@@ -1,0 +1,1189 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>UnityFx.Async</name>
+    </assembly>
+    <members>
+        <member name="T:UnityFx.Async.IAsyncContinuationContainer">
+            <summary>
+            A continuation container.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.IAsyncContinuationContainer.AddContinuation(System.Action)">
+            <summary>
+            Adds new continuation to the operation.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.IAsyncContinuationContainer.RemoveContinuation(System.Action)">
+            <summary>
+            Removes existing continuation from the operation.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.AsyncOperationStatus">
+            <summary>
+            Enumerates possible status values used by <see cref="T:UnityFx.Async.IAsyncOperation"/>.
+            </summary>
+            <seealso cref="T:UnityFx.Async.IAsyncOperation"/>
+        </member>
+        <member name="F:UnityFx.Async.AsyncOperationStatus.Initialized">
+            <summary>
+            The operation is initialized but has not yet been scheduled for execution.
+            </summary>
+        </member>
+        <member name="F:UnityFx.Async.AsyncOperationStatus.Running">
+            <summary>
+            The operation execution has started.
+            </summary>
+        </member>
+        <member name="F:UnityFx.Async.AsyncOperationStatus.Success">
+            <summary>
+            The operation has completed successfully.
+            </summary>
+        </member>
+        <member name="F:UnityFx.Async.AsyncOperationStatus.Faulted">
+            <summary>
+            The operation failed.
+            </summary>
+        </member>
+        <member name="F:UnityFx.Async.AsyncOperationStatus.Canceled">
+            <summary>
+            The operation has been canceled.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.IAsyncOperation">
+            <summary>
+            A disposable <see cref="T:System.IAsyncResult"/> with status.
+            </summary>
+            <remarks>
+            The interface is designed to be as close to the TLP Task as possible. All interface methods are expected to be thread-safe.
+            The only exception to this rule is <see cref="M:System.IDisposable.Dispose"/>.
+            </remarks>
+            <seealso cref="T:System.IAsyncResult"/>
+            <seealso cref="T:UnityFx.Async.IAsyncOperation`1"/>
+        </member>
+        <member name="P:UnityFx.Async.IAsyncOperation.Progress">
+            <summary>
+            Returns the operation progress in range [0,1]. Read only.
+            </summary>
+        </member>
+        <member name="P:UnityFx.Async.IAsyncOperation.Status">
+            <summary>
+            Returns the operation status identifier. Read only.
+            </summary>
+        </member>
+        <member name="P:UnityFx.Async.IAsyncOperation.Exception">
+            <summary>
+            Returns an <see cref="T:System.Exception"/> that caused the operation to end prematurely. If the operation completed successfully
+            or has not yet thrown any exceptions, this will return <c>null</c>. Read only.
+            </summary>
+        </member>
+        <member name="P:UnityFx.Async.IAsyncOperation.IsCompletedSuccessfully">
+            <summary>
+            Returns <c>true</c> if the operation has completed successfully, <c>false</c> otherwise. Read only.
+            </summary>
+        </member>
+        <member name="P:UnityFx.Async.IAsyncOperation.IsFaulted">
+            <summary>
+            Returns <c>true</c> if the operation has failed for any reason, <c>false</c> otherwise. Read only.
+            </summary>
+        </member>
+        <member name="P:UnityFx.Async.IAsyncOperation.IsCanceled">
+            <summary>
+            Returns <c>true</c> if the operation has been canceled by user, <c>false</c> otherwise. Read only.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.IAsyncOperationContainer">
+            <summary>
+            A container of asynchronous operations.
+            </summary>
+        </member>
+        <member name="P:UnityFx.Async.IAsyncOperationContainer.Size">
+            <summary>
+            Returns the total number of operations in the container. Read only.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.IAsyncOperationController">
+            <summary>
+            Controller of a <see cref="T:UnityFx.Async.IAsyncOperation"/> instance.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.IAsyncOperationController.SetCanceled">
+            <summary>
+            Transitions the underlying <see cref="T:UnityFx.Async.IAsyncOperation"/> into the <see cref="F:UnityFx.Async.AsyncOperationStatus.Canceled"/> state.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.IAsyncOperationController.TrySetCanceled">
+            <summary>
+            Attempts to transition the underlying <see cref="T:UnityFx.Async.IAsyncOperation"/> into the <see cref="F:UnityFx.Async.AsyncOperationStatus.Canceled"/> state.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.IAsyncOperationController.SetException(System.Exception)">
+            <summary>
+            Transitions the underlying <see cref="T:UnityFx.Async.IAsyncOperation"/> into the <see cref="F:UnityFx.Async.AsyncOperationStatus.Faulted"/> state.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.IAsyncOperationController.TrySetException(System.Exception)">
+            <summary>
+            Attempts to transition the underlying <see cref="T:UnityFx.Async.IAsyncOperation"/> into the <see cref="F:UnityFx.Async.AsyncOperationStatus.Faulted"/> state.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.IAsyncOperationController.SetCompleted">
+            <summary>
+            Transitions the underlying <see cref="T:UnityFx.Async.IAsyncOperation"/> into the <see cref="F:UnityFx.Async.AsyncOperationStatus.Success"/> state.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.IAsyncOperationController.TrySetCompleted">
+            <summary>
+            Attempts to transition the underlying <see cref="T:UnityFx.Async.IAsyncOperation"/> into the <see cref="F:UnityFx.Async.AsyncOperationStatus.Success"/> state.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.IAsyncOperationController.SetProgress(System.Single)">
+            <summary>
+            Sets the operation progress value.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.IAsyncOperationController`1">
+            <summary>
+            Controller of a <see cref="T:UnityFx.Async.IAsyncOperation`1"/> instance.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.IAsyncOperationController`1.SetResult(`0)">
+            <summary>
+            Transitions the underlying <see cref="T:UnityFx.Async.IAsyncOperation`1"/> into the <see cref="F:UnityFx.Async.AsyncOperationStatus.Success"/> state.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.IAsyncOperationController`1.TrySetResult(`0)">
+            <summary>
+            Attempts to transition the underlying <see cref="T:UnityFx.Async.IAsyncOperation`1"/> into the <see cref="F:UnityFx.Async.AsyncOperationStatus.Success"/> state.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.IAsyncOperation`1">
+            <summary>
+             Extends an <see cref="T:UnityFx.Async.IAsyncOperation"/> interface with a result value.
+            </summary>
+            <seealso cref="T:System.IAsyncResult"/>
+            <seealso cref="T:UnityFx.Async.IAsyncOperation"/>
+        </member>
+        <member name="P:UnityFx.Async.IAsyncOperation`1.Result">
+            <summary>
+            Returns the result value of this operation. Accessing the property blocks the calling thread until the operation is complete. Read only.
+            </summary>
+            <remarks>
+            Once the result of an operation is available, it is stored and is returned immediately on subsequent calls to the <see cref="P:UnityFx.Async.IAsyncOperation`1.Result"/> property.
+            Note that, if an exception occurred during the operation, or if the operation has been cancelled, the <see cref="P:UnityFx.Async.IAsyncOperation`1.Result"/> property does not return a value.
+            Instead, attempting to access the property value throws an <see cref="T:System.InvalidOperationException"/> exception.
+            </remarks>
+            <exception cref="T:System.InvalidOperationException">Thrown if the property is accessed before operation is completed.</exception>
+        </member>
+        <member name="T:UnityFx.Async.IAwaiter">
+            <summary>
+            An generic awaiter.
+            </summary>
+        </member>
+        <member name="P:UnityFx.Async.IAwaiter.IsCompleted">
+            <summary>
+            Returns <c>true</c> if the source awaitable is completed; <c>false</c> otherwise. Read only.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.IAwaiter.GetResult">
+            <summary>
+            Returns the source result value.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.IAwaiter`1">
+            <summary>
+            An generic awaiter.
+            </summary>
+            <seealso cref="T:UnityFx.Async.IAwaiter"/>
+        </member>
+        <member name="P:UnityFx.Async.IAwaiter`1.IsCompleted">
+            <summary>
+            Returns <c>true</c> if the source awaitable is completed; <c>false</c> otherwise. Read only.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.IAwaiter`1.GetResult">
+            <summary>
+            Returns the source result value.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.AsyncContinuationOptions">
+            <summary>
+            Continuation flags.
+            </summary>
+        </member>
+        <member name="F:UnityFx.Async.AsyncContinuationOptions.None">
+            <summary>
+            No options. Default continuation behaviour.
+            </summary>
+        </member>
+        <member name="F:UnityFx.Async.AsyncContinuationOptions.OnlyOnSuccess">
+            <summary>
+            Specifies that the continuation should be scheduled only if its antecedent has completed successfully.
+            </summary>
+        </member>
+        <member name="F:UnityFx.Async.AsyncContinuationOptions.OnlyOnFaulted">
+            <summary>
+            Specifies that the continuation task should be scheduled only if its antecedent has completed with an error.
+            </summary>
+        </member>
+        <member name="F:UnityFx.Async.AsyncContinuationOptions.OnlyOnCanceled">
+            <summary>
+            Specifies that the continuation task should be scheduled only if its antecedent has been canceled.
+            </summary>
+        </member>
+        <member name="F:UnityFx.Async.AsyncContinuationOptions.NotOnSuccess">
+            <summary>
+            Specifies that the continuation should be scheduled only if its antecedent has not completed successfully.
+            </summary>
+        </member>
+        <member name="F:UnityFx.Async.AsyncContinuationOptions.NotOnFaulted">
+            <summary>
+            Specifies that the continuation should be scheduled only if its antecedent has not completed with an error.
+            </summary>
+        </member>
+        <member name="F:UnityFx.Async.AsyncContinuationOptions.NotOnCanceled">
+            <summary>
+            Specifies that the continuation should be scheduled only if its antecedent has not been canceled.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.AsyncExtensions">
+            <summary>
+            Defines extension methods realted to <see cref="T:UnityFx.Async.IAsyncOperation"/>.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.GetAwaiter(UnityFx.Async.IAsyncOperation)">
+            <summary>
+            Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.GetAwaiter``1(UnityFx.Async.IAsyncOperation{``0})">
+            <summary>
+            Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.ToTask(UnityFx.Async.IAsyncOperation)">
+            <summary>
+            Created a <see cref="T:System.Threading.Tasks.Task"/> instance matching the source <see cref="T:UnityFx.Async.IAsyncOperation"/>.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.ToTask``1(UnityFx.Async.IAsyncOperation{``0})">
+            <summary>
+            Created a <see cref="T:System.Threading.Tasks.Task"/> instance matching the source <see cref="T:UnityFx.Async.IAsyncOperation"/>.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.Transform``2(UnityFx.Async.IAsyncOperation{``1},System.Func{``1,``0})">
+            <summary>
+            Transforms the caller instance of <see cref="T:UnityFx.Async.IAsyncOperation`1"/> to another one that differs only by the result value.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.ContinueWith``1(``0,System.Func{``0,System.IAsyncResult})">
+            <summary>
+            Creates a continuation that executes when the target <see cref="T:System.IAsyncResult"/> completes.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncExtensions.ContinueWith``2(``0,System.Func{``0,UnityFx.Async.IAsyncOperation{``1}})"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.ContinueWith``1(``0,System.Func{``0,System.IAsyncResult},UnityFx.Async.AsyncScheduler)">
+            <summary>
+            Creates a continuation that executes when the target <see cref="T:System.IAsyncResult"/> completes.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncExtensions.ContinueWith``2(``0,System.Func{``0,UnityFx.Async.IAsyncOperation{``1}})"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.ContinueWith``2(``0,System.Func{``0,UnityFx.Async.IAsyncOperation{``1}})">
+            <summary>
+            Creates a continuation that executes when the target <see cref="T:System.IAsyncResult"/> completes.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncExtensions.ContinueWith``1(``0,System.Func{``0,System.IAsyncResult})"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.ContinueWith``2(``0,System.Func{``0,UnityFx.Async.IAsyncOperation{``1}},UnityFx.Async.AsyncScheduler)">
+            <summary>
+            Creates a continuation that executes when the target <see cref="T:System.IAsyncResult"/> completes.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncExtensions.ContinueWith``1(``0,System.Func{``0,System.IAsyncResult})"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.ContinueWith``1(``0,System.Func{``0,UnityEngine.AsyncOperation})">
+            <summary>
+            Creates a continuation that executes when the target <see cref="T:System.IAsyncResult"/> completes.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncExtensions.ContinueWith``2(``0,System.Func{``0,UnityFx.Async.IAsyncOperation{``1}})"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.ContinueWith``1(``0,System.Func{``0,UnityEngine.AsyncOperation},UnityFx.Async.AsyncScheduler)">
+            <summary>
+            Creates a continuation that executes when the target <see cref="T:System.IAsyncResult"/> completes.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncExtensions.ContinueWith``2(``0,System.Func{``0,UnityFx.Async.IAsyncOperation{``1}})"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.Wait(System.IAsyncResult)">
+            <summary>
+            Causes the calling thread to wait until the <see cref="T:System.IAsyncResult"/> instance has completed.
+            </summary>
+            <seealso cref="M:UnityFx.Async.AsyncExtensions.Wait(System.IAsyncResult,System.Int32)"/>
+            <seealso cref="M:UnityFx.Async.AsyncExtensions.Wait(System.IAsyncResult,System.TimeSpan)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.Wait(System.IAsyncResult,System.TimeSpan)">
+            <summary>
+            Causes the calling thread to wait until the <see cref="T:System.IAsyncResult"/> instance has completed or until the specified <paramref name="timeout"/>.
+            </summary>
+            <seealso cref="M:UnityFx.Async.AsyncExtensions.Wait(System.IAsyncResult)"/>
+            <seealso cref="M:UnityFx.Async.AsyncExtensions.Wait(System.IAsyncResult,System.Int32)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.Wait(System.IAsyncResult,System.Int32)">
+            <summary>
+            Causes the calling thread to wait until the <see cref="T:System.IAsyncResult"/> instance has completed or until the specified number of milliseconds.
+            </summary>
+            <seealso cref="M:UnityFx.Async.AsyncExtensions.Wait(System.IAsyncResult)"/>
+            <seealso cref="M:UnityFx.Async.AsyncExtensions.Wait(System.IAsyncResult,System.TimeSpan)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.GetAsyncFactory(UnityEngine.MonoBehaviour)">
+            <summary>
+            Returns a <see cref="T:UnityFx.Async.AsyncFactory"/> instance for this <see cref="T:UnityEngine.MonoBehaviour"/>.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.StartAsyncOperation(UnityEngine.MonoBehaviour,System.Collections.IEnumerator)">
+            <summary>
+            Starts an instance of <see cref="T:UnityFx.Async.IAsyncOperation"/> from the supplied <see cref="T:System.Collections.IEnumerator"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.StartAsyncOperation(UnityEngine.MonoBehaviour,System.Collections.IEnumerator,System.Threading.CancellationToken)">
+            <summary>
+            Starts an instance of <see cref="T:UnityFx.Async.IAsyncOperation"/> from the supplied <see cref="T:System.Collections.IEnumerator"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.StartAsyncOperation(UnityEngine.MonoBehaviour,System.IAsyncResult)">
+            <summary>
+            Starts an instance of <see cref="T:UnityFx.Async.IAsyncOperation"/> from the supplied <see cref="T:System.IAsyncResult"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.StartAsyncOperation(UnityEngine.MonoBehaviour,System.Action{UnityFx.Async.IAsyncOperationController})">
+            <summary>
+            Starts an instance of <see cref="T:UnityFx.Async.IAsyncOperation"/> from the supplied update callback.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="updateCallback"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.StartAsyncOperation(UnityEngine.MonoBehaviour,System.Action{UnityFx.Async.IAsyncOperationController},System.Threading.CancellationToken)">
+            <summary>
+            Starts an instance of <see cref="T:UnityFx.Async.IAsyncOperation"/> from the supplied update callback.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="updateCallback"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.StartAsyncOperation``1(UnityEngine.MonoBehaviour,System.Action{UnityFx.Async.IAsyncOperationController{``0}})">
+            <summary>
+            Starts an instance of <see cref="T:UnityFx.Async.IAsyncOperation`1"/> from the supplied update callback.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="updateCallback"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.StartAsyncOperation``1(UnityEngine.MonoBehaviour,System.Action{UnityFx.Async.IAsyncOperationController{``0}},System.Threading.CancellationToken)">
+            <summary>
+            Starts an instance of <see cref="T:UnityFx.Async.IAsyncOperation`1"/> from the supplied update callback.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="updateCallback"/> is <c>null</c>.</exception>
+        </member>
+        <member name="T:UnityFx.Async.AsyncFactory">
+            <summary>
+            Provides support for creating and scheduling asynchronous operations.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.#ctor(UnityFx.Async.AsyncScheduler)">
+            <summary>
+            Initializes a new instance of the <see cref="T:UnityFx.Async.AsyncFactory"/> struct.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.#ctor(UnityEngine.MonoBehaviour)">
+            <summary>
+            Initializes a new instance of the <see cref="T:UnityFx.Async.AsyncFactory"/> struct.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.FromCoroutine(UnityEngine.YieldInstruction)">
+            <summary>
+            Creates an instance of <see cref="T:UnityFx.Async.IAsyncOperation"/> from the supplied <see cref="T:UnityEngine.Coroutine"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.FromEnumerator(System.Collections.IEnumerator)"/>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.FromAsyncOperation(UnityEngine.AsyncOperation)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.FromEnumerator(System.Collections.IEnumerator)">
+            <summary>
+            Creates an instance of <see cref="T:UnityFx.Async.IAsyncOperation"/> from the supplied <see cref="T:System.Collections.IEnumerator"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.FromCoroutine(UnityEngine.YieldInstruction)"/>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.FromAsyncOperation(UnityEngine.AsyncOperation)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.FromEnumerator(System.Collections.IEnumerator,System.Threading.CancellationToken)">
+            <summary>
+            Creates an instance of <see cref="T:UnityFx.Async.IAsyncOperation"/> from the supplied <see cref="T:System.Collections.IEnumerator"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.FromCoroutine(UnityEngine.YieldInstruction)"/>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.FromAsyncOperation(UnityEngine.AsyncOperation)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.FromAsyncOperation(UnityEngine.AsyncOperation)">
+            <summary>
+            Creates an instance of <see cref="T:UnityFx.Async.IAsyncOperation"/> for the supplied <see cref="T:UnityEngine.AsyncOperation"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.FromCoroutine(UnityEngine.YieldInstruction)"/>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.FromEnumerator(System.Collections.IEnumerator)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.FromAsyncOperation``1(UnityEngine.AsyncOperation)">
+            <summary>
+            Creates an instance of <see cref="T:UnityFx.Async.IAsyncOperation"/> for the supplied <see cref="T:UnityEngine.AsyncOperation"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.FromCoroutine(UnityEngine.YieldInstruction)"/>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.FromEnumerator(System.Collections.IEnumerator)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.FromAsyncResult(System.IAsyncResult)">
+            <summary>
+            Creates an instance of <see cref="T:UnityFx.Async.IAsyncOperation"/> for the supplied <see cref="T:System.IAsyncResult"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.FromCoroutine(UnityEngine.YieldInstruction)"/>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.FromEnumerator(System.Collections.IEnumerator)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.FromUpdateCallback(System.Action{UnityFx.Async.IAsyncOperationController})">
+            <summary>
+            Starts a new operation.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="updateCallback"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.FromUpdateCallback``1(System.Action{UnityFx.Async.IAsyncOperationController{``0}})"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.FromUpdateCallback(System.Action{UnityFx.Async.IAsyncOperationController},System.Threading.CancellationToken)">
+            <summary>
+            Starts a new operation.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="updateCallback"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.FromUpdateCallback``1(System.Action{UnityFx.Async.IAsyncOperationController{``0}})"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.FromUpdateCallback``1(System.Action{UnityFx.Async.IAsyncOperationController{``0}})">
+            <summary>
+            Starts a new operation.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="updateCallback"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.FromUpdateCallback(System.Action{UnityFx.Async.IAsyncOperationController})"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.FromUpdateCallback``1(System.Action{UnityFx.Async.IAsyncOperationController{``0}},System.Threading.CancellationToken)">
+            <summary>
+            Starts a new operation.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="updateCallback"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.FromUpdateCallback(System.Action{UnityFx.Async.IAsyncOperationController})"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.WhenAll(System.IAsyncResult[])">
+            <summary>
+            Creates a new <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that finishes when all of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.WhenAny(System.IAsyncResult[],UnityFx.Async.AsyncContinuationOptions)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.WhenAll(System.IAsyncResult[],UnityFx.Async.AsyncContinuationOptions)">
+            <summary>
+            Creates a new <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that finishes when all of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.WhenAny(System.IAsyncResult[],UnityFx.Async.AsyncContinuationOptions)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.WhenAll(System.IAsyncResult[],System.Threading.CancellationToken,UnityFx.Async.AsyncContinuationOptions)">
+            <summary>
+            Creates a new <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that finishes when all of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.WhenAny(System.IAsyncResult[],UnityFx.Async.AsyncContinuationOptions)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.WhenAll``1(UnityFx.Async.IAsyncOperation{``0}[])">
+            <summary>
+            Creates a new <see cref="T:UnityFx.Async.IAsyncOperation`1"/> instance that finishes when all of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.WhenAll(System.IAsyncResult[],UnityFx.Async.AsyncContinuationOptions)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.WhenAll``1(UnityFx.Async.IAsyncOperation{``0}[],UnityFx.Async.AsyncContinuationOptions)">
+            <summary>
+            Creates a new <see cref="T:UnityFx.Async.IAsyncOperation`1"/> instance that finishes when all of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.WhenAll(System.IAsyncResult[],UnityFx.Async.AsyncContinuationOptions)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.WhenAll``1(UnityFx.Async.IAsyncOperation{``0}[],System.Threading.CancellationToken,UnityFx.Async.AsyncContinuationOptions)">
+            <summary>
+            Creates a new <see cref="T:UnityFx.Async.IAsyncOperation`1"/> instance that finishes when all of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.WhenAll(System.IAsyncResult[],UnityFx.Async.AsyncContinuationOptions)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.WhenAny(System.IAsyncResult[])">
+            <summary>
+            Creates a new <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that finishes when all of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.WhenAll(System.IAsyncResult[],UnityFx.Async.AsyncContinuationOptions)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.WhenAny(System.IAsyncResult[],UnityFx.Async.AsyncContinuationOptions)">
+            <summary>
+            Creates a new <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that finishes when all of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.WhenAll(System.IAsyncResult[],UnityFx.Async.AsyncContinuationOptions)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.WhenAny(System.IAsyncResult[],System.Threading.CancellationToken,UnityFx.Async.AsyncContinuationOptions)">
+            <summary>
+            Creates a new <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that finishes when all of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.WhenAll(System.IAsyncResult[],UnityFx.Async.AsyncContinuationOptions)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.WhenAny``1(UnityFx.Async.IAsyncOperation{``0}[])">
+            <summary>
+            Creates a new <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that finishes when all of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.WhenAny(System.IAsyncResult[],UnityFx.Async.AsyncContinuationOptions)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.WhenAny``1(UnityFx.Async.IAsyncOperation{``0}[],UnityFx.Async.AsyncContinuationOptions)">
+            <summary>
+            Creates a new <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that finishes when all of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.WhenAny(System.IAsyncResult[],UnityFx.Async.AsyncContinuationOptions)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.WhenAny``1(UnityFx.Async.IAsyncOperation{``0}[],System.Threading.CancellationToken,UnityFx.Async.AsyncContinuationOptions)">
+            <summary>
+            Creates a new <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that finishes when all of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.WhenAny(System.IAsyncResult[],UnityFx.Async.AsyncContinuationOptions)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.ContinueWhen``1(``0,System.Func{``0,System.IAsyncResult})">
+            <summary>
+            Creates a continuation that executes when the target <see cref="T:System.IAsyncResult"/> completes.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> or <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.ContinueWhen``2(``0,System.Func{``0,UnityFx.Async.IAsyncOperation{``1}})"/>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.ContinueWhen``1(``0,System.Func{``0,UnityEngine.AsyncOperation})"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.ContinueWhen``2(``0,System.Func{``0,UnityFx.Async.IAsyncOperation{``1}})">
+            <summary>
+            Creates a continuation that executes when the target <see cref="T:System.IAsyncResult"/> completes.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> or <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.ContinueWhen``1(``0,System.Func{``0,System.IAsyncResult})"/>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.ContinueWhen``1(``0,System.Func{``0,UnityEngine.AsyncOperation})"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncFactory.ContinueWhen``1(``0,System.Func{``0,UnityEngine.AsyncOperation})">
+            <summary>
+            Creates a continuation that executes when the target <see cref="T:System.IAsyncResult"/> completes.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> or <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.ContinueWhen``1(``0,System.Func{``0,System.IAsyncResult})"/>
+            <seealso cref="M:UnityFx.Async.AsyncFactory.ContinueWhen``2(``0,System.Func{``0,UnityFx.Async.IAsyncOperation{``1}})"/>
+        </member>
+        <member name="T:UnityFx.Async.AsyncResult">
+            <summary>
+            Implementation of <see cref="T:UnityFx.Async.IAsyncOperation"/>.
+            </summary>
+            <seealso href="https://blogs.msdn.microsoft.com/nikos/2011/03/14/how-to-implement-the-iasyncresult-design-pattern/"/>
+            <seealso cref="T:System.IAsyncResult"/>
+        </member>
+        <member name="F:UnityFx.Async.AsyncResult.WaitSleepTimeout">
+            <summary>
+            Number of milliseconds to wait until the next <see cref="P:System.IAsyncResult.IsCompleted"/> check.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.#ctor(System.Object,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:UnityFx.Async.AsyncResult"/> class.
+            </summary>
+            <param name="asyncState">User-defined data returned by <see cref="P:UnityFx.Async.AsyncResult.AsyncState"/>.</param>
+            <param name="status">Initial operation status.</param>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.#ctor(System.Object,UnityFx.Async.AsyncOperationStatus)">
+            <summary>
+            Initializes a new instance of the <see cref="T:UnityFx.Async.AsyncResult"/> class.
+            </summary>
+            <param name="asyncState">User-defined data returned by <see cref="P:UnityFx.Async.AsyncResult.AsyncState"/>.</param>
+            <param name="status">Initial operation status.</param>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.#ctor(System.Object,System.Threading.CancellationToken,UnityFx.Async.AsyncOperationStatus)">
+            <summary>
+            Initializes a new instance of the <see cref="T:UnityFx.Async.AsyncResult"/> class.
+            </summary>
+            <param name="asyncState">User-defined data returned by <see cref="P:UnityFx.Async.AsyncResult.AsyncState"/>.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <param name="status">Initial operation status.</param>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.#ctor(System.Object,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:UnityFx.Async.AsyncResult"/> class.
+            </summary>
+            <param name="asyncState">User-defined data returned by <see cref="P:UnityFx.Async.AsyncResult.AsyncState"/>.</param>
+            <param name="e">Exception instance.</param>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.SetCurrent(System.Object)">
+            <summary>
+            Sets the value of <see cref="P:UnityFx.Async.AsyncResult.Current"/> property. Use with care.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.TrySetStatus(System.Int32)">
+            <summary>
+            Finished the operation (if it is not already finished). Do not use this method unless absolutely needed.
+            </summary>
+            <seealso cref="M:UnityFx.Async.AsyncResult.FireCompleted"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FireCompleted">
+            <summary>
+            Triggers completed event (if any).
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.SetStarted">
+            <summary>
+            Start the operation.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.GetExceptionSafe">
+            <summary>
+            Returns an exception for the operation instance. Never returns <c>null</c>.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.ThrowIfFaulted">
+            <summary>
+            Throws exception if the operation has failed.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.ThrowIfDisposed">
+            <summary>
+            Throws <see cref="T:System.ObjectDisposedException"/> if this operation has been disposed.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.OnUpdate">
+            <summary>
+            Updates the operation state. Called by <see cref="M:UnityFx.Async.AsyncResult.MoveNext"/>. Default implementation does nothing.
+            </summary>
+            <remarks>
+            Do not reference public class methods and properties in this method (except <see cref="M:UnityFx.Async.AsyncResult.SetCompleted"/>)
+            because their implementation may reference <see cref="M:UnityFx.Async.AsyncResult.MoveNext"/> and cause endless recursion.
+            </remarks>
+            <seealso cref="M:UnityFx.Async.AsyncResult.OnCompleted"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.OnCompleted">
+            <summary>
+            Notifies the observer that the provider has finished sending push-based notifications.
+            </summary>
+            <seealso cref="M:UnityFx.Async.AsyncResult.OnUpdate"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.AddContinuation(System.Action)">
+            <inheritdoc/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.RemoveContinuation(System.Action)">
+            <inheritdoc/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.SetProgress(System.Single)">
+            <inheritdoc/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.SetCanceled">
+            <inheritdoc/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.TrySetCanceled">
+            <inheritdoc/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.SetException(System.Exception)">
+            <inheritdoc/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.TrySetException(System.Exception)">
+            <inheritdoc/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.SetCompleted">
+            <inheritdoc/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.TrySetCompleted">
+            <inheritdoc/>
+        </member>
+        <member name="P:UnityFx.Async.AsyncResult.Progress">
+            <inheritdoc/>
+        </member>
+        <member name="P:UnityFx.Async.AsyncResult.Status">
+            <inheritdoc/>
+        </member>
+        <member name="P:UnityFx.Async.AsyncResult.Exception">
+            <inheritdoc/>
+        </member>
+        <member name="P:UnityFx.Async.AsyncResult.IsCompletedSuccessfully">
+            <inheritdoc/>
+        </member>
+        <member name="P:UnityFx.Async.AsyncResult.IsFaulted">
+            <inheritdoc/>
+        </member>
+        <member name="P:UnityFx.Async.AsyncResult.IsCanceled">
+            <inheritdoc/>
+        </member>
+        <member name="P:UnityFx.Async.AsyncResult.AsyncWaitHandle">
+            <inheritdoc/>
+        </member>
+        <member name="P:UnityFx.Async.AsyncResult.AsyncState">
+            <inheritdoc/>
+        </member>
+        <member name="P:UnityFx.Async.AsyncResult.CompletedSynchronously">
+            <inheritdoc/>
+        </member>
+        <member name="P:UnityFx.Async.AsyncResult.IsCompleted">
+            <inheritdoc/>
+        </member>
+        <member name="P:UnityFx.Async.AsyncResult.Current">
+            <inheritdoc/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.MoveNext">
+            <inheritdoc/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.Reset">
+            <inheritdoc/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="P:UnityFx.Async.AsyncResult.Completed">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that is completed successfully. Read only.
+            </summary>
+        </member>
+        <member name="P:UnityFx.Async.AsyncResult.Factory">
+            <summary>
+            Returns default factory for <see cref="T:UnityFx.Async.IAsyncOperation"/> instances. Read only.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromCanceled">
+            <summary>
+            Returns a canceled <see cref="T:UnityFx.Async.IAsyncOperation"/> instance.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromCanceled(System.Threading.CancellationToken)">
+            <summary>
+            Returns a canceled <see cref="T:UnityFx.Async.IAsyncOperation"/> instance.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromCanceled``1">
+            <summary>
+            Returns a canceled <see cref="T:UnityFx.Async.IAsyncOperation"/> instance.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromCanceled``1(System.Threading.CancellationToken)">
+            <summary>
+            Returns a canceled <see cref="T:UnityFx.Async.IAsyncOperation"/> instance.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromException(System.Exception)">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation"/> instance completed with an exception.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromException``1(System.Exception)">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation`1"/> instance completed with an exception.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromResult``1(``0)">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation`1"/> instance that is completed with the specified result.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromEnumerator(System.Collections.IEnumerator)">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that wraps the specified <see cref="T:System.Collections.IEnumerator"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified operation is <c>null</c>.</exception>
+            <seealso cref="T:UnityFx.Async.AsyncFactory"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromEnumerator(System.Collections.IEnumerator,System.Threading.CancellationToken)">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that wraps the specified <see cref="T:System.Collections.IEnumerator"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified operation is <c>null</c>.</exception>
+            <seealso cref="T:UnityFx.Async.AsyncFactory"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromCoroutine(UnityEngine.YieldInstruction)">
+            <summary>
+            Creates an instance of <see cref="T:UnityFx.Async.IAsyncOperation"/> from the supplied <see cref="T:UnityEngine.YieldInstruction"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+            <seealso cref="T:UnityFx.Async.AsyncFactory"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromAsyncOperation(UnityEngine.AsyncOperation)">
+            <summary>
+            Creates an instance of <see cref="T:UnityFx.Async.IAsyncOperation"/> for the supplied <see cref="T:UnityEngine.AsyncOperation"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+            <seealso cref="T:UnityFx.Async.AsyncFactory"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromAsyncOperation``1(UnityEngine.AsyncOperation)">
+            <summary>
+            Creates an instance of <see cref="T:UnityFx.Async.IAsyncOperation"/> for the supplied <see cref="T:UnityEngine.AsyncOperation"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+            <seealso cref="T:UnityFx.Async.AsyncFactory"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromAsyncResult(System.IAsyncResult)">
+            <summary>
+            Creates an instance of <see cref="T:UnityFx.Async.IAsyncOperation"/> for the supplied <see cref="T:System.IAsyncResult"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+            <seealso cref="T:UnityFx.Async.AsyncFactory"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromUpdateCallback(System.Action{UnityFx.Async.IAsyncOperationController})">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that wraps the specified <see cref="T:System.Action`1"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified action is <c>null</c>.</exception>
+            <seealso cref="T:UnityFx.Async.AsyncFactory"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromUpdateCallback(System.Action{UnityFx.Async.IAsyncOperationController},System.Threading.CancellationToken)">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that wraps the specified <see cref="T:System.Action`1"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified action is <c>null</c>.</exception>
+            <seealso cref="T:UnityFx.Async.AsyncFactory"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromUpdateCallback``1(System.Action{UnityFx.Async.IAsyncOperationController{``0}})">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation`1"/> instance that wraps the specified <see cref="T:System.Action`1"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified action is <c>null</c>.</exception>
+            <seealso cref="T:UnityFx.Async.AsyncFactory"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.FromUpdateCallback``1(System.Action{UnityFx.Async.IAsyncOperationController{``0}},System.Threading.CancellationToken)">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation`1"/> instance that wraps the specified <see cref="T:System.Action`1"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified action is <c>null</c>.</exception>
+            <seealso cref="T:UnityFx.Async.AsyncFactory"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.WhenAll(System.IAsyncResult[])">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that finishes when all specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.WhenAll(System.IAsyncResult[],UnityFx.Async.AsyncContinuationOptions)">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that finishes when all specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.WhenAll(System.IAsyncResult[],System.Threading.CancellationToken,UnityFx.Async.AsyncContinuationOptions)">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that finishes when all specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.WhenAll``1(UnityFx.Async.IAsyncOperation{``0}[])">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation`1"/> instance that finishes when all specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.WhenAll``1(UnityFx.Async.IAsyncOperation{``0}[],UnityFx.Async.AsyncContinuationOptions)">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation`1"/> instance that finishes when all specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.WhenAll``1(UnityFx.Async.IAsyncOperation{``0}[],System.Threading.CancellationToken,UnityFx.Async.AsyncContinuationOptions)">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation`1"/> instance that finishes when all specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.WhenAny(System.IAsyncResult[])">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that finishes when any of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.WhenAny(System.IAsyncResult[],UnityFx.Async.AsyncContinuationOptions)">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that finishes when any of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.WhenAny(System.IAsyncResult[],System.Threading.CancellationToken,UnityFx.Async.AsyncContinuationOptions)">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation"/> instance that finishes when any of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.WhenAny``1(UnityFx.Async.IAsyncOperation{``0}[])">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation`1"/> instance that finishes when any of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.WhenAny``1(UnityFx.Async.IAsyncOperation{``0}[],UnityFx.Async.AsyncContinuationOptions)">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation`1"/> instance that finishes when any of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult.WhenAny``1(UnityFx.Async.IAsyncOperation{``0}[],System.Threading.CancellationToken,UnityFx.Async.AsyncContinuationOptions)">
+            <summary>
+            Returns an <see cref="T:UnityFx.Async.IAsyncOperation`1"/> instance that finishes when any of the specified operations finish.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+        </member>
+        <member name="T:UnityFx.Async.AsyncResultAwaiter">
+            <summary>
+            Provides an object that waits for the completion of an asynchronous operation. This type and its members are intended for compiler use only.
+            </summary>
+            <seealso cref="T:UnityFx.Async.AsyncResult"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResultAwaiter.#ctor(System.IAsyncResult)">
+            <summary>
+            Initializes a new instance of the <see cref="T:UnityFx.Async.AsyncResultAwaiter"/> struct.
+            </summary>
+        </member>
+        <member name="P:UnityFx.Async.AsyncResultAwaiter.IsCompleted">
+            <summary>
+            Returns <c>true</c> if the source awaitable is completed; <c>false</c> otherwise. Read only.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResultAwaiter.GetResult">
+            <summary>
+            Returns the source result value.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResultAwaiter.OnCompleted(System.Action)">
+            <summary>
+            Schedules the continuation action that's invoked when the operation completes.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.AsyncResultAwaiter`1">
+            <summary>
+            Provides an object that waits for the completion of an asynchronous operation. This type and its members are intended for compiler use only.
+            </summary>
+            <seealso cref="T:UnityFx.Async.AsyncResult`1"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResultAwaiter`1.#ctor(UnityFx.Async.IAsyncOperation{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:UnityFx.Async.AsyncResultAwaiter`1"/> struct.
+            </summary>
+        </member>
+        <member name="P:UnityFx.Async.AsyncResultAwaiter`1.IsCompleted">
+            <summary>
+            Returns <c>true</c> if the source awaitable is completed; <c>false</c> otherwise. Read only.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResultAwaiter`1.GetResult">
+            <summary>
+            Returns the source result value.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResultAwaiter`1.OnCompleted(System.Action)">
+            <summary>
+            Schedules the continuation action that's invoked when the operation completes.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.AsyncResult`1">
+            <summary>
+            Implementation of <see cref="T:UnityFx.Async.IAsyncOperation`1"/>.
+            </summary>
+            <typeparam name="T">Type of the operation result.</typeparam>
+            <seealso cref="T:System.IAsyncResult"/>
+            <seealso cref="T:UnityFx.Async.IAsyncOperation"/>
+            <seealso cref="T:UnityFx.Async.AsyncResult"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult`1.#ctor(System.Object,UnityFx.Async.AsyncOperationStatus)">
+            <summary>
+            Initializes a new instance of the <see cref="T:UnityFx.Async.AsyncResult`1"/> class.
+            </summary>
+            <param name="asyncState">User-defined data returned by <see cref="P:UnityFx.Async.AsyncResult.AsyncState"/>.</param>
+            <param name="status">Initial operation status.</param>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult`1.#ctor(System.Object,System.Threading.CancellationToken,UnityFx.Async.AsyncOperationStatus)">
+            <summary>
+            Initializes a new instance of the <see cref="T:UnityFx.Async.AsyncResult`1"/> class.
+            </summary>
+            <param name="asyncState">User-defined data returned by <see cref="P:UnityFx.Async.AsyncResult.AsyncState"/>.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <param name="status">Initial operation status.</param>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult`1.#ctor(System.Object,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:UnityFx.Async.AsyncResult`1"/> class.
+            </summary>
+            <param name="asyncState">User-defined data returned by <see cref="P:UnityFx.Async.AsyncResult.AsyncState"/>.</param>
+            <param name="e">An exception instance.</param>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult`1.#ctor(System.Object,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:UnityFx.Async.AsyncResult`1"/> class.
+            </summary>
+            <param name="asyncState">User-defined data returned by <see cref="P:UnityFx.Async.AsyncResult.AsyncState"/>.</param>
+            <param name="result">Operation result.</param>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult`1.SetResult(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult`1.TrySetResult(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="P:UnityFx.Async.AsyncResult`1.Result">
+            <summary>
+            Returns the result value of this operation. Accessing the property blocks the calling thread until the operation is complete. Read only.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncResult`1.Subscribe(System.IObserver{`0})">
+            <inheritdoc/>
+        </member>
+        <member name="T:UnityFx.Async.AsyncScheduler">
+            <summary>
+            An object that handles the low-level work of running asynchronous operations.
+            </summary>
+        </member>
+        <member name="P:UnityFx.Async.AsyncScheduler.Default">
+            <summary>
+            Returns default <see cref="T:UnityEngine.MonoBehaviour"/>-based scheduler instance. Read only.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncScheduler.FromMonoBehaviour(UnityEngine.MonoBehaviour)">
+            <summary>
+            Returns a new instance of <see cref="T:UnityFx.Async.AsyncScheduler"/> for the specified <see cref="T:UnityEngine.MonoBehaviour"/>.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncScheduler.ExecuteOnUpdate(System.Action)">
+            <summary>
+            Executes the specified delegate on the main thread during Update method.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncScheduler.ExecuteOnLateUpdate(System.Action)">
+            <summary>
+            Executes the specified delegate on the main thread during LateUpdate method.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncScheduler.QueueAsync(System.IAsyncResult)">
+            <summary>
+            Queues the specified asynchronous operation for execution.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncScheduler.QueueEnum(System.Collections.IEnumerator)">
+            <summary>
+            Queues the specified enumerator instance for execution.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:UnityFx.Async.AsyncScheduler.QueueForExecution(System.IAsyncResult)">
+            <summary>
+            Queues the specified operation for execution.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncScheduler.QueueForExecution(System.Collections.IEnumerator)">
+            <summary>
+            Queues the specified operation for execution.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.Globals">
+            <summary>
+            Responsible for initialization of global data used by the assembly classes.
+            </summary>
+        </member>
+        <member name="P:UnityFx.Async.Globals.RootGo">
+            <summary>
+            Returns the global <see cref="T:UnityEngine.GameObject"/> containing all components used by the assembly classes. Read only.
+            </summary>
+        </member>
+        <member name="P:UnityFx.Async.Globals.AsyncRunner">
+            <summary>
+            Returns a <see cref="T:UnityEngine.MonoBehaviour"/> instance that is used for running coroutines. Read only.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.Globals.AddChildService(System.String)">
+            <summary>
+            Create a new <see cref="T:UnityEngine.GameObject"/> instance and attaches it to the <see cref="P:UnityFx.Async.Globals.RootGo"/>.
+            </summary>
+            <param name="childName">Name of the <see cref="T:UnityEngine.GameObject"/> to create.</param>
+            <returns>Returns the <see cref="T:UnityEngine.GameObject"/> instance created.</returns>
+        </member>
+        <member name="T:UnityFx.Async.AsyncContinuation`3">
+            <summary>
+            A common continuation stuff.
+            </summary>
+        </member>
+        <member name="P:UnityFx.Async.AsyncContinuation`3.Size">
+            <inheritdoc/>
+        </member>
+        <member name="T:UnityFx.Async.AsyncEnumeratorWrapper">
+            <summary>
+            Implementation of <see cref="T:UnityFx.Async.IAsyncOperation"/> wrapper for <see cref="T:System.Collections.IEnumerator"/>.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.AsyncOperationContinuation`2">
+            <summary>
+            A continuation specialization for <see cref="T:UnityFx.Async.AsyncResult"/>.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.AsyncOperationWhenAll">
+            <summary>
+            An operation that finishes when all child operation finish.
+            </summary>
+        </member>
+        <member name="P:UnityFx.Async.AsyncOperationWhenAll.Size">
+            <inheritdoc/>
+        </member>
+        <member name="T:UnityFx.Async.AsyncOperationWhenAll`1">
+            <summary>
+            An operation that finishes when all child operation finish.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.AsyncOperationWhenAny">
+            <summary>
+            An operation that finishes when any of the child operations finish.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.AsyncOperationWhenAny`1">
+            <summary>
+            An operation that finishes when any of the child operations finish.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.AsyncOperationWrapper`1">
+            <summary>
+            Implementation of <see cref="T:UnityFx.Async.IAsyncOperation"/> wrapper of <see cref="T:UnityFx.Async.AsyncResult"/>.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.AsyncResultContinuation`3">
+            <summary>
+            A continuation specialization for <see cref="T:System.IAsyncResult"/>.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.AsyncResultTransformer`2">
+            <summary>
+            Implementation of <see cref="T:UnityFx.Async.IAsyncOperation`1"/> that wraps another <see cref="T:UnityFx.Async.IAsyncOperation`1"/> instance and transforma its result.
+            </summary>
+            <typeparam name="T">Type of the operation result.</typeparam>
+            <typeparam name="U">Result type of the wrapped operation.</typeparam>
+        </member>
+        <member name="T:UnityFx.Async.AsyncResultWrapper">
+            <summary>
+            Implementation of <see cref="T:UnityFx.Async.IAsyncOperation"/> wrapper for <see cref="T:System.IAsyncResult"/>.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.AsyncUpdateCallback">
+            <summary>
+            Implementation of <see cref="T:UnityFx.Async.IAsyncOperation"/> that executes an update callback on each frame.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.AsyncUpdateCallback`1">
+            <summary>
+            Implementation of <see cref="T:UnityFx.Async.IAsyncOperation"/> that executes an update callback on each frame.
+            </summary>
+        </member>
+    </members>
+</doc>

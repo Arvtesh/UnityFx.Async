@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFrameworks>net35;net46</TargetFrameworks>
+    <Description>Unity3d extensions for asynchronous operations and coroutines management.</Description>
+    <Company />
+    <Authors>Arvtesh</Authors>
+    <Version>0.3.0</Version>
+    <PackageProjectUrl>https://github.com/Arvtesh/UnityFx.Async</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Arvtesh/UnityFx.Async</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>Unity3d;Async;AsyncOperation;Coroutine</PackageTags>
+    <AssemblyVersion>0.3.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,10 +21,12 @@
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net35'">
 		<DefineConstants>UNITYFX_NET35</DefineConstants>
+		<DocumentationFile>$(TargetPath)\UnityFx.Async.xml</DocumentationFile>
 	</PropertyGroup>
 
-	<PropertyGroup>
-	  <DocumentationFile>$(TargetPath)\UnityFx.Async.xml</DocumentationFile>
+	<PropertyGroup Condition="'$(TargetFramework)'=='net46'">
+		<DefineConstants>UNITYFX_NET46</DefineConstants>
+		<DocumentationFile>$(TargetPath)\UnityFx.Async.xml</DocumentationFile>
 	</PropertyGroup>
 	
 </Project>

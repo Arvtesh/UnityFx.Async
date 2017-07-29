@@ -3,8 +3,10 @@ $solutionPath = Join-Path $scriptPath "UnityFx.sln"
 $configuration = $args[0]
 $outputPath = Join-Path $scriptPath "..\Build"
 $binPath = Join-Path $outputPath (Join-Path "Bin" $configuration)
-$binEditorPath = Join-Path $binPath "Editor"
-$samplesPath = Join-Path $scriptPath "..\Samples"
+$binPath35 = Join-Path $binPath "net35"
+$binPath46 = Join-Path $binPath "net46"
+$assetsPath35 = Join-Path $scriptPath "..\UnityApp35\Assets\UnityFx"
+$assetsPath46 = Join-Path $scriptPath "..\UnityApp46\Assets\UnityFx"
 $msbuildPath = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MsBuild.exe"
 $nugetPath = Join-Path $outputPath "nuget.exe"
 $gitversionPath = Join-Path $outputPath "gitversion.commandline\tools\gitversion.exe"
@@ -15,10 +17,16 @@ if (!(Test-Path $outputPath))
 	New-Item $outputPath -ItemType Directory
 }
 
-if (!(Test-Path $binPath))
+if (!(Test-Path $binPath35))
 {
-	New-Item $binPath -ItemType Directory
+	New-Item $binPath35 -ItemType Directory
 }
+
+if (!(Test-Path $binPath46))
+{
+	New-Item $binPath46 -ItemType Directory
+}
+
 
 # download nuget.exe if not present
 if (!(Test-Path $nugetPath))
@@ -58,12 +66,17 @@ if ($LastExitCode -ne 0)
 }
 
 # publish build results to .\Build\Bin
-$filesToPublish =
-	(Join-Path $scriptPath (Join-Path "UnityFx.Async\bin" (Join-Path $configuration "UnityFx.Async.dll"))),
-	(Join-Path $scriptPath (Join-Path "UnityFx.Async\bin" (Join-Path $configuration "UnityFx.Async.pdb"))),
-	(Join-Path $scriptPath (Join-Path "UnityFx.Async\bin" (Join-Path $configuration "UnityFx.Async.XML")))
+$filesToPublish35 =
+	(Join-Path $scriptPath (Join-Path "UnityFx.Async\bin" (Join-Path $configuration "net35\UnityFx.Async.dll"))),
+	(Join-Path $scriptPath (Join-Path "UnityFx.Async\bin" (Join-Path $configuration "net35\UnityFx.Async.xml")))
 
-Copy-Item -Path $filesToPublish -Destination $binPath -Force
+$filesToPublish46 =
+	(Join-Path $scriptPath (Join-Path "UnityFx.Async\bin" (Join-Path $configuration "net46\UnityFx.Async.dll"))),
+	(Join-Path $scriptPath (Join-Path "UnityFx.Async\bin" (Join-Path $configuration "net46\UnityFx.Async.xml")))
+
+Copy-Item -Path $filesToPublish35 -Destination $binPath35 -Force
+Copy-Item -Path $filesToPublish46 -Destination $binPath46 -Force
+Copy-Item -Path $filesToPublish46 -Destination $assetsPath46 -Force
 
 # revert AssemblyInfo's back
 if ($env:CI -ne 'True')
