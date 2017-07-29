@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
-using System.Threading.Tasks;
 
 namespace UnityFx.Async
 {
@@ -42,7 +41,7 @@ namespace UnityFx.Async
 	/// A disposable <see cref="IAsyncResult"/> with status.
 	/// </summary>
 	/// <remarks>
-	/// The interface is designed to be as close to the <see cref="Task"/> as possible. All interface methods are expected to be thread-safe.
+	/// The interface is designed to be as close to the TLP Task as possible. All interface methods are expected to be thread-safe.
 	/// The only exception to this rule is <see cref="IDisposable.Dispose"/>.
 	/// </remarks>
 	/// <seealso cref="IAsyncResult"/>

@@ -26,7 +26,9 @@ namespace UnityFx.Async
 		private readonly bool _completedSynchronously;
 		private readonly object _asyncState;
 
+#if !UNITYFX_NET35
 		private CancellationToken _cancellationToken;
+#endif
 		private EventWaitHandle _waitHandle;
 		private Exception _exception;
 		private object _current;
@@ -91,6 +93,7 @@ namespace UnityFx.Async
 		{
 		}
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
 		/// </summary>
@@ -102,6 +105,7 @@ namespace UnityFx.Async
 		{
 			_cancellationToken = cancellationToken;
 		}
+#endif
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
@@ -452,6 +456,9 @@ namespace UnityFx.Async
 				// The operation is pending.
 				try
 				{
+#if UNITYFX_NET35
+					OnUpdate();
+#else
 					if (_cancellationToken.IsCancellationRequested)
 					{
 						TrySetCanceled();
@@ -460,6 +467,7 @@ namespace UnityFx.Async
 					{
 						OnUpdate();
 					}
+#endif
 				}
 				catch (Exception e)
 				{

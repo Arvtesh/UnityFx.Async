@@ -20,11 +20,19 @@ namespace UnityFx.Async
 
 		#region interface
 
+		public AsyncEnumeratorWrapper(IEnumerator op)
+			: base(op)
+		{
+			_op = op;
+		}
+
+#if !UNITYFX_NET35
 		public AsyncEnumeratorWrapper(IEnumerator op, CancellationToken cancellationToken)
 			: base(op, cancellationToken)
 		{
 			_op = op;
 		}
+#endif
 
 		#endregion
 

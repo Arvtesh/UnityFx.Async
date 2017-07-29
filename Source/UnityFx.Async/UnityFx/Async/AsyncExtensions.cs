@@ -4,8 +4,11 @@
 using System;
 using System.Collections;
 using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
+
+#if !UNITYFX_NET35
+using System.Threading.Tasks;
+#endif
 
 namespace UnityFx.Async
 {
@@ -14,7 +17,9 @@ namespace UnityFx.Async
 	/// </summary>
 	public static class AsyncExtensions
 	{
-		#region awaiters
+		#region IAsyncOperation
+
+#if !UNITYFX_NET35
 
 		/// <summary>
 		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
@@ -31,10 +36,6 @@ namespace UnityFx.Async
 		{
 			return new AsyncResultAwaiter<T>(op);
 		}
-
-		#endregion
-
-		#region IAsyncOperation
 
 		/// <summary>
 		/// Created a <see cref="Task"/> instance matching the source <see cref="IAsyncOperation"/>.
@@ -101,6 +102,8 @@ namespace UnityFx.Async
 				throw new NotSupportedException();
 			}
 		}
+
+#endif
 
 		/// <summary>
 		/// Transforms the caller instance of <see cref="IAsyncOperation{T}"/> to another one that differs only by the result value.
@@ -251,13 +254,15 @@ namespace UnityFx.Async
 		/// Starts an instance of <see cref="IAsyncOperation"/> from the supplied <see cref="IEnumerator"/>.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
-		public static IAsyncOperation StartAsyncOperation(this MonoBehaviour b, IEnumerator op) => GetAsyncFactory(b).FromEnumerator(op, CancellationToken.None);
+		public static IAsyncOperation StartAsyncOperation(this MonoBehaviour b, IEnumerator op) => GetAsyncFactory(b).FromEnumerator(op);
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Starts an instance of <see cref="IAsyncOperation"/> from the supplied <see cref="IEnumerator"/>.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
 		public static IAsyncOperation StartAsyncOperation(this MonoBehaviour b, IEnumerator op, CancellationToken cancellationToken) => GetAsyncFactory(b).FromEnumerator(op, cancellationToken);
+#endif
 
 		/// <summary>
 		/// Starts an instance of <see cref="IAsyncOperation"/> from the supplied <see cref="IAsyncResult"/>.
@@ -269,25 +274,29 @@ namespace UnityFx.Async
 		/// Starts an instance of <see cref="IAsyncOperation"/> from the supplied update callback.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="updateCallback"/> is <c>null</c>.</exception>
-		public static IAsyncOperation StartAsyncOperation(this MonoBehaviour b, Action<IAsyncOperationController> updateCallback) => GetAsyncFactory(b).FromUpdateCallback(updateCallback, CancellationToken.None);
+		public static IAsyncOperation StartAsyncOperation(this MonoBehaviour b, Action<IAsyncOperationController> updateCallback) => GetAsyncFactory(b).FromUpdateCallback(updateCallback);
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Starts an instance of <see cref="IAsyncOperation"/> from the supplied update callback.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="updateCallback"/> is <c>null</c>.</exception>
 		public static IAsyncOperation StartAsyncOperation(this MonoBehaviour b, Action<IAsyncOperationController> updateCallback, CancellationToken cancellationToken) => GetAsyncFactory(b).FromUpdateCallback(updateCallback, cancellationToken);
+#endif
 
 		/// <summary>
 		/// Starts an instance of <see cref="IAsyncOperation{T}"/> from the supplied update callback.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="updateCallback"/> is <c>null</c>.</exception>
-		public static IAsyncOperation<T> StartAsyncOperation<T>(this MonoBehaviour b, Action<IAsyncOperationController<T>> updateCallback) => GetAsyncFactory(b).FromUpdateCallback(updateCallback, CancellationToken.None);
+		public static IAsyncOperation<T> StartAsyncOperation<T>(this MonoBehaviour b, Action<IAsyncOperationController<T>> updateCallback) => GetAsyncFactory(b).FromUpdateCallback(updateCallback);
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Starts an instance of <see cref="IAsyncOperation{T}"/> from the supplied update callback.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="updateCallback"/> is <c>null</c>.</exception>
 		public static IAsyncOperation<T> StartAsyncOperation<T>(this MonoBehaviour b, Action<IAsyncOperationController<T>> updateCallback, CancellationToken cancellationToken) => GetAsyncFactory(b).FromUpdateCallback(updateCallback, cancellationToken);
+#endif
 
 		#endregion
 	}

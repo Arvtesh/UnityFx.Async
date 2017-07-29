@@ -65,7 +65,9 @@ namespace UnityFx.Async
 
 		#region IObservable
 
+#if !UNITYFX_NET35
 		public IDisposable Subscribe(IObserver<T> observer) => throw new NotImplementedException();
+#endif
 
 		#endregion
 

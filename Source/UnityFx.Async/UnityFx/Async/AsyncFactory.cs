@@ -55,7 +55,7 @@ namespace UnityFx.Async
 				yield return c;
 			}
 
-			var result = new AsyncEnumeratorWrapper(CoroutineEnum(op), CancellationToken.None);
+			var result = new AsyncEnumeratorWrapper(CoroutineEnum(op));
 			StartCoroutine(result);
 			return result;
 		}
@@ -68,9 +68,17 @@ namespace UnityFx.Async
 		/// <seealso cref="FromAsyncOperation(AsyncOperation)"/>
 		public IAsyncOperation FromEnumerator(IEnumerator op)
 		{
-			return FromEnumerator(op, CancellationToken.None);
+			if (op == null)
+			{
+				throw new ArgumentNullException(nameof(op));
+			}
+
+			var result = new AsyncEnumeratorWrapper(op);
+			StartCoroutine(result);
+			return result;
 		}
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Creates an instance of <see cref="IAsyncOperation"/> from the supplied <see cref="IEnumerator"/>.
 		/// </summary>
@@ -88,6 +96,7 @@ namespace UnityFx.Async
 			StartCoroutine(result);
 			return result;
 		}
+#endif
 
 		/// <summary>
 		/// Creates an instance of <see cref="IAsyncOperation"/> for the supplied <see cref="AsyncOperation"/>.
@@ -150,9 +159,17 @@ namespace UnityFx.Async
 		/// <seealso cref="FromUpdateCallback{T}(Action{IAsyncOperationController{T}})"/>
 		public IAsyncOperation FromUpdateCallback(Action<IAsyncOperationController> updateCallback)
 		{
-			return FromUpdateCallback(updateCallback, CancellationToken.None);
+			if (updateCallback == null)
+			{
+				throw new ArgumentNullException(nameof(updateCallback));
+			}
+
+			var result = new AsyncUpdateCallback(updateCallback);
+			StartCoroutine(result);
+			return result;
 		}
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Starts a new operation.
 		/// </summary>
@@ -169,6 +186,7 @@ namespace UnityFx.Async
 			StartCoroutine(result);
 			return result;
 		}
+#endif
 
 		/// <summary>
 		/// Starts a new operation.
@@ -177,9 +195,17 @@ namespace UnityFx.Async
 		/// <seealso cref="FromUpdateCallback(Action{IAsyncOperationController})"/>
 		public IAsyncOperation<T> FromUpdateCallback<T>(Action<IAsyncOperationController<T>> updateCallback)
 		{
-			return FromUpdateCallback(updateCallback, CancellationToken.None);
+			if (updateCallback == null)
+			{
+				throw new ArgumentNullException(nameof(updateCallback));
+			}
+
+			var result = new AsyncUpdateCallback<T>(updateCallback);
+			StartCoroutine(result);
+			return result;
 		}
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Starts a new operation.
 		/// </summary>
@@ -196,6 +222,7 @@ namespace UnityFx.Async
 			StartCoroutine(result);
 			return result;
 		}
+#endif
 
 		/// <summary>
 		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
@@ -204,7 +231,7 @@ namespace UnityFx.Async
 		/// <seealso cref="WhenAny(IAsyncResult[], AsyncContinuationOptions)"/>
 		public IAsyncOperation WhenAll(params IAsyncResult[] ops)
 		{
-			return WhenAll(ops, CancellationToken.None, AsyncContinuationOptions.None);
+			return WhenAll(ops, AsyncContinuationOptions.None);
 		}
 
 		/// <summary>
@@ -214,9 +241,17 @@ namespace UnityFx.Async
 		/// <seealso cref="WhenAny(IAsyncResult[], AsyncContinuationOptions)"/>
 		public IAsyncOperation WhenAll(IAsyncResult[] ops, AsyncContinuationOptions options)
 		{
-			return WhenAll(ops, CancellationToken.None, options);
+			if (ops == null)
+			{
+				throw new ArgumentNullException(nameof(ops));
+			}
+
+			var result = new AsyncOperationWhenAll(ops, options);
+			StartCoroutine(result);
+			return result;
 		}
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
 		/// </summary>
@@ -233,6 +268,7 @@ namespace UnityFx.Async
 			StartCoroutine(result);
 			return result;
 		}
+#endif
 
 		/// <summary>
 		/// Creates a new <see cref="IAsyncOperation{T}"/> instance that finishes when all of the specified operations finish.
@@ -241,7 +277,7 @@ namespace UnityFx.Async
 		/// <seealso cref="WhenAll(IAsyncResult[], AsyncContinuationOptions)"/>
 		public IAsyncOperation<T[]> WhenAll<T>(params IAsyncOperation<T>[] ops)
 		{
-			return WhenAll(ops, CancellationToken.None, AsyncContinuationOptions.None);
+			return WhenAll(ops, AsyncContinuationOptions.None);
 		}
 
 		/// <summary>
@@ -251,9 +287,17 @@ namespace UnityFx.Async
 		/// <seealso cref="WhenAll(IAsyncResult[], AsyncContinuationOptions)"/>
 		public IAsyncOperation<T[]> WhenAll<T>(IAsyncOperation<T>[] ops, AsyncContinuationOptions options)
 		{
-			return WhenAll(ops, CancellationToken.None, options);
+			if (ops == null)
+			{
+				throw new ArgumentNullException(nameof(ops));
+			}
+
+			var result = new AsyncOperationWhenAll<T>(ops, options);
+			StartCoroutine(result);
+			return result;
 		}
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Creates a new <see cref="IAsyncOperation{T}"/> instance that finishes when all of the specified operations finish.
 		/// </summary>
@@ -270,6 +314,7 @@ namespace UnityFx.Async
 			StartCoroutine(result);
 			return result;
 		}
+#endif
 
 		/// <summary>
 		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
@@ -278,7 +323,7 @@ namespace UnityFx.Async
 		/// <seealso cref="WhenAll(IAsyncResult[], AsyncContinuationOptions)"/>
 		public IAsyncOperation WhenAny(params IAsyncResult[] ops)
 		{
-			return WhenAny(ops, CancellationToken.None, AsyncContinuationOptions.None);
+			return WhenAny(ops, AsyncContinuationOptions.None);
 		}
 
 		/// <summary>
@@ -288,9 +333,17 @@ namespace UnityFx.Async
 		/// <seealso cref="WhenAll(IAsyncResult[], AsyncContinuationOptions)"/>
 		public IAsyncOperation WhenAny(IAsyncResult[] ops, AsyncContinuationOptions options)
 		{
-			return WhenAny(ops, CancellationToken.None, options);
+			if (ops == null)
+			{
+				throw new ArgumentNullException(nameof(ops));
+			}
+
+			var result = new AsyncOperationWhenAny(ops, options);
+			StartCoroutine(result);
+			return result;
 		}
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
 		/// </summary>
@@ -307,6 +360,7 @@ namespace UnityFx.Async
 			StartCoroutine(result);
 			return result;
 		}
+#endif
 
 		/// <summary>
 		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
@@ -315,7 +369,7 @@ namespace UnityFx.Async
 		/// <seealso cref="WhenAny(IAsyncResult[], AsyncContinuationOptions)"/>
 		public IAsyncOperation<T> WhenAny<T>(params IAsyncOperation<T>[] ops)
 		{
-			return WhenAny(ops, CancellationToken.None, AsyncContinuationOptions.None);
+			return WhenAny(ops, AsyncContinuationOptions.None);
 		}
 
 		/// <summary>
@@ -325,9 +379,17 @@ namespace UnityFx.Async
 		/// <seealso cref="WhenAny(IAsyncResult[], AsyncContinuationOptions)"/>
 		public IAsyncOperation<T> WhenAny<T>(IAsyncOperation<T>[] ops, AsyncContinuationOptions options)
 		{
-			return WhenAny(ops, CancellationToken.None, options);
+			if (ops == null)
+			{
+				throw new ArgumentNullException(nameof(ops));
+			}
+
+			var result = new AsyncOperationWhenAny<T>(ops, options);
+			StartCoroutine(result);
+			return result;
 		}
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
 		/// </summary>
@@ -344,6 +406,7 @@ namespace UnityFx.Async
 			StartCoroutine(result);
 			return result;
 		}
+#endif
 
 		/// <summary>
 		/// Creates a continuation that executes when the target <see cref="IAsyncResult"/> completes.

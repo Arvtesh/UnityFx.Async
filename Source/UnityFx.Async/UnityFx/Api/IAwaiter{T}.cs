@@ -10,7 +10,11 @@ namespace UnityFx.Async
 	/// An generic awaiter.
 	/// </summary>
 	/// <seealso cref="IAwaiter"/>
+#if UNITYFX_NET35
+	public interface IAwaiter<out T> 
+#else
 	public interface IAwaiter<out T> : INotifyCompletion
+#endif
 	{
 		/// <summary>
 		/// Returns <c>true</c> if the source awaitable is completed; <c>false</c> otherwise. Read only.
@@ -21,5 +25,14 @@ namespace UnityFx.Async
 		/// Returns the source result value.
 		/// </summary>
 		T GetResult();
+
+#if UNITYFX_NET35
+		/// <summary>
+		/// Schedules the continuation action that's invoked when the instance completes.
+		/// </summary>
+		/// <param name="continuation">The action to invoke when the operation completes.</param>
+		/// <exception cref="ArgumentNullException">The continuation argument is <c>null</c>.</exception>
+		void OnCompleted(Action continuation);
+#endif
 	}
 }

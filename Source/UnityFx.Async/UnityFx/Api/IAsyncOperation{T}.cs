@@ -10,7 +10,11 @@ namespace UnityFx.Async
 	/// </summary>
 	/// <seealso cref="IAsyncResult"/>
 	/// <seealso cref="IAsyncOperation"/>
+#if UNITYFX_NET35
+	public interface IAsyncOperation<out T> : IAsyncOperation
+#else
 	public interface IAsyncOperation<out T> : IAsyncOperation, IObservable<T>
+#endif
 	{
 		/// <summary>
 		/// Returns the result value of this operation. Accessing the property blocks the calling thread until the operation is complete. Read only.

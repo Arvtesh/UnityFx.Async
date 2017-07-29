@@ -33,6 +33,7 @@ namespace UnityFx.Async
 		{
 		}
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
@@ -43,6 +44,7 @@ namespace UnityFx.Async
 			: base(asyncState, cancellationToken, status)
 		{
 		}
+#endif
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
@@ -117,6 +119,8 @@ namespace UnityFx.Async
 
 		#region IObservable
 
+#if !UNITYFX_NET35
+
 		/// <inheritdoc/>
 		public IDisposable Subscribe(IObserver<T> observer)
 		{
@@ -139,10 +143,6 @@ namespace UnityFx.Async
 			});
 		}
 
-		#endregion
-
-		#region implementation
-
 		private class DisposableSubscription : IDisposable
 		{
 			private readonly IAsyncContinuationContainer _op;
@@ -160,6 +160,8 @@ namespace UnityFx.Async
 				_op.RemoveContinuation(_action);
 			}
 		}
+
+#endif
 
 		#endregion
 	}

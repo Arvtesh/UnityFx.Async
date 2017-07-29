@@ -19,11 +19,23 @@ namespace UnityFx.Async
 
 		#region interface
 
+		public AsyncUpdateCallback(Action<IAsyncOperationController<T>> updater)
+			: base(null)
+		{
+			_updater = updater;
+		}
+
+#if !UNITYFX_NET35
 		public AsyncUpdateCallback(Action<IAsyncOperationController<T>> updater, CancellationToken cancellationToken)
 			: base(null, cancellationToken)
 		{
 			_updater = updater;
 		}
+#endif
+
+		#endregion
+
+		#region AsyncResult
 
 		protected override void OnUpdate()
 		{

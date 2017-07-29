@@ -45,20 +45,24 @@ namespace UnityFx.Async
 		/// </summary>
 		public static IAsyncOperation FromCanceled() => new AsyncResult(null, AsyncOperationStatus.Canceled);
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Returns a canceled <see cref="IAsyncOperation"/> instance.
 		/// </summary>
 		public static IAsyncOperation FromCanceled(CancellationToken cancellationToken) => new AsyncResult(null, cancellationToken, AsyncOperationStatus.Canceled);
+#endif
 
 		/// <summary>
 		/// Returns a canceled <see cref="IAsyncOperation"/> instance.
 		/// </summary>
 		public static IAsyncOperation<T> FromCanceled<T>() => new AsyncResult<T>(null, AsyncOperationStatus.Canceled);
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Returns a canceled <see cref="IAsyncOperation"/> instance.
 		/// </summary>
 		public static IAsyncOperation<TResult> FromCanceled<TResult>(CancellationToken cancellationToken) => new AsyncResult<TResult>(null, cancellationToken, AsyncOperationStatus.Canceled);
+#endif
 
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance completed with an exception.
@@ -80,14 +84,16 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified operation is <c>null</c>.</exception>
 		/// <seealso cref="AsyncFactory"/>
-		public static IAsyncOperation FromEnumerator(IEnumerator op) => _factory.FromEnumerator(op, CancellationToken.None);
+		public static IAsyncOperation FromEnumerator(IEnumerator op) => _factory.FromEnumerator(op);
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that wraps the specified <see cref="IEnumerator"/>.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified operation is <c>null</c>.</exception>
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation FromEnumerator(IEnumerator op, CancellationToken cancellationToken) => _factory.FromEnumerator(op, cancellationToken);
+#endif
 
 		/// <summary>
 		/// Creates an instance of <see cref="IAsyncOperation"/> from the supplied <see cref="YieldInstruction"/>.
@@ -122,100 +128,112 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified action is <c>null</c>.</exception>
 		/// <seealso cref="AsyncFactory"/>
-		public static IAsyncOperation FromUpdateCallback(Action<IAsyncOperationController> updateCallback) => _factory.FromUpdateCallback(updateCallback, CancellationToken.None);
+		public static IAsyncOperation FromUpdateCallback(Action<IAsyncOperationController> updateCallback) => _factory.FromUpdateCallback(updateCallback);
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that wraps the specified <see cref="Action{T}"/>.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified action is <c>null</c>.</exception>
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation FromUpdateCallback(Action<IAsyncOperationController> updateCallback, CancellationToken cancellationToken) => _factory.FromUpdateCallback(updateCallback, cancellationToken);
+#endif
 
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that wraps the specified <see cref="Action{T}"/>.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified action is <c>null</c>.</exception>
 		/// <seealso cref="AsyncFactory"/>
-		public static IAsyncOperation<T> FromUpdateCallback<T>(Action<IAsyncOperationController<T>> updateCallback) => _factory.FromUpdateCallback(updateCallback, CancellationToken.None);
+		public static IAsyncOperation<T> FromUpdateCallback<T>(Action<IAsyncOperationController<T>> updateCallback) => _factory.FromUpdateCallback(updateCallback);
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that wraps the specified <see cref="Action{T}"/>.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified action is <c>null</c>.</exception>
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation<T> FromUpdateCallback<T>(Action<IAsyncOperationController<T>> updateCallback, CancellationToken cancellationToken) => _factory.FromUpdateCallback(updateCallback, cancellationToken);
+#endif
 
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that finishes when all specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
-		public static IAsyncOperation WhenAll(params IAsyncResult[] ops) => _factory.WhenAll(ops, CancellationToken.None, AsyncContinuationOptions.None);
+		public static IAsyncOperation WhenAll(params IAsyncResult[] ops) => _factory.WhenAll(ops, AsyncContinuationOptions.None);
 
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that finishes when all specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
-		public static IAsyncOperation WhenAll(IAsyncResult[] ops, AsyncContinuationOptions options) => _factory.WhenAll(ops, CancellationToken.None, options);
+		public static IAsyncOperation WhenAll(IAsyncResult[] ops, AsyncContinuationOptions options) => _factory.WhenAll(ops, options);
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that finishes when all specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
 		public static IAsyncOperation WhenAll(IAsyncResult[] ops, CancellationToken cancellationToken, AsyncContinuationOptions options = AsyncContinuationOptions.None) => _factory.WhenAll(ops, cancellationToken, options);
+#endif
 
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that finishes when all specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
-		public static IAsyncOperation<T[]> WhenAll<T>(params IAsyncOperation<T>[] ops) => _factory.WhenAll(ops, CancellationToken.None, AsyncContinuationOptions.None);
+		public static IAsyncOperation<T[]> WhenAll<T>(params IAsyncOperation<T>[] ops) => _factory.WhenAll(ops, AsyncContinuationOptions.None);
 
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that finishes when all specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
-		public static IAsyncOperation<T[]> WhenAll<T>(IAsyncOperation<T>[] ops, AsyncContinuationOptions options) => _factory.WhenAll(ops, CancellationToken.None, options);
+		public static IAsyncOperation<T[]> WhenAll<T>(IAsyncOperation<T>[] ops, AsyncContinuationOptions options) => _factory.WhenAll(ops, options);
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that finishes when all specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
 		public static IAsyncOperation<T[]> WhenAll<T>(IAsyncOperation<T>[] ops, CancellationToken cancellationToken, AsyncContinuationOptions options = AsyncContinuationOptions.None) => _factory.WhenAll(ops, cancellationToken, options);
+#endif
 
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that finishes when any of the specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
-		public static IAsyncOperation WhenAny(params IAsyncResult[] ops) => _factory.WhenAny(ops, CancellationToken.None, AsyncContinuationOptions.None);
+		public static IAsyncOperation WhenAny(params IAsyncResult[] ops) => _factory.WhenAny(ops, AsyncContinuationOptions.None);
 
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that finishes when any of the specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
-		public static IAsyncOperation WhenAny(IAsyncResult[] ops, AsyncContinuationOptions options) => _factory.WhenAny(ops, CancellationToken.None, options);
+		public static IAsyncOperation WhenAny(IAsyncResult[] ops, AsyncContinuationOptions options) => _factory.WhenAny(ops, options);
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that finishes when any of the specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
 		public static IAsyncOperation WhenAny(IAsyncResult[] ops, CancellationToken cancellationToken, AsyncContinuationOptions options = AsyncContinuationOptions.None) => _factory.WhenAny(ops, cancellationToken, options);
+#endif
 
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that finishes when any of the specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
-		public static IAsyncOperation<T> WhenAny<T>(params IAsyncOperation<T>[] ops) => _factory.WhenAny(ops, CancellationToken.None, AsyncContinuationOptions.None);
+		public static IAsyncOperation<T> WhenAny<T>(params IAsyncOperation<T>[] ops) => _factory.WhenAny(ops, AsyncContinuationOptions.None);
 
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that finishes when any of the specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
-		public static IAsyncOperation<T> WhenAny<T>(IAsyncOperation<T>[] ops, AsyncContinuationOptions options) => _factory.WhenAny(ops, CancellationToken.None, options);
+		public static IAsyncOperation<T> WhenAny<T>(IAsyncOperation<T>[] ops, AsyncContinuationOptions options) => _factory.WhenAny(ops, options);
 
+#if !UNITYFX_NET35
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that finishes when any of the specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
 		public static IAsyncOperation<T> WhenAny<T>(IAsyncOperation<T>[] ops, CancellationToken cancellationToken, AsyncContinuationOptions options = AsyncContinuationOptions.None) => _factory.WhenAny(ops, cancellationToken, options);
+#endif
 
 		#endregion
 
