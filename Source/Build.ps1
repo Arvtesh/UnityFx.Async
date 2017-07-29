@@ -5,8 +5,8 @@ $outputPath = Join-Path $scriptPath "..\Build"
 $binPath = Join-Path $outputPath (Join-Path "Bin" $configuration)
 $binPath35 = Join-Path $binPath "net35"
 $binPath46 = Join-Path $binPath "net46"
-$assetsPath35 = Join-Path $scriptPath "..\UnityApp35\Assets\UnityFx"
-$assetsPath46 = Join-Path $scriptPath "..\UnityApp46\Assets\UnityFx"
+$assetsPath35 = Join-Path $scriptPath "..\UnityPackage35\Assets\UnityFx"
+$assetsPath46 = Join-Path $scriptPath "..\UnityPackage46\Assets\UnityFx"
 $msbuildPath = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MsBuild.exe"
 $nugetPath = Join-Path $outputPath "nuget.exe"
 $gitversionPath = Join-Path $outputPath "gitversion.commandline\tools\gitversion.exe"
@@ -51,4 +51,5 @@ $filesToPublish46 =
 	(Join-Path $scriptPath (Join-Path "UnityFx.Async\bin" (Join-Path $configuration "net46\UnityFx.Async.dll"))),
 	(Join-Path $scriptPath (Join-Path "UnityFx.Async\bin" (Join-Path $configuration "net46\UnityFx.Async.xml")))
 
+Copy-Item -Path $filesToPublish35 -Destination $assetsPath35 -Force
 Copy-Item -Path $filesToPublish46 -Destination $assetsPath46 -Force
