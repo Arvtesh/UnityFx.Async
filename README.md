@@ -1,9 +1,5 @@
 # UnityFx.NET
 
-Channel  | UnityFx |
----------|---------|
-AppVeyor<br> ([home](https://ci.appveyor.com/project/Arvtesh/unityfx-net)) | [![Build status](https://ci.appveyor.com/api/projects/status/y9nxifeyomgqhxa5/branch/master?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-net/branch/master)
-
 ## Synopsis
 
 Unity3d extensions for asynchronous operations and coroutines management. The library provides an `IAsyncOperation` interface that can be used very much like TPL [Task](https://msdn.microsoft.com/ru-ru/library/system.threading.tasks.task(v=vs.110).aspx).
