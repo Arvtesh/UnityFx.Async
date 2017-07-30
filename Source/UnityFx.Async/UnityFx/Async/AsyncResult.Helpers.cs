@@ -12,7 +12,8 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private static IAsyncOperation _empty;
+		private static IAsyncOperation _completed;
+		private static IAsyncOperation _canceled;
 		private static AsyncFactory _factory;
 
 		#endregion
@@ -26,12 +27,28 @@ namespace UnityFx.Async
 		{
 			get
 			{
-				if (_empty == null)
+				if (_completed == null)
 				{
-					_empty = new AsyncResult(null, AsyncOperationStatus.Success);
+					_completed = new AsyncResult(null, AsyncOperationStatus.Success);
 				}
 
-				return _empty;
+				return _completed;
+			}
+		}
+
+		/// <summary>
+		/// Returns an <see cref="IAsyncOperation"/> instance that is canceled. Read only.
+		/// </summary>
+		public static IAsyncOperation Canceled
+		{
+			get
+			{
+				if (_canceled == null)
+				{
+					_canceled = new AsyncResult(null, AsyncOperationStatus.Canceled);
+				}
+
+				return _canceled;
 			}
 		}
 
@@ -86,6 +103,13 @@ namespace UnityFx.Async
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation FromEnumerator(IEnumerator op) => _factory.FromEnumerator(op);
 
+		/// <summary>
+		/// Returns an <see cref="IAsyncOperation"/> instance that wraps the specified <see cref="IEnumerator"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the specified operation is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation FromEnumerator(IEnumerator op, MonoBehaviour b) => new AsyncFactory(b).FromEnumerator(op);
+
 #if !UNITYFX_NET35
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that wraps the specified <see cref="IEnumerator"/>.
@@ -93,6 +117,13 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the specified operation is <c>null</c>.</exception>
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation FromEnumerator(IEnumerator op, CancellationToken cancellationToken) => _factory.FromEnumerator(op, cancellationToken);
+
+		/// <summary>
+		/// Returns an <see cref="IAsyncOperation"/> instance that wraps the specified <see cref="IEnumerator"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the specified operation is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation FromEnumerator(IEnumerator op, CancellationToken cancellationToken, MonoBehaviour b) => new AsyncFactory(b).FromEnumerator(op, cancellationToken);
 #endif
 
 		/// <summary>
@@ -101,6 +132,13 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation FromCoroutine(YieldInstruction op) => _factory.FromCoroutine(op);
+
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation"/> from the supplied <see cref="YieldInstruction"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation FromCoroutine(YieldInstruction op, MonoBehaviour b) => new AsyncFactory(b).FromCoroutine(op);
 
 		/// <summary>
 		/// Creates an instance of <see cref="IAsyncOperation"/> for the supplied <see cref="AsyncOperation"/>.
@@ -114,7 +152,21 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
 		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation FromAsyncOperation(AsyncOperation op, MonoBehaviour b) => new AsyncFactory(b).FromAsyncOperation(op);
+
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation"/> for the supplied <see cref="AsyncOperation"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation<T> FromAsyncOperation<T>(AsyncOperation op) where T : class => _factory.FromAsyncOperation<T>(op);
+
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation"/> for the supplied <see cref="AsyncOperation"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation<T> FromAsyncOperation<T>(AsyncOperation op, MonoBehaviour b) where T : class => new AsyncFactory(b).FromAsyncOperation<T>(op);
 
 		/// <summary>
 		/// Creates an instance of <see cref="IAsyncOperation"/> for the supplied <see cref="IAsyncResult"/>.
@@ -124,11 +176,25 @@ namespace UnityFx.Async
 		public static IAsyncOperation FromAsyncResult(IAsyncResult op) => _factory.FromAsyncResult(op);
 
 		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation"/> for the supplied <see cref="IAsyncResult"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation FromAsyncResult(IAsyncResult op, MonoBehaviour b) => new AsyncFactory(b).FromAsyncResult(op);
+
+		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that wraps the specified <see cref="Action{T}"/>.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified action is <c>null</c>.</exception>
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation FromUpdateCallback(Action<IAsyncOperationController> updateCallback) => _factory.FromUpdateCallback(updateCallback);
+
+		/// <summary>
+		/// Returns an <see cref="IAsyncOperation"/> instance that wraps the specified <see cref="Action{T}"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the specified action is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation FromUpdateCallback(Action<IAsyncOperationController> updateCallback, MonoBehaviour b) => new AsyncFactory(b).FromUpdateCallback(updateCallback);
 
 #if !UNITYFX_NET35
 		/// <summary>
@@ -137,6 +203,13 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the specified action is <c>null</c>.</exception>
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation FromUpdateCallback(Action<IAsyncOperationController> updateCallback, CancellationToken cancellationToken) => _factory.FromUpdateCallback(updateCallback, cancellationToken);
+
+		/// <summary>
+		/// Returns an <see cref="IAsyncOperation"/> instance that wraps the specified <see cref="Action{T}"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the specified action is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation FromUpdateCallback(Action<IAsyncOperationController> updateCallback, CancellationToken cancellationToken, MonoBehaviour b) => new AsyncFactory(b).FromUpdateCallback(updateCallback, cancellationToken);
 #endif
 
 		/// <summary>
@@ -146,6 +219,13 @@ namespace UnityFx.Async
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation<T> FromUpdateCallback<T>(Action<IAsyncOperationController<T>> updateCallback) => _factory.FromUpdateCallback(updateCallback);
 
+		/// <summary>
+		/// Returns an <see cref="IAsyncOperation{T}"/> instance that wraps the specified <see cref="Action{T}"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the specified action is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation<T> FromUpdateCallback<T>(Action<IAsyncOperationController<T>> updateCallback, MonoBehaviour b) => new AsyncFactory(b).FromUpdateCallback(updateCallback);
+
 #if !UNITYFX_NET35
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that wraps the specified <see cref="Action{T}"/>.
@@ -153,6 +233,13 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the specified action is <c>null</c>.</exception>
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation<T> FromUpdateCallback<T>(Action<IAsyncOperationController<T>> updateCallback, CancellationToken cancellationToken) => _factory.FromUpdateCallback(updateCallback, cancellationToken);
+
+		/// <summary>
+		/// Returns an <see cref="IAsyncOperation{T}"/> instance that wraps the specified <see cref="Action{T}"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the specified action is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation<T> FromUpdateCallback<T>(Action<IAsyncOperationController<T>> updateCallback, CancellationToken cancellationToken, MonoBehaviour b) => new AsyncFactory(b).FromUpdateCallback(updateCallback, cancellationToken);
 #endif
 
 		/// <summary>
@@ -165,7 +252,19 @@ namespace UnityFx.Async
 		/// Returns an <see cref="IAsyncOperation"/> instance that finishes when all specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+		public static IAsyncOperation WhenAll(IAsyncResult[] ops, MonoBehaviour b) => new AsyncFactory(b).WhenAll(ops, AsyncContinuationOptions.None);
+
+		/// <summary>
+		/// Returns an <see cref="IAsyncOperation"/> instance that finishes when all specified operations finish.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
 		public static IAsyncOperation WhenAll(IAsyncResult[] ops, AsyncContinuationOptions options) => _factory.WhenAll(ops, options);
+
+		/// <summary>
+		/// Returns an <see cref="IAsyncOperation"/> instance that finishes when all specified operations finish.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+		public static IAsyncOperation WhenAll(IAsyncResult[] ops, AsyncContinuationOptions options, MonoBehaviour b) => new AsyncFactory(b).WhenAll(ops, options);
 
 #if !UNITYFX_NET35
 		/// <summary>
@@ -185,7 +284,19 @@ namespace UnityFx.Async
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that finishes when all specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+		public static IAsyncOperation<T[]> WhenAll<T>(IAsyncOperation<T>[] ops, MonoBehaviour b) => new AsyncFactory(b).WhenAll(ops, AsyncContinuationOptions.None);
+
+		/// <summary>
+		/// Returns an <see cref="IAsyncOperation{T}"/> instance that finishes when all specified operations finish.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
 		public static IAsyncOperation<T[]> WhenAll<T>(IAsyncOperation<T>[] ops, AsyncContinuationOptions options) => _factory.WhenAll(ops, options);
+
+		/// <summary>
+		/// Returns an <see cref="IAsyncOperation{T}"/> instance that finishes when all specified operations finish.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+		public static IAsyncOperation<T[]> WhenAll<T>(IAsyncOperation<T>[] ops, AsyncContinuationOptions options, MonoBehaviour b) => new AsyncFactory(b).WhenAll(ops, options);
 
 #if !UNITYFX_NET35
 		/// <summary>
@@ -205,7 +316,19 @@ namespace UnityFx.Async
 		/// Returns an <see cref="IAsyncOperation"/> instance that finishes when any of the specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+		public static IAsyncOperation WhenAny(IAsyncResult[] ops, MonoBehaviour b) => new AsyncFactory(b).WhenAny(ops, AsyncContinuationOptions.None);
+
+		/// <summary>
+		/// Returns an <see cref="IAsyncOperation"/> instance that finishes when any of the specified operations finish.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
 		public static IAsyncOperation WhenAny(IAsyncResult[] ops, AsyncContinuationOptions options) => _factory.WhenAny(ops, options);
+
+		/// <summary>
+		/// Returns an <see cref="IAsyncOperation"/> instance that finishes when any of the specified operations finish.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+		public static IAsyncOperation WhenAny(IAsyncResult[] ops, AsyncContinuationOptions options, MonoBehaviour b) => new AsyncFactory(b).WhenAny(ops, options);
 
 #if !UNITYFX_NET35
 		/// <summary>
@@ -225,7 +348,19 @@ namespace UnityFx.Async
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that finishes when any of the specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+		public static IAsyncOperation<T> WhenAny<T>(IAsyncOperation<T>[] ops, MonoBehaviour b) => new AsyncFactory(b).WhenAny(ops, AsyncContinuationOptions.None);
+
+		/// <summary>
+		/// Returns an <see cref="IAsyncOperation{T}"/> instance that finishes when any of the specified operations finish.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
 		public static IAsyncOperation<T> WhenAny<T>(IAsyncOperation<T>[] ops, AsyncContinuationOptions options) => _factory.WhenAny(ops, options);
+
+		/// <summary>
+		/// Returns an <see cref="IAsyncOperation{T}"/> instance that finishes when any of the specified operations finish.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
+		public static IAsyncOperation<T> WhenAny<T>(IAsyncOperation<T>[] ops, AsyncContinuationOptions options, MonoBehaviour b) => new AsyncFactory(b).WhenAny(ops, options);
 
 #if !UNITYFX_NET35
 		/// <summary>

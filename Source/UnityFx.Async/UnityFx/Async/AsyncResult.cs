@@ -495,9 +495,9 @@ namespace UnityFx.Async
 		public void Dispose()
 		{
 			// NOTE: thread safety is not required
-			if (ReferenceEquals(this, _empty))
+			if (this == _completed || this == _canceled)
 			{
-				// Do not dispose the _empty instance because it might be reused.
+				// Do not dispose the _completed and _canceled instances because they might be reused.
 			}
 			else if (_progress >= 0)
 			{
