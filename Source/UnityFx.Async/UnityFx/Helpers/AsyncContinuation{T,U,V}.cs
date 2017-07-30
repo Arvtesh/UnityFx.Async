@@ -2,22 +2,23 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using UnityEngine;
 
 namespace UnityFx.Async
 {
 	/// <summary>
 	/// A common continuation stuff.
 	/// </summary>
-	internal abstract class AsyncContinuation<T, U, V> : AsyncResult<V>, IAsyncOperationContainer
+	internal class AsyncContinuation<T, TContinuation, TResult> : AsyncResult<TResult>, IAsyncOperationContainer
 		where T : class, IAsyncOperation
-		where U : class
+		where TContinuation : class
 	{
 		#region data
 
-		private readonly Func<T, U> _continuationFactory;
+		private readonly Func<T, TContinuation> _continuationFactory;
 
 		private T _op;
-		private U _continuation;
+		private TContinuation _continuation;
 
 		private int _opQueueLength = 1;
 		private float _opMaxProgress = 0.5f;
@@ -26,7 +27,7 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public AsyncContinuation(T op, Func<T, U> continuationFactory)
+		public AsyncContinuation(T op, Func<T, TContinuation> continuationFactory)
 			: base(null)
 		{
 			_continuationFactory = continuationFactory;
@@ -38,13 +39,6 @@ namespace UnityFx.Async
 				_opMaxProgress = _opQueueLength / (_opQueueLength + 1.0f);
 			}
 		}
-
-		protected void SetContinuationProgress(float progress)
-		{
-			SetProgress(_opMaxProgress + progress * (1 - _opMaxProgress));
-		}
-
-		protected abstract void OnUpdateContinuation(U continuation);
 
 		#endregion
 
@@ -74,7 +68,22 @@ namespace UnityFx.Async
 			}
 			else if (_continuation != null)
 			{
-				OnUpdateContinuation(_continuation);
+				if (_continuation is AsyncOperation)
+				{
+					UpdateContinuation(_continuation as AsyncOperation);
+				}
+				else if (_continuation is IAsyncOperation<TResult>)
+				{
+					UpdateContinuation(_continuation as IAsyncOperation<TResult>);
+				}
+				else if (_continuation is IAsyncOperation)
+				{
+					UpdateContinuation(_continuation as IAsyncOperation);
+				}
+				else if (_continuation is IAsyncResult)
+				{
+					UpdateContinuation(_continuation as IAsyncResult);
+				}
 			}
 		}
 
@@ -82,12 +91,111 @@ namespace UnityFx.Async
 
 		#region IAsyncQueue
 
-		/// <inheritdoc/>
 		public int Size => _opQueueLength + 1;
 
 		#endregion
 
 		#region implementation
+
+		private void UpdateContinuation(AsyncOperation continuation)
+		{
+			if (continuation.isDone)
+			{
+				try
+				{
+					SetResult((TResult)GetOperationResult(continuation));
+				}
+				finally
+				{
+					_continuation = null;
+				}
+			}
+			else
+			{
+				SetContinuationProgress(continuation.progress);
+			}
+		}
+
+		private void UpdateContinuation(IAsyncOperation<TResult> continuation)
+		{
+			if (continuation.IsCompleted)
+			{
+				try
+				{
+					if (continuation.IsCompletedSuccessfully)
+					{
+						SetResult(continuation.Result);
+					}
+					else if (continuation.IsCanceled)
+					{
+						SetCanceled();
+					}
+					else
+					{
+						SetException(continuation.Exception);
+					}
+				}
+				finally
+				{
+					_continuation = null;
+				}
+			}
+			else
+			{
+				SetContinuationProgress(continuation.Progress);
+			}
+		}
+
+		private void UpdateContinuation(IAsyncOperation continuation)
+		{
+			if (continuation.IsCompleted)
+			{
+				try
+				{
+					if (continuation.IsCompletedSuccessfully)
+					{
+						SetCompleted();
+					}
+					else if (continuation.IsCanceled)
+					{
+						SetCanceled();
+					}
+					else
+					{
+						SetException(continuation.Exception);
+					}
+				}
+				finally
+				{
+					_continuation = null;
+				}
+			}
+			else
+			{
+				SetContinuationProgress(continuation.Progress);
+			}
+		}
+
+		private void UpdateContinuation(IAsyncResult continuation)
+		{
+			if (continuation.IsCompleted)
+			{
+				try
+				{
+					SetCompleted();
+				}
+				finally
+				{
+					_continuation = null;
+				}
+			}
+		}
+
+		private void SetContinuationProgress(float progress)
+		{
+			SetProgress(_opMaxProgress + progress * (1 - _opMaxProgress));
+		}
+
 		#endregion
 	}
 }

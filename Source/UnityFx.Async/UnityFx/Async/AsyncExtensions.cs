@@ -122,8 +122,7 @@ namespace UnityFx.Async
 		/// Creates a continuation that executes when the target <see cref="IAsyncResult"/> completes.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
-		/// <seealso cref="ContinueWith{T, U}(T, Func{T, IAsyncOperation{U}})"/>
-		public static IAsyncOperation ContinueWith<T>(this T op, Func<T, IAsyncResult> continuationFactory) where T : class, IAsyncOperation
+		public static IAsyncOperation ContinueWith(this IAsyncOperation op, Func<IAsyncOperation, IAsyncResult> continuationFactory)
 		{
 			return AsyncResult.Factory.ContinueWhen(op, continuationFactory);
 		}
@@ -132,8 +131,34 @@ namespace UnityFx.Async
 		/// Creates a continuation that executes when the target <see cref="IAsyncResult"/> completes.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
-		/// <seealso cref="ContinueWith{T, U}(T, Func{T, IAsyncOperation{U}})"/>
-		public static IAsyncOperation ContinueWith<T>(this T op, Func<T, IAsyncResult> continuationFactory, AsyncScheduler scheduler) where T : class, IAsyncOperation
+		public static IAsyncOperation<TResult> ContinueWith<TResult>(this IAsyncOperation op, Func<IAsyncOperation, IAsyncOperation<TResult>> continuationFactory)
+		{
+			return AsyncResult.Factory.ContinueWhen(op, continuationFactory);
+		}
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncResult"/> completes.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+		public static IAsyncOperation ContinueWith<T>(this IAsyncOperation<T> op, Func<IAsyncOperation<T>, IAsyncResult> continuationFactory)
+		{
+			return AsyncResult.Factory.ContinueWhen(op, continuationFactory);
+		}
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncResult"/> completes.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+		public static IAsyncOperation<TResult> ContinueWith<T, TResult>(this IAsyncOperation<T> op, Func<IAsyncOperation<T>, IAsyncOperation<TResult>> continuationFactory)
+		{
+			return AsyncResult.Factory.ContinueWhen(op, continuationFactory);
+		}
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncResult"/> completes.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+		public static IAsyncOperation ContinueWith(this IAsyncOperation op, Func<IAsyncOperation, IAsyncResult> continuationFactory, AsyncScheduler scheduler)
 		{
 			if (scheduler == null)
 			{
@@ -147,18 +172,7 @@ namespace UnityFx.Async
 		/// Creates a continuation that executes when the target <see cref="IAsyncResult"/> completes.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
-		/// <seealso cref="ContinueWith{T}(T, Func{T, IAsyncResult})"/>
-		public static IAsyncOperation<TResult> ContinueWith<T, TResult>(this T op, Func<T, IAsyncOperation<TResult>> continuationFactory) where T : class, IAsyncOperation
-		{
-			return AsyncResult.Factory.ContinueWhen(op, continuationFactory);
-		}
-
-		/// <summary>
-		/// Creates a continuation that executes when the target <see cref="IAsyncResult"/> completes.
-		/// </summary>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
-		/// <seealso cref="ContinueWith{T}(T, Func{T, IAsyncResult})"/>
-		public static IAsyncOperation<TResult> ContinueWith<T, TResult>(this T op, Func<T, IAsyncOperation<TResult>> continuationFactory, AsyncScheduler scheduler) where T : class, IAsyncOperation
+		public static IAsyncOperation<TResult> ContinueWith<TResult>(this IAsyncOperation op, Func<IAsyncOperation, IAsyncOperation<TResult>> continuationFactory, AsyncScheduler scheduler)
 		{
 			if (scheduler == null)
 			{
@@ -172,8 +186,35 @@ namespace UnityFx.Async
 		/// Creates a continuation that executes when the target <see cref="IAsyncResult"/> completes.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
-		/// <seealso cref="ContinueWith{T, U}(T, Func{T, IAsyncOperation{U}})"/>
-		public static IAsyncOperation<UnityEngine.Object> ContinueWith<T>(this T op, Func<T, AsyncOperation> continuationFactory) where T : class, IAsyncOperation
+		public static IAsyncOperation ContinueWith<T>(this IAsyncOperation<T> op, Func<IAsyncOperation<T>, IAsyncResult> continuationFactory, AsyncScheduler scheduler)
+		{
+			if (scheduler == null)
+			{
+				throw new ArgumentNullException(nameof(scheduler));
+			}
+
+			return new AsyncFactory(scheduler).ContinueWhen(op, continuationFactory);
+		}
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncResult"/> completes.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+		public static IAsyncOperation<TResult> ContinueWith<T, TResult>(this IAsyncOperation<T> op, Func<IAsyncOperation<T>, IAsyncOperation<TResult>> continuationFactory, AsyncScheduler scheduler)
+		{
+			if (scheduler == null)
+			{
+				throw new ArgumentNullException(nameof(scheduler));
+			}
+
+			return new AsyncFactory(scheduler).ContinueWhen(op, continuationFactory);
+		}
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncResult"/> completes.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+		public static IAsyncOperation<UnityEngine.Object> ContinueWith(this IAsyncOperation op, Func<IAsyncOperation, AsyncOperation> continuationFactory)
 		{
 			return AsyncResult.Factory.ContinueWhen(op, continuationFactory);
 		}
@@ -182,15 +223,27 @@ namespace UnityFx.Async
 		/// Creates a continuation that executes when the target <see cref="IAsyncResult"/> completes.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
-		/// <seealso cref="ContinueWith{T, U}(T, Func{T, IAsyncOperation{U}})"/>
-		public static IAsyncOperation<UnityEngine.Object> ContinueWith<T>(this T op, Func<T, AsyncOperation> continuationFactory, AsyncScheduler scheduler) where T : class, IAsyncOperation
+		public static IAsyncOperation<TResult> ContinueWith<TResult>(this IAsyncOperation op, Func<IAsyncOperation, AsyncOperation> continuationFactory) where TResult : UnityEngine.Object
 		{
-			if (scheduler == null)
-			{
-				throw new ArgumentNullException(nameof(scheduler));
-			}
+			return AsyncResult.Factory.ContinueWhen<TResult>(op, continuationFactory);
+		}
 
-			return new AsyncFactory(scheduler).ContinueWhen(op, continuationFactory);
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncResult"/> completes.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+		public static IAsyncOperation<UnityEngine.Object> ContinueWith<T>(this IAsyncOperation<T> op, Func<IAsyncOperation<T>, AsyncOperation> continuationFactory)
+		{
+			return AsyncResult.Factory.ContinueWhen(op, continuationFactory);
+		}
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncResult"/> completes.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+		public static IAsyncOperation<TResult> ContinueWith<T, TResult>(this IAsyncOperation<T> op, Func<IAsyncOperation<T>, AsyncOperation> continuationFactory) where TResult : UnityEngine.Object
+		{
+			return AsyncResult.Factory.ContinueWhen<T, TResult>(op, continuationFactory);
 		}
 
 		/// <summary>
