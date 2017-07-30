@@ -17,27 +17,38 @@ Unity3d provides powerful tools for creating graphical applications. Still there
 
 ## Code samples
 
+1) The simpliest way of creating operations is using `AsyncResult` statis helpers. No `MonoBehaviour` is needed.
+
 ```csharp
-IEnumerator Foo(Coroutine c, IEnumerator e, AsyncOperation op, IAsyncResult ar)
-{
-	var op1 = AsyncResult.FromCoroutine(c);
-	var op2 = AsyncResult.FromEnumerator(e);
-	var op3 = AsyncResult.FromAsyncOperation(op);
-
-	// wait for the first operation to finish
-	yield return op1;
-
-	// wait for the second operation to finish and then load scene 'tt'
-	yield return op2.ContinueWith((parentOp) => SceneManager.LoadSceneAsync("TestScene"));
-
-	// wait for the rest of operations to finish; note than 'ar' may actually represent a coroutine or .NET asynchronous operation
-	yield return AsyncResult.WhenAll(op3, ar);
-}
+var op1 = AsyncResult.FromEnumerator(GetEnum());
+var op2 = AsyncResult.FromCoroutine(StartCoroutine(GetEnum()));
+var op3 = AsyncResult.FromCoroutine(new WaitForSeconds(2));
+var op4 = AsyncResult.FromAsyncOperation(SceneManager.LoadSceneAsync("TestScene"));
+var op5 = AsyncResult.FromUpdateCallback<int>(c => c.SetResult(20));
 ```
 
-## API Reference
+2) There are several halpers that create completed operations:
 
-TODO
+```csharp
+var op1 = AsyncResult.Completed;
+var op2 = AsyncResult.Canceled;
+var op3 = AsyncResult.FromException(new Exception());
+var op4 = AsyncResult.FromException<SomeClass>(new Exception());
+var op5 = AsyncResult.FromResult<int>(20);
+```
+
+3) To execute an operation on a specific `MonoBehaviour` use `AsyncFactory`:
+
+```csharp
+var factory = new AsyncFactory(monoBehaviour);
+var op1 = factory.FromEnumerator(GetEnum());
+var op2 = factory.FromUpdateCallback(c => c.SetCompleted());
+```
+
+4) You can compose several operations into one:
+
+```csharp
+```
 
 ## Software requirements
 
