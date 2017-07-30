@@ -14,12 +14,43 @@ namespace UnityFx.Async
 
 		private static readonly Queue<Action> _updateExecutionQueue = new Queue<Action>();
 		private static readonly Queue<Action> _lateUpdateExecutionQueue = new Queue<Action>();
+		private static AsyncRunnerBehaviour _instance;
 
 		private readonly List<Action> _tmpList = new List<Action>();
 
 		#endregion
 
 		#region interface
+
+		public static AsyncRunnerBehaviour Instance
+		{
+			get
+			{
+				const string goName = "UnityFx";
+
+				if (ReferenceEquals(_instance, null))
+				{
+					var go = GameObject.Find(goName);
+
+					if (ReferenceEquals(go, null))
+					{
+						go = new GameObject(goName, typeof(AsyncRunnerBehaviour));
+						GameObject.DontDestroyOnLoad(go);
+					}
+
+					var c = go.GetComponent<AsyncRunnerBehaviour>();
+
+					if (ReferenceEquals(c, null))
+					{
+						c = go.AddComponent<AsyncRunnerBehaviour>();
+					}
+
+					_instance = c;
+				}
+
+				return _instance;
+			}
+		}
 
 		public static void QueueActionForUpdate(Action op)
 		{

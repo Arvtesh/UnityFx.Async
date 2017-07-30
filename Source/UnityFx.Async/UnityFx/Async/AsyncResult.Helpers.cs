@@ -13,7 +13,7 @@ namespace UnityFx.Async
 		#region data
 
 		private static IAsyncOperation _empty;
-		private static AsyncFactory _factory = new AsyncFactory(Globals.AsyncRunner);
+		private static AsyncFactory _factory;
 
 		#endregion
 

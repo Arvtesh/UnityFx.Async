@@ -491,6 +491,10 @@ namespace UnityFx.Async
 			{
 				s.QueueEnum(op);
 			}
+			else
+			{
+				AsyncRunnerBehaviour.Instance.StartCoroutine(op);
+			}
 		}
 
 		#endregion

@@ -29,7 +29,7 @@ namespace UnityFx.Async
 			{
 				if (_defaultScheduler == null)
 				{
-					_defaultScheduler = new DefaultAsyncScheduler(Globals.AsyncRunner);
+					_defaultScheduler = new DefaultAsyncScheduler(AsyncRunnerBehaviour.Instance);
 				}
 
 				return _defaultScheduler;
