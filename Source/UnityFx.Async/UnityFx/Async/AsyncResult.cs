@@ -98,9 +98,26 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
 		/// </summary>
+		public AsyncResult()
+			: this(null, StatusInitialized)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
+		/// </summary>
+		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
+		public AsyncResult(object asyncState)
+			: this(asyncState, StatusInitialized)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
+		/// </summary>
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
 		/// <param name="status">Initial operation status.</param>
-		public AsyncResult(object asyncState, AsyncOperationStatus status = AsyncOperationStatus.Initialized)
+		public AsyncResult(object asyncState, AsyncOperationStatus status)
 			: this(asyncState, (int)status)
 		{
 		}
@@ -110,9 +127,20 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
 		/// </summary>
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
+		/// <param name="status">Initial operation status.</param>
+		public AsyncResult(object asyncState, CancellationToken cancellationToken)
+			: this(asyncState, StatusInitialized)
+		{
+			_cancellationToken = cancellationToken;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
+		/// </summary>
+		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <param name="status">Initial operation status.</param>
-		public AsyncResult(object asyncState, CancellationToken cancellationToken, AsyncOperationStatus status = AsyncOperationStatus.Initialized)
+		public AsyncResult(object asyncState, CancellationToken cancellationToken, AsyncOperationStatus status)
 			: this(asyncState, (int)status)
 		{
 			_cancellationToken = cancellationToken;

@@ -26,9 +26,25 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
+		public AsyncResult()
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// </summary>
+		/// <param name="asyncState">User-defined data returned by <see cref="AsyncResult.AsyncState"/>.</param>
+		public AsyncResult(object asyncState)
+			: base(asyncState)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// </summary>
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncResult.AsyncState"/>.</param>
 		/// <param name="status">Initial operation status.</param>
-		public AsyncResult(object asyncState, AsyncOperationStatus status = AsyncOperationStatus.Running)
+		public AsyncResult(object asyncState, AsyncOperationStatus status)
 			: base(asyncState, (int)status)
 		{
 		}
@@ -38,9 +54,19 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncResult.AsyncState"/>.</param>
+		/// <param name="status">Initial operation status.</param>
+		public AsyncResult(object asyncState, CancellationToken cancellationToken)
+			: base(asyncState, cancellationToken)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// </summary>
+		/// <param name="asyncState">User-defined data returned by <see cref="AsyncResult.AsyncState"/>.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <param name="status">Initial operation status.</param>
-		public AsyncResult(object asyncState, CancellationToken cancellationToken, AsyncOperationStatus status = AsyncOperationStatus.Running)
+		public AsyncResult(object asyncState, CancellationToken cancellationToken, AsyncOperationStatus status)
 			: base(asyncState, cancellationToken, status)
 		{
 		}
