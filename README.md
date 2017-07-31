@@ -82,7 +82,8 @@ var op3 = AsyncResult.WhenAll(op1, op2);
 7) Operations can be chaned togather vey much like [Tasks](https://msdn.microsoft.com/ru-ru/library/system.threading.tasks.task(v=vs.110).aspx):
 
 ```csharp
-var op1 = AsyncResult.FromCoroutine(new WaitForSeconds(10));
+var op1 = AsyncResult.Delay(TimeSpan.FromSeconds(10));
+var op2 = op1.ContinueWith(op => AsyncResult.FromEnumerator(GetEnum()));
 ```
 
 ## Software requirements

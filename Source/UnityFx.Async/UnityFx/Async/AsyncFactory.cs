@@ -38,6 +38,28 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation"/> from the supplied time interval.
+		/// </summary>
+		public IAsyncOperation FromDelay(TimeSpan delay)
+		{
+			var result = new AsyncDelay(delay);
+			StartCoroutine(result);
+			return result;
+		}
+
+#if !UNITYFX_NET35
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation"/> from the supplied time interval.
+		/// </summary>
+		public IAsyncOperation FromDelay(TimeSpan delay, CancellationToken cancellationToken)
+		{
+			var result = new AsyncDelay(delay, cancellationToken);
+			StartCoroutine(result);
+			return result;
+		}
+#endif
+
+		/// <summary>
 		/// Creates an instance of <see cref="IAsyncOperation"/> from the supplied <see cref="Coroutine"/>.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>

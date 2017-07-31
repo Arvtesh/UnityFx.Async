@@ -81,23 +81,6 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
 		/// </summary>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
-		/// <param name="status">Initial operation status.</param>
-		internal AsyncResult(object asyncState, int status)
-		{
-			if (status < StatusInitialized || status > StatusCanceled)
-			{
-				throw new ArgumentException(_errorOpStatus, nameof(status));
-			}
-
-			_completedSynchronously = status > StatusRunning;
-			_asyncState = asyncState;
-			_status = status;
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
-		/// </summary>
 		public AsyncResult()
 			: this(null, StatusInitialized)
 		{
@@ -158,6 +141,23 @@ namespace UnityFx.Async
 			_asyncState = asyncState;
 			_status = e is OperationCanceledException ? StatusCanceled : StatusFaulted;
 			_exception = e;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
+		/// </summary>
+		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
+		/// <param name="status">Initial operation status.</param>
+		internal AsyncResult(object asyncState, int status)
+		{
+			if (status < StatusInitialized || status > StatusCanceled)
+			{
+				throw new ArgumentException(_errorOpStatus, nameof(status));
+			}
+
+			_completedSynchronously = status > StatusRunning;
+			_asyncState = asyncState;
+			_status = status;
 		}
 
 		/// <summary>
@@ -350,6 +350,28 @@ namespace UnityFx.Async
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that is completed with the specified result.
 		/// </summary>
 		public static IAsyncOperation<TResult> FromResult<TResult>(TResult result) => new AsyncResult<TResult>(null, result);
+
+		/// <summary>
+		/// Returns an instance of <see cref="IAsyncOperation"/> that is finished in the specified time interval.
+		/// </summary>
+		public static IAsyncOperation Delay(TimeSpan delay) => _factory.FromDelay(delay);
+
+		/// <summary>
+		/// Returns an instance of <see cref="IAsyncOperation"/> that is finished in the specified time interval.
+		/// </summary>
+		public static IAsyncOperation Delay(TimeSpan delay, MonoBehaviour b) => new AsyncFactory(b).FromDelay(delay);
+
+#if !UNITYFX_NET35
+		/// <summary>
+		/// Returns an instance of <see cref="IAsyncOperation"/> that is finished in the specified time interval.
+		/// </summary>
+		public static IAsyncOperation Delay(TimeSpan delay, CancellationToken cancellationToken) => _factory.FromDelay(delay, cancellationToken);
+
+		/// <summary>
+		/// Returns an instance of <see cref="IAsyncOperation"/> that is finished in the specified time interval.
+		/// </summary>
+		public static IAsyncOperation Delay(TimeSpan delay, CancellationToken cancellationToken, MonoBehaviour b) => new AsyncFactory(b).FromDelay(delay, cancellationToken);
+#endif
 
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that wraps the specified <see cref="IEnumerator"/>.
