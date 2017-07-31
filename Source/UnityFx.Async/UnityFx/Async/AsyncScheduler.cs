@@ -78,24 +78,10 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Queues the specified asynchronous operation for execution.
-		/// </summary>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
-		public void QueueAsync(IAsyncResult op)
-		{
-			if (op == null)
-			{
-				throw new ArgumentNullException(nameof(op));
-			}
-
-			QueueForExecution(op);
-		}
-
-		/// <summary>
 		/// Queues the specified enumerator instance for execution.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
-		public void QueueEnum(IEnumerator op)
+		public void QueueCoroutine(IEnumerator op)
 		{
 			if (op == null)
 			{
@@ -104,20 +90,12 @@ namespace UnityFx.Async
 
 			QueueForExecution(op);
 		}
-
-		/// <summary>
-		/// Queues the specified operation for execution.
-		/// </summary>
-		protected abstract void QueueForExecution(IAsyncResult op);
 
 		/// <summary>
 		/// Queues the specified operation for execution.
 		/// </summary>
 		protected abstract void QueueForExecution(IEnumerator op);
 
-		#endregion
-
-		#region implementation
 		#endregion
 	}
 }

@@ -588,7 +588,7 @@ namespace UnityFx.Async
 			}
 			else if (_scheduler is AsyncScheduler s)
 			{
-				s.QueueEnum(op);
+				s.QueueCoroutine(op);
 			}
 			else
 			{

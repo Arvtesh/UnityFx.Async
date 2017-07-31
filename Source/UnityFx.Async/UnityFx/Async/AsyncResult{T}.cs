@@ -74,6 +74,8 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		public void SetResult(T result)
 		{
+			ThrowIfDisposed();
+
 			if (TrySetStatus(StatusCompleted))
 			{
 				_result = result;
@@ -88,6 +90,8 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		public bool TrySetResult(T result)
 		{
+			ThrowIfDisposed();
+
 			if (TrySetStatus(StatusCompleted))
 			{
 				_result = result;

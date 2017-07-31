@@ -85,6 +85,10 @@ namespace UnityFx.Async
 					UpdateContinuation(_continuation as IAsyncResult);
 				}
 			}
+			else
+			{
+				SetCompleted();
+			}
 		}
 
 		#endregion
