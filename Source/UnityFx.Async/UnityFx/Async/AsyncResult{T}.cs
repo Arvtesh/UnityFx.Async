@@ -54,7 +54,7 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncResult.AsyncState"/>.</param>
-		/// <param name="status">Initial operation status.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		public AsyncResult(object asyncState, CancellationToken cancellationToken)
 			: base(asyncState, cancellationToken)
 		{
@@ -139,6 +139,7 @@ namespace UnityFx.Async
 		{
 			get
 			{
+				ThrowIfDisposed();
 				AsyncExtensions.Wait(this);
 				ThrowIfFaulted();
 				return _result;

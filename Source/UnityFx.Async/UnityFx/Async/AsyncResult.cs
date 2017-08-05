@@ -79,6 +79,11 @@ namespace UnityFx.Async
 		public const int WaitSleepTimeout = 32;
 
 		/// <summary>
+		/// Returns <c>true</c> if the operation is disposed; <c>false</c> otherwise. Read only.
+		/// </summary>
+		public bool IsDisposed => _progress < 0;
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
 		/// </summary>
 		public AsyncResult()
@@ -110,9 +115,9 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
 		/// </summary>
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
-		/// <param name="status">Initial operation status.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
 		public AsyncResult(object asyncState, CancellationToken cancellationToken)
-			: this(asyncState, StatusInitialized)
+			: this(asyncState, cancellationToken.IsCancellationRequested ? StatusCanceled : StatusInitialized)
 		{
 			_cancellationToken = cancellationToken;
 		}
@@ -124,7 +129,7 @@ namespace UnityFx.Async
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <param name="status">Initial operation status.</param>
 		public AsyncResult(object asyncState, CancellationToken cancellationToken, AsyncOperationStatus status)
-			: this(asyncState, (int)status)
+			: this(asyncState, cancellationToken.IsCancellationRequested ? StatusCanceled : (int)status)
 		{
 			_cancellationToken = cancellationToken;
 		}
@@ -230,11 +235,6 @@ namespace UnityFx.Async
 		/// </summary>
 		protected void ThrowIfFaulted()
 		{
-			if (_progress < 0)
-			{
-				throw new ObjectDisposedException(GetType().Name);
-			}
-
 			if (_status > StatusCompleted)
 			{
 				throw new InvalidOperationException(_errorOpFaulted, _exception);
@@ -333,7 +333,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns a canceled <see cref="IAsyncOperation"/> instance.
 		/// </summary>
-		public static IAsyncOperation<TResult> FromCanceled<TResult>(CancellationToken cancellationToken) => new AsyncResult<TResult>(null, cancellationToken, AsyncOperationStatus.Canceled);
+		public static IAsyncOperation<T> FromCanceled<T>(CancellationToken cancellationToken) => new AsyncResult<T>(null, cancellationToken, AsyncOperationStatus.Canceled);
 #endif
 
 		/// <summary>
@@ -349,7 +349,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that is completed with the specified result.
 		/// </summary>
-		public static IAsyncOperation<TResult> FromResult<TResult>(TResult result) => new AsyncResult<TResult>(null, result);
+		public static IAsyncOperation<T> FromResult<T>(T result) => new AsyncResult<T>(null, result);
 
 		/// <summary>
 		/// Returns an instance of <see cref="IAsyncOperation"/> that is finished in the specified time interval.
@@ -992,7 +992,7 @@ namespace UnityFx.Async
 			}
 			else if (_exception != null)
 			{
-				return $"{{Status={Status}, Progress={Progress.ToString(NumberFormatInfo.InvariantInfo)}, Exception={_exception?.Message}}}";
+				return $"{{Status={Status}, Progress={Progress.ToString(NumberFormatInfo.InvariantInfo)}, Exception={_exception.Message}}}";
 			}
 			else
 			{
