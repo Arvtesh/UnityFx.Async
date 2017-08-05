@@ -14,7 +14,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// The operation is initialized but has not yet been scheduled for execution.
 		/// </summary>
-		Initialized = AsyncResult.StatusInitialized,
+		Created = AsyncResult.StatusInitialized,
 
 		/// <summary>
 		/// The operation execution has started.
@@ -24,7 +24,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// The operation has completed successfully.
 		/// </summary>
-		Success = AsyncResult.StatusCompleted,
+		RanToCompletion = AsyncResult.StatusCompleted,
 
 		/// <summary>
 		/// The operation failed.

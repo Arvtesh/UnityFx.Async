@@ -11,12 +11,12 @@ namespace UnityFx.Async
 	public interface IAsyncOperationController<in T> : IAsyncOperationController
 	{
 		/// <summary>
-		/// Transitions the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.Success"/> state.
+		/// Transitions the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
 		void SetResult(T result);
 
 		/// <summary>
-		/// Attempts to transition the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.Success"/> state.
+		/// Attempts to transition the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
 		bool TrySetResult(T result);
 	}

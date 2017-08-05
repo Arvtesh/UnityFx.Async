@@ -31,12 +31,12 @@ namespace UnityFx.Async
 		bool TrySetException(Exception e);
 
 		/// <summary>
-		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Success"/> state.
+		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
 		void SetCompleted();
 
 		/// <summary>
-		/// Attempts to transition the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Success"/> state.
+		/// Attempts to transition the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
 		bool TrySetCompleted();
 
