@@ -12,9 +12,9 @@
 /.vscode/
 
 # UnityApps
-/UnityTests/*.*
-/UnityPackage35/*.*
-/UnityPackage46/*.*
+/AssetStore/UnityPackage35/*.*
+/AssetStore/UnityPackage46/*.*
+/Tests/UnityTests/*.*
 
 # NuGet Packages Directory
 [Pp]ackages/

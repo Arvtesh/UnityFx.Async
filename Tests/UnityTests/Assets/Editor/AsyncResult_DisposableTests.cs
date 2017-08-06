@@ -6,7 +6,7 @@ using UnityEngine;
 namespace UnityFx.Async.Tests
 {
 	[TestFixture]
-	public class DisposeTests
+	public class AsyncResult_DisposableTests
 	{
 		[Test]
 		public void NewInstanceIsNotDisposed()

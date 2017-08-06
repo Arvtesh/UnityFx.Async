@@ -6,7 +6,7 @@ using UnityEngine;
 namespace UnityFx.Async.Tests
 {
 	[TestFixture]
-	public class InitializationTests
+	public class AsyncResult_InitializationTests
 	{
 		[Test]
 		public void ConstructorTest1()
