@@ -4,6 +4,8 @@
 
 Unity3d extensions for asynchronous operations and coroutines management. The library provides an `IAsyncOperation` interface that can be used very much like TPL [Task](https://msdn.microsoft.com/ru-ru/library/system.threading.tasks.task(v=vs.110).aspx).
 
+Please see [CHANGELOG](CHANGELOG.md) for information on recent changes.
+
 ## Motivation
 
 Unity3d provides powerful tools for creating graphical applications. Still there are quite a few places where its API is not ideal. One of the issues is asynchronous operations and coroutines management. While the concept of coroutines itself is great for frame-based applications, Unity implementation is not consistent to say the least:
