@@ -12,12 +12,6 @@ skip_commits:
 build_script:
   - ps: .\build.ps1
 
-dotnet_csproj:
-  patch: true
-  file: '**\*.csproj'
-  version: '{version}'
-  package_version: '{version}'
-
 test: off
 
 artifacts:
