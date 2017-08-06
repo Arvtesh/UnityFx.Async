@@ -20,7 +20,6 @@ namespace UnityFx.Async
 
 		internal DefaultAsyncScheduler(MonoBehaviour owner)
 		{
-			Debug.Assert(owner != null);
 			_owner = owner;
 		}
 

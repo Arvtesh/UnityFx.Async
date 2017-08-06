@@ -13,28 +13,9 @@ namespace UnityFx.Async
 	public abstract class AsyncScheduler
 	{
 		#region data
-
-		private static AsyncScheduler _defaultScheduler;
-
 		#endregion
 
 		#region interface
-
-		/// <summary>
-		/// Returns default <see cref="MonoBehaviour"/>-based scheduler instance. Read only.
-		/// </summary>
-		public static AsyncScheduler Default
-		{
-			get
-			{
-				if (_defaultScheduler == null)
-				{
-					_defaultScheduler = new DefaultAsyncScheduler(AsyncRunnerBehaviour.Instance);
-				}
-
-				return _defaultScheduler;
-			}
-		}
 
 		/// <summary>
 		/// Returns a new instance of <see cref="AsyncScheduler"/> for the specified <see cref="MonoBehaviour"/>.
