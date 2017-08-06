@@ -1,10 +1,18 @@
 # UnityFx.Async
 
+Channel  | Branch | UnityFx.Async |
+---------|--------|---------------|
+AppVeyor ([home](https://ci.appveyor.com/project/Arvtesh/unityfx-async)) | master | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/master?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/master)
+ | develop | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/develop?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/develop)
+
+
 ## Synopsis
 
 Unity3d extensions for asynchronous operations and coroutines management. The library provides an `IAsyncOperation` interface that can be used very much like TPL [Task](https://msdn.microsoft.com/ru-ru/library/system.threading.tasks.task(v=vs.110).aspx).
 
 Please see [CHANGELOG](CHANGELOG.md) for information on recent changes.
+
+Unity Asset Store [link](https://www.assetstore.unity3d.com/#!/content/96696).
 
 ## Motivation
 
