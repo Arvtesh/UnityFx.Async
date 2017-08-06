@@ -1,10 +1,9 @@
-# UnityFx.Async Change Log
+# UnityFx.Async changelog
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
-----------------------------------
 
 ### Added
 - Unit tests for `AsyncResult` added.
@@ -17,7 +16,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Fixed `Progress` returning -1 when the operation is disposed.
 
 ## [0.3.1] - 2017-08-01
-----------------------------------
 
 ### Added
 - Initial release.
