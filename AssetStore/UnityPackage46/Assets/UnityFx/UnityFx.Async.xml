@@ -1366,11 +1366,6 @@
             An object that handles the low-level work of running asynchronous operations.
             </summary>
         </member>
-        <member name="P:UnityFx.Async.AsyncScheduler.Default">
-            <summary>
-            Returns default <see cref="T:UnityEngine.MonoBehaviour"/>-based scheduler instance. Read only.
-            </summary>
-        </member>
         <member name="M:UnityFx.Async.AsyncScheduler.FromMonoBehaviour(UnityEngine.MonoBehaviour)">
             <summary>
             Returns a new instance of <see cref="T:UnityFx.Async.AsyncScheduler"/> for the specified <see cref="T:UnityEngine.MonoBehaviour"/>.

@@ -23,12 +23,12 @@
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net35'">
 		<DefineConstants>UNITYFX_NET35</DefineConstants>
-		<DocumentationFile>$(TargetPath)\UnityFx.Async.xml</DocumentationFile>
+		<DocumentationFile>$(OutDir)\UnityFx.Async.xml</DocumentationFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net46'">
 		<DefineConstants>UNITYFX_NET46</DefineConstants>
-		<DocumentationFile>$(TargetPath)\UnityFx.Async.xml</DocumentationFile>
+		<DocumentationFile>$(OutDir)\UnityFx.Async.xml</DocumentationFile>
 	</PropertyGroup>
 	
 </Project>
