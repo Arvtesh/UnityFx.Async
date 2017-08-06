@@ -3,7 +3,7 @@
 Channel  | Branch | UnityFx.Async |
 ---------|--------|---------------|
 AppVeyor ([home](https://ci.appveyor.com/project/Arvtesh/unityfx-async)) | master | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/master?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/master)
- | develop | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/develop?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/develop)
+- | develop | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/develop?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/develop)
 
 
 ## Synopsis
