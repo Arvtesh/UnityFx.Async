@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 namespace UnityFx.Async
@@ -12,11 +13,11 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private static readonly Queue<Action> _updateExecutionQueue = new Queue<Action>();
-		private static readonly Queue<Action> _lateUpdateExecutionQueue = new Queue<Action>();
+		private static Queue<Action> _updateExecutionQueue;
+		private static Queue<Action> _lateUpdateExecutionQueue;
 		private static AsyncRunnerBehaviour _instance;
 
-		private readonly List<Action> _tmpList = new List<Action>();
+		private List<Action> _tmpList;
 
 		#endregion
 
@@ -35,7 +36,7 @@ namespace UnityFx.Async
 					if (ReferenceEquals(go, null))
 					{
 						go = new GameObject(goName, typeof(AsyncRunnerBehaviour));
-						GameObject.DontDestroyOnLoad(go);
+						DontDestroyOnLoad(go);
 					}
 
 					var c = go.GetComponent<AsyncRunnerBehaviour>();
@@ -54,6 +55,11 @@ namespace UnityFx.Async
 
 		public static void QueueActionForUpdate(Action op)
 		{
+			if (_updateExecutionQueue == null)
+			{
+				Interlocked.CompareExchange(ref _updateExecutionQueue, new Queue<Action>(), null);
+			}
+
 			lock (_updateExecutionQueue)
 			{
 				_updateExecutionQueue.Enqueue(op);
@@ -62,6 +68,11 @@ namespace UnityFx.Async
 
 		public static void QueueActionForLateUpdate(Action op)
 		{
+			if (_lateUpdateExecutionQueue == null)
+			{
+				Interlocked.CompareExchange(ref _lateUpdateExecutionQueue, new Queue<Action>(), null);
+			}
+
 			lock (_lateUpdateExecutionQueue)
 			{
 				_lateUpdateExecutionQueue.Enqueue(op);
@@ -74,12 +85,18 @@ namespace UnityFx.Async
 
 		private void Update()
 		{
-			UpdateQueue(_updateExecutionQueue);
+			if (_updateExecutionQueue != null)
+			{
+				UpdateQueue(_updateExecutionQueue);
+			}
 		}
 
 		private void LateUpdate()
 		{
-			UpdateQueue(_lateUpdateExecutionQueue);
+			if (_lateUpdateExecutionQueue != null)
+			{
+				UpdateQueue(_lateUpdateExecutionQueue);
+			}
 		}
 
 		#endregion
@@ -91,6 +108,11 @@ namespace UnityFx.Async
 			// check the queue size first to avoid locking each frame
 			if (ops.Count > 0)
 			{
+				if (_tmpList == null)
+				{
+					_tmpList = new List<Action>();
+				}
+
 				lock (ops)
 				{
 					_tmpList.AddRange(ops);
