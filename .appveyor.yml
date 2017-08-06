@@ -19,3 +19,11 @@ artifacts:
     name: UnityFx.Async-net35
   - path: .\Build\Bin\net46
     name: UnityFx.Async-net46
+
+deploy:
+ - provider: GitHub
+   auth_token:
+   secure: HcMqPRgwKBeu9drMO5V8Bbeb4Jn8jCdE8iJz7JiKDnuXbNPLrhRbrzWhavocDhgd
+   force_update: false
+   on:
+    branch: master
