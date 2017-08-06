@@ -21,9 +21,9 @@ artifacts:
     name: UnityFx.Async-net46
 
 deploy:
- - provider: GitHub
-   auth_token:
-    secure: KdcuA480q9C7+waWIMcGNs17WORwZnlN0Yx9h/0NatT/26XnhKrWYXO3/KCbea1bPxLvzV2ym7PgeYn8PFpQ7zRhf47czcgSEMk6jW27oik=
-   force_update: false
-   on:
-    branch: master
+  - provider: GitHub
+    auth_token:
+      secure: KdcuA480q9C7+waWIMcGNs17WORwZnlN0Yx9h/0NatT/26XnhKrWYXO3/KCbea1bPxLvzV2ym7PgeYn8PFpQ7zRhf47czcgSEMk6jW27oik=
+    force_update: false
+    on:
+      branch: master
