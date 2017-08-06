@@ -6,7 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ## [Unreleased]
 
 ### Added
-- Unit tests for `AsyncResult` added.
+- Added unit tests for `AsyncResult`.
+- Added [AppVeyor CI support](https://ci.appveyor.com/project/Arvtesh/unityfx-async).
 
 ### Changed
 - Renamed `AsyncOperationStatus` values to match [TastStatus](https://msdn.microsoft.com/ru-ru/library/system.threading.tasks.taskstatus(v=vs.110).aspx).
