@@ -30,6 +30,11 @@ if (!(Test-Path $nugetPath))
 	Invoke-WebRequest "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" -Outfile $nugetPath
 }
 
+# install & run GitVersion
+Write-Host "Install/update GetVersion" -Foreground Blue
+& $nugetPath install -excludeversion gitversion.commandline -outputdirectory $outputPath
+& $gitversionPath /l console /output buildserver
+
 # build projects
 Write-Host "Building projects" -Foreground Blue
 & $nugetPath restore $solutionPath
