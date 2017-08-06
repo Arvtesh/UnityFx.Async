@@ -56,8 +56,7 @@ namespace UnityFx.Async
 		 *  0: Running;
 		 *  1: Success (completed without exceptions);
 		 *  2: Faulted (completed with exceptions);
-		 *  3: Canceled;
-		 *  4: Disposed.
+		 *  3: Canceled.
 		 *
 		 * Do not modify this field outside class constructor manually; use TrySetStatus instead.
 		 */
@@ -838,7 +837,7 @@ namespace UnityFx.Async
 		#region IAsyncOperation
 
 		/// <inheritdoc/>
-		public float Progress => _status == StatusInitialized ? 0 : _status > StatusRunning ? 1 : _progress;
+		public float Progress => _status == StatusInitialized ? 0 : _status > StatusRunning ? 1 : _progress < 0 ? 0 : _progress;
 
 		/// <inheritdoc/>
 		public AsyncOperationStatus Status => (AsyncOperationStatus)_status;
