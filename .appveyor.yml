@@ -23,7 +23,7 @@ artifacts:
 deploy:
   - provider: GitHub
     auth_token:
-      secure: KdcuA480q9C7+waWIMcGNs17WORwZnlN0Yx9h/0NatT/26XnhKrWYXO3/KCbea1bPxLvzV2ym7PgeYn8PFpQ7zRhf47czcgSEMk6jW27oik=
+      secure: aTd8m7PLWUlE3iacD7bx9oWPW/CK0+BTE7/nhgB2EXk8iZ3FJ/TJX5kKLIYP76nN
     force_update: false
     on:
       branch: master
