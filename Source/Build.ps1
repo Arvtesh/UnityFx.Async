@@ -62,5 +62,7 @@ Copy-Item -Path $filesToPublish35 -Destination $binPath35 -Force
 Copy-Item -Path $filesToPublish46 -Destination $assetsPath46 -Force
 Copy-Item -Path $filesToPublish46 -Destination $binPath46 -Force
 Copy-Item -Path $filesToPublish46 -Destination $assetsPathTests -Force
-Copy-Item -Path CHANGELOG.md -Destination $binPath -Force
-Copy-Item -Path README.md -Destination $binPath -Force
+Copy-Item -Path CHANGELOG.md -Destination $binPath35 -Force
+Copy-Item -Path CHANGELOG.md -Destination $binPath46 -Force
+Copy-Item -Path README.md -Destination $binPath35 -Force
+Copy-Item -Path README.md -Destination $binPath46 -Force
