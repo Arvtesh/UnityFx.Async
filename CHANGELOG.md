@@ -10,14 +10,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 
 ### Changed
 - Renamed `AsyncOperationStatus` values to match [TastStatus](https://msdn.microsoft.com/ru-ru/library/system.threading.tasks.taskstatus(v=vs.110).aspx).
-- Changed project structure: all Asset Store related stuff is moved to `AssetStore` folder.
+- Changed project structure: all [Asset Store](https://www.assetstore.unity3d.com/) related stuff is moved to `AssetStore` folder.
 - Implemented lazy initialization for all internal data allocated by the library.
 
 ### Removed
-- Removed default `AsyncScheduler.Default` property.
+- Removed `AsyncScheduler.Default` property.
 
 ### Fixed
-- Fixed `Progress` returning -1 when the operation is disposed.
+- Fixed `Progress` returning `-1` when the operation is disposed.
 
 ## [0.3.1] - 2017-08-01
 
