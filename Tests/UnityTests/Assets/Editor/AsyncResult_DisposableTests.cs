@@ -9,13 +9,6 @@ namespace UnityFx.Async.Tests
 	public class AsyncResult_DisposableTests
 	{
 		[Test]
-		public void NewInstanceIsNotDisposed()
-		{
-			var op = new AsyncResult();
-			Assert.IsFalse(op.IsDisposed);
-		}
-
-		[Test]
 		public void DisposeChangesOperationState()
 		{
 			var op = new AsyncResult();
