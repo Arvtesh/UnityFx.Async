@@ -102,9 +102,7 @@ var op2 = op1.ContinueWith(op => AsyncResult.FromEnumerator(GetEnum()));
 
 ## Contributing
 
-- Clone repository: `git clone https://github.com/Arvtesh/UnityFx.Async.git`
-- Build sources: `powershell .\build.ps1`
-- Run unit-tests: `TODO`
+Please see [contributing guide](CONTRIBUTING.md) for details.
 
 ## License
 
