@@ -47,7 +47,7 @@ namespace UnityFx.Async
 			return result;
 		}
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Creates an instance of <see cref="IAsyncOperation"/> from the supplied time interval.
 		/// </summary>
@@ -100,7 +100,7 @@ namespace UnityFx.Async
 			return result;
 		}
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Creates an instance of <see cref="IAsyncOperation"/> from the supplied <see cref="IEnumerator"/>.
 		/// </summary>
@@ -191,7 +191,7 @@ namespace UnityFx.Async
 			return result;
 		}
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Starts a new operation.
 		/// </summary>
@@ -227,7 +227,7 @@ namespace UnityFx.Async
 			return result;
 		}
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Starts a new operation.
 		/// </summary>
@@ -273,7 +273,7 @@ namespace UnityFx.Async
 			return result;
 		}
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
 		/// </summary>
@@ -319,7 +319,7 @@ namespace UnityFx.Async
 			return result;
 		}
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Creates a new <see cref="IAsyncOperation{T}"/> instance that finishes when all of the specified operations finish.
 		/// </summary>
@@ -365,7 +365,7 @@ namespace UnityFx.Async
 			return result;
 		}
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
 		/// </summary>
@@ -411,7 +411,7 @@ namespace UnityFx.Async
 			return result;
 		}
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
 		/// </summary>

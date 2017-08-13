@@ -26,7 +26,7 @@ namespace UnityFx.Async
 			_op = op;
 		}
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		public AsyncEnumeratorWrapper(IEnumerator op, CancellationToken cancellationToken)
 			: base(op, cancellationToken)
 		{

@@ -49,7 +49,7 @@ namespace UnityFx.Async
 		{
 		}
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
@@ -150,7 +150,7 @@ namespace UnityFx.Async
 
 		#region IObservable
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 
 		/// <inheritdoc/>
 		public IDisposable Subscribe(IObserver<T> observer)

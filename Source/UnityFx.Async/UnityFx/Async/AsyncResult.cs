@@ -31,7 +31,7 @@ namespace UnityFx.Async
 		private readonly bool _completedSynchronously;
 		private readonly object _asyncState;
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		private CancellationToken _cancellationToken;
 #endif
 		private EventWaitHandle _waitHandle;
@@ -109,7 +109,7 @@ namespace UnityFx.Async
 		{
 		}
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
 		/// </summary>
@@ -316,7 +316,7 @@ namespace UnityFx.Async
 		/// </summary>
 		public static AsyncFactory Factory => _factory;
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Returns a canceled <see cref="IAsyncOperation"/> instance.
 		/// </summary>
@@ -328,7 +328,7 @@ namespace UnityFx.Async
 		/// </summary>
 		public static IAsyncOperation<T> FromCanceled<T>() => new AsyncResult<T>(null, AsyncOperationStatus.Canceled);
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Returns a canceled <see cref="IAsyncOperation"/> instance.
 		/// </summary>
@@ -360,7 +360,7 @@ namespace UnityFx.Async
 		/// </summary>
 		public static IAsyncOperation Delay(TimeSpan delay, MonoBehaviour b) => new AsyncFactory(b).FromDelay(delay);
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Returns an instance of <see cref="IAsyncOperation"/> that is finished in the specified time interval.
 		/// </summary>
@@ -386,7 +386,7 @@ namespace UnityFx.Async
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation FromEnumerator(IEnumerator op, MonoBehaviour b) => new AsyncFactory(b).FromEnumerator(op);
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that wraps the specified <see cref="IEnumerator"/>.
 		/// </summary>
@@ -472,7 +472,7 @@ namespace UnityFx.Async
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation FromUpdateCallback(Action<IAsyncOperationController> updateCallback, MonoBehaviour b) => new AsyncFactory(b).FromUpdateCallback(updateCallback);
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that wraps the specified <see cref="Action{T}"/>.
 		/// </summary>
@@ -502,7 +502,7 @@ namespace UnityFx.Async
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation<T> FromUpdateCallback<T>(Action<IAsyncOperationController<T>> updateCallback, MonoBehaviour b) => new AsyncFactory(b).FromUpdateCallback(updateCallback);
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that wraps the specified <see cref="Action{T}"/>.
 		/// </summary>
@@ -542,7 +542,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
 		public static IAsyncOperation WhenAll(IAsyncResult[] ops, AsyncContinuationOptions options, MonoBehaviour b) => new AsyncFactory(b).WhenAll(ops, options);
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that finishes when all specified operations finish.
 		/// </summary>
@@ -574,7 +574,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
 		public static IAsyncOperation<T[]> WhenAll<T>(IAsyncOperation<T>[] ops, AsyncContinuationOptions options, MonoBehaviour b) => new AsyncFactory(b).WhenAll(ops, options);
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that finishes when all specified operations finish.
 		/// </summary>
@@ -606,7 +606,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
 		public static IAsyncOperation WhenAny(IAsyncResult[] ops, AsyncContinuationOptions options, MonoBehaviour b) => new AsyncFactory(b).WhenAny(ops, options);
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that finishes when any of the specified operations finish.
 		/// </summary>
@@ -638,7 +638,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
 		public static IAsyncOperation<T> WhenAny<T>(IAsyncOperation<T>[] ops, AsyncContinuationOptions options, MonoBehaviour b) => new AsyncFactory(b).WhenAny(ops, options);
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that finishes when any of the specified operations finish.
 		/// </summary>

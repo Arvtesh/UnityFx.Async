@@ -6,7 +6,7 @@ using System.Collections;
 using System.Threading;
 using UnityEngine;
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 using System.Threading.Tasks;
 #endif
 
@@ -19,7 +19,7 @@ namespace UnityFx.Async
 	{
 		#region IAsyncOperation
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 
 		/// <summary>
 		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
@@ -397,7 +397,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
 		public static IAsyncOperation StartAsyncOperation(this MonoBehaviour b, IEnumerator op) => GetAsyncFactory(b).FromEnumerator(op);
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Starts an instance of <see cref="IAsyncOperation"/> from the supplied <see cref="IEnumerator"/>.
 		/// </summary>
@@ -417,7 +417,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="updateCallback"/> is <c>null</c>.</exception>
 		public static IAsyncOperation StartAsyncOperation(this MonoBehaviour b, Action<IAsyncOperationController> updateCallback) => GetAsyncFactory(b).FromUpdateCallback(updateCallback);
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Starts an instance of <see cref="IAsyncOperation"/> from the supplied update callback.
 		/// </summary>
@@ -431,7 +431,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="updateCallback"/> is <c>null</c>.</exception>
 		public static IAsyncOperation<T> StartAsyncOperation<T>(this MonoBehaviour b, Action<IAsyncOperationController<T>> updateCallback) => GetAsyncFactory(b).FromUpdateCallback(updateCallback);
 
-#if !UNITYFX_NET35
+#if UNITYFX_NET46
 		/// <summary>
 		/// Starts an instance of <see cref="IAsyncOperation{T}"/> from the supplied update callback.
 		/// </summary>
