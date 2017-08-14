@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Threading;
 using UnityEngine;
 
 namespace UnityFx.Async
@@ -16,6 +17,7 @@ namespace UnityFx.Async
 		#region data
 
 		private readonly Func<T, TContinuation> _continuationFactory;
+		private readonly AsyncContinuationOptions _options;
 
 		private T _op;
 		private TContinuation _continuation;
@@ -27,10 +29,11 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public AsyncContinuation(T op, Func<T, TContinuation> continuationFactory)
+		public AsyncContinuation(T op, Func<T, TContinuation> continuationFactory, AsyncContinuationOptions options)
 			: base(null)
 		{
 			_continuationFactory = continuationFactory;
+			_options = options;
 			_op = op;
 
 			if (op is IAsyncOperationContainer aq)
@@ -39,6 +42,22 @@ namespace UnityFx.Async
 				_opMaxProgress = _opQueueLength / (_opQueueLength + 1.0f);
 			}
 		}
+
+#if UNITYFX_NET46
+		public AsyncContinuation(T op, Func<T, TContinuation> continuationFactory, CancellationToken cancellationToken, AsyncContinuationOptions options)
+			: base(null, cancellationToken)
+		{
+			_continuationFactory = continuationFactory;
+			_options = options;
+			_op = op;
+
+			if (op is IAsyncOperationContainer aq)
+			{
+				_opQueueLength = aq.Size;
+				_opMaxProgress = _opQueueLength / (_opQueueLength + 1.0f);
+			}
+		}
+#endif
 
 		#endregion
 

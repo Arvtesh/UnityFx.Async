@@ -545,10 +545,77 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(continuationFactory));
 			}
 
-			var result = new AsyncContinuation<T, IAsyncResult, object>(op, continuationFactory);
+			var result = new AsyncContinuation<T, IAsyncResult, object>(op, continuationFactory, AsyncContinuationOptions.None);
 			StartCoroutine(result);
 			return result;
 		}
+
+#if UNITYFX_NET46
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> or <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+		public IAsyncOperation ContinueWhen<T>(T op, Func<T, IAsyncResult> continuationFactory, CancellationToken cancellationToken) where T : class, IAsyncOperation
+		{
+			if (op == null)
+			{
+				throw new ArgumentNullException(nameof(op));
+			}
+
+			if (continuationFactory == null)
+			{
+				throw new ArgumentNullException(nameof(continuationFactory));
+			}
+
+			var result = new AsyncContinuation<T, IAsyncResult, object>(op, continuationFactory, cancellationToken, AsyncContinuationOptions.None);
+			StartCoroutine(result);
+			return result;
+		}
+#endif
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> or <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+		public IAsyncOperation ContinueWhen<T>(T op, Func<T, IAsyncResult> continuationFactory, AsyncContinuationOptions options) where T : class, IAsyncOperation
+		{
+			if (op == null)
+			{
+				throw new ArgumentNullException(nameof(op));
+			}
+
+			if (continuationFactory == null)
+			{
+				throw new ArgumentNullException(nameof(continuationFactory));
+			}
+
+			var result = new AsyncContinuation<T, IAsyncResult, object>(op, continuationFactory, options);
+			StartCoroutine(result);
+			return result;
+		}
+
+#if UNITYFX_NET46
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> or <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+		public IAsyncOperation ContinueWhen<T>(T op, Func<T, IAsyncResult> continuationFactory, CancellationToken cancellationToken, AsyncContinuationOptions options) where T : class, IAsyncOperation
+		{
+			if (op == null)
+			{
+				throw new ArgumentNullException(nameof(op));
+			}
+
+			if (continuationFactory == null)
+			{
+				throw new ArgumentNullException(nameof(continuationFactory));
+			}
+
+			var result = new AsyncContinuation<T, IAsyncResult, object>(op, continuationFactory, cancellationToken, options);
+			StartCoroutine(result);
+			return result;
+		}
+#endif
 
 		/// <summary>
 		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
@@ -566,10 +633,77 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(continuationFactory));
 			}
 
-			var result = new AsyncContinuation<T, IAsyncOperation<TResult>, TResult>(op, continuationFactory);
+			var result = new AsyncContinuation<T, IAsyncOperation<TResult>, TResult>(op, continuationFactory, AsyncContinuationOptions.None);
 			StartCoroutine(result);
 			return result;
 		}
+
+#if UNITYFX_NET46
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> or <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+		public IAsyncOperation<TResult> ContinueWhen<T, TResult>(T op, Func<T, IAsyncOperation<TResult>> continuationFactory, CancellationToken cancellationToken) where T : class, IAsyncOperation
+		{
+			if (op == null)
+			{
+				throw new ArgumentNullException(nameof(op));
+			}
+
+			if (continuationFactory == null)
+			{
+				throw new ArgumentNullException(nameof(continuationFactory));
+			}
+
+			var result = new AsyncContinuation<T, IAsyncOperation<TResult>, TResult>(op, continuationFactory, cancellationToken, AsyncContinuationOptions.None);
+			StartCoroutine(result);
+			return result;
+		}
+#endif
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> or <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+		public IAsyncOperation<TResult> ContinueWhen<T, TResult>(T op, Func<T, IAsyncOperation<TResult>> continuationFactory, AsyncContinuationOptions options) where T : class, IAsyncOperation
+		{
+			if (op == null)
+			{
+				throw new ArgumentNullException(nameof(op));
+			}
+
+			if (continuationFactory == null)
+			{
+				throw new ArgumentNullException(nameof(continuationFactory));
+			}
+
+			var result = new AsyncContinuation<T, IAsyncOperation<TResult>, TResult>(op, continuationFactory, options);
+			StartCoroutine(result);
+			return result;
+		}
+
+#if UNITYFX_NET46
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> or <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+		public IAsyncOperation<TResult> ContinueWhen<T, TResult>(T op, Func<T, IAsyncOperation<TResult>> continuationFactory, CancellationToken cancellationToken, AsyncContinuationOptions options) where T : class, IAsyncOperation
+		{
+			if (op == null)
+			{
+				throw new ArgumentNullException(nameof(op));
+			}
+
+			if (continuationFactory == null)
+			{
+				throw new ArgumentNullException(nameof(continuationFactory));
+			}
+
+			var result = new AsyncContinuation<T, IAsyncOperation<TResult>, TResult>(op, continuationFactory, cancellationToken, options);
+			StartCoroutine(result);
+			return result;
+		}
+#endif
 
 		/// <summary>
 		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
@@ -587,10 +721,77 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(continuationFactory));
 			}
 
-			var result = new AsyncContinuation<T, AsyncOperation, TResult>(op, continuationFactory);
+			var result = new AsyncContinuation<T, AsyncOperation, TResult>(op, continuationFactory, AsyncContinuationOptions.None);
 			StartCoroutine(result);
 			return result;
 		}
+
+#if UNITYFX_NET46
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> or <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+		public IAsyncOperation<TResult> ContinueWhen<T, TResult>(T op, Func<T, AsyncOperation> continuationFactory, CancellationToken cancellationToken) where T : class, IAsyncOperation where TResult : UnityEngine.Object
+		{
+			if (op == null)
+			{
+				throw new ArgumentNullException(nameof(op));
+			}
+
+			if (continuationFactory == null)
+			{
+				throw new ArgumentNullException(nameof(continuationFactory));
+			}
+
+			var result = new AsyncContinuation<T, AsyncOperation, TResult>(op, continuationFactory, cancellationToken, AsyncContinuationOptions.None);
+			StartCoroutine(result);
+			return result;
+		}
+#endif
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> or <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+		public IAsyncOperation<TResult> ContinueWhen<T, TResult>(T op, Func<T, AsyncOperation> continuationFactory, AsyncContinuationOptions options) where T : class, IAsyncOperation where TResult : UnityEngine.Object
+		{
+			if (op == null)
+			{
+				throw new ArgumentNullException(nameof(op));
+			}
+
+			if (continuationFactory == null)
+			{
+				throw new ArgumentNullException(nameof(continuationFactory));
+			}
+
+			var result = new AsyncContinuation<T, AsyncOperation, TResult>(op, continuationFactory, options);
+			StartCoroutine(result);
+			return result;
+		}
+
+#if UNITYFX_NET46
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> or <paramref name="continuationFactory"/> is <c>null</c>.</exception>
+		public IAsyncOperation<TResult> ContinueWhen<T, TResult>(T op, Func<T, AsyncOperation> continuationFactory, CancellationToken cancellationToken, AsyncContinuationOptions options) where T : class, IAsyncOperation where TResult : UnityEngine.Object
+		{
+			if (op == null)
+			{
+				throw new ArgumentNullException(nameof(op));
+			}
+
+			if (continuationFactory == null)
+			{
+				throw new ArgumentNullException(nameof(continuationFactory));
+			}
+
+			var result = new AsyncContinuation<T, AsyncOperation, TResult>(op, continuationFactory, cancellationToken, options);
+			StartCoroutine(result);
+			return result;
+		}
+#endif
 
 		#endregion
 
