@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace UnityFx.Async
 {
@@ -443,6 +444,96 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation<T> FromAsyncOperation<T>(AsyncOperation op, MonoBehaviour b) where T : class => new AsyncFactory(b).FromAsyncOperation<T>(op);
+
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation FromWebRequest(UnityWebRequest request) => _factory.FromWebRequest(request);
+
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation FromWebRequest(UnityWebRequest request, MonoBehaviour b) => new AsyncFactory(b).FromWebRequest(request);
+
+#if UNITYFX_NET46
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation FromWebRequest(UnityWebRequest request, CancellationToken cancellationToken) => _factory.FromWebRequest(request, cancellationToken);
+
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation FromWebRequest(UnityWebRequest request, CancellationToken cancellationToken, MonoBehaviour b) => new AsyncFactory(b).FromWebRequest(request, cancellationToken);
+#endif
+
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation{T}"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation<T> FromWebRequest<T>(UnityWebRequest request) where T : UnityEngine.Object => _factory.FromWebRequest<T>(request);
+
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation{T}"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation<T> FromWebRequest<T>(UnityWebRequest request, MonoBehaviour b) where T : UnityEngine.Object => new AsyncFactory(b).FromWebRequest<T>(request);
+
+#if UNITYFX_NET46
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation{T}"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation<T> FromWebRequest<T>(UnityWebRequest request, CancellationToken cancellationToken) where T : UnityEngine.Object => _factory.FromWebRequest<T>(request, cancellationToken);
+
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation{T}"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation<T> FromWebRequest<T>(UnityWebRequest request, CancellationToken cancellationToken, MonoBehaviour b) where T : UnityEngine.Object => new AsyncFactory(b).FromWebRequest<T>(request, cancellationToken);
+#endif
+
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation{T}"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation<T> FromWebRequest<T>(UnityWebRequest request, Func<UnityWebRequest, T> resultProcessor) where T : UnityEngine.Object => _factory.FromWebRequest<T>(request, resultProcessor);
+
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation{T}"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation<T> FromWebRequest<T>(UnityWebRequest request, Func<UnityWebRequest, T> resultProcessor, MonoBehaviour b) where T : UnityEngine.Object => new AsyncFactory(b).FromWebRequest<T>(request, resultProcessor);
+
+#if UNITYFX_NET46
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation{T}"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation<T> FromWebRequest<T>(UnityWebRequest request, Func<UnityWebRequest, T> resultProcessor, CancellationToken cancellationToken) where T : UnityEngine.Object => _factory.FromWebRequest<T>(request, resultProcessor, cancellationToken);
+
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation{T}"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="AsyncFactory"/>
+		public static IAsyncOperation<T> FromWebRequest<T>(UnityWebRequest request, Func<UnityWebRequest, T> resultProcessor, CancellationToken cancellationToken, MonoBehaviour b) where T : UnityEngine.Object => new AsyncFactory(b).FromWebRequest<T>(request, resultProcessor, cancellationToken);
+#endif
 
 		/// <summary>
 		/// Creates an instance of <see cref="IAsyncOperation"/> for the supplied <see cref="IAsyncResult"/>.

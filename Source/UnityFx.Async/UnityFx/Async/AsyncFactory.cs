@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace UnityFx.Async
 {
@@ -155,6 +156,136 @@ namespace UnityFx.Async
 			StartCoroutine(result);
 			return result;
 		}
+
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="FromWebRequest{T}(UnityWebRequest)"/>
+		/// <seealso cref="FromWebRequest{T}(UnityWebRequest, Func{UnityWebRequest, T})"/>
+		/// <seealso cref="FromAsyncOperation(AsyncOperation)"/>
+		public IAsyncOperation FromWebRequest(UnityWebRequest request)
+		{
+			if (request == null)
+			{
+				throw new ArgumentNullException(nameof(request));
+			}
+
+			var result = new UnityWebRequestWrapper<UnityEngine.Object>(request);
+			StartCoroutine(result);
+			return result;
+		}
+
+#if UNITYFX_NET46
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="FromWebRequest{T}(UnityWebRequest)"/>
+		/// <seealso cref="FromWebRequest{T}(UnityWebRequest, Func{UnityWebRequest, T})"/>
+		/// <seealso cref="FromAsyncOperation(AsyncOperation)"/>
+		public IAsyncOperation FromWebRequest(UnityWebRequest request, CancellationToken cancellationToken)
+		{
+			if (request == null)
+			{
+				throw new ArgumentNullException(nameof(request));
+			}
+
+			var result = new UnityWebRequestWrapper<UnityEngine.Object>(request, cancellationToken);
+			StartCoroutine(result);
+			return result;
+		}
+#endif
+
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation{T}"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="FromWebRequest(UnityWebRequest)"/>
+		/// <seealso cref="FromWebRequest{T}(UnityWebRequest, Func{UnityWebRequest, T})"/>
+		/// <seealso cref="FromAsyncOperation{T}(AsyncOperation)"/>
+		public IAsyncOperation<T> FromWebRequest<T>(UnityWebRequest request) where T : UnityEngine.Object
+		{
+			if (request == null)
+			{
+				throw new ArgumentNullException(nameof(request));
+			}
+
+			var result = new UnityWebRequestWrapper<T>(request);
+			StartCoroutine(result);
+			return result;
+		}
+
+#if UNITYFX_NET46
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation{T}"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="FromWebRequest(UnityWebRequest)"/>
+		/// <seealso cref="FromWebRequest{T}(UnityWebRequest, Func{UnityWebRequest, T})"/>
+		/// <seealso cref="FromAsyncOperation{T}(AsyncOperation)"/>
+		public IAsyncOperation<T> FromWebRequest<T>(UnityWebRequest request, CancellationToken cancellationToken) where T : UnityEngine.Object
+		{
+			if (request == null)
+			{
+				throw new ArgumentNullException(nameof(request));
+			}
+
+			var result = new UnityWebRequestWrapper<T>(request, cancellationToken);
+			StartCoroutine(result);
+			return result;
+		}
+#endif
+
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation{T}"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="FromWebRequest(UnityWebRequest)"/>
+		/// <seealso cref="FromWebRequest{T}(UnityWebRequest)"/>
+		/// <seealso cref="FromAsyncOperation{T}(AsyncOperation)"/>
+		public IAsyncOperation<T> FromWebRequest<T>(UnityWebRequest request, Func<UnityWebRequest, T> resultProcessor) where T : UnityEngine.Object
+		{
+			if (request == null)
+			{
+				throw new ArgumentNullException(nameof(request));
+			}
+
+			if (resultProcessor == null)
+			{
+				throw new ArgumentNullException(nameof(resultProcessor));
+			}
+
+			var result = new UnityWebRequestWrapper<T>(request, resultProcessor);
+			StartCoroutine(result);
+			return result;
+		}
+
+#if UNITYFX_NET46
+		/// <summary>
+		/// Creates an instance of <see cref="IAsyncOperation{T}"/> for the supplied <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="request"/> is <c>null</c>.</exception>
+		/// <seealso cref="FromWebRequest(UnityWebRequest)"/>
+		/// <seealso cref="FromWebRequest{T}(UnityWebRequest)"/>
+		/// <seealso cref="FromAsyncOperation{T}(AsyncOperation)"/>
+		public IAsyncOperation<T> FromWebRequest<T>(UnityWebRequest request, Func<UnityWebRequest, T> resultProcessor, CancellationToken cancellationToken) where T : UnityEngine.Object
+		{
+			if (request == null)
+			{
+				throw new ArgumentNullException(nameof(request));
+			}
+
+			if (resultProcessor == null)
+			{
+				throw new ArgumentNullException(nameof(resultProcessor));
+			}
+
+			var result = new UnityWebRequestWrapper<T>(request, resultProcessor, cancellationToken);
+			StartCoroutine(result);
+			return result;
+		}
+#endif
 
 		/// <summary>
 		/// Creates an instance of <see cref="IAsyncOperation"/> for the supplied <see cref="IAsyncResult"/>.
