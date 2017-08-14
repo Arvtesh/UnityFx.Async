@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 
 ### Added
 - Added unit tests for `AsyncResult`.
+- Added `FromWebRequest` helpers.
 - Added [AppVeyor CI](https://ci.appveyor.com/project/Arvtesh/unityfx-async) support.
 - Added [GitVersion](https://gitversion.readthedocs.io/en/latest/) support.
 
