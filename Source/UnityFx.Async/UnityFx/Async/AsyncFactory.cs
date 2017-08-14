@@ -381,25 +381,16 @@ namespace UnityFx.Async
 		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
-		/// <seealso cref="WhenAny(IAsyncResult[], AsyncContinuationOptions)"/>
+		/// <seealso cref="WhenAny(IAsyncResult[])"/>
+		/// <seealso cref="WhenAll{T}(IAsyncOperation{T}[])"/>
 		public IAsyncOperation WhenAll(params IAsyncResult[] ops)
 		{
-			return WhenAll(ops, AsyncContinuationOptions.None);
-		}
-
-		/// <summary>
-		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
-		/// </summary>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
-		/// <seealso cref="WhenAny(IAsyncResult[], AsyncContinuationOptions)"/>
-		public IAsyncOperation WhenAll(IAsyncResult[] ops, AsyncContinuationOptions options)
-		{
 			if (ops == null)
 			{
 				throw new ArgumentNullException(nameof(ops));
 			}
 
-			var result = new AsyncOperationWhenAll(ops, options);
+			var result = new AsyncOperationWhenAll(ops);
 			StartCoroutine(result);
 			return result;
 		}
@@ -409,15 +400,16 @@ namespace UnityFx.Async
 		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
-		/// <seealso cref="WhenAny(IAsyncResult[], AsyncContinuationOptions)"/>
-		public IAsyncOperation WhenAll(IAsyncResult[] ops, CancellationToken cancellationToken, AsyncContinuationOptions options = AsyncContinuationOptions.None)
+		/// <seealso cref="WhenAny(IAsyncResult[], CancellationToken)"/>
+		/// <seealso cref="WhenAll(IAsyncResult[])"/>
+		public IAsyncOperation WhenAll(IAsyncResult[] ops, CancellationToken cancellationToken)
 		{
 			if (ops == null)
 			{
 				throw new ArgumentNullException(nameof(ops));
 			}
 
-			var result = new AsyncOperationWhenAll(ops, cancellationToken, options);
+			var result = new AsyncOperationWhenAll(ops, cancellationToken);
 			StartCoroutine(result);
 			return result;
 		}
@@ -427,25 +419,16 @@ namespace UnityFx.Async
 		/// Creates a new <see cref="IAsyncOperation{T}"/> instance that finishes when all of the specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
-		/// <seealso cref="WhenAll(IAsyncResult[], AsyncContinuationOptions)"/>
+		/// <seealso cref="WhenAny{T}(IAsyncOperation{T}[])"/>
+		/// <seealso cref="WhenAll(IAsyncResult[])"/>
 		public IAsyncOperation<T[]> WhenAll<T>(params IAsyncOperation<T>[] ops)
 		{
-			return WhenAll(ops, AsyncContinuationOptions.None);
-		}
-
-		/// <summary>
-		/// Creates a new <see cref="IAsyncOperation{T}"/> instance that finishes when all of the specified operations finish.
-		/// </summary>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
-		/// <seealso cref="WhenAll(IAsyncResult[], AsyncContinuationOptions)"/>
-		public IAsyncOperation<T[]> WhenAll<T>(IAsyncOperation<T>[] ops, AsyncContinuationOptions options)
-		{
 			if (ops == null)
 			{
 				throw new ArgumentNullException(nameof(ops));
 			}
 
-			var result = new AsyncOperationWhenAll<T>(ops, options);
+			var result = new AsyncOperationWhenAll<T>(ops);
 			StartCoroutine(result);
 			return result;
 		}
@@ -455,15 +438,16 @@ namespace UnityFx.Async
 		/// Creates a new <see cref="IAsyncOperation{T}"/> instance that finishes when all of the specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
-		/// <seealso cref="WhenAll(IAsyncResult[], AsyncContinuationOptions)"/>
-		public IAsyncOperation<T[]> WhenAll<T>(IAsyncOperation<T>[] ops, CancellationToken cancellationToken, AsyncContinuationOptions options = AsyncContinuationOptions.None)
+		/// <seealso cref="WhenAny{T}(IAsyncOperation{T}[], CancellationToken)"/>
+		/// <seealso cref="WhenAll{T}(IAsyncOperation{T}[])"/>
+		public IAsyncOperation<T[]> WhenAll<T>(IAsyncOperation<T>[] ops, CancellationToken cancellationToken)
 		{
 			if (ops == null)
 			{
 				throw new ArgumentNullException(nameof(ops));
 			}
 
-			var result = new AsyncOperationWhenAll<T>(ops, cancellationToken, options);
+			var result = new AsyncOperationWhenAll<T>(ops, cancellationToken);
 			StartCoroutine(result);
 			return result;
 		}
@@ -473,25 +457,16 @@ namespace UnityFx.Async
 		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
-		/// <seealso cref="WhenAll(IAsyncResult[], AsyncContinuationOptions)"/>
+		/// <seealso cref="WhenAll(IAsyncResult[])"/>
+		/// <seealso cref="WhenAny{T}(IAsyncOperation{T}[])"/>
 		public IAsyncOperation WhenAny(params IAsyncResult[] ops)
 		{
-			return WhenAny(ops, AsyncContinuationOptions.None);
-		}
-
-		/// <summary>
-		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
-		/// </summary>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
-		/// <seealso cref="WhenAll(IAsyncResult[], AsyncContinuationOptions)"/>
-		public IAsyncOperation WhenAny(IAsyncResult[] ops, AsyncContinuationOptions options)
-		{
 			if (ops == null)
 			{
 				throw new ArgumentNullException(nameof(ops));
 			}
 
-			var result = new AsyncOperationWhenAny(ops, options);
+			var result = new AsyncOperationWhenAny(ops);
 			StartCoroutine(result);
 			return result;
 		}
@@ -501,15 +476,16 @@ namespace UnityFx.Async
 		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
-		/// <seealso cref="WhenAll(IAsyncResult[], AsyncContinuationOptions)"/>
-		public IAsyncOperation WhenAny(IAsyncResult[] ops, CancellationToken cancellationToken, AsyncContinuationOptions options = AsyncContinuationOptions.None)
+		/// <seealso cref="WhenAll(IAsyncResult[], CancellationToken)"/>
+		/// <seealso cref="WhenAny(IAsyncResult[])"/>
+		public IAsyncOperation WhenAny(IAsyncResult[] ops, CancellationToken cancellationToken)
 		{
 			if (ops == null)
 			{
 				throw new ArgumentNullException(nameof(ops));
 			}
 
-			var result = new AsyncOperationWhenAny(ops, cancellationToken, options);
+			var result = new AsyncOperationWhenAny(ops, cancellationToken);
 			StartCoroutine(result);
 			return result;
 		}
@@ -519,25 +495,16 @@ namespace UnityFx.Async
 		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
-		/// <seealso cref="WhenAny(IAsyncResult[], AsyncContinuationOptions)"/>
+		/// <seealso cref="WhenAll{T}(IAsyncOperation{T}[])"/>
+		/// <seealso cref="WhenAny(IAsyncResult[])"/>
 		public IAsyncOperation<T> WhenAny<T>(params IAsyncOperation<T>[] ops)
-		{
-			return WhenAny(ops, AsyncContinuationOptions.None);
-		}
-
-		/// <summary>
-		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
-		/// </summary>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
-		/// <seealso cref="WhenAny(IAsyncResult[], AsyncContinuationOptions)"/>
-		public IAsyncOperation<T> WhenAny<T>(IAsyncOperation<T>[] ops, AsyncContinuationOptions options)
 		{
 			if (ops == null)
 			{
 				throw new ArgumentNullException(nameof(ops));
 			}
 
-			var result = new AsyncOperationWhenAny<T>(ops, options);
+			var result = new AsyncOperationWhenAny<T>(ops);
 			StartCoroutine(result);
 			return result;
 		}
@@ -547,15 +514,16 @@ namespace UnityFx.Async
 		/// Creates a new <see cref="IAsyncOperation"/> instance that finishes when all of the specified operations finish.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="ops"/> is <c>null</c>.</exception>
-		/// <seealso cref="WhenAny(IAsyncResult[], AsyncContinuationOptions)"/>
-		public IAsyncOperation<T> WhenAny<T>(IAsyncOperation<T>[] ops, CancellationToken cancellationToken, AsyncContinuationOptions options = AsyncContinuationOptions.None)
+		/// <seealso cref="WhenAll{T}(IAsyncOperation{T}[], CancellationToken)"/>
+		/// <seealso cref="WhenAny{T}(IAsyncOperation{T}[])"/>
+		public IAsyncOperation<T> WhenAny<T>(IAsyncOperation<T>[] ops, CancellationToken cancellationToken)
 		{
 			if (ops == null)
 			{
 				throw new ArgumentNullException(nameof(ops));
 			}
 
-			var result = new AsyncOperationWhenAny<T>(ops, cancellationToken, options);
+			var result = new AsyncOperationWhenAny<T>(ops, cancellationToken);
 			StartCoroutine(result);
 			return result;
 		}

@@ -15,23 +15,22 @@ namespace UnityFx.Async
 		#region data
 
 		private List<IAsyncOperation<T>> _ops;
-		private AsyncContinuationOptions _options;
 
 		#endregion
 
 		#region interface
 
-		public AsyncOperationWhenAny(IAsyncOperation<T>[] ops, AsyncContinuationOptions options)
+		public AsyncOperationWhenAny(IAsyncOperation<T>[] ops)
 			: base(null)
 		{
-			Initialize(ops, options);
+			Initialize(ops);
 		}
 
 #if UNITYFX_NET46
-		public AsyncOperationWhenAny(IAsyncOperation<T>[] ops, CancellationToken cancellationToken, AsyncContinuationOptions options)
+		public AsyncOperationWhenAny(IAsyncOperation<T>[] ops, CancellationToken cancellationToken)
 			: base(null, cancellationToken)
 		{
-			Initialize(ops, options);
+			Initialize(ops);
 		}
 #endif
 
@@ -47,11 +46,8 @@ namespace UnityFx.Async
 			{
 				if (op.IsCompleted)
 				{
-					if (IsCompletedWithOptions(op, _options))
-					{
-						SetResult(op.Result);
-						return;
-					}
+					SetResult(op.Result);
+					return;
 				}
 				else
 				{
@@ -83,10 +79,9 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		private void Initialize(IAsyncOperation<T>[] ops, AsyncContinuationOptions options)
+		private void Initialize(IAsyncOperation<T>[] ops)
 		{
 			_ops = new List<IAsyncOperation<T>>(ops.Length);
-			_options = options;
 
 			foreach (var op in ops)
 			{
