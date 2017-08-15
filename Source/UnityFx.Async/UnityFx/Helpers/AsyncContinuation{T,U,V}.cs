@@ -137,7 +137,7 @@ namespace UnityFx.Async
 			{
 				if (op.IsCompletedSuccessfully)
 				{
-					return (options & AsyncContinuationOptions.OnlyOnSuccess) != 0;
+					return (options & AsyncContinuationOptions.OnlyOnRanToCompletion) != 0;
 				}
 				else if (op.IsCanceled)
 				{
