@@ -73,7 +73,18 @@ namespace UnityFx.Async
 
 					try
 					{
-						_continuation = _continuationFactory(_op);
+						if (IsCompletedWithOptions(_op, _options))
+						{
+							_continuation = _continuationFactory(_op);
+						}
+						else if (_op.IsCanceled)
+						{
+							SetCanceled();
+						}
+						else
+						{
+							SetException(_op.Exception);
+						}
 					}
 					finally
 					{
@@ -119,6 +130,27 @@ namespace UnityFx.Async
 		#endregion
 
 		#region implementation
+
+		private static bool IsCompletedWithOptions(IAsyncOperation op, AsyncContinuationOptions options)
+		{
+			if (options != AsyncContinuationOptions.None)
+			{
+				if (op.IsCompletedSuccessfully)
+				{
+					return (options & AsyncContinuationOptions.OnlyOnSuccess) != 0;
+				}
+				else if (op.IsCanceled)
+				{
+					return (options & AsyncContinuationOptions.OnlyOnCanceled) != 0;
+				}
+				else
+				{
+					return (options & AsyncContinuationOptions.OnlyOnFaulted) != 0;
+				}
+			}
+
+			return true;
+		}
 
 		private void UpdateContinuation(AsyncOperation continuation)
 		{
