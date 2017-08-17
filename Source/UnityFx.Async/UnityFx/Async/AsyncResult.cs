@@ -61,7 +61,11 @@ namespace UnityFx.Async
 		 *
 		 * Do not modify this field outside class constructor manually; use TrySetStatus instead.
 		 */
+#if UNITYFX_ST
+		private int _status;
+#else
 		private volatile int _status;
+#endif
 
 		#endregion
 
@@ -179,13 +183,18 @@ namespace UnityFx.Async
 		/// <seealso cref="FireCompleted"/>
 		protected bool TrySetStatus(int newStatus)
 		{
-			if (_status < StatusCompleted)
+			if (_status < StatusCompleted && newStatus > _status)
 			{
+#if UNITYFX_ST
+				_status = newStatus;
+				return true;
+#else
 				if (Interlocked.CompareExchange(ref _status, newStatus, StatusInitialized) == StatusInitialized ||
 					Interlocked.CompareExchange(ref _status, newStatus, StatusRunning) == StatusRunning)
 				{
 					return true;
 				}
+#endif
 			}
 
 			return false;
@@ -736,6 +745,9 @@ namespace UnityFx.Async
 
 				if (_waitHandle == null)
 				{
+#if UNITYFX_ST
+					_waitHandle = new ManualResetEvent(IsCompleted);
+#else
 					var done = IsCompleted;
 					var mre = new ManualResetEvent(done);
 
@@ -750,6 +762,7 @@ namespace UnityFx.Async
 						// set the event state properly so that callers do not deadlock.
 						_waitHandle.Set();
 					}
+#endif
 				}
 
 				return _waitHandle;

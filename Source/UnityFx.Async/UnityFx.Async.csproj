@@ -1,25 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net35;net46</TargetFrameworks>
-    <Description>Unity3d extensions for asynchronous operations and coroutines management.</Description>
-    <Company />
-    <Authors>Arvtesh</Authors>
-    <PackageProjectUrl>https://github.com/Arvtesh/UnityFx.Async</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Arvtesh/UnityFx.Async</RepositoryUrl>
-    <RepositoryType>Git</RepositoryType>
-    <PackageTags>Unity3d;Async;AsyncOperation;Coroutine</PackageTags>
-    <PackageLicenseUrl>https://opensource.org/licenses/mit-license.php</PackageLicenseUrl>
-    <Version>0.3.1</Version>
-    <AssemblyVersion>0.3.1.0</AssemblyVersion>
-    <FileVersion>0.3.1.0</FileVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net35;net46</TargetFrameworks>
+		<Description>Unity3d extensions for asynchronous operations and coroutines management.</Description>
+		<Company />
+		<Authors>Arvtesh</Authors>
+		<PackageProjectUrl>https://github.com/Arvtesh/UnityFx.Async</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Arvtesh/UnityFx.Async</RepositoryUrl>
+		<RepositoryType>Git</RepositoryType>
+		<PackageTags>Unity3d;Async;AsyncOperation;Coroutine</PackageTags>
+		<PackageLicenseUrl>https://opensource.org/licenses/mit-license.php</PackageLicenseUrl>
+		<Version>0.3.1</Version>
+		<AssemblyVersion>0.3.1.0</AssemblyVersion>
+		<FileVersion>0.3.1.0</FileVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Reference Include="UnityEngine">
-      <HintPath>..\UnityFx.Dependencies\UnityEngine.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+	<ItemGroup>
+		<Reference Include="UnityEngine">
+			<HintPath>..\UnityFx.Dependencies\UnityEngine.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net35'">
 		<DefineConstants>UNITYFX_NET35</DefineConstants>
@@ -30,5 +30,5 @@
 		<DefineConstants>UNITYFX_NET46</DefineConstants>
 		<DocumentationFile>$(OutDir)\UnityFx.Async.xml</DocumentationFile>
 	</PropertyGroup>
-	
+
 </Project>
