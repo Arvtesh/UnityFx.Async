@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added unit tests for `AsyncResult`.
 - Added `FromWebRequest` helpers.
 - Added `AsyncContinuationOptions` support to continuations.
+- Added support for single-threaded mode via `UNITYFX_ST` define (no locks or interlocked oprations are used in this mode).
 - Added [AppVeyor CI](https://ci.appveyor.com/project/Arvtesh/unityfx-async) support.
 - Added [GitVersion](https://gitversion.readthedocs.io/en/latest/) support.
 
