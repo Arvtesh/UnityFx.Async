@@ -9,7 +9,7 @@ namespace UnityFx.Async
 	/// <summary>
 	/// An generic awaiter.
 	/// </summary>
-#if UNITYFX_NET35
+#if NET35
 	public interface IAwaiter
 #else
 	public interface IAwaiter : INotifyCompletion
@@ -25,7 +25,7 @@ namespace UnityFx.Async
 		/// </summary>
 		void GetResult();
 
-#if UNITYFX_NET35
+#if NET35
 		/// <summary>
 		/// Schedules the continuation action that's invoked when the instance completes.
 		/// </summary>

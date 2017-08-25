@@ -32,7 +32,7 @@ namespace UnityFx.Async
 		private readonly bool _completedSynchronously;
 		private readonly object _asyncState;
 
-#if UNITYFX_NET46
+#if NET46
 		private CancellationToken _cancellationToken;
 #endif
 		private EventWaitHandle _waitHandle;
@@ -114,7 +114,7 @@ namespace UnityFx.Async
 		{
 		}
 
-#if UNITYFX_NET46
+#if NET46
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
 		/// </summary>
@@ -326,7 +326,7 @@ namespace UnityFx.Async
 		/// </summary>
 		public static AsyncFactory Factory => _factory;
 
-#if UNITYFX_NET46
+#if NET46
 		/// <summary>
 		/// Returns a canceled <see cref="IAsyncOperation"/> instance.
 		/// </summary>
@@ -338,7 +338,7 @@ namespace UnityFx.Async
 		/// </summary>
 		public static IAsyncOperation<T> FromCanceled<T>() => new AsyncResult<T>(null, AsyncOperationStatus.Canceled);
 
-#if UNITYFX_NET46
+#if NET46
 		/// <summary>
 		/// Returns a canceled <see cref="IAsyncOperation"/> instance.
 		/// </summary>
@@ -365,7 +365,7 @@ namespace UnityFx.Async
 		/// </summary>
 		public static IAsyncOperation Delay(TimeSpan delay) => _factory.FromDelay(delay);
 
-#if UNITYFX_NET46
+#if NET46
 		/// <summary>
 		/// Returns an instance of <see cref="IAsyncOperation"/> that is finished in the specified time interval.
 		/// </summary>
@@ -379,7 +379,7 @@ namespace UnityFx.Async
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation FromEnumerator(IEnumerator op) => _factory.FromEnumerator(op);
 
-#if UNITYFX_NET46
+#if NET46
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that wraps the specified <see cref="IEnumerator"/>.
 		/// </summary>
@@ -416,7 +416,7 @@ namespace UnityFx.Async
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation FromWebRequest(UnityWebRequest request) => _factory.FromWebRequest(request);
 
-#if UNITYFX_NET46
+#if NET46
 		/// <summary>
 		/// Creates an instance of <see cref="IAsyncOperation"/> for the supplied <see cref="UnityWebRequest"/>.
 		/// </summary>
@@ -432,7 +432,7 @@ namespace UnityFx.Async
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation<T> FromWebRequest<T>(UnityWebRequest request) where T : UnityEngine.Object => _factory.FromWebRequest<T>(request);
 
-#if UNITYFX_NET46
+#if NET46
 		/// <summary>
 		/// Creates an instance of <see cref="IAsyncOperation{T}"/> for the supplied <see cref="UnityWebRequest"/>.
 		/// </summary>
@@ -448,7 +448,7 @@ namespace UnityFx.Async
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation<T> FromWebRequest<T>(UnityWebRequest request, Func<UnityWebRequest, T> resultProcessor) where T : UnityEngine.Object => _factory.FromWebRequest<T>(request, resultProcessor);
 
-#if UNITYFX_NET46
+#if NET46
 		/// <summary>
 		/// Creates an instance of <see cref="IAsyncOperation{T}"/> for the supplied <see cref="UnityWebRequest"/>.
 		/// </summary>
@@ -471,7 +471,7 @@ namespace UnityFx.Async
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation FromUpdateCallback(Action<IAsyncOperationController> updateCallback) => _factory.FromUpdateCallback(updateCallback);
 
-#if UNITYFX_NET46
+#if NET46
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that wraps the specified <see cref="Action{T}"/>.
 		/// </summary>
@@ -487,7 +487,7 @@ namespace UnityFx.Async
 		/// <seealso cref="AsyncFactory"/>
 		public static IAsyncOperation<T> FromUpdateCallback<T>(Action<IAsyncOperationController<T>> updateCallback) => _factory.FromUpdateCallback(updateCallback);
 
-#if UNITYFX_NET46
+#if NET46
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that wraps the specified <see cref="Action{T}"/>.
 		/// </summary>
@@ -503,7 +503,7 @@ namespace UnityFx.Async
 		public static IAsyncOperation WhenAll(params IAsyncResult[] ops) => _factory.WhenAll(ops);
 
 
-#if UNITYFX_NET46
+#if NET46
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that finishes when all specified operations finish.
 		/// </summary>
@@ -517,7 +517,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
 		public static IAsyncOperation<T[]> WhenAll<T>(params IAsyncOperation<T>[] ops) => _factory.WhenAll(ops);
 
-#if UNITYFX_NET46
+#if NET46
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that finishes when all specified operations finish.
 		/// </summary>
@@ -531,7 +531,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
 		public static IAsyncOperation WhenAny(params IAsyncResult[] ops) => _factory.WhenAny(ops);
 
-#if UNITYFX_NET46
+#if NET46
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation"/> instance that finishes when any of the specified operations finish.
 		/// </summary>
@@ -545,7 +545,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
 		public static IAsyncOperation<T> WhenAny<T>(params IAsyncOperation<T>[] ops) => _factory.WhenAny(ops);
 
-#if UNITYFX_NET46
+#if NET46
 		/// <summary>
 		/// Returns an <see cref="IAsyncOperation{T}"/> instance that finishes when any of the specified operations finish.
 		/// </summary>
@@ -804,7 +804,7 @@ namespace UnityFx.Async
 				// The operation is pending.
 				try
 				{
-#if UNITYFX_NET35
+#if NET35
 					OnUpdate();
 #else
 					if (_cancellationToken.IsCancellationRequested)

@@ -43,7 +43,7 @@ namespace UnityFx.Async
 			}
 		}
 
-#if UNITYFX_NET46
+#if NET46
 		public AsyncContinuation(T op, Func<T, TContinuation> continuationFactory, CancellationToken cancellationToken, AsyncContinuationOptions options)
 			: base(null, cancellationToken)
 		{

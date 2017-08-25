@@ -26,7 +26,7 @@ namespace UnityFx.Async
 			Initialize(ops);
 		}
 
-#if UNITYFX_NET46
+#if NET46
 		public AsyncOperationWhenAny(IAsyncResult[] ops, CancellationToken cancellationToken)
 			: base(null, cancellationToken)
 		{

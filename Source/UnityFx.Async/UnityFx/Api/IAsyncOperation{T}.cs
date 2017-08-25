@@ -10,7 +10,7 @@ namespace UnityFx.Async
 	/// </summary>
 	/// <seealso cref="IAsyncResult"/>
 	/// <seealso cref="IAsyncOperation"/>
-#if UNITYFX_NET35
+#if NET35
 	public interface IAsyncOperation<out T> : IAsyncOperation
 #else
 	public interface IAsyncOperation<out T> : IAsyncOperation, IObservable<T>

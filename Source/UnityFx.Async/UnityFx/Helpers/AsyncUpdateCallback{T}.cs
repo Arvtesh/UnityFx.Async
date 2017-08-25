@@ -25,7 +25,7 @@ namespace UnityFx.Async
 			_updater = updater;
 		}
 
-#if UNITYFX_NET46
+#if NET46
 		public AsyncUpdateCallback(Action<IAsyncOperationController<T>> updater, CancellationToken cancellationToken)
 			: base(null, cancellationToken)
 		{
