@@ -15,9 +15,9 @@ build_script:
 test: off
 
 artifacts:
-  - path: .\Build\Bin\net35
+  - path: .\Bin\net35
     name: UnityFx.Async-net35
-  - path: .\Build\Bin\net46
+  - path: .\Bin\net46
     name: UnityFx.Async-net46
 
 deploy:
