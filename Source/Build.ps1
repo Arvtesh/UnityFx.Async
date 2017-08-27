@@ -68,12 +68,12 @@ if ($LastExitCode -ne 0)
 
 # publish build results to .\Build\Bin
 $filesToPublish35 =
-	(Join-Path $scriptPath (Join-Path "UnityFx.Async\bin" (Join-Path $configuration "net35\UnityFx.Async.dll"))),
-	(Join-Path $scriptPath (Join-Path "UnityFx.Async\bin" (Join-Path $configuration "net35\UnityFx.Async.xml")))
+	(Join-Path $scriptPath (Join-Path "bin" (Join-Path $configuration "net35\UnityFx.Async.dll"))),
+	(Join-Path $scriptPath (Join-Path "bin" (Join-Path $configuration "net35\UnityFx.Async.xml")))
 
 $filesToPublish46 =
-	(Join-Path $scriptPath (Join-Path "UnityFx.Async\bin" (Join-Path $configuration "net46\UnityFx.Async.dll"))),
-	(Join-Path $scriptPath (Join-Path "UnityFx.Async\bin" (Join-Path $configuration "net46\UnityFx.Async.xml")))
+	(Join-Path $scriptPath (Join-Path "bin" (Join-Path $configuration "net46\UnityFx.Async.dll"))),
+	(Join-Path $scriptPath (Join-Path "bin" (Join-Path $configuration "net46\UnityFx.Async.xml")))
 
 Copy-Item -Path $filesToPublish35 -Destination $assetsPath35 -Force
 Copy-Item -Path $filesToPublish35 -Destination $binPath35 -Force
