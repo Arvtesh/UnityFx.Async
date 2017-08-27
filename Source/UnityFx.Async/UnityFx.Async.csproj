@@ -2,17 +2,21 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net35;net46</TargetFrameworks>
-		<Description>Unity3d extensions for asynchronous operations and coroutines management.</Description>
+		<Description>Asynchronous operations for Unity3d.</Description>
 		<Company />
-		<Authors>Arvtesh</Authors>
+		<Authors>Alexander Bogarsukov</Authors>
 		<PackageProjectUrl>https://github.com/Arvtesh/UnityFx.Async</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Arvtesh/UnityFx.Async</RepositoryUrl>
 		<RepositoryType>Git</RepositoryType>
 		<PackageTags>Unity3d;Async;AsyncOperation;Coroutine</PackageTags>
 		<PackageLicenseUrl>https://opensource.org/licenses/mit-license.php</PackageLicenseUrl>
-		<Version>0.3.1</Version>
-		<AssemblyVersion>0.3.1.0</AssemblyVersion>
-		<FileVersion>0.3.1.0</FileVersion>
+		<Version>0.4.0</Version>
+		<AssemblyVersion>0.4.0.0</AssemblyVersion>
+		<FileVersion>0.4.0.0</FileVersion>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -20,13 +24,5 @@
 			<HintPath>..\UnityFx.Dependencies\UnityEngine.dll</HintPath>
 		</Reference>
 	</ItemGroup>
-
-	<PropertyGroup Condition="'$(TargetFramework)'=='net35'">
-		<DocumentationFile>$(OutDir)UnityFx.Async.xml</DocumentationFile>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(TargetFramework)'=='net46'">
-		<DocumentationFile>$(OutDir)UnityFx.Async.xml</DocumentationFile>
-	</PropertyGroup>
 
 </Project>

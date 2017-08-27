@@ -17,6 +17,11 @@ Write-Host "PackagePath:" $outputPath
 Write-Host "BinPath:" $binPath
 
 # create output folders if needed
+if (!(Test-Path $outputPath))
+{
+	New-Item $outputPath -ItemType Directory
+}
+
 if (!(Test-Path $binPath35))
 {
 	New-Item $binPath35 -ItemType Directory
