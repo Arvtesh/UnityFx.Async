@@ -1,0 +1,1 @@
+powershell .\BuildDocs.ps1

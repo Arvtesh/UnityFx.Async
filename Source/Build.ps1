@@ -1,7 +1,7 @@
 $scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
 $solutionPath = Join-Path $scriptPath "UnityFx.sln"
 $configuration = $args[0]
-$outputPath = Join-Path $scriptPath "..\Build"
+$packagesPath = Join-Path $scriptPath "..\Build"
 $binPath = Join-Path $scriptPath "..\Bin"
 $binPath35 = Join-Path $binPath "net35"
 $binPath46 = Join-Path $binPath "net46"
@@ -9,17 +9,17 @@ $assetsPath35 = Join-Path $scriptPath "..\AssetStore\UnityPackage35\Assets\Unity
 $assetsPath46 = Join-Path $scriptPath "..\AssetStore\UnityPackage46\Assets\UnityFx"
 $assetsPathTests = Join-Path $scriptPath "..\Tests\UnityTests\Assets\UnityFx"
 $msbuildPath = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MsBuild.exe"
-$nugetPath = Join-Path $outputPath "nuget.exe"
-$gitversionPath = Join-Path $outputPath "gitversion.commandline\tools\gitversion.exe"
+$nugetPath = Join-Path $packagesPath "nuget.exe"
+$gitversionPath = Join-Path $packagesPath "gitversion.commandline\tools\gitversion.exe"
 
 Write-Host "BasePath:" $scriptPath
-Write-Host "PackagePath:" $outputPath
+Write-Host "PackagePath:" $packagesPath
 Write-Host "BinPath:" $binPath
 
 # create output folders if needed
-if (!(Test-Path $outputPath))
+if (!(Test-Path $packagesPath))
 {
-	New-Item $outputPath -ItemType Directory
+	New-Item $packagesPath -ItemType Directory
 }
 
 if (!(Test-Path $binPath35))
@@ -41,12 +41,8 @@ if (!(Test-Path $nugetPath))
 
 # install & run GitVersion
 Write-Host "Install/update GetVersion" -Foreground Blue
-& $nugetPath install -excludeversion gitversion.commandline -outputdirectory $outputPath
+& $nugetPath install -excludeversion gitversion.commandline -outputdirectory $packagesPath
 & $gitversionPath /l console /output buildserver
-
-# install & run docfx
-Write-Host "Install/update DocFx" -Foreground Blue
-& $nugetPath install -excludeversion docfx.console -outputdirectory $outputPath
 
 # build projects
 Write-Host "Building projects" -Foreground Blue
