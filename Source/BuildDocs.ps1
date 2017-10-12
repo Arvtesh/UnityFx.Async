@@ -5,7 +5,7 @@ $nugetPath = Join-Path $packagesPath "nuget.exe"
 $docfxSrcFiles = (Join-Path $binPath "UnityFx.Async.dll"), (Join-Path $binPath "UnityFx.Async.xml")
 $docfxPath = Join-Path $packagesPath "docfx.console\tools\docfx.exe"
 $docfxConfigPath = Join-Path $scriptPath "DocFx"
-$docfxPublishTarget = Join-Path $scriptPath "..\Docs\*"
+$docfxPublishTarget = Join-Path $scriptPath "..\docs\*"
 $docfxSrcPath = Join-Path $docfxConfigPath "src"
 
 # docfx workaround
