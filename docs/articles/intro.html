@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>What is this? | Asynchronous Operations for Unity </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="What is this? | Asynchronous Operations for Unity ">
+    <meta name="generator" content="docfx 2.23.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="what-is-this">What is this?</h1>
+
+<p><em>UnityFx.Async</em> is a set of of classes and interfaces that extend <a href="https://unity3d.com">Unity3d</a> asynchronous operations and can be used very much like <a href="https://msdn.microsoft.com/ru-ru/library/dd460717(v=vs.110).aspx">TPL</a> in .NET.</p>
+<p>Quick example:</p>
+<pre><code class="lang-csharp">var op = AsyncResult.FromWebRequest(UnityWebRequest.Get(&quot;https://www.google.com&quot;));
+yield return op;
+
+if (op.IsCompletedSuccessfully)
+{
+    // TODO
+}
+</code></pre><h1 id="why-do-i-need-this">Why do I need this?</h1>
+<p>While Unity3d is a great engine, there are quite a few places where its API is not ideal. Asynchronous operations and coroutines management are the examples. While the concept of coroutines itself is great for frame-based applications, current Unity implementation is not consistent at least:</p>
+<ul>
+<li>There is no single base class/interface for yieldable entities. For example <a href="https://docs.unity3d.com/ScriptReference/Coroutine.html">Coroutine</a> and <a href="https://docs.unity3d.com/ScriptReference/AsyncOperation.html">AsyncOperation</a> both inherit <a href="https://docs.unity3d.com/ScriptReference/YieldInstruction.html">YieldInstruction</a>, while <a href="https://docs.unity3d.com/ScriptReference/CustomYieldInstruction.html">CustomYieldInstruction</a> and <a href="https://docs.unity3d.com/ScriptReference/WWW.html">WWW</a> do not. <em>UnityFx.Async</em> uses .NET <a href="https://msdn.microsoft.com/en-us/library/system.iasyncresult(v=vs.110).aspx">IAsyncResult</a> interface as a base for all its asynchronous operations and provides wrappers for native Unity3d operations.</li>
+<li>Running a coroutine requires <a href="https://docs.unity3d.com/ScriptReference/MonoBehaviour.html">MonoBehaviour</a> instance which is not always convenient. <em>UnityFx.Async</em> provides possibility to start coroutines without specifying a <code>MonoBehaviour</code>. It also provides a mechanism of defining custom coroutine runners via <code>AsyncScheduler</code> abstract class.</li>
+<li>Unity3d built-in asynchronous operations provide very little control after they have been started, <a href="https://docs.unity3d.com/ScriptReference/Coroutine.html">Coroutine</a> for example doesn&#39;t even provide a way to determine if it is completed. <em>UnityFx.Async</em> defines <code>IAsyncOperation</code> interface to give users extended control options (it mimics .NET <a href="https://msdn.microsoft.com/ru-ru/library/system.threading.tasks.task(v=vs.110).aspx">Task</a> as much as possible).</li>
+<li>There is no standard way to return a coroutine result value. While some of the <a href="https://docs.unity3d.com/ScriptReference/AsyncOperation.html">AsyncOperation</a>-derived classes define operation results, <a href="https://docs.unity3d.com/ScriptReference/WWW.html">WWW</a> uses completely inconsistent way of doing this. There is a generic version of <code>IAsyncOperation</code> interface with result values in <em>UnityFx.Async</em> (again very similar to <a href="https://msdn.microsoft.com/ru-ru/library/dd321424(v=vs.110).aspx">Task<t></t></a>).</li>
+<li>There is no easy way of chaining coroutines, waiting for completion of a coroutine group etc. <em>UnityFx.Async</em> implements a set of extension methods for both <code>IAsyncResult</code> and <code>IAsyncOperation</code> interfaces that provide the above mentioned functionality.</li>
+<li>Coroutines can&#39;t handle exceptions, because <code>yield return</code> statements cannot be surrounded with a try-catch block. <em>UnityFx.Async</em> finishes the corresponding operation with an error if any exceptions are being thrown inside its coroutine update loop.</li>
+<li><em>UnityFx.Async</em> provides default yieldable/awaitable implementation for <code>IAsyncOperation</code> and <code>IAsyncResult</code> to allow easy library extension.</li>
+</ul>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/Source/DocFx/articles/intro.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Copyright © 2015-2017 Microsoft<br>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
