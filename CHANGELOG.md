@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ## [Unreleased]
 
 ### Added
+- Added project documentation site (`docs` folder).
 - Added unit tests for `AsyncResult`.
 - Added `FromWebRequest` helpers.
 - Added `AsyncContinuationOptions` support to continuations.
