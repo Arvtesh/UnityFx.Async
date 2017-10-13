@@ -212,8 +212,6 @@ namespace UnityFx.Async
 			finally
 			{
 				_waitHandle?.Set();
-
-				// TODO: synchronization needed
 				_continuation?.Invoke();
 				_continuation = null;
 			}
@@ -583,15 +581,30 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		public void AddContinuation(Action continuation)
 		{
-			// TODO: make sure other threads do not interfere
-			_continuation += continuation;
+			if (continuation == null)
+			{
+				throw new NullReferenceException(nameof(continuation));
+			}
+
+			if (IsCompleted)
+			{
+				AsyncScheduler.QueueForUpdate(continuation);
+			}
+			else
+			{
+				// NOTE: this is thread-safe
+				_continuation += continuation;
+			}
 		}
 
 		/// <inheritdoc/>
 		public void RemoveContinuation(Action continuation)
 		{
-			// TODO: make sure other threads do not interfere
-			_continuation -= continuation;
+			if (continuation != null)
+			{
+				// NOTE: this is thread-safe
+				_continuation -= continuation;
+			}
 		}
 
 		#endregion

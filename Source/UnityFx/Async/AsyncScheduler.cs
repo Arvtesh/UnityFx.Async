@@ -34,7 +34,7 @@ namespace UnityFx.Async
 		/// Executes the specified delegate on the main thread during Update method.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
-		public static void ExecuteOnUpdate(Action op)
+		public static void QueueForUpdate(Action op)
 		{
 			if (op == null)
 			{
@@ -48,7 +48,7 @@ namespace UnityFx.Async
 		/// Executes the specified delegate on the main thread during LateUpdate method.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
-		public static void ExecuteOnLateUpdate(Action op)
+		public static void QueueForLateUpdate(Action op)
 		{
 			if (op == null)
 			{
@@ -56,6 +56,20 @@ namespace UnityFx.Async
 			}
 
 			AsyncRunnerBehaviour.QueueActionForLateUpdate(op);
+		}
+
+		/// <summary>
+		/// Queues the specified action for execution.
+		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="a"/> is <c>null</c>.</exception>
+		public void QueueAction(Action a)
+		{
+			if (a == null)
+			{
+				throw new ArgumentNullException(nameof(a));
+			}
+
+			AsyncRunnerBehaviour.QueueActionForUpdate(a);
 		}
 
 		/// <summary>
