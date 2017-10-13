@@ -581,6 +581,8 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		public void AddContinuation(Action continuation)
 		{
+			ThrowIfDisposed();
+
 			if (continuation == null)
 			{
 				throw new NullReferenceException(nameof(continuation));
@@ -592,20 +594,48 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				// NOTE: this is thread-safe
+#if UNITYFX_ST
 				_continuation += continuation;
+#else
+				// NOTE: the code is adapted from https://stackoverflow.com/questions/3522361/add-delegate-to-event-thread-safety
+				Action d1 = _continuation;
+				Action d2, d3;
+
+				do
+				{
+					d2 = d1;
+					d3 = (Action)Delegate.Combine(d2, continuation);
+					d1 = Interlocked.CompareExchange(ref _continuation, d3, d2);
+				}
+				while (d1 != d2);
+#endif
 			}
 		}
 
 		/// <inheritdoc/>
 		public void RemoveContinuation(Action continuation)
 		{
+			ThrowIfDisposed();
+
 			if (continuation != null)
 			{
-				// NOTE: this is thread-safe
+#if UNITYFX_ST
 				_continuation -= continuation;
+#else
+				// NOTE: the code is adapted from https://stackoverflow.com/questions/3522361/add-delegate-to-event-thread-safety
+				Action d1 = _continuation;
+				Action d2, d3;
+
+				do
+				{
+					d2 = d1;
+					d3 = (Action)Delegate.Remove(d2, continuation);
+					d1 = Interlocked.CompareExchange(ref _continuation, d3, d2);
+				}
+				while (d1 != d2);
+#endif
 			}
-		}
+}
 
 		#endregion
 
