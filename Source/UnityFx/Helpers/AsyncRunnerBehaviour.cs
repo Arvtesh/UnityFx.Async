@@ -13,11 +13,11 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private static Queue<Action> _updateExecutionQueue;
-		private static Queue<Action> _lateUpdateExecutionQueue;
-		private static AsyncRunnerBehaviour _instance;
-
+		private Queue<Action> _updateExecutionQueue;
+		private Queue<Action> _lateUpdateExecutionQueue;
 		private List<Action> _tmpList;
+
+		private static AsyncRunnerBehaviour _instance;
 
 		#endregion
 
@@ -53,7 +53,7 @@ namespace UnityFx.Async
 			}
 		}
 
-		public static void QueueActionForUpdate(Action op)
+		public void QueueActionForUpdate(Action op)
 		{
 			if (_updateExecutionQueue == null)
 			{
@@ -66,7 +66,7 @@ namespace UnityFx.Async
 			}
 		}
 
-		public static void QueueActionForLateUpdate(Action op)
+		public void QueueActionForLateUpdate(Action op)
 		{
 			if (_lateUpdateExecutionQueue == null)
 			{

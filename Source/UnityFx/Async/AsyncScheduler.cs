@@ -41,7 +41,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(op));
 			}
 
-			AsyncRunnerBehaviour.QueueActionForUpdate(op);
+			AsyncRunnerBehaviour.Instance.QueueActionForUpdate(op);
 		}
 
 		/// <summary>
@@ -55,7 +55,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(op));
 			}
 
-			AsyncRunnerBehaviour.QueueActionForLateUpdate(op);
+			AsyncRunnerBehaviour.Instance.QueueActionForLateUpdate(op);
 		}
 
 		/// <summary>
@@ -69,7 +69,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(a));
 			}
 
-			AsyncRunnerBehaviour.QueueActionForUpdate(a);
+			AsyncRunnerBehaviour.Instance.QueueActionForUpdate(a);
 		}
 
 		/// <summary>
