@@ -588,7 +588,7 @@ namespace UnityFx.Async
 
 			if (IsCompleted)
 			{
-				AsyncScheduler.QueueForUpdate(continuation);
+				AsyncRunnerBehaviour.Instance.QueueActionForUpdate(continuation);
 			}
 			else
 			{
