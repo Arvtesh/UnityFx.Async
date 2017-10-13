@@ -16,5 +16,3 @@ mailto:arvtesh@gmail.com
 
 USEFUL LINKS
 Github project: https://github.com/Arvtesh/UnityFx.Async
-Unity forums: TODO
-Asset store: TODO

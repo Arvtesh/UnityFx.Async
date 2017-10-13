@@ -13,6 +13,8 @@ Please see [CHANGELOG](CHANGELOG.md) for information on recent changes.
 
 Unity Asset Store [link](https://www.assetstore.unity3d.com/#!/content/96696).
 
+Documentation [link](https://arvtesh.github.io/UnityFx.Async/).
+
 ## Motivation
 
 Unity3d provides powerful set of tools for game development. While it is a great engine there are quite a few places where its API is not ideal. Asynchronous operations and coroutine management are examples of such weaknesses. While the concept of coroutines itself is great for frame-based applications, Unity implementation is not consistent at least:
