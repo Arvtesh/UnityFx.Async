@@ -269,6 +269,7 @@
             <summary>
             Transforms the caller instance of <see cref="T:UnityFx.Async.IAsyncOperation`1"/> to another one that differs only by the result value.
             </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="transformer"/> is <c>null</c>.</exception>
         </member>
         <member name="M:UnityFx.Async.AsyncExtensions.ContinueWith``1(``0,System.Func{``0,System.IAsyncResult})">
             <summary>
@@ -308,37 +309,37 @@
         </member>
         <member name="M:UnityFx.Async.AsyncExtensions.ContinueWith``1(``0,System.Func{``0,UnityEngine.AsyncOperation})">
             <summary>
-            Creates a continuation that executes when the target <see cref="T:UnityFx.Async.IAsyncOperation"/> completes.
+            Creates a continuation that executes when the target <see cref="T:UnityEngine.AsyncOperation"/> completes.
             </summary>
             <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
         </member>
         <member name="M:UnityFx.Async.AsyncExtensions.ContinueWith``1(``0,System.Func{``0,UnityEngine.AsyncOperation},UnityEngine.MonoBehaviour)">
             <summary>
-            Creates a continuation that executes when the target <see cref="T:UnityFx.Async.IAsyncOperation"/> completes.
+            Creates a continuation that executes when the target <see cref="T:UnityEngine.AsyncOperation"/> completes.
             </summary>
             <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
         </member>
         <member name="M:UnityFx.Async.AsyncExtensions.ContinueWith``1(``0,System.Func{``0,UnityEngine.AsyncOperation},UnityFx.Async.AsyncScheduler)">
             <summary>
-            Creates a continuation that executes when the target <see cref="T:UnityFx.Async.IAsyncOperation"/> completes.
+            Creates a continuation that executes when the target <see cref="T:UnityEngine.AsyncOperation"/> completes.
             </summary>
             <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
         </member>
         <member name="M:UnityFx.Async.AsyncExtensions.ContinueWith``2(``0,System.Func{``0,UnityEngine.AsyncOperation})">
             <summary>
-            Creates a continuation that executes when the target <see cref="T:UnityFx.Async.IAsyncOperation"/> completes.
+            Creates a continuation that executes when the target <see cref="T:UnityEngine.AsyncOperation"/> completes.
             </summary>
             <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
         </member>
         <member name="M:UnityFx.Async.AsyncExtensions.ContinueWith``2(``0,System.Func{``0,UnityEngine.AsyncOperation},UnityEngine.MonoBehaviour)">
             <summary>
-            Creates a continuation that executes when the target <see cref="T:UnityFx.Async.IAsyncOperation"/> completes.
+            Creates a continuation that executes when the target <see cref="T:UnityEngine.AsyncOperation"/> completes.
             </summary>
             <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
         </member>
         <member name="M:UnityFx.Async.AsyncExtensions.ContinueWith``2(``0,System.Func{``0,UnityEngine.AsyncOperation},UnityFx.Async.AsyncScheduler)">
             <summary>
-            Creates a continuation that executes when the target <see cref="T:UnityFx.Async.IAsyncOperation"/> completes.
+            Creates a continuation that executes when the target <see cref="T:UnityEngine.AsyncOperation"/> completes.
             </summary>
             <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="continuationFactory"/> is <c>null</c>.</exception>
         </member>
@@ -982,17 +983,11 @@
             Returns a new instance of <see cref="T:UnityFx.Async.AsyncScheduler"/> for the specified <see cref="T:UnityEngine.MonoBehaviour"/>.
             </summary>
         </member>
-        <member name="M:UnityFx.Async.AsyncScheduler.ExecuteOnUpdate(System.Action)">
+        <member name="M:UnityFx.Async.AsyncScheduler.QueueAction(System.Action)">
             <summary>
-            Executes the specified delegate on the main thread during Update method.
+            Queues the specified action for execution.
             </summary>
-            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
-        </member>
-        <member name="M:UnityFx.Async.AsyncScheduler.ExecuteOnLateUpdate(System.Action)">
-            <summary>
-            Executes the specified delegate on the main thread during LateUpdate method.
-            </summary>
-            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="op"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="a"/> is <c>null</c>.</exception>
         </member>
         <member name="M:UnityFx.Async.AsyncScheduler.QueueCoroutine(System.Collections.IEnumerator)">
             <summary>
