@@ -1980,30 +1980,6 @@ references:
   commentId: Overload:UnityFx.Async.AsyncScheduler.#ctor
   fullName: UnityFx.Async.AsyncScheduler.AsyncScheduler
   nameWithType: AsyncScheduler.AsyncScheduler
-- uid: UnityFx.Async.AsyncScheduler.ExecuteOnLateUpdate(System.Action)
-  name: ExecuteOnLateUpdate(Action)
-  href: api/UnityFx.Async.AsyncScheduler.html#UnityFx_Async_AsyncScheduler_ExecuteOnLateUpdate_System_Action_
-  commentId: M:UnityFx.Async.AsyncScheduler.ExecuteOnLateUpdate(System.Action)
-  fullName: UnityFx.Async.AsyncScheduler.ExecuteOnLateUpdate(System.Action)
-  nameWithType: AsyncScheduler.ExecuteOnLateUpdate(Action)
-- uid: UnityFx.Async.AsyncScheduler.ExecuteOnLateUpdate*
-  name: ExecuteOnLateUpdate
-  href: api/UnityFx.Async.AsyncScheduler.html#UnityFx_Async_AsyncScheduler_ExecuteOnLateUpdate_
-  commentId: Overload:UnityFx.Async.AsyncScheduler.ExecuteOnLateUpdate
-  fullName: UnityFx.Async.AsyncScheduler.ExecuteOnLateUpdate
-  nameWithType: AsyncScheduler.ExecuteOnLateUpdate
-- uid: UnityFx.Async.AsyncScheduler.ExecuteOnUpdate(System.Action)
-  name: ExecuteOnUpdate(Action)
-  href: api/UnityFx.Async.AsyncScheduler.html#UnityFx_Async_AsyncScheduler_ExecuteOnUpdate_System_Action_
-  commentId: M:UnityFx.Async.AsyncScheduler.ExecuteOnUpdate(System.Action)
-  fullName: UnityFx.Async.AsyncScheduler.ExecuteOnUpdate(System.Action)
-  nameWithType: AsyncScheduler.ExecuteOnUpdate(Action)
-- uid: UnityFx.Async.AsyncScheduler.ExecuteOnUpdate*
-  name: ExecuteOnUpdate
-  href: api/UnityFx.Async.AsyncScheduler.html#UnityFx_Async_AsyncScheduler_ExecuteOnUpdate_
-  commentId: Overload:UnityFx.Async.AsyncScheduler.ExecuteOnUpdate
-  fullName: UnityFx.Async.AsyncScheduler.ExecuteOnUpdate
-  nameWithType: AsyncScheduler.ExecuteOnUpdate
 - uid: UnityFx.Async.AsyncScheduler.FromMonoBehaviour(UnityEngine.MonoBehaviour)
   name: FromMonoBehaviour(MonoBehaviour)
   href: api/UnityFx.Async.AsyncScheduler.html#UnityFx_Async_AsyncScheduler_FromMonoBehaviour_UnityEngine_MonoBehaviour_
@@ -2016,6 +1992,18 @@ references:
   commentId: Overload:UnityFx.Async.AsyncScheduler.FromMonoBehaviour
   fullName: UnityFx.Async.AsyncScheduler.FromMonoBehaviour
   nameWithType: AsyncScheduler.FromMonoBehaviour
+- uid: UnityFx.Async.AsyncScheduler.QueueAction(System.Action)
+  name: QueueAction(Action)
+  href: api/UnityFx.Async.AsyncScheduler.html#UnityFx_Async_AsyncScheduler_QueueAction_System_Action_
+  commentId: M:UnityFx.Async.AsyncScheduler.QueueAction(System.Action)
+  fullName: UnityFx.Async.AsyncScheduler.QueueAction(System.Action)
+  nameWithType: AsyncScheduler.QueueAction(Action)
+- uid: UnityFx.Async.AsyncScheduler.QueueAction*
+  name: QueueAction
+  href: api/UnityFx.Async.AsyncScheduler.html#UnityFx_Async_AsyncScheduler_QueueAction_
+  commentId: Overload:UnityFx.Async.AsyncScheduler.QueueAction
+  fullName: UnityFx.Async.AsyncScheduler.QueueAction
+  nameWithType: AsyncScheduler.QueueAction
 - uid: UnityFx.Async.AsyncScheduler.QueueCoroutine(System.Collections.IEnumerator)
   name: QueueCoroutine(IEnumerator)
   href: api/UnityFx.Async.AsyncScheduler.html#UnityFx_Async_AsyncScheduler_QueueCoroutine_System_Collections_IEnumerator_

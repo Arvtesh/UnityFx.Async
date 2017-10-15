@@ -126,94 +126,6 @@
   </h3>
   
   
-  <a id="UnityFx_Async_AsyncScheduler_ExecuteOnLateUpdate_" data-uid="UnityFx.Async.AsyncScheduler.ExecuteOnLateUpdate*"></a>
-  <h4 id="UnityFx_Async_AsyncScheduler_ExecuteOnLateUpdate_System_Action_" data-uid="UnityFx.Async.AsyncScheduler.ExecuteOnLateUpdate(System.Action)">ExecuteOnLateUpdate(Action)</h4>
-  <div class="markdown level1 summary"><p>Executes the specified delegate on the main thread during LateUpdate method.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void ExecuteOnLateUpdate(Action op)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span></td>
-        <td><span class="parametername">op</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ArgumentNullException</span></td>
-        <td><p>Thrown if the <code data-dev-comment-type="paramref" class="paramref">op</code> is <code>null</code>.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <a id="UnityFx_Async_AsyncScheduler_ExecuteOnUpdate_" data-uid="UnityFx.Async.AsyncScheduler.ExecuteOnUpdate*"></a>
-  <h4 id="UnityFx_Async_AsyncScheduler_ExecuteOnUpdate_System_Action_" data-uid="UnityFx.Async.AsyncScheduler.ExecuteOnUpdate(System.Action)">ExecuteOnUpdate(Action)</h4>
-  <div class="markdown level1 summary"><p>Executes the specified delegate on the main thread during Update method.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void ExecuteOnUpdate(Action op)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span></td>
-        <td><span class="parametername">op</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ArgumentNullException</span></td>
-        <td><p>Thrown if the <code data-dev-comment-type="paramref" class="paramref">op</code> is <code>null</code>.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
   <a id="UnityFx_Async_AsyncScheduler_FromMonoBehaviour_" data-uid="UnityFx.Async.AsyncScheduler.FromMonoBehaviour*"></a>
   <h4 id="UnityFx_Async_AsyncScheduler_FromMonoBehaviour_UnityEngine_MonoBehaviour_" data-uid="UnityFx.Async.AsyncScheduler.FromMonoBehaviour(UnityEngine.MonoBehaviour)">FromMonoBehaviour(MonoBehaviour)</h4>
   <div class="markdown level1 summary"><p>Returns a new instance of <a class="xref" href="UnityFx.Async.AsyncScheduler.html">AsyncScheduler</a> for the specified <span class="xref">UnityEngine.MonoBehaviour</span>.</p>
@@ -252,6 +164,50 @@
       <tr>
         <td><a class="xref" href="UnityFx.Async.AsyncScheduler.html">AsyncScheduler</a></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="UnityFx_Async_AsyncScheduler_QueueAction_" data-uid="UnityFx.Async.AsyncScheduler.QueueAction*"></a>
+  <h4 id="UnityFx_Async_AsyncScheduler_QueueAction_System_Action_" data-uid="UnityFx.Async.AsyncScheduler.QueueAction(System.Action)">QueueAction(Action)</h4>
+  <div class="markdown level1 summary"><p>Queues the specified action for execution.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void QueueAction(Action a)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span></td>
+        <td><span class="parametername">a</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ArgumentNullException</span></td>
+        <td><p>Thrown if the <code data-dev-comment-type="paramref" class="paramref">a</code> is <code>null</code>.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -351,8 +307,8 @@
             <span class="pull-right">
               <a href="#top">Back to top</a>
             </span>
+            Copyright (c) 2016-2017 Alexander Bogarsukov
             
-            <span>Copyright © 2015-2017 Microsoft<br>Generated by <strong>DocFX</strong></span>
           </div>
         </div>
       </footer>
