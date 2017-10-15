@@ -54,19 +54,17 @@
         ]
       }
     ],
-		"dest": "../../Docs",
+		"dest": "../../docs",
 		"globalMetadata": {
 			"_appTitle": "Asynchronous Operations for Unity",
-			"_gitUrlPattern": "https://github.com/Arvtesh/UnityFx.Async"
+			"_appFooter": "Copyright (c) 2016-2017 Alexander Bogarsukov",
+			"_gitUrlPattern": "github"
 		},
-    "globalMetadataFiles": [],
-    "fileMetadataFiles": [],
     "template": [
       "default"
     ],
-    "postProcessors": [],
-    "noLangKeyword": false,
-    "keepFileLink": false,
-    "cleanupCacheHistory": false
+		"sitemap": {
+			"baseUrl": "https://arvtesh.github.io/UnityFx.Async/"
+		}
   }
 }
