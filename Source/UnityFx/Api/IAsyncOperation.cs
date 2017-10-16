@@ -38,7 +38,7 @@ namespace UnityFx.Async
 	}
 
 	/// <summary>
-	/// A disposable <see cref="IAsyncResult"/> with status.
+	/// A disposable <see cref="IAsyncResult"/> with status information.
 	/// </summary>
 	/// <remarks>
 	/// The interface is designed to be as close to the TLP Task as possible. All interface methods are expected to be thread-safe.

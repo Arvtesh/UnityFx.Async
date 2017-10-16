@@ -792,9 +792,9 @@
             </summary>
             <exception cref="T:System.ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
         </member>
-        <member name="M:UnityFx.Async.AsyncResult.GetOperationResult(UnityEngine.AsyncOperation)">
+        <member name="M:UnityFx.Async.AsyncResult.GetOperationResult(UnityEngine.YieldInstruction)">
             <summary>
-            Helper method that returns a result of the <see cref="T:UnityEngine.AsyncOperation"/> instance passed (if any).
+            Helper method that returns a result of the <see cref="T:UnityEngine.YieldInstruction"/> instance passed (if any).
             </summary>
         </member>
         <member name="M:UnityFx.Async.AsyncResult.AddContinuation(System.Action)">
