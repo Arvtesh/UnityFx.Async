@@ -22,7 +22,7 @@
 
 	<ItemGroup>
 		<Reference Include="UnityEngine">
-			<HintPath>..\Dependencies\UnityEngine.dll</HintPath>
+			<HintPath>Dependencies\UnityEngine.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 

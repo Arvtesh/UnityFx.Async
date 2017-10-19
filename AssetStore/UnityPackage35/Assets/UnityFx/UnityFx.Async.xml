@@ -52,7 +52,7 @@
         </member>
         <member name="T:UnityFx.Async.IAsyncOperation">
             <summary>
-            A disposable <see cref="T:System.IAsyncResult"/> with status.
+            A disposable <see cref="T:System.IAsyncResult"/> with status information.
             </summary>
             <remarks>
             The interface is designed to be as close to the TLP Task as possible. All interface methods are expected to be thread-safe.
