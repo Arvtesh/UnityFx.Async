@@ -1,5 +1,5 @@
 $scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
-$packagesPath = Join-Path $scriptPath "..\Build"
+$packagesPath = Join-Path $scriptPath "..\temp\BuildTools"
 $binPath = Join-Path $scriptPath "bin\Release\net46"
 $nugetPath = Join-Path $packagesPath "nuget.exe"
 $docfxSrcFiles = (Join-Path $binPath "UnityFx.Async.dll"), (Join-Path $binPath "UnityFx.Async.xml")

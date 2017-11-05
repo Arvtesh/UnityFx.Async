@@ -20,8 +20,18 @@ artifacts:
   - path: .\Bin\net46
     name: UnityFx.Async-net46
 
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '$(GitVersion_MajorMinorPatch)'
+  package_version: '$(GitVersion_SemVer)'
+  assembly_version: '$(GitVersion_AssemblySemVer)'
+  file_version: '$(GitVersion_MajorMinorPatch).$(GitVersion_CommitsSinceVersionSource)'
+  informational_version: '$(GitVersion_InformationalVersion)'
+
 deploy:
   - provider: GitHub
+    tag: v$(GitVersion_MajorMinorPatch)
     auth_token:
       secure: aTd8m7PLWUlE3iacD7bx9oWPW/CK0+BTE7/nhgB2EXk8iZ3FJ/TJX5kKLIYP76nN
     force_update: false

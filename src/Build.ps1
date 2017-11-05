@@ -1,8 +1,8 @@
 $scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
 $solutionPath = Join-Path $scriptPath "UnityFx.sln"
 $configuration = $args[0]
-$packagesPath = Join-Path $scriptPath "..\Build"
-$binPath = Join-Path $scriptPath "..\Bin"
+$packagesPath = Join-Path $scriptPath "..\temp\BuildTools"
+$binPath = Join-Path $scriptPath "..\bin"
 $binPath35 = Join-Path $binPath "net35"
 $binPath46 = Join-Path $binPath "net46"
 $assetsPath35 = Join-Path $scriptPath "..\AssetStore\UnityPackage35\Assets\UnityFx"
@@ -62,7 +62,7 @@ if ($LastExitCode -ne 0)
 	}
 }
 
-# publish build results to .\Build\Bin
+# publish build results to .\bin
 $filesToPublish35 =
 	(Join-Path $scriptPath (Join-Path "bin" (Join-Path $configuration "net35\UnityFx.Async.dll"))),
 	(Join-Path $scriptPath (Join-Path "bin" (Join-Path $configuration "net35\UnityFx.Async.xml")))

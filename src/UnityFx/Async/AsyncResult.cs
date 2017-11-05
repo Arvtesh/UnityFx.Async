@@ -552,9 +552,9 @@ namespace UnityFx.Async
 #endif
 
 		/// <summary>
-		/// Helper method that returns a result of the <see cref="AsyncOperation"/> instance passed (if any).
+		/// Helper method that returns a result of the <see cref="YieldInstruction"/> instance passed (if any).
 		/// </summary>
-		protected internal static object GetOperationResult(AsyncOperation op)
+		protected internal static object GetOperationResult(YieldInstruction op)
 		{
 			if (op is ResourceRequest rr)
 			{

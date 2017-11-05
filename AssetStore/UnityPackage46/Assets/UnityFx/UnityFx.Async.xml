@@ -52,7 +52,7 @@
         </member>
         <member name="T:UnityFx.Async.IAsyncOperation">
             <summary>
-            A disposable <see cref="T:System.IAsyncResult"/> with status.
+            A disposable <see cref="T:System.IAsyncResult"/> with status information.
             </summary>
             <remarks>
             The interface is designed to be as close to the TLP Task as possible. All interface methods are expected to be thread-safe.
@@ -441,6 +441,31 @@
             </summary>
             <seealso cref="M:UnityFx.Async.AsyncExtensions.Wait(System.IAsyncResult)"/>
             <seealso cref="M:UnityFx.Async.AsyncExtensions.Wait(System.IAsyncResult,System.TimeSpan)"/>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.ToTask(UnityEngine.YieldInstruction)">
+            <summary>
+            Returns a <see cref="T:System.Threading.Tasks.Task"/> instance for the specified <see cref="T:UnityEngine.YieldInstruction"/>.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.ToTask``1(UnityEngine.YieldInstruction)">
+            <summary>
+            Returns a <see cref="T:System.Threading.Tasks.Task`1"/> instance for the specified <see cref="T:UnityEngine.YieldInstruction"/>.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.ToTask(UnityEngine.Networking.UnityWebRequest)">
+            <summary>
+            Returns a <see cref="T:System.Threading.Tasks.Task"/> instance for the specified <see cref="T:UnityEngine.Networking.UnityWebRequest"/>.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.ToTask``1(UnityEngine.Networking.UnityWebRequest)">
+            <summary>
+            Returns a <see cref="T:System.Threading.Tasks.Task`1"/> instance for the specified <see cref="T:UnityEngine.Networking.UnityWebRequest"/>.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.AsyncExtensions.ToTask``1(UnityEngine.Networking.UnityWebRequest,System.Func{UnityEngine.Networking.UnityWebRequest,``0})">
+            <summary>
+            Returns a <see cref="T:System.Threading.Tasks.Task`1"/> instance for the specified <see cref="T:UnityEngine.Networking.UnityWebRequest"/>.
+            </summary>
         </member>
         <member name="M:UnityFx.Async.AsyncExtensions.GetAsyncFactory(UnityEngine.MonoBehaviour)">
             <summary>
@@ -1106,9 +1131,9 @@
             </summary>
             <exception cref="T:System.ArgumentNullException">Thrown if the specified array is <c>null</c>.</exception>
         </member>
-        <member name="M:UnityFx.Async.AsyncResult.GetOperationResult(UnityEngine.AsyncOperation)">
+        <member name="M:UnityFx.Async.AsyncResult.GetOperationResult(UnityEngine.YieldInstruction)">
             <summary>
-            Helper method that returns a result of the <see cref="T:UnityEngine.AsyncOperation"/> instance passed (if any).
+            Helper method that returns a result of the <see cref="T:UnityEngine.YieldInstruction"/> instance passed (if any).
             </summary>
         </member>
         <member name="M:UnityFx.Async.AsyncResult.AddContinuation(System.Action)">

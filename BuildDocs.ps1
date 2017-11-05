@@ -1,2 +1,2 @@
-.\Source\Build.ps1 Release
-.\Source\BuildDocs.ps1
+.\src\Build.ps1 Release
+.\src\BuildDocs.ps1

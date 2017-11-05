@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Networking;
 
 #if NET46
 using System.Threading.Tasks;
@@ -406,6 +407,68 @@ namespace UnityFx.Async
 
 		#endregion
 
+		#region YieldInstruction
+
+#if NET46
+		/// <summary>
+		/// Returns a <see cref="Task"/> instance for the specified <see cref="YieldInstruction"/>.
+		/// </summary>
+		public static Task ToTask(this YieldInstruction op)
+		{
+			var result = new TaskCompletionSource<UnityEngine.Object>(op);
+			AsyncRunnerBehaviour.Instance.StartCoroutine(WaitEnum(op, result));
+			return result.Task;
+		}
+
+		/// <summary>
+		/// Returns a <see cref="Task{TResult}"/> instance for the specified <see cref="YieldInstruction"/>.
+		/// </summary>
+		public static Task<T> ToTask<T>(this YieldInstruction op) where T : UnityEngine.Object
+		{
+			var result = new TaskCompletionSource<T>(op);
+			AsyncRunnerBehaviour.Instance.StartCoroutine(WaitEnum(op, result));
+			return result.Task;
+		}
+#endif
+
+		#endregion
+
+		#region UnityWebRequest
+
+#if NET46
+		/// <summary>
+		/// Returns a <see cref="Task"/> instance for the specified <see cref="UnityWebRequest"/>.
+		/// </summary>
+		public static Task ToTask(this UnityWebRequest op)
+		{
+			var result = new TaskCompletionSource<object>(op);
+			AsyncRunnerBehaviour.Instance.StartCoroutine(WaitEnum(op, result, null));
+			return result.Task;
+		}
+
+		/// <summary>
+		/// Returns a <see cref="Task{TResult}"/> instance for the specified <see cref="UnityWebRequest"/>.
+		/// </summary>
+		public static Task<T> ToTask<T>(this UnityWebRequest op) where T : class
+		{
+			var result = new TaskCompletionSource<T>(op);
+			AsyncRunnerBehaviour.Instance.StartCoroutine(WaitEnum(op, result, null));
+			return result.Task;
+		}
+
+		/// <summary>
+		/// Returns a <see cref="Task{TResult}"/> instance for the specified <see cref="UnityWebRequest"/>.
+		/// </summary>
+		public static Task<T> ToTask<T>(this UnityWebRequest op, Func<UnityWebRequest, T> resultProcessor) where T : class
+		{
+			var result = new TaskCompletionSource<T>(op);
+			AsyncRunnerBehaviour.Instance.StartCoroutine(WaitEnum(op, result, resultProcessor));
+			return result.Task;
+		}
+#endif
+
+		#endregion
+
 		#region MonoBehaviour
 
 		/// <summary>
@@ -462,6 +525,99 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="updateCallback"/> is <c>null</c>.</exception>
 		public static IAsyncOperation<T> StartAsyncOperation<T>(this MonoBehaviour b, Action<IAsyncOperationController<T>> updateCallback, CancellationToken cancellationToken) => GetAsyncFactory(b).FromUpdateCallback(updateCallback, cancellationToken);
+#endif
+
+		#endregion
+
+		#region implementation
+
+#if NET46
+		private static IEnumerator WaitEnum<T>(YieldInstruction op, TaskCompletionSource<T> tcs) where T : UnityEngine.Object
+		{
+			yield return op;
+			tcs.SetResult(AsyncResult.GetOperationResult(op) as T);
+		}
+
+		private static IEnumerator WaitEnum<T>(UnityWebRequest op, TaskCompletionSource<T> tcs, Func<UnityWebRequest, T> resultProcessor) where T : class
+		{
+			using (op)
+			{
+				yield return op.Send();
+
+				if (op.isNetworkError || op.isHttpError)
+				{
+					tcs.SetException(new SystemException(op.error));
+				}
+				else if (resultProcessor != null)
+				{
+					try
+					{
+						tcs.SetResult(resultProcessor(op));
+					}
+					catch (Exception e)
+					{
+						tcs.SetException(e);
+					}
+				}
+				else if (typeof(T) == typeof(string))
+				{
+					tcs.SetResult(op.downloadHandler.text as T);
+				}
+				else if (typeof(T) == typeof(byte[]))
+				{
+					tcs.SetResult(op.downloadHandler.data as T);
+				}
+				else if (typeof(T) == typeof(AssetBundle))
+				{
+					if (op.downloadHandler is DownloadHandlerAssetBundle h)
+					{
+						tcs.SetResult(h.assetBundle as T);
+					}
+					else
+					{
+						tcs.SetResult(null);
+					}
+				}
+				else if (typeof(T) == typeof(Texture))
+				{
+					if (op.downloadHandler is DownloadHandlerTexture h)
+					{
+						tcs.SetResult(h.texture as T);
+					}
+					else
+					{
+						tcs.SetResult(null);
+					}
+				}
+				else if (typeof(T) == typeof(MovieTexture))
+				{
+					if (op.downloadHandler is DownloadHandlerMovieTexture h)
+					{
+						tcs.SetResult(h.movieTexture as T);
+					}
+					else
+					{
+						tcs.SetResult(null);
+					}
+				}
+				else if (typeof(T) == typeof(AudioClip))
+				{
+					if (op.downloadHandler is DownloadHandlerAudioClip h)
+					{
+						tcs.SetResult(h.audioClip as T);
+					}
+					else
+					{
+						tcs.SetResult(null);
+					}
+				}
+				else
+				{
+					tcs.SetResult(null);
+				}
+			}
+		}
+
 #endif
 
 		#endregion
