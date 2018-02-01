@@ -10,17 +10,17 @@ namespace UnityFx.Async
 	/// <summary>
 	/// A common continuation stuff.
 	/// </summary>
-	internal class AsyncContinuation<T, TContinuation, TResult> : AsyncResult<TResult>, IAsyncOperationContainer
+	internal class AsyncContinuation<T, U, V> : AsyncResult<V>, IAsyncOperationContainer
 		where T : class, IAsyncOperation
-		where TContinuation : class
+		where U : class
 	{
 		#region data
 
-		private readonly Func<T, TContinuation> _continuationFactory;
+		private readonly Func<T, U> _continuationFactory;
 		private readonly AsyncContinuationOptions _options;
 
 		private T _op;
-		private TContinuation _continuation;
+		private U _continuation;
 
 		private int _opQueueLength = 1;
 		private float _opMaxProgress = 0.5f;
@@ -29,7 +29,7 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public AsyncContinuation(T op, Func<T, TContinuation> continuationFactory, AsyncContinuationOptions options)
+		public AsyncContinuation(T op, Func<T, U> continuationFactory, AsyncContinuationOptions options)
 			: base(null)
 		{
 			_continuationFactory = continuationFactory;
@@ -43,8 +43,8 @@ namespace UnityFx.Async
 			}
 		}
 
-#if NET46
-		public AsyncContinuation(T op, Func<T, TContinuation> continuationFactory, CancellationToken cancellationToken, AsyncContinuationOptions options)
+#if !NET35
+		public AsyncContinuation(T op, Func<T, U> continuationFactory, CancellationToken cancellationToken, AsyncContinuationOptions options)
 			: base(null, cancellationToken)
 		{
 			_continuationFactory = continuationFactory;
@@ -102,9 +102,9 @@ namespace UnityFx.Async
 				{
 					UpdateContinuation(_continuation as AsyncOperation);
 				}
-				else if (_continuation is IAsyncOperation<TResult>)
+				else if (_continuation is IAsyncOperation<V>)
 				{
-					UpdateContinuation(_continuation as IAsyncOperation<TResult>);
+					UpdateContinuation(_continuation as IAsyncOperation<V>);
 				}
 				else if (_continuation is IAsyncOperation)
 				{
@@ -158,7 +158,7 @@ namespace UnityFx.Async
 			{
 				try
 				{
-					SetResult((TResult)GetOperationResult(continuation));
+					SetResult((V)GetOperationResult(continuation));
 				}
 				finally
 				{
@@ -171,7 +171,7 @@ namespace UnityFx.Async
 			}
 		}
 
-		private void UpdateContinuation(IAsyncOperation<TResult> continuation)
+		private void UpdateContinuation(IAsyncOperation<V> continuation)
 		{
 			if (continuation.IsCompleted)
 			{

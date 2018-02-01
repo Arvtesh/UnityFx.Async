@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace UnityFx.Async
@@ -9,25 +10,25 @@ namespace UnityFx.Async
 	/// <summary>
 	/// An operation that finishes when all child operation finish.
 	/// </summary>
-	internal sealed class AsyncOperationWhenAll<T> : AsyncResult<T[]>, IAsyncOperationContainer
+	internal sealed class AsyncOperationWhenAll : AsyncResult, IAsyncOperationContainer
 	{
 		#region data
 
-		private IAsyncOperation<T>[] _ops;
+		private List<IAsyncResult> _ops;
 		private int _opsCount;
 
 		#endregion
 
 		#region interface
 
-		public AsyncOperationWhenAll(IAsyncOperation<T>[] ops)
+		public AsyncOperationWhenAll(IAsyncResult[] ops)
 			: base(null)
 		{
 			Initialize(ops);
 		}
 
-#if NET46
-		public AsyncOperationWhenAll(IAsyncOperation<T>[] ops, CancellationToken cancellationToken)
+#if !NET35
+		public AsyncOperationWhenAll(IAsyncResult[] ops, CancellationToken cancellationToken)
 			: base(null, cancellationToken)
 		{
 			Initialize(ops);
@@ -43,45 +44,28 @@ namespace UnityFx.Async
 			var allComplete = true;
 			var progress = 0f;
 
-			for (var i = 0; i < _ops.Length; ++i)
+			foreach (var op in _ops)
 			{
-				var op = _ops[i];
+				var opLength = op is IAsyncOperationContainer c ? c.Size : 1;
 
-				if (op != null)
+				if (op.IsCompleted)
 				{
-					var opLength = op is IAsyncOperationContainer c ? c.Size : 1;
-
-					if (op.IsCompleted)
+					progress += opLength;
+				}
+				else
+				{
+					if (op is IAsyncOperation asyncOp)
 					{
-						progress += opLength;
+						progress += asyncOp.Progress * opLength;
 					}
-					else
-					{
-						if (op is IAsyncOperation asyncOp)
-						{
-							progress += asyncOp.Progress * opLength;
-						}
 
-						allComplete = false;
-					}
+					allComplete = false;
 				}
 			}
 
 			if (allComplete)
 			{
-				var result = new T[_ops.Length];
-
-				for (var i = 0; i < _ops.Length; ++i)
-				{
-					var op = _ops[i];
-
-					if (op != null && op.IsCompletedSuccessfully)
-					{
-						result[i] = op.Result;
-					}
-				}
-
-				SetResult(result);
+				SetCompleted();
 			}
 			else
 			{
@@ -93,20 +77,19 @@ namespace UnityFx.Async
 
 		#region IAsyncOperationContainer
 
+		/// <inheritdoc/>
 		public int Size => _opsCount;
 
 		#endregion
 
 		#region implementation
 
-		private void Initialize(IAsyncOperation<T>[] ops)
+		private void Initialize(IAsyncResult[] ops)
 		{
-			_ops = new IAsyncOperation<T>[ops.Length];
+			_ops = new List<IAsyncResult>(ops.Length);
 
-			for (var i = 0; i < ops.Length; ++i)
+			foreach (var op in ops)
 			{
-				var op = ops[i];
-
 				if (op != null)
 				{
 					if (op is IAsyncOperationContainer c)
@@ -118,7 +101,7 @@ namespace UnityFx.Async
 						_opsCount += 1;
 					}
 
-					_ops[i] = op;
+					_ops.Add(op);
 				}
 			}
 		}

@@ -1048,7 +1048,7 @@
             Implementation of <see cref="T:UnityFx.Async.IAsyncOperation`1"/> that wraps another <see cref="T:UnityFx.Async.IAsyncOperation`1"/> instance and transforma its result.
             </summary>
             <typeparam name="T">Type of the operation result.</typeparam>
-            <typeparam name="TFrom">Result type of the wrapped operation.</typeparam>
+            <typeparam name="U">Result type of the wrapped operation.</typeparam>
         </member>
         <member name="T:UnityFx.Async.AsyncResultWrapper">
             <summary>

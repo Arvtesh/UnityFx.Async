@@ -11,7 +11,7 @@ namespace UnityFx.Async
 	/// </summary>
 	/// <seealso cref="IAwaiter"/>
 #if NET35
-	public interface IAwaiter<out T> 
+	public interface IAwaiter<out T>
 #else
 	public interface IAwaiter<out T> : INotifyCompletion
 #endif

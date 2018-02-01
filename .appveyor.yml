@@ -9,6 +9,9 @@ skip_commits:
   files:
     - '**/*.md'
 
+install:
+  - cmd: git submodule -q update --init
+
 build_script:
   - ps: .\build.ps1
 

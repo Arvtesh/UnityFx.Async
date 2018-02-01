@@ -39,7 +39,7 @@ namespace UnityFx.Async
 			_op = request.Send();
 		}
 
-#if NET46
+#if !NET35
 		public UnityWebRequestWrapper(UnityWebRequest request, CancellationToken cancellationToken)
 			: base(request, cancellationToken)
 		{

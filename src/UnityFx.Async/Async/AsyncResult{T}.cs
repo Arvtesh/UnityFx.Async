@@ -49,7 +49,7 @@ namespace UnityFx.Async
 		{
 		}
 
-#if NET46
+#if !NET35
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>

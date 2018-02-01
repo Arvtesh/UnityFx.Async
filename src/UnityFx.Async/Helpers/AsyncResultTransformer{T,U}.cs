@@ -12,20 +12,20 @@ namespace UnityFx.Async
 	/// Implementation of <see cref="IAsyncOperation{T}"/> that wraps another <see cref="IAsyncOperation{T}"/> instance and transforma its result.
 	/// </summary>
 	/// <typeparam name="T">Type of the operation result.</typeparam>
-	/// <typeparam name="TFrom">Result type of the wrapped operation.</typeparam>
+	/// <typeparam name="U">Result type of the wrapped operation.</typeparam>
 	[DebuggerDisplay("Status = {Status}, Progress={Progress}")]
-	internal sealed class AsyncResultTransformer<T, TFrom> : IAsyncOperation<T>, IEnumerator
+	internal sealed class AsyncResultTransformer<T, U> : IAsyncOperation<T>, IEnumerator
 	{
 		#region data
 
-		private readonly IAsyncOperation<TFrom> _op;
-		private readonly Func<TFrom, T> _transformer;
+		private readonly IAsyncOperation<U> _op;
+		private readonly Func<U, T> _transformer;
 
 		#endregion
 
 		#region interface
 
-		public AsyncResultTransformer(IAsyncOperation<TFrom> op, Func<TFrom, T> transformer)
+		public AsyncResultTransformer(IAsyncOperation<U> op, Func<U, T> transformer)
 		{
 			_op = op;
 			_transformer = transformer;
@@ -60,14 +60,6 @@ namespace UnityFx.Async
 		public bool CompletedSynchronously => _op.CompletedSynchronously;
 
 		public bool IsCompleted => _op.IsCompleted;
-
-		#endregion
-
-		#region IObservable
-
-#if NET46
-		public IDisposable Subscribe(IObserver<T> observer) => throw new NotImplementedException();
-#endif
 
 		#endregion
 

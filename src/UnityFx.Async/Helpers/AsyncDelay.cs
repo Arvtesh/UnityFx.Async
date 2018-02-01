@@ -27,7 +27,7 @@ namespace UnityFx.Async
 			_delay = (float)delay.TotalSeconds;
 		}
 
-#if NET46
+#if !NET35
 		public AsyncDelay(TimeSpan delay, CancellationToken cancellationToken)
 			: base(null, cancellationToken)
 		{
