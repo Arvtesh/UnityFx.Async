@@ -5,9 +5,6 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Globalization;
-#if !NET35
-using System.Runtime.ExceptionServices;
-#endif
 using System.Threading;
 
 namespace UnityFx.Async
@@ -22,17 +19,21 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private const int _statusCompletedFlag = 0x00100000;
-		private const int _statusSynchronousFlag = 0x00200000;
-		private const int _statusDisposedFlag = 0x00400000;
+		private const int _flagCompleted = 0x00100000;
+		private const int _flagSynchronous = 0x00200000;
+		private const int _flagCompletedSynchronously = _flagCompleted | _flagSynchronous;
+		private const int _flagDisposed = 0x00400000;
+		private const int _flagDoNotDispose = 0x10000000;
 		private const int _statusMask = 0x0000000f;
 
 		private readonly AsyncCallback _asyncCallback;
 		private readonly object _asyncState;
 
+		private static IAsyncOperation _completedOperation;
+
 		private EventWaitHandle _waitHandle;
 		private Exception _exception;
-		private int _status;
+		private int _flags;
 		private Action _continuation;
 
 		#endregion
@@ -42,7 +43,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns <see langword="true"/> if the operation is disposed; <see langword="false"/> otherwise. Read only.
 		/// </summary>
-		protected bool IsDisposed => (_status & _statusDisposedFlag) != 0;
+		protected bool IsDisposed => (_flags & _flagDisposed) != 0;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
@@ -63,28 +64,28 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Throws exception if the operation has failed.
+		/// Transitions the operation to <see cref="AsyncOperationStatus.Scheduled"/> state.
 		/// </summary>
-		protected internal void ThrowIfFaulted()
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <seealso cref="SetRunning"/>
+		public void SetScheduled()
 		{
-			if (IsFaulted)
+			if (!TrySetStatusInternal(StatusScheduled))
 			{
-				if (_exception != null)
-				{
-#if !NET35
-					ExceptionDispatchInfo.Capture(_exception).Throw();
-#else
-					throw _exception;
-#endif
-				}
-				else if (IsCanceled)
-				{
-					throw new OperationCanceledException(GetOperationName());
-				}
-				else
-				{
-					throw new Exception(GetOperationName());
-				}
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Transitions the operation to <see cref="AsyncOperationStatus.Running"/> state.
+		/// </summary>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <seealso cref="SetScheduled"/>
+		public void SetRunning()
+		{
+			if (!TrySetStatusInternal(StatusRunning))
+			{
+				throw new InvalidOperationException();
 			}
 		}
 
@@ -93,7 +94,7 @@ namespace UnityFx.Async
 		/// </summary>
 		protected void ThrowIfDisposed()
 		{
-			if ((_status & _statusDisposedFlag) != 0)
+			if ((_flags & _flagDisposed) != 0)
 			{
 				throw new ObjectDisposedException(GetOperationName());
 			}
@@ -113,6 +114,13 @@ namespace UnityFx.Async
 		#region virtual interface
 
 		/// <summary>
+		/// Called when the operation state has changed.
+		/// </summary>
+		protected virtual void OnStatusChanged()
+		{
+		}
+
+		/// <summary>
 		/// Called when the operation is completed.
 		/// </summary>
 		protected virtual void OnCompleted()
@@ -130,9 +138,9 @@ namespace UnityFx.Async
 		/// <seealso cref="ThrowIfDisposed"/>
 		protected virtual void Dispose(bool disposing)
 		{
-			if (disposing)
+			if (disposing && (_flags & _flagDoNotDispose) == 0)
 			{
-				_status |= _statusDisposedFlag;
+				_flags |= _flagDisposed;
 
 				if (_waitHandle != null)
 				{
@@ -145,6 +153,69 @@ namespace UnityFx.Async
 		#endregion
 
 		#region static interface
+
+		/// <summary>
+		/// Returns an operation that's already been completed successfully.
+		/// </summary>
+		/// <remarks>
+		/// May not always return the same instance.
+		/// </remarks>
+		public static IAsyncOperation Completed
+		{
+			get
+			{
+				if (_completedOperation == null)
+				{
+					_completedOperation = new AsyncResult(_flagDoNotDispose | _flagCompletedSynchronously | StatusRanToCompletion);
+				}
+
+				return _completedOperation;
+			}
+		}
+
+		/// <summary>
+		/// Creates an operation that completes after a time delay.
+		/// </summary>
+		/// <param name="millisecondsDelay">The number of milliseconds to wait before completing the returned operation, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="millisecondsDelay"/> is less than -1.</exception>
+		/// <returns>An operation that represents the time delay.</returns>
+		public static IAsyncOperation Delay(int millisecondsDelay)
+		{
+			if (millisecondsDelay < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(millisecondsDelay));
+			}
+
+			if (millisecondsDelay == 0)
+			{
+				return Completed;
+			}
+
+			if (millisecondsDelay == Timeout.Infinite)
+			{
+				return new AsyncResult();
+			}
+
+			return new DelayAsyncResult(millisecondsDelay);
+		}
+
+		/// <summary>
+		/// Creates a task that completes after a specified time interval.
+		/// </summary>
+		/// <param name="delay">The time span to wait before completing the returned task, or <c>TimeSpan.FromMilliseconds(-1)</c> to wait indefinitely.</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="delay"/> represents a negative time interval other than <c>TimeSpan.FromMillseconds(-1)</c>.</exception>
+		/// <returns>An operation that represents the time delay.</returns>
+		public static IAsyncOperation Delay(TimeSpan delay)
+		{
+			var millisecondsDelay = (long)delay.TotalMilliseconds;
+
+			if (millisecondsDelay > int.MaxValue)
+			{
+				throw new ArgumentOutOfRangeException(nameof(delay));
+			}
+
+			return Delay((int)millisecondsDelay);
+		}
 
 		/// <summary>
 		/// tt
@@ -190,11 +261,11 @@ namespace UnityFx.Async
 		{
 			if (status > StatusRunning)
 			{
-				status |= _statusCompletedFlag;
+				status |= _flagCompleted;
 
 				if (completedSynchronously)
 				{
-					status |= _statusSynchronousFlag;
+					status |= _flagSynchronous;
 				}
 			}
 
@@ -212,7 +283,7 @@ namespace UnityFx.Async
 
 			if (continuation == null)
 			{
-				throw new NullReferenceException(nameof(continuation));
+				throw new ArgumentNullException(nameof(continuation));
 			}
 
 			if (IsCompleted)
@@ -337,19 +408,19 @@ namespace UnityFx.Async
 		#region IAsyncOperation
 
 		/// <inheritdoc/>
-		public AsyncOperationStatus Status => (AsyncOperationStatus)(_status & _statusMask);
+		public AsyncOperationStatus Status => (AsyncOperationStatus)(_flags & _statusMask);
 
 		/// <inheritdoc/>
 		public Exception Exception => _exception;
 
 		/// <inheritdoc/>
-		public bool IsCompletedSuccessfully => (_status & _statusMask) == StatusRanToCompletion;
+		public bool IsCompletedSuccessfully => (_flags & _statusMask) == StatusRanToCompletion;
 
 		/// <inheritdoc/>
-		public bool IsFaulted => (_status & _statusMask) == StatusFaulted;
+		public bool IsFaulted => (_flags & _statusMask) == StatusFaulted;
 
 		/// <inheritdoc/>
-		public bool IsCanceled => (_status & _statusMask) == StatusCanceled;
+		public bool IsCanceled => (_flags & _statusMask) == StatusCanceled;
 
 		#endregion
 
@@ -369,10 +440,10 @@ namespace UnityFx.Async
 		public object AsyncState => _asyncState;
 
 		/// <inheritdoc/>
-		public bool CompletedSynchronously => (_status & _statusSynchronousFlag) != 0;
+		public bool CompletedSynchronously => (_flags & _flagSynchronous) != 0;
 
 		/// <inheritdoc/>
-		public bool IsCompleted => (_status & _statusCompletedFlag) != 0;
+		public bool IsCompleted => (_flags & _flagCompleted) != 0;
 
 		#endregion
 
@@ -382,7 +453,7 @@ namespace UnityFx.Async
 		public object Current => null;
 
 		/// <inheritdoc/>
-		public bool MoveNext() => _status == StatusRunning;
+		public bool MoveNext() => _flags == StatusRunning;
 
 		/// <inheritdoc/>
 		public void Reset() => throw new NotSupportedException();
@@ -431,29 +502,43 @@ namespace UnityFx.Async
 			}
 		}
 
+		private AsyncResult(int flags)
+		{
+			_flags = flags;
+		}
+
 		private bool TrySetStatusInternal(int newStatus)
 		{
-			var status = _status;
+			var status = _flags;
 
-			if ((status & _statusCompletedFlag) == 0)
+			if ((status & _flagCompleted) == 0)
 			{
 				var status0 = status & _statusMask;
 				var status1 = newStatus & _statusMask;
 
 				if (status0 < status1)
 				{
+					var result = false;
+
 					if (status0 == StatusCreated)
 					{
-						return Interlocked.CompareExchange(ref _status, newStatus, StatusCreated) == StatusCreated;
+						result = Interlocked.CompareExchange(ref _flags, newStatus, StatusCreated) == StatusCreated;
 					}
 					else if (status0 == StatusScheduled)
 					{
-						return Interlocked.CompareExchange(ref _status, newStatus, StatusScheduled) == StatusScheduled;
+						result = Interlocked.CompareExchange(ref _flags, newStatus, StatusScheduled) == StatusScheduled;
 					}
 					else
 					{
-						return Interlocked.CompareExchange(ref _status, newStatus, StatusRunning) == StatusRunning;
+						result = Interlocked.CompareExchange(ref _flags, newStatus, StatusRunning) == StatusRunning;
 					}
+
+					if (result)
+					{
+						OnStatusChanged();
+					}
+
+					return result;
 				}
 			}
 

@@ -34,8 +34,4 @@
 		<AdditionalFiles Include="../CodingConventions/Common/stylecop.json" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Helpers\" />
-	</ItemGroup>
-
 </Project>

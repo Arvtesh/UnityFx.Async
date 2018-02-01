@@ -16,7 +16,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="result">The operation result.</param>
 		/// <param name="completedSynchronously">A synchronous completion flag. Set to <see langword="false"/> if not sure.</param>
-		/// <exception cref="InvalidOperationException">Thrown if the operation is already completed.</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <seealso cref="TrySetResult(T, bool)"/>
 		void SetResult(T result, bool completedSynchronously);
 

@@ -3,6 +3,9 @@
 
 using System;
 using System.Collections;
+#if !NET35
+using System.Runtime.ExceptionServices;
+#endif
 using System.Threading;
 #if !NET35
 using System.Threading.Tasks;
@@ -16,6 +19,64 @@ namespace UnityFx.Async
 	public static class AsyncExtensions
 	{
 		#region IAsyncOperation
+
+		/// <summary>
+		/// Blocks calling thread until the operation is completed.
+		/// </summary>
+		public static void Wait(this IAsyncOperation op)
+		{
+			if (!op.IsCompleted)
+			{
+				op.AsyncWaitHandle.WaitOne();
+			}
+		}
+
+		/// <summary>
+		/// Blocks calling thread until the operation is completed. After that rethrows the operation exception (if any).
+		/// </summary>
+		public static void Join(this IAsyncOperation op)
+		{
+			Wait(op);
+			ThrowIfFaulted(op);
+		}
+
+		/// <summary>
+		/// Blocks calling thread until the operation is completed. After that rethrows the operation exception (if any).
+		/// </summary>
+		public static T Join<T>(this IAsyncOperation<T> op)
+		{
+			Wait(op);
+			ThrowIfFaulted(op);
+			return op.Result;
+		}
+
+		/// <summary>
+		/// Throws exception if the operation has failed.
+		/// </summary>
+		public static void ThrowIfFaulted(this IAsyncOperation op)
+		{
+			if (op.IsFaulted)
+			{
+				var e = op.Exception;
+
+				if (e != null)
+				{
+#if !NET35
+					ExceptionDispatchInfo.Capture(e).Throw();
+#else
+					throw e;
+#endif
+				}
+				else if (op.IsCanceled)
+				{
+					throw new OperationCanceledException(op.ToString());
+				}
+				else
+				{
+					throw new Exception(op.ToString());
+				}
+			}
+		}
 
 #if !NET35
 
