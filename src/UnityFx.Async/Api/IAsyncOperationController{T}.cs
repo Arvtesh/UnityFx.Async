@@ -6,18 +6,27 @@ using System;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Controller of a <see cref="IAsyncOperation{T}"/> instance.
+	/// Controls completion of a <see cref="IAsyncOperation{T}"/> instance.
 	/// </summary>
+	/// <seealso cref="IAsyncOperation{T}"/>
 	public interface IAsyncOperationController<in T> : IAsyncOperationController
 	{
 		/// <summary>
 		/// Transitions the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
-		void SetResult(T result);
+		/// <param name="result">The operation result.</param>
+		/// <param name="completedSynchronously">A synchronous completion flag. Set to <see langword="false"/> if not sure.</param>
+		/// <exception cref="InvalidOperationException">Thrown if the operation is already completed.</exception>
+		/// <seealso cref="TrySetResult(T, bool)"/>
+		void SetResult(T result, bool completedSynchronously);
 
 		/// <summary>
 		/// Attempts to transition the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
-		bool TrySetResult(T result);
+		/// <param name="result">The operation result.</param>
+		/// <param name="completedSynchronously">A synchronous completion flag. Set to <see langword="false"/> if not sure.</param>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="SetResult(T, bool)"/>
+		bool TrySetResult(T result, bool completedSynchronously);
 	}
 }

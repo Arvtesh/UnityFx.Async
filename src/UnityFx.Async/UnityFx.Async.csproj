@@ -27,17 +27,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Reference Include="UnityEngine">
-			<HintPath>..\Dependencies\UnityEngine.dll</HintPath>
-		</Reference>
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<AdditionalFiles Include="../CodingConventions/Common/stylecop.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Helpers\" />
 	</ItemGroup>
 
 </Project>
