@@ -40,6 +40,15 @@ namespace UnityFx.Async
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// </summary>
+		/// <param name="setRunning">If set to <see langword="true"/> transitions the operation to <see cref="AsyncOperationStatus.Running"/> status; otherwise the status is set to <see cref="AsyncOperationStatus.Scheduled"/>.</param>
+		public AsyncResult(bool setRunning)
+			: base(setRunning)
+		{
+		}
+
 		#endregion
 
 		#region IAsyncOperationController

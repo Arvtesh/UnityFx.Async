@@ -17,6 +17,7 @@ namespace UnityFx.Async
 		/// <param name="result">The operation result.</param>
 		/// <param name="completedSynchronously">A synchronous completion flag. Set to <see langword="false"/> if not sure.</param>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="TrySetResult(T, bool)"/>
 		void SetResult(T result, bool completedSynchronously);
 
@@ -25,6 +26,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="result">The operation result.</param>
 		/// <param name="completedSynchronously">A synchronous completion flag. Set to <see langword="false"/> if not sure.</param>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="SetResult(T, bool)"/>
 		bool TrySetResult(T result, bool completedSynchronously);

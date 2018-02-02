@@ -65,6 +65,15 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
+		/// </summary>
+		/// <param name="setRunning">If set to <see langword="true"/> transitions the operation to <see cref="AsyncOperationStatus.Running"/> status; otherwise the status is set to <see cref="AsyncOperationStatus.Scheduled"/>.</param>
+		public AsyncResult(bool setRunning)
+		{
+			_flags = setRunning ? StatusRunning : StatusScheduled;
+		}
+
+		/// <summary>
 		/// Transitions the operation to <see cref="AsyncOperationStatus.Scheduled"/> state.
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
@@ -162,6 +171,42 @@ namespace UnityFx.Async
 
 				return _completedOperation;
 			}
+		}
+
+		/// <summary>
+		/// Creates a <see cref="IAsyncOperation"/> that has completed with a specified exception.
+		/// </summary>
+		/// <param name="e">The exception with which to complete the operation.</param>
+		/// <returns>The faulted operation.</returns>
+		public static IAsyncOperation FromException(Exception e)
+		{
+			var op = new AsyncResult();
+			op.SetException(e, true);
+			return op;
+		}
+
+		/// <summary>
+		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with a specified exception.
+		/// </summary>
+		/// <param name="e">The exception with which to complete the operation.</param>
+		/// <returns>The faulted operation.</returns>
+		public static IAsyncOperation<T> FromException<T>(Exception e)
+		{
+			var op = new AsyncResult<T>();
+			op.SetException(e, true);
+			return op;
+		}
+
+		/// <summary>
+		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with a specified result.
+		/// </summary>
+		/// <param name="result">The result value with which to complete the operation.</param>
+		/// <returns>The completed operation.</returns>
+		public static IAsyncOperation<T> FromResult<T>(T result)
+		{
+			var op = new AsyncResult<T>();
+			op.SetResult(result, true);
+			return op;
 		}
 
 		/// <summary>
@@ -268,23 +313,23 @@ namespace UnityFx.Async
 		#region IAsyncContinuationContainer
 
 		/// <inheritdoc/>
-		public void AddContinuation(Action continuation)
+		public void AddCompletionCallback(Action action)
 		{
 			ThrowIfDisposed();
 
-			if (continuation == null)
+			if (action == null)
 			{
-				throw new ArgumentNullException(nameof(continuation));
+				throw new ArgumentNullException(nameof(action));
 			}
 
-			if (IsCompleted || !TryAddContinuation(continuation))
+			if (IsCompleted || !TryAddContinuation(action))
 			{
-				continuation.Invoke();
+				action.Invoke();
 			}
 		}
 
 		/// <inheritdoc/>
-		public void RemoveContinuation(Action continuation)
+		public void RemoveCompletionCallback(Action action)
 		{
 			ThrowIfDisposed();
 			throw new NotImplementedException();

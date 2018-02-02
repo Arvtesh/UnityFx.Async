@@ -20,6 +20,7 @@ namespace UnityFx.Async
 		#region interface
 
 		public DelayAsyncResult(int millisecondsDelay)
+			: base(true)
 		{
 			_timer = new Timer(TimerCompletionCallback, this, millisecondsDelay, Timeout.Infinite);
 		}
@@ -38,7 +39,7 @@ namespace UnityFx.Async
 		{
 			if (disposing)
 			{
-				_timer.Dispose();
+				_timer?.Dispose();
 			}
 
 			base.Dispose(disposing);

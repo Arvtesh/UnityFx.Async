@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Defines extension methods realted to <see cref="IAsyncOperation"/>.
+	/// Extension methods for <see cref="IAsyncOperation"/> related classes.
 	/// </summary>
 	public static class AsyncExtensions
 	{
@@ -23,6 +23,9 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Blocks calling thread until the operation is completed.
 		/// </summary>
+		/// <param name="op">The operation to wait for.</param>
+		/// <seealso cref="Join(IAsyncOperation)"/>
+		/// <seealso cref="Join{T}(IAsyncOperation{T})"/>
 		public static void Wait(this IAsyncOperation op)
 		{
 			if (!op.IsCompleted)
@@ -34,6 +37,9 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Blocks calling thread until the operation is completed. After that rethrows the operation exception (if any).
 		/// </summary>
+		/// <param name="op">The operation to join.</param>
+		/// <seealso cref="Join{T}(IAsyncOperation{T})"/>
+		/// <seealso cref="Wait(IAsyncOperation)"/>
 		public static void Join(this IAsyncOperation op)
 		{
 			Wait(op);
@@ -43,6 +49,9 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Blocks calling thread until the operation is completed. After that rethrows the operation exception (if any).
 		/// </summary>
+		/// <param name="op">The operation to join.</param>
+		/// <seealso cref="Join(IAsyncOperation)"/>
+		/// <seealso cref="Wait(IAsyncOperation)"/>
 		public static T Join<T>(this IAsyncOperation<T> op)
 		{
 			Wait(op);
@@ -78,6 +87,249 @@ namespace UnityFx.Async
 			}
 		}
 
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="action"/> is expected to start another asynchronous operation. When the operation is completed it
+		/// should use the second <paramref name="action"/> argument to complete the continuation. If the <paramref name="op"/>
+		/// is already completed the <paramref name="action"/> is being called synchronously.
+		/// </remarks>
+		/// <typeparam name="T">Type of the operation to continue.</typeparam>
+		/// <param name="op">The operation to continue.</param>
+		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <exception cref="NotSupportedException">Thrown if the target <see cref="IAsyncOperation"/> does not implement <see cref="IAsyncContinuationController"/>.</exception>
+		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncOperationCompletionSource, object}, object)"/>
+		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncOperationCompletionSource{U}})"/>
+		/// <seealso cref="TransformWith{T, U}(T, Func{T, U})"/>
+		public static IAsyncOperation ContinueWith<T>(this T op, Action<T, IAsyncOperationCompletionSource> action) where T : IAsyncOperation
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			if (op is IAsyncContinuationController c)
+			{
+				var result = new AsyncResult(false);
+
+				c.AddCompletionCallback(() =>
+				{
+					try
+					{
+						result.SetRunning();
+						action(op, result);
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e, false);
+					}
+				});
+
+				return result;
+			}
+			else
+			{
+				throw new NotSupportedException();
+			}
+		}
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="action"/> is expected to start another asynchronous operation. When the operation is completed it
+		/// should use the second <paramref name="action"/> argument to complete the continuation. If the <paramref name="op"/>
+		/// is already completed the <paramref name="action"/> is being called synchronously.
+		/// </remarks>
+		/// <typeparam name="T">Type of the operation to continue.</typeparam>
+		/// <param name="op">The operation to continue.</param>
+		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
+		/// <param name="state">User-defined state that is passed as last argument of <paramref name="action"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <exception cref="NotSupportedException">Thrown if the target <see cref="IAsyncOperation"/> does not implement <see cref="IAsyncContinuationController"/>.</exception>
+		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncOperationCompletionSource})"/>
+		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncOperationCompletionSource{U}})"/>
+		/// <seealso cref="TransformWith{T, U}(T, Func{T, U})"/>
+		public static IAsyncOperation ContinueWith<T>(this T op, Action<T, IAsyncOperationCompletionSource, object> action, object state) where T : IAsyncOperation
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			if (op is IAsyncContinuationController c)
+			{
+				var result = new AsyncResult(false);
+
+				c.AddCompletionCallback(() =>
+				{
+					try
+					{
+						result.SetRunning();
+						action(op, result, state);
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e, false);
+					}
+				});
+
+				return result;
+			}
+			else
+			{
+				throw new NotSupportedException();
+			}
+		}
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="action"/> is expected to start another asynchronous operation. When the operation is completed it
+		/// should use the second <paramref name="action"/> argument to complete the continuation. If the <paramref name="op"/>
+		/// is already completed the <paramref name="action"/> is being called synchronously.
+		/// </remarks>
+		/// <typeparam name="T">Type of the operation to continue.</typeparam>
+		/// <typeparam name="U">Result type of the continuation operation.</typeparam>
+		/// <param name="op">The operation to continue.</param>
+		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <exception cref="NotSupportedException">Thrown if the target <see cref="IAsyncOperation"/> does not implement <see cref="IAsyncContinuationController"/>.</exception>
+		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncOperationCompletionSource{U}, object}, object)"/>
+		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncOperationCompletionSource})"/>
+		/// <seealso cref="TransformWith{T, U}(T, Func{T, U})"/>
+		public static IAsyncOperation<U> ContinueWith<T, U>(this T op, Action<T, IAsyncOperationCompletionSource<U>> action) where T : IAsyncOperation
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			if (op is IAsyncContinuationController c)
+			{
+				var result = new AsyncResult<U>(false);
+
+				c.AddCompletionCallback(() =>
+				{
+					try
+					{
+						result.SetRunning();
+						action(op, result);
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e, false);
+					}
+				});
+
+				return result;
+			}
+			else
+			{
+				throw new NotSupportedException();
+			}
+		}
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="action"/> is expected to start another asynchronous operation. When the operation is completed it
+		/// should use the second <paramref name="action"/> argument to complete the continuation. If the <paramref name="op"/>
+		/// is already completed the <paramref name="action"/> is being called synchronously.
+		/// </remarks>
+		/// <typeparam name="T">Type of the operation to continue.</typeparam>
+		/// <typeparam name="U">Result type of the continuation operation.</typeparam>
+		/// <param name="op">The operation to continue.</param>
+		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
+		/// <param name="state">User-defined state that is passed as last argument of <paramref name="action"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <exception cref="NotSupportedException">Thrown if the target <see cref="IAsyncOperation"/> does not implement <see cref="IAsyncContinuationController"/>.</exception>
+		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncOperationCompletionSource{U}})"/>
+		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncOperationCompletionSource})"/>
+		/// <seealso cref="TransformWith{T, U}(T, Func{T, U})"/>
+		public static IAsyncOperation<U> ContinueWith<T, U>(this T op, Action<T, IAsyncOperationCompletionSource<U>, object> action, object state) where T : IAsyncOperation
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			if (op is IAsyncContinuationController c)
+			{
+				var result = new AsyncResult<U>(false);
+
+				c.AddCompletionCallback(() =>
+				{
+					try
+					{
+						result.SetRunning();
+						action(op, result, state);
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e, false);
+					}
+				});
+
+				return result;
+			}
+			else
+			{
+				throw new NotSupportedException();
+			}
+		}
+
+		/// <summary>
+		/// Creates a continuation that transforms the target <see cref="IAsyncOperation"/> result.
+		/// </summary>
+		/// <typeparam name="T">Type of the operation to continue.</typeparam>
+		/// <typeparam name="U">Result type of the continuation operation.</typeparam>
+		/// <param name="op">The operation which result is to be transformed.</param>
+		/// <param name="resultTransformer">A function used for the <paramref name="op"/> result transformation.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="resultTransformer"/> is <see langword="null"/>.</exception>
+		/// <exception cref="NotSupportedException">Thrown if the target <see cref="IAsyncOperation"/> does not implement <see cref="IAsyncContinuationController"/>.</exception>
+		/// <returns>An operation with the transformed result vlaue.</returns>
+		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncOperationCompletionSource})"/>
+		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncOperationCompletionSource{U}})"/>
+		public static IAsyncOperation<U> TransformWith<T, U>(this T op, Func<T, U> resultTransformer) where T : class, IAsyncOperation
+		{
+			if (resultTransformer == null)
+			{
+				throw new ArgumentNullException(nameof(resultTransformer));
+			}
+
+			if (op is IAsyncContinuationController c)
+			{
+				var result = new AsyncResult<U>(false);
+
+				c.AddCompletionCallback(() =>
+				{
+					try
+					{
+						result.SetResult(resultTransformer(op), false);
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e, false);
+					}
+				});
+
+				return result;
+			}
+			else
+			{
+				throw new NotSupportedException();
+			}
+		}
+
 #if !NET35
 
 		/// <summary>
@@ -99,25 +351,26 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Created a <see cref="Task"/> instance matching the source <see cref="IAsyncOperation"/>.
 		/// </summary>
+		/// <exception cref="NotSupportedException">Thrown if the target <see cref="IAsyncOperation"/> does not implement <see cref="IAsyncContinuationController"/>.</exception>
 		public static Task ToTask(this IAsyncOperation op)
 		{
-			if (op is IAsyncContinuationContainer c)
+			if (op is IAsyncContinuationController c)
 			{
-				var result = new TaskCompletionSource<object>(op);
+				var result = new TaskCompletionSource<object>();
 
-				c.AddContinuation(() =>
+				c.AddCompletionCallback(() =>
 				{
 					if (op.IsCompletedSuccessfully)
 					{
-						result.SetResult(null);
+						result.TrySetResult(null);
 					}
 					else if (op.IsCanceled)
 					{
-						result.SetCanceled();
+						result.TrySetCanceled();
 					}
 					else
 					{
-						result.SetException(op.Exception);
+						result.TrySetException(op.Exception);
 					}
 				});
 
@@ -132,25 +385,26 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Created a <see cref="Task"/> instance matching the source <see cref="IAsyncOperation"/>.
 		/// </summary>
+		/// <exception cref="NotSupportedException">Thrown if the target <see cref="IAsyncOperation"/> does not implement <see cref="IAsyncContinuationController"/>.</exception>
 		public static Task<T> ToTask<T>(this IAsyncOperation<T> op)
 		{
-			if (op is IAsyncContinuationContainer c)
+			if (op is IAsyncContinuationController c)
 			{
-				var result = new TaskCompletionSource<T>(op);
+				var result = new TaskCompletionSource<T>();
 
-				c.AddContinuation(() =>
+				c.AddCompletionCallback(() =>
 				{
 					if (op.IsCompletedSuccessfully)
 					{
-						result.SetResult(op.Result);
+						result.TrySetResult(op.Result);
 					}
 					else if (op.IsCanceled)
 					{
-						result.SetCanceled();
+						result.TrySetCanceled();
 					}
 					else
 					{
-						result.SetException(op.Exception);
+						result.TrySetException(op.Exception);
 					}
 				});
 

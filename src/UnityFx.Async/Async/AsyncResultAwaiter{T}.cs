@@ -50,9 +50,9 @@ namespace UnityFx.Async
 		/// </summary>
 		public void OnCompleted(Action continuation)
 		{
-			if (_op is IAsyncContinuationContainer c)
+			if (_op is IAsyncContinuationController c)
 			{
-				c.AddContinuation(continuation);
+				c.AddCompletionCallback(continuation);
 			}
 			else
 			{
