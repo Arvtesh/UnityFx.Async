@@ -9,10 +9,11 @@ namespace UnityFx.Async
 	/// <summary>
 	/// An generic awaiter.
 	/// </summary>
+	/// <seealso cref="IAsyncAwaiter"/>
 #if NET35
-	public interface IAwaiter
+	public interface IAsyncAwaiter<out T>
 #else
-	public interface IAwaiter : INotifyCompletion
+	public interface IAsyncAwaiter<out T> : INotifyCompletion
 #endif
 	{
 		/// <summary>
@@ -23,7 +24,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns the source result value.
 		/// </summary>
-		void GetResult();
+		T GetResult();
 
 #if NET35
 		/// <summary>

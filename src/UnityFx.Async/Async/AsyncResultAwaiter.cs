@@ -9,7 +9,7 @@ namespace UnityFx.Async
 	/// Provides an object that waits for the completion of an asynchronous operation. This type and its members are intended for compiler use only.
 	/// </summary>
 	/// <seealso cref="AsyncResult"/>
-	public struct AsyncResultAwaiter : IAwaiter
+	public struct AsyncResultAwaiter : IAsyncAwaiter
 	{
 		#region data
 
