@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
-using System.Runtime.CompilerServices;
 
 namespace UnityFx.Async
 {
@@ -40,10 +39,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns the source result value.
 		/// </summary>
-		public T GetResult()
-		{
-			return _op.Result;
-		}
+		public T GetResult() => _op.Result;
 
 		#endregion
 

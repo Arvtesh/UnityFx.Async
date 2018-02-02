@@ -165,5 +165,101 @@ namespace UnityFx.Async
 #endif
 
 		#endregion
+
+		#region IAsyncOperationCompletionSource
+
+		/// <summary>
+		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Canceled"/> state.
+		/// </summary>
+		/// <param name="acs">The copmletion source instance.</param>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <seealso cref="TrySetCanceled(IAsyncOperationCompletionSource)"/>
+		public static void SetCanceled(this IAsyncOperationCompletionSource acs)
+		{
+			acs.SetCanceled(false);
+		}
+
+		/// <summary>
+		/// Attempts to transition the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Canceled"/> state.
+		/// </summary>
+		/// <param name="acs">The copmletion source instance.</param>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="SetCanceled(IAsyncOperationCompletionSource)"/>
+		public static bool TrySetCanceled(this IAsyncOperationCompletionSource acs)
+		{
+			return acs.TrySetCanceled(false);
+		}
+
+		/// <summary>
+		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="acs">The copmletion source instance.</param>
+		/// <param name="e">An exception that caused the operation to end prematurely.</param>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <seealso cref="TrySetException(IAsyncOperationCompletionSource, Exception)"/>
+		public static void SetException(this IAsyncOperationCompletionSource acs, Exception e)
+		{
+			acs.SetException(e, false);
+		}
+
+		/// <summary>
+		/// Attempts to transition the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="acs">The copmletion source instance.</param>
+		/// <param name="e">An exception that caused the operation to end prematurely.</param>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="SetException(IAsyncOperationCompletionSource, Exception)"/>
+		public static bool TrySetException(this IAsyncOperationCompletionSource acs, Exception e)
+		{
+			return acs.TrySetException(e, false);
+		}
+
+		/// <summary>
+		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
+		/// </summary>
+		/// <param name="acs">The copmletion source instance.</param>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <seealso cref="TrySetCompleted(IAsyncOperationCompletionSource)"/>
+		public static void SetCompleted(this IAsyncOperationCompletionSource acs)
+		{
+			acs.SetCompleted(false);
+		}
+
+		/// <summary>
+		/// Attempts to transition the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
+		/// </summary>
+		/// <param name="acs">The copmletion source instance.</param>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="SetCompleted(IAsyncOperationCompletionSource)"/>
+		public static bool TrySetCompleted(this IAsyncOperationCompletionSource acs)
+		{
+			return acs.TrySetCompleted(false);
+		}
+
+		/// <summary>
+		/// Transitions the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
+		/// </summary>
+		/// <param name="acs">The copmletion source instance.</param>
+		/// <param name="result">The operation result.</param>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <seealso cref="TrySetResult{T}(IAsyncOperationCompletionSource{T}, T)"/>
+		public static void SetResult<T>(this IAsyncOperationCompletionSource<T> acs, T result)
+		{
+			acs.SetResult(result, false);
+		}
+
+		/// <summary>
+		/// Attempts to transition the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
+		/// </summary>
+		/// <param name="acs">The copmletion source instance.</param>
+		/// <param name="result">The operation result.</param>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="SetResult{T}(IAsyncOperationCompletionSource{T}, T)"/>
+		public static bool TrySetResult<T>(this IAsyncOperationCompletionSource<T> acs, T result)
+		{
+			return acs.TrySetResult(result, false);
+		}
+
+		#endregion
 	}
 }

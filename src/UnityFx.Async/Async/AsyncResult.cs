@@ -15,7 +15,7 @@ namespace UnityFx.Async
 	/// <seealso href="https://blogs.msdn.microsoft.com/nikos/2011/03/14/how-to-implement-the-iasyncresult-design-pattern/"/>
 	/// <seealso cref="IAsyncResult"/>
 	[DebuggerDisplay("{DebuggerDisplay,nq}")]
-	public class AsyncResult : IAsyncOperation, IAsyncOperationController, IEnumerator
+	public class AsyncResult : IAsyncOperation, IAsyncOperationCompletionSource, IEnumerator
 	{
 		#region data
 
@@ -26,15 +26,16 @@ namespace UnityFx.Async
 		private const int _flagDoNotDispose = 0x10000000;
 		private const int _statusMask = 0x0000000f;
 
-		private readonly AsyncCallback _asyncCallback;
 		private readonly object _asyncState;
 
 		private static IAsyncOperation _completedOperation;
+		private static object _continuationCompletionSentinel = new object();
 
 		private EventWaitHandle _waitHandle;
 		private Exception _exception;
-		private int _flags;
-		private Action _continuation;
+
+		private volatile object _continuation;
+		private volatile int _flags;
 
 		#endregion
 
@@ -59,8 +60,8 @@ namespace UnityFx.Async
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
 		public AsyncResult(AsyncCallback asyncCallback, object asyncState)
 		{
-			_asyncCallback = asyncCallback;
 			_asyncState = asyncState;
+			_continuation = asyncCallback;
 		}
 
 		/// <summary>
@@ -96,17 +97,8 @@ namespace UnityFx.Async
 		{
 			if ((_flags & _flagDisposed) != 0)
 			{
-				throw new ObjectDisposedException(GetOperationName());
+				throw new ObjectDisposedException(ToString());
 			}
-		}
-
-		/// <summary>
-		/// Returns the operation name.
-		/// </summary>
-		/// <returns>Name of the operation.</returns>
-		protected string GetOperationName()
-		{
-			return GetType().Name;
 		}
 
 		#endregion
@@ -126,8 +118,7 @@ namespace UnityFx.Async
 		protected virtual void OnCompleted()
 		{
 			_waitHandle?.Set();
-			_asyncCallback?.Invoke(this);
-			_continuation?.Invoke();
+			InvokeContinuation();
 		}
 
 		/// <summary>
@@ -286,23 +277,9 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(continuation));
 			}
 
-			if (IsCompleted)
+			if (IsCompleted || !TryAddContinuation(continuation))
 			{
 				continuation.Invoke();
-			}
-			else
-			{
-				// NOTE: the code is adapted from https://stackoverflow.com/questions/3522361/add-delegate-to-event-thread-safety
-				Action d1 = _continuation;
-				Action d2, d3;
-
-				do
-				{
-					d2 = d1;
-					d3 = (Action)Delegate.Combine(d2, continuation);
-					d1 = Interlocked.CompareExchange(ref _continuation, d3, d2);
-				}
-				while (d1 != d2);
 			}
 		}
 
@@ -310,26 +287,12 @@ namespace UnityFx.Async
 		public void RemoveContinuation(Action continuation)
 		{
 			ThrowIfDisposed();
-
-			if (continuation != null)
-			{
-				// NOTE: the code is adapted from https://stackoverflow.com/questions/3522361/add-delegate-to-event-thread-safety
-				Action d1 = _continuation;
-				Action d2, d3;
-
-				do
-				{
-					d2 = d1;
-					d3 = (Action)Delegate.Remove(d2, continuation);
-					d1 = Interlocked.CompareExchange(ref _continuation, d3, d2);
-				}
-				while (d1 != d2);
-			}
+			throw new NotImplementedException();
 		}
 
 		#endregion
 
-		#region IAsyncOperationController
+		#region IAsyncOperationCompletionSource
 
 		/// <inheritdoc/>
 		public void SetCanceled(bool completedSynchronously)
@@ -476,13 +439,23 @@ namespace UnityFx.Async
 
 		#endregion
 
+		#region Object
+
+		/// <inheritdoc/>
+		public override string ToString()
+		{
+			return GetType().Name;
+		}
+
+		#endregion
+
 		#region implementation
 
 		private string DebuggerDisplay
 		{
 			get
 			{
-				var result = GetOperationName();
+				var result = ToString();
 				var state = Status.ToString();
 
 				if (IsFaulted && _exception != null)
@@ -518,31 +491,98 @@ namespace UnityFx.Async
 
 				if (status0 < status1)
 				{
-					var result = false;
-
-					if (status0 == StatusCreated)
-					{
-						result = Interlocked.CompareExchange(ref _flags, newStatus, StatusCreated) == StatusCreated;
-					}
-					else if (status0 == StatusScheduled)
-					{
-						result = Interlocked.CompareExchange(ref _flags, newStatus, StatusScheduled) == StatusScheduled;
-					}
-					else
-					{
-						result = Interlocked.CompareExchange(ref _flags, newStatus, StatusRunning) == StatusRunning;
-					}
-
-					if (result)
+					if (Interlocked.CompareExchange(ref _flags, newStatus, status) == status)
 					{
 						OnStatusChanged();
+						return true;
 					}
-
-					return result;
 				}
 			}
 
 			return false;
+		}
+
+		private bool TryAddContinuation(object d1)
+		{
+			// NOTE: the code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
+			var d0 = _continuation;
+
+			// If no continuation is stored yet, try to store it as _continuation.
+			if (d0 == null)
+			{
+				d0 = Interlocked.CompareExchange(ref _continuation, d1, null);
+
+				// Quick return if exchange succeeded.
+				if (d0 == null)
+				{
+					return true;
+				}
+			}
+
+			// Logic for the case where we were previously storing a single continuation.
+			if (d0 != _continuationCompletionSentinel && !(d0 is ArrayList))
+			{
+				var newList = new ArrayList() { d0 };
+
+				Interlocked.CompareExchange(ref _continuation, newList, d0);
+
+				// We might be racing against another thread converting the single into a list,
+				// or we might be racing against operation completion, so resample "list" below.
+			}
+
+			// If list is null, it can only mean that _continuationCompletionSentinel has been exchanged
+			// into _continuation. Thus, the task has completed and we should return false from this method,
+			// as we will not be queuing up the continuation.
+			if (_continuation is ArrayList list)
+			{
+				lock (list)
+				{
+					// It is possible for the operation to complete right after we snap the copy of the list.
+					// If so, then fall through and return false without queuing the continuation.
+					if (_continuation != _continuationCompletionSentinel)
+					{
+						list.Add(d1);
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		private void InvokeContinuation()
+		{
+			var continuation = Interlocked.Exchange(ref _continuation, _continuationCompletionSentinel);
+
+			if (continuation != null)
+			{
+				if (continuation is IEnumerable list)
+				{
+					lock (list)
+					{
+						foreach (var item in list)
+						{
+							InvokeContinuation(item);
+						}
+					}
+				}
+				else
+				{
+					InvokeContinuation(continuation);
+				}
+			}
+		}
+
+		private void InvokeContinuation(object continuation)
+		{
+			if (continuation is Action a)
+			{
+				a.Invoke();
+			}
+			else if (continuation is AsyncCallback ac)
+			{
+				ac.Invoke(this);
+			}
 		}
 
 		#endregion
