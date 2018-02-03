@@ -13,7 +13,7 @@ namespace UnityFx.Async
 	/// <seealso cref="IAsyncResult"/>
 	/// <seealso cref="IAsyncOperation"/>
 	/// <seealso cref="AsyncResult"/>
-	public class AsyncResult<T> : AsyncResult, IAsyncOperationController<T>, IAsyncOperation<T>
+	public class AsyncResult<T> : AsyncResult, IAsyncCompletionSource<T>, IAsyncOperation<T>
 	{
 		#region data
 
@@ -33,64 +33,20 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncResult.AsyncState"/>.</param>
-		public AsyncResult(object asyncState)
-			: base(asyncState)
+		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
+		public AsyncResult(AsyncCallback asyncCallback, object asyncState)
+			: base(asyncCallback, asyncState)
 		{
 		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncResult.AsyncState"/>.</param>
-		/// <param name="status">Initial operation status.</param>
-		public AsyncResult(object asyncState, AsyncOperationStatus status)
-			: base(asyncState, (int)status)
+		/// <param name="setRunning">If set to <see langword="true"/> transitions the operation to <see cref="AsyncOperationStatus.Running"/> status; otherwise the status is set to <see cref="AsyncOperationStatus.Scheduled"/>.</param>
+		public AsyncResult(bool setRunning)
+			: base(setRunning)
 		{
-		}
-
-#if !NET35
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
-		/// </summary>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncResult.AsyncState"/>.</param>
-		/// <param name="cancellationToken">Cancellation token.</param>
-		public AsyncResult(object asyncState, CancellationToken cancellationToken)
-			: base(asyncState, cancellationToken)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
-		/// </summary>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncResult.AsyncState"/>.</param>
-		/// <param name="cancellationToken">Cancellation token.</param>
-		/// <param name="status">Initial operation status.</param>
-		public AsyncResult(object asyncState, CancellationToken cancellationToken, AsyncOperationStatus status)
-			: base(asyncState, cancellationToken, status)
-		{
-		}
-#endif
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
-		/// </summary>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncResult.AsyncState"/>.</param>
-		/// <param name="e">An exception instance.</param>
-		public AsyncResult(object asyncState, Exception e)
-			: base(asyncState, e)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
-		/// </summary>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncResult.AsyncState"/>.</param>
-		/// <param name="result">Operation result.</param>
-		public AsyncResult(object asyncState, T result)
-			: base(asyncState, StatusCompleted)
-		{
-			_result = result;
 		}
 
 		#endregion
@@ -98,30 +54,23 @@ namespace UnityFx.Async
 		#region IAsyncOperationController
 
 		/// <inheritdoc/>
-		public void SetResult(T result)
+		public void SetResult(T result, bool completedSynchronously)
 		{
-			ThrowIfDisposed();
-
-			if (TrySetStatus(StatusCompleted))
-			{
-				_result = result;
-				FireCompleted();
-			}
-			else
+			if (!TrySetResult(result, completedSynchronously))
 			{
 				throw new InvalidOperationException();
 			}
 		}
 
 		/// <inheritdoc/>
-		public bool TrySetResult(T result)
+		public bool TrySetResult(T result, bool completedSynchronously)
 		{
 			ThrowIfDisposed();
 
-			if (TrySetStatus(StatusCompleted))
+			if (TrySetStatus(StatusRanToCompletion, completedSynchronously))
 			{
 				_result = result;
-				FireCompleted();
+				OnCompleted();
 				return true;
 			}
 
@@ -130,69 +79,21 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region IAsyncResult
+		#region IAsyncOperation
 
-		/// <summary>
-		/// Returns the result value of this operation. Accessing the property blocks the calling thread until the operation is complete. Read only.
-		/// </summary>
+		/// <inheritdoc/>
 		public T Result
 		{
 			get
 			{
-				ThrowIfDisposed();
-				AsyncExtensions.Wait(this);
-				ThrowIfFaulted();
+				if (!IsCompletedSuccessfully)
+				{
+					throw new InvalidOperationException("The operation result is not available.");
+				}
+
 				return _result;
 			}
 		}
-
-		#endregion
-
-		#region IObservable
-
-#if NET46
-
-		/// <inheritdoc/>
-		public IDisposable Subscribe(IObserver<T> observer)
-		{
-			if (observer == null)
-			{
-				throw new ArgumentNullException(nameof(observer));
-			}
-
-			return new DisposableSubscription(this, () =>
-			{
-				if (IsCompletedSuccessfully)
-				{
-					observer.OnNext(_result);
-					observer.OnCompleted();
-				}
-				else
-				{
-					observer.OnError(GetExceptionSafe());
-				}
-			});
-		}
-
-		private class DisposableSubscription : IDisposable
-		{
-			private readonly IAsyncContinuationContainer _op;
-			private readonly Action _action;
-
-			public DisposableSubscription(IAsyncContinuationContainer op, Action action)
-			{
-				_op = op;
-				_op.AddContinuation(action);
-				_action = action;
-			}
-
-			public void Dispose()
-			{
-				_op.RemoveContinuation(_action);
-			}
-		}
-
-#endif
 
 		#endregion
 	}

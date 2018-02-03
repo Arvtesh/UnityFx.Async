@@ -6,7 +6,7 @@ using System;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Enumerates possible status values used by <see cref="IAsyncOperation"/>.
+	/// Enumerates possible status values for <see cref="IAsyncOperation"/>.
 	/// </summary>
 	/// <seealso cref="IAsyncOperation"/>
 	public enum AsyncOperationStatus
@@ -14,27 +14,32 @@ namespace UnityFx.Async
 		/// <summary>
 		/// The operation is initialized but has not yet been scheduled for execution.
 		/// </summary>
-		Created = AsyncResult.StatusInitialized,
+		Created = AsyncResult.StatusCreated,
 
 		/// <summary>
-		/// The operation execution has started.
+		/// The operation has been scheduled for execution but has not yet begun executing.
+		/// </summary>
+		Scheduled = AsyncResult.StatusScheduled,
+
+		/// <summary>
+		/// The operation is running but has not yet completed.
 		/// </summary>
 		Running = AsyncResult.StatusRunning,
 
 		/// <summary>
-		/// The operation has completed successfully.
+		/// The operation completed execution successfully.
 		/// </summary>
-		RanToCompletion = AsyncResult.StatusCompleted,
-
-		/// <summary>
-		/// The operation failed.
-		/// </summary>
-		Faulted = AsyncResult.StatusFaulted,
+		RanToCompletion = AsyncResult.StatusRanToCompletion,
 
 		/// <summary>
 		/// The operation has been canceled.
 		/// </summary>
 		Canceled = AsyncResult.StatusCanceled,
+
+		/// <summary>
+		/// The operation completed due to an unhandled exception.
+		/// </summary>
+		Faulted = AsyncResult.StatusFaulted
 	}
 
 	/// <summary>
@@ -46,37 +51,52 @@ namespace UnityFx.Async
 	/// </remarks>
 	/// <seealso cref="IAsyncResult"/>
 	/// <seealso cref="IAsyncOperation{T}"/>
-	public interface IAsyncOperation : IAsyncResult, IDisposable
+	public interface IAsyncOperation : IAsyncOperationEvents, IAsyncResult, IDisposable
 	{
-		/// <summary>
-		/// Returns the operation progress in range [0,1]. Read only.
-		/// </summary>
-		float Progress { get; }
-
 		/// <summary>
 		/// Returns the operation status identifier. Read only.
 		/// </summary>
+		/// <value>The operation status identifier.</value>
+		/// <seealso cref="IsCompletedSuccessfully"/>
+		/// <seealso cref="IsFaulted"/>
+		/// <seealso cref="IsCanceled"/>
 		AsyncOperationStatus Status { get; }
 
 		/// <summary>
 		/// Returns an <see cref="System.Exception"/> that caused the operation to end prematurely. If the operation completed successfully
-		/// or has not yet thrown any exceptions, this will return <c>null</c>. Read only.
+		/// or has not yet thrown any exceptions, this will return <see langword="null"/>. Read only.
 		/// </summary>
+		/// <value>An exception that caused the operation to end prematurely.</value>
+		/// <seealso cref="IsFaulted"/>
+		/// <seealso cref="Status"/>
 		Exception Exception { get; }
 
 		/// <summary>
-		/// Returns <c>true</c> if the operation has completed successfully, <c>false</c> otherwise. Read only.
+		/// Returns <see langword="true"/> if the operation has completed successfully, <see langword="false"/> otherwise. Read only.
 		/// </summary>
+		/// <value>A value indicating whether the operation has finished successfully.</value>
+		/// <seealso cref="IsFaulted"/>
+		/// <seealso cref="IsCanceled"/>
+		/// <seealso cref="Status"/>
 		bool IsCompletedSuccessfully { get; }
 
 		/// <summary>
-		/// Returns <c>true</c> if the operation has failed for any reason, <c>false</c> otherwise. Read only.
+		/// Returns <see langword="true"/> if the operation has failed for any reason, <see langword="false"/> otherwise. Read only.
 		/// </summary>
+		/// <value>A value indicating whether the operation has failed.</value>
+		/// <seealso cref="Exception"/>
+		/// <seealso cref="IsCompletedSuccessfully"/>
+		/// <seealso cref="IsCanceled"/>
+		/// <seealso cref="Status"/>
 		bool IsFaulted { get; }
 
 		/// <summary>
-		/// Returns <c>true</c> if the operation has been canceled by user, <c>false</c> otherwise. Read only.
+		/// Returns <see langword="true"/> if the operation has been canceled by user, <see langword="false"/> otherwise. Read only.
 		/// </summary>
+		/// <value>A value indicating whether the operation has been canceled by user.</value>
+		/// <seealso cref="IsCompletedSuccessfully"/>
+		/// <seealso cref="IsFaulted"/>
+		/// <seealso cref="Status"/>
 		bool IsCanceled { get; }
 	}
 }

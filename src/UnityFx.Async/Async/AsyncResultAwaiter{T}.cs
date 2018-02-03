@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
-using System.Runtime.CompilerServices;
 
 namespace UnityFx.Async
 {
@@ -10,7 +9,7 @@ namespace UnityFx.Async
 	/// Provides an object that waits for the completion of an asynchronous operation. This type and its members are intended for compiler use only.
 	/// </summary>
 	/// <seealso cref="AsyncResult{T}"/>
-	public struct AsyncResultAwaiter<T> : IAwaiter<T>
+	public struct AsyncResultAwaiter<T> : IAsyncAwaiter<T>
 	{
 		#region data
 
@@ -40,10 +39,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns the source result value.
 		/// </summary>
-		public T GetResult()
-		{
-			return _op.Result;
-		}
+		public T GetResult() => _op.Result;
 
 		#endregion
 
@@ -54,9 +50,9 @@ namespace UnityFx.Async
 		/// </summary>
 		public void OnCompleted(Action continuation)
 		{
-			if (_op is IAsyncContinuationContainer c)
+			if (_op is IAsyncOperationEvents c)
 			{
-				c.AddContinuation(continuation);
+				c.AddCompletionCallback(continuation);
 			}
 			else
 			{

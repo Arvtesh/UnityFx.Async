@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net35;net46;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net35;net46;netstandard1.3;netstandard2.0</TargetFrameworks>
 		<Description>Asynchronous operations for Unity3d.</Description>
 		<Company />
 		<Authors>Alexander Bogarsukov</Authors>
@@ -10,9 +10,9 @@
 		<RepositoryType>Git</RepositoryType>
 		<PackageTags>Unity3d;Async;AsyncOperation;Coroutine;Task</PackageTags>
 		<PackageLicenseUrl>https://opensource.org/licenses/mit-license.php</PackageLicenseUrl>
-		<Version>0.6.0</Version>
-		<AssemblyVersion>0.6.0.0</AssemblyVersion>
-		<FileVersion>0.6.0.0</FileVersion>
+		<Version>0.7.0</Version>
+		<AssemblyVersion>0.7.0.0</AssemblyVersion>
+		<FileVersion>0.7.0.0</FileVersion>
 		<CodeAnalysisRuleSet>../CodingConventions/Cs/CsharpRules.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
@@ -25,12 +25,6 @@
 	<PropertyGroup Condition="'$(TargetFramework)' != 'net35'">
 		<DefineConstants>UNITYFX_SUPPORT_TAP</DefineConstants>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<Reference Include="UnityEngine">
-			<HintPath>..\Dependencies\UnityEngine.dll</HintPath>
-		</Reference>
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" PrivateAssets="All" />
