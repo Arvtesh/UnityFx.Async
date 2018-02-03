@@ -20,10 +20,15 @@ nuget:
   disable_publish_on_pr: true 
 
 artifacts:
-  - path: .\Bin\net35
+  - path: .\bin\net35
     name: UnityFx.Async-net35
-  - path: .\Bin\net46
+  - path: .\bin\net46
     name: UnityFx.Async-net46
+  - path: .\bin\netstandard1.3
+    name: UnityFx.Async-netstandard1.3
+  - path: .\bin\netstandard2.0
+    name: UnityFx.Async-netstandard2.0
+  - path: .\bin\*.nupkg
 
 dotnet_csproj:
   patch: true
