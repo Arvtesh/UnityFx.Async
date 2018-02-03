@@ -99,41 +99,33 @@ namespace UnityFx.Async
 		/// <param name="op">The operation to continue.</param>
 		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
-		/// <exception cref="NotSupportedException">Thrown if the target <see cref="IAsyncOperation"/> does not implement <see cref="IAsyncContinuationController"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
-		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncOperationCompletionSource, object}, object)"/>
-		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncOperationCompletionSource{U}})"/>
+		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncCompletionSource, object}, object)"/>
+		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncCompletionSource{U}})"/>
 		/// <seealso cref="TransformWith{T, U}(T, Func{T, U})"/>
-		public static IAsyncOperation ContinueWith<T>(this T op, Action<T, IAsyncOperationCompletionSource> action) where T : IAsyncOperation
+		public static IAsyncOperation ContinueWith<T>(this T op, Action<T, IAsyncCompletionSource> action) where T : IAsyncOperation
 		{
 			if (action == null)
 			{
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			if (op is IAsyncContinuationController c)
-			{
-				var result = new AsyncResult(false);
+			var result = new AsyncResult(false);
 
-				c.AddCompletionCallback(() =>
+			op.AddCompletionCallback(() =>
+			{
+				try
 				{
-					try
-					{
-						result.SetRunning();
-						action(op, result);
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				});
+					result.SetRunning();
+					action(op, result);
+				}
+				catch (Exception e)
+				{
+					result.TrySetException(e, false);
+				}
+			});
 
-				return result;
-			}
-			else
-			{
-				throw new NotSupportedException();
-			}
+			return result;
 		}
 
 		/// <summary>
@@ -149,41 +141,33 @@ namespace UnityFx.Async
 		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
 		/// <param name="state">User-defined state that is passed as last argument of <paramref name="action"/>.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
-		/// <exception cref="NotSupportedException">Thrown if the target <see cref="IAsyncOperation"/> does not implement <see cref="IAsyncContinuationController"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
-		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncOperationCompletionSource})"/>
-		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncOperationCompletionSource{U}})"/>
+		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncCompletionSource})"/>
+		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncCompletionSource{U}})"/>
 		/// <seealso cref="TransformWith{T, U}(T, Func{T, U})"/>
-		public static IAsyncOperation ContinueWith<T>(this T op, Action<T, IAsyncOperationCompletionSource, object> action, object state) where T : IAsyncOperation
+		public static IAsyncOperation ContinueWith<T>(this T op, Action<T, IAsyncCompletionSource, object> action, object state) where T : IAsyncOperation
 		{
 			if (action == null)
 			{
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			if (op is IAsyncContinuationController c)
-			{
-				var result = new AsyncResult(false);
+			var result = new AsyncResult(false);
 
-				c.AddCompletionCallback(() =>
+			op.AddCompletionCallback(() =>
+			{
+				try
 				{
-					try
-					{
-						result.SetRunning();
-						action(op, result, state);
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				});
+					result.SetRunning();
+					action(op, result, state);
+				}
+				catch (Exception e)
+				{
+					result.TrySetException(e, false);
+				}
+			});
 
-				return result;
-			}
-			else
-			{
-				throw new NotSupportedException();
-			}
+			return result;
 		}
 
 		/// <summary>
@@ -199,41 +183,33 @@ namespace UnityFx.Async
 		/// <param name="op">The operation to continue.</param>
 		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
-		/// <exception cref="NotSupportedException">Thrown if the target <see cref="IAsyncOperation"/> does not implement <see cref="IAsyncContinuationController"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
-		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncOperationCompletionSource{U}, object}, object)"/>
-		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncOperationCompletionSource})"/>
+		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncCompletionSource{U}, object}, object)"/>
+		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncCompletionSource})"/>
 		/// <seealso cref="TransformWith{T, U}(T, Func{T, U})"/>
-		public static IAsyncOperation<U> ContinueWith<T, U>(this T op, Action<T, IAsyncOperationCompletionSource<U>> action) where T : IAsyncOperation
+		public static IAsyncOperation<U> ContinueWith<T, U>(this T op, Action<T, IAsyncCompletionSource<U>> action) where T : IAsyncOperation
 		{
 			if (action == null)
 			{
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			if (op is IAsyncContinuationController c)
-			{
-				var result = new AsyncResult<U>(false);
+			var result = new AsyncResult<U>(false);
 
-				c.AddCompletionCallback(() =>
+			op.AddCompletionCallback(() =>
+			{
+				try
 				{
-					try
-					{
-						result.SetRunning();
-						action(op, result);
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				});
+					result.SetRunning();
+					action(op, result);
+				}
+				catch (Exception e)
+				{
+					result.TrySetException(e, false);
+				}
+			});
 
-				return result;
-			}
-			else
-			{
-				throw new NotSupportedException();
-			}
+			return result;
 		}
 
 		/// <summary>
@@ -250,41 +226,34 @@ namespace UnityFx.Async
 		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
 		/// <param name="state">User-defined state that is passed as last argument of <paramref name="action"/>.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
-		/// <exception cref="NotSupportedException">Thrown if the target <see cref="IAsyncOperation"/> does not implement <see cref="IAsyncContinuationController"/>.</exception>
+		/// <exception cref="NotSupportedException">Thrown if the target <see cref="IAsyncOperation"/> does not implement <see cref="IAsyncOperationEvents"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
-		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncOperationCompletionSource{U}})"/>
-		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncOperationCompletionSource})"/>
+		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncCompletionSource{U}})"/>
+		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncCompletionSource})"/>
 		/// <seealso cref="TransformWith{T, U}(T, Func{T, U})"/>
-		public static IAsyncOperation<U> ContinueWith<T, U>(this T op, Action<T, IAsyncOperationCompletionSource<U>, object> action, object state) where T : IAsyncOperation
+		public static IAsyncOperation<U> ContinueWith<T, U>(this T op, Action<T, IAsyncCompletionSource<U>, object> action, object state) where T : IAsyncOperation
 		{
 			if (action == null)
 			{
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			if (op is IAsyncContinuationController c)
-			{
-				var result = new AsyncResult<U>(false);
+			var result = new AsyncResult<U>(false);
 
-				c.AddCompletionCallback(() =>
+			op.AddCompletionCallback(() =>
+			{
+				try
 				{
-					try
-					{
-						result.SetRunning();
-						action(op, result, state);
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				});
+					result.SetRunning();
+					action(op, result, state);
+				}
+				catch (Exception e)
+				{
+					result.TrySetException(e, false);
+				}
+			});
 
-				return result;
-			}
-			else
-			{
-				throw new NotSupportedException();
-			}
+			return result;
 		}
 
 		/// <summary>
@@ -295,10 +264,9 @@ namespace UnityFx.Async
 		/// <param name="op">The operation which result is to be transformed.</param>
 		/// <param name="resultTransformer">A function used for the <paramref name="op"/> result transformation.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="resultTransformer"/> is <see langword="null"/>.</exception>
-		/// <exception cref="NotSupportedException">Thrown if the target <see cref="IAsyncOperation"/> does not implement <see cref="IAsyncContinuationController"/>.</exception>
 		/// <returns>An operation with the transformed result vlaue.</returns>
-		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncOperationCompletionSource})"/>
-		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncOperationCompletionSource{U}})"/>
+		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncCompletionSource})"/>
+		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncCompletionSource{U}})"/>
 		public static IAsyncOperation<U> TransformWith<T, U>(this T op, Func<T, U> resultTransformer) where T : class, IAsyncOperation
 		{
 			if (resultTransformer == null)
@@ -306,28 +274,21 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(resultTransformer));
 			}
 
-			if (op is IAsyncContinuationController c)
-			{
-				var result = new AsyncResult<U>(false);
+			var result = new AsyncResult<U>(false);
 
-				c.AddCompletionCallback(() =>
+			op.AddCompletionCallback(() =>
+			{
+				try
 				{
-					try
-					{
-						result.SetResult(resultTransformer(op), false);
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				});
+					result.SetResult(resultTransformer(op), false);
+				}
+				catch (Exception e)
+				{
+					result.TrySetException(e, false);
+				}
+			});
 
-				return result;
-			}
-			else
-			{
-				throw new NotSupportedException();
-			}
+			return result;
 		}
 
 #if !NET35
@@ -351,84 +312,68 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Created a <see cref="Task"/> instance matching the source <see cref="IAsyncOperation"/>.
 		/// </summary>
-		/// <exception cref="NotSupportedException">Thrown if the target <see cref="IAsyncOperation"/> does not implement <see cref="IAsyncContinuationController"/>.</exception>
 		public static Task ToTask(this IAsyncOperation op)
 		{
-			if (op is IAsyncContinuationController c)
-			{
-				var result = new TaskCompletionSource<object>();
+			var result = new TaskCompletionSource<object>();
 
-				c.AddCompletionCallback(() =>
+			op.AddCompletionCallback(() =>
+			{
+				if (op.IsCompletedSuccessfully)
 				{
-					if (op.IsCompletedSuccessfully)
-					{
-						result.TrySetResult(null);
-					}
-					else if (op.IsCanceled)
-					{
-						result.TrySetCanceled();
-					}
-					else
-					{
-						result.TrySetException(op.Exception);
-					}
-				});
+					result.TrySetResult(null);
+				}
+				else if (op.IsCanceled)
+				{
+					result.TrySetCanceled();
+				}
+				else
+				{
+					result.TrySetException(op.Exception);
+				}
+			});
 
-				return result.Task;
-			}
-			else
-			{
-				throw new NotSupportedException();
-			}
+			return result.Task;
 		}
 
 		/// <summary>
 		/// Created a <see cref="Task"/> instance matching the source <see cref="IAsyncOperation"/>.
 		/// </summary>
-		/// <exception cref="NotSupportedException">Thrown if the target <see cref="IAsyncOperation"/> does not implement <see cref="IAsyncContinuationController"/>.</exception>
 		public static Task<T> ToTask<T>(this IAsyncOperation<T> op)
 		{
-			if (op is IAsyncContinuationController c)
-			{
-				var result = new TaskCompletionSource<T>();
+			var result = new TaskCompletionSource<T>();
 
-				c.AddCompletionCallback(() =>
+			op.AddCompletionCallback(() =>
+			{
+				if (op.IsCompletedSuccessfully)
 				{
-					if (op.IsCompletedSuccessfully)
-					{
-						result.TrySetResult(op.Result);
-					}
-					else if (op.IsCanceled)
-					{
-						result.TrySetCanceled();
-					}
-					else
-					{
-						result.TrySetException(op.Exception);
-					}
-				});
+					result.TrySetResult(op.Result);
+				}
+				else if (op.IsCanceled)
+				{
+					result.TrySetCanceled();
+				}
+				else
+				{
+					result.TrySetException(op.Exception);
+				}
+			});
 
-				return result.Task;
-			}
-			else
-			{
-				throw new NotSupportedException();
-			}
+			return result.Task;
 		}
 
-#endif
+		#endif
 
 		#endregion
 
-		#region IAsyncOperationCompletionSource
+		#region IAsyncCompletionSource
 
 		/// <summary>
 		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Canceled"/> state.
 		/// </summary>
 		/// <param name="acs">The copmletion source instance.</param>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
-		/// <seealso cref="TrySetCanceled(IAsyncOperationCompletionSource)"/>
-		public static void SetCanceled(this IAsyncOperationCompletionSource acs)
+		/// <seealso cref="TrySetCanceled(IAsyncCompletionSource)"/>
+		public static void SetCanceled(this IAsyncCompletionSource acs)
 		{
 			acs.SetCanceled(false);
 		}
@@ -438,8 +383,8 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="acs">The copmletion source instance.</param>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="SetCanceled(IAsyncOperationCompletionSource)"/>
-		public static bool TrySetCanceled(this IAsyncOperationCompletionSource acs)
+		/// <seealso cref="SetCanceled(IAsyncCompletionSource)"/>
+		public static bool TrySetCanceled(this IAsyncCompletionSource acs)
 		{
 			return acs.TrySetCanceled(false);
 		}
@@ -450,8 +395,8 @@ namespace UnityFx.Async
 		/// <param name="acs">The copmletion source instance.</param>
 		/// <param name="e">An exception that caused the operation to end prematurely.</param>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
-		/// <seealso cref="TrySetException(IAsyncOperationCompletionSource, Exception)"/>
-		public static void SetException(this IAsyncOperationCompletionSource acs, Exception e)
+		/// <seealso cref="TrySetException(IAsyncCompletionSource, Exception)"/>
+		public static void SetException(this IAsyncCompletionSource acs, Exception e)
 		{
 			acs.SetException(e, false);
 		}
@@ -462,8 +407,8 @@ namespace UnityFx.Async
 		/// <param name="acs">The copmletion source instance.</param>
 		/// <param name="e">An exception that caused the operation to end prematurely.</param>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="SetException(IAsyncOperationCompletionSource, Exception)"/>
-		public static bool TrySetException(this IAsyncOperationCompletionSource acs, Exception e)
+		/// <seealso cref="SetException(IAsyncCompletionSource, Exception)"/>
+		public static bool TrySetException(this IAsyncCompletionSource acs, Exception e)
 		{
 			return acs.TrySetException(e, false);
 		}
@@ -473,8 +418,8 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="acs">The copmletion source instance.</param>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
-		/// <seealso cref="TrySetCompleted(IAsyncOperationCompletionSource)"/>
-		public static void SetCompleted(this IAsyncOperationCompletionSource acs)
+		/// <seealso cref="TrySetCompleted(IAsyncCompletionSource)"/>
+		public static void SetCompleted(this IAsyncCompletionSource acs)
 		{
 			acs.SetCompleted(false);
 		}
@@ -484,8 +429,8 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="acs">The copmletion source instance.</param>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="SetCompleted(IAsyncOperationCompletionSource)"/>
-		public static bool TrySetCompleted(this IAsyncOperationCompletionSource acs)
+		/// <seealso cref="SetCompleted(IAsyncCompletionSource)"/>
+		public static bool TrySetCompleted(this IAsyncCompletionSource acs)
 		{
 			return acs.TrySetCompleted(false);
 		}
@@ -496,8 +441,8 @@ namespace UnityFx.Async
 		/// <param name="acs">The copmletion source instance.</param>
 		/// <param name="result">The operation result.</param>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
-		/// <seealso cref="TrySetResult{T}(IAsyncOperationCompletionSource{T}, T)"/>
-		public static void SetResult<T>(this IAsyncOperationCompletionSource<T> acs, T result)
+		/// <seealso cref="TrySetResult{T}(IAsyncCompletionSource{T}, T)"/>
+		public static void SetResult<T>(this IAsyncCompletionSource<T> acs, T result)
 		{
 			acs.SetResult(result, false);
 		}
@@ -508,8 +453,8 @@ namespace UnityFx.Async
 		/// <param name="acs">The copmletion source instance.</param>
 		/// <param name="result">The operation result.</param>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="SetResult{T}(IAsyncOperationCompletionSource{T}, T)"/>
-		public static bool TrySetResult<T>(this IAsyncOperationCompletionSource<T> acs, T result)
+		/// <seealso cref="SetResult{T}(IAsyncCompletionSource{T}, T)"/>
+		public static bool TrySetResult<T>(this IAsyncCompletionSource<T> acs, T result)
 		{
 			return acs.TrySetResult(result, false);
 		}

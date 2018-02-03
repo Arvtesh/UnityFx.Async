@@ -9,7 +9,7 @@ namespace UnityFx.Async
 	/// Controls completion of a <see cref="IAsyncOperation{T}"/> instance.
 	/// </summary>
 	/// <seealso cref="IAsyncOperation{T}"/>
-	public interface IAsyncOperationCompletionSource<in T> : IAsyncOperationCompletionSource
+	public interface IAsyncCompletionSource<in T> : IAsyncCompletionSource
 	{
 		/// <summary>
 		/// Transitions the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.

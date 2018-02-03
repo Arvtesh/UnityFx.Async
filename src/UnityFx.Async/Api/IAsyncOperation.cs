@@ -51,7 +51,7 @@ namespace UnityFx.Async
 	/// </remarks>
 	/// <seealso cref="IAsyncResult"/>
 	/// <seealso cref="IAsyncOperation{T}"/>
-	public interface IAsyncOperation : IAsyncResult, IDisposable
+	public interface IAsyncOperation : IAsyncOperationEvents, IAsyncResult, IDisposable
 	{
 		/// <summary>
 		/// Returns the operation status identifier. Read only.

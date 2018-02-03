@@ -13,7 +13,7 @@ namespace UnityFx.Async
 	/// <seealso cref="IAsyncResult"/>
 	/// <seealso cref="IAsyncOperation"/>
 	/// <seealso cref="AsyncResult"/>
-	public class AsyncResult<T> : AsyncResult, IAsyncOperationCompletionSource<T>, IAsyncOperation<T>
+	public class AsyncResult<T> : AsyncResult, IAsyncCompletionSource<T>, IAsyncOperation<T>
 	{
 		#region data
 

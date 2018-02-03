@@ -3,8 +3,8 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Threading;
 
 namespace UnityFx.Async
@@ -15,7 +15,7 @@ namespace UnityFx.Async
 	/// <seealso href="https://blogs.msdn.microsoft.com/nikos/2011/03/14/how-to-implement-the-iasyncresult-design-pattern/"/>
 	/// <seealso cref="IAsyncResult"/>
 	[DebuggerDisplay("{DebuggerDisplay,nq}")]
-	public class AsyncResult : IAsyncOperation, IAsyncOperationCompletionSource, IEnumerator
+	public class AsyncResult : IAsyncOperation, IAsyncCompletionSource, IEnumerator
 	{
 		#region data
 
@@ -144,7 +144,11 @@ namespace UnityFx.Async
 
 				if (_waitHandle != null)
 				{
+#if NET35
 					_waitHandle.Close();
+#else
+					_waitHandle.Dispose();
+#endif
 					_waitHandle = null;
 				}
 			}
@@ -269,7 +273,11 @@ namespace UnityFx.Async
 				if (Interlocked.CompareExchange(ref waitHandle, mre, null) != null)
 				{
 					// Another thread created this object's event; dispose the event we just created.
+#if NET35
 					mre.Close();
+#else
+					mre.Dispose();
+#endif
 				}
 				else if (!done && asyncResult.IsCompleted)
 				{
@@ -306,33 +314,6 @@ namespace UnityFx.Async
 			}
 
 			return TrySetStatusInternal(status);
-		}
-
-		#endregion
-
-		#region IAsyncContinuationContainer
-
-		/// <inheritdoc/>
-		public void AddCompletionCallback(Action action)
-		{
-			ThrowIfDisposed();
-
-			if (action == null)
-			{
-				throw new ArgumentNullException(nameof(action));
-			}
-
-			if (IsCompleted || !TryAddContinuation(action))
-			{
-				action.Invoke();
-			}
-		}
-
-		/// <inheritdoc/>
-		public void RemoveCompletionCallback(Action action)
-		{
-			ThrowIfDisposed();
-			throw new NotImplementedException();
 		}
 
 		#endregion
@@ -429,6 +410,33 @@ namespace UnityFx.Async
 
 		/// <inheritdoc/>
 		public bool IsCanceled => (_flags & _statusMask) == StatusCanceled;
+
+		#endregion
+
+		#region IAsyncOperationEvents
+
+		/// <inheritdoc/>
+		public void AddCompletionCallback(Action action)
+		{
+			ThrowIfDisposed();
+
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			if (IsCompleted || !TryAddContinuation(action))
+			{
+				action.Invoke();
+			}
+		}
+
+		/// <inheritdoc/>
+		public void RemoveCompletionCallback(Action action)
+		{
+			ThrowIfDisposed();
+			throw new NotImplementedException();
+		}
 
 		#endregion
 
@@ -547,29 +555,29 @@ namespace UnityFx.Async
 			return false;
 		}
 
-		private bool TryAddContinuation(object d1)
+		private bool TryAddContinuation(object valueToAdd)
 		{
-			// NOTE: the code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
-			var d0 = _continuation;
+			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
+			var oldValue = _continuation;
 
 			// If no continuation is stored yet, try to store it as _continuation.
-			if (d0 == null)
+			if (oldValue == null)
 			{
-				d0 = Interlocked.CompareExchange(ref _continuation, d1, null);
+				oldValue = Interlocked.CompareExchange(ref _continuation, valueToAdd, null);
 
 				// Quick return if exchange succeeded.
-				if (d0 == null)
+				if (oldValue == null)
 				{
 					return true;
 				}
 			}
 
 			// Logic for the case where we were previously storing a single continuation.
-			if (d0 != _continuationCompletionSentinel && !(d0 is ArrayList))
+			if (oldValue != _continuationCompletionSentinel && !(oldValue is IList))
 			{
-				var newList = new ArrayList() { d0 };
+				var newList = new List<object>() { oldValue };
 
-				Interlocked.CompareExchange(ref _continuation, newList, d0);
+				Interlocked.CompareExchange(ref _continuation, newList, oldValue);
 
 				// We might be racing against another thread converting the single into a list,
 				// or we might be racing against operation completion, so resample "list" below.
@@ -578,7 +586,7 @@ namespace UnityFx.Async
 			// If list is null, it can only mean that _continuationCompletionSentinel has been exchanged
 			// into _continuation. Thus, the task has completed and we should return false from this method,
 			// as we will not be queuing up the continuation.
-			if (_continuation is ArrayList list)
+			if (_continuation is IList list)
 			{
 				lock (list)
 				{
@@ -586,7 +594,7 @@ namespace UnityFx.Async
 					// If so, then fall through and return false without queuing the continuation.
 					if (_continuation != _continuationCompletionSentinel)
 					{
-						list.Add(d1);
+						list.Add(valueToAdd);
 						return true;
 					}
 				}
@@ -627,6 +635,10 @@ namespace UnityFx.Async
 			else if (continuation is AsyncCallback ac)
 			{
 				ac.Invoke(this);
+			}
+			else if (continuation is EventHandler eh)
+			{
+				eh.Invoke(this, EventArgs.Empty);
 			}
 		}
 
