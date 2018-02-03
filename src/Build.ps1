@@ -43,7 +43,7 @@ Write-Host "Building projects" -Foreground Blue
 # fail if solution build failed
 if ($LastExitCode -ne 0)
 {
-	if ($env:CI -eq 'True')
+	if ($env:CI -eq $True)
 	{
 		$host.SetShouldExit($LastExitCode)
 	}

@@ -8,11 +8,13 @@
 		<PackageProjectUrl>https://github.com/Arvtesh/UnityFx.Async</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Arvtesh/UnityFx.Async</RepositoryUrl>
 		<RepositoryType>Git</RepositoryType>
+		<PackageVersion>0.7.0.0</PackageVersion>
 		<PackageTags>Unity3d;Async;AsyncOperation</PackageTags>
 		<PackageLicenseUrl>https://opensource.org/licenses/mit-license.php</PackageLicenseUrl>
 		<Version>0.7.0</Version>
 		<AssemblyVersion>0.7.0.0</AssemblyVersion>
 		<FileVersion>0.7.0.0</FileVersion>
+		<InformationalVersion>0.7.0.0</InformationalVersion>
 		<CodeAnalysisRuleSet>../CodingConventions/Cs/CsharpRules.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
