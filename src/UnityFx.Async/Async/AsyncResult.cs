@@ -466,13 +466,13 @@ namespace UnityFx.Async
 		#region IEnumerator
 
 		/// <inheritdoc/>
-		public object Current => null;
+		object IEnumerator.Current => null;
 
 		/// <inheritdoc/>
-		public bool MoveNext() => _flags == StatusRunning;
+		bool IEnumerator.MoveNext() => _flags == StatusRunning;
 
 		/// <inheritdoc/>
-		public void Reset() => throw new NotSupportedException();
+		void IEnumerator.Reset() => throw new NotSupportedException();
 
 		#endregion
 

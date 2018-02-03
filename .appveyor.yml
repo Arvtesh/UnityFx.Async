@@ -15,7 +15,9 @@ install:
 build_script:
   - ps: .\build.ps1
 
-test: off
+nuget:
+  project_feed: true
+  disable_publish_on_pr: true 
 
 artifacts:
   - path: .\Bin\net35
