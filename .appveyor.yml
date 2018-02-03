@@ -15,10 +15,6 @@ install:
 build_script:
   - ps: .\build.ps1
 
-nuget:
-  project_feed: true
-  disable_publish_on_pr: true 
-
 artifacts:
   - path: .\bin\net35
     name: UnityFx.Async-net35

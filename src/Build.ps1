@@ -36,7 +36,7 @@ Write-Host "Install/update GetVersion" -Foreground Blue
 
 # build projects
 Write-Host "Building projects" -Foreground Blue
-& $nugetPath restore $solutionPath
+& $msbuildPath $solutionPath /m /t:Restore
 & $msbuildPath $solutionPath /m /t:Build /p:Configuration=$configuration
 & $msbuildPath $solutionPath /m /t:Pack /p:Configuration=$configuration
 
@@ -54,5 +54,5 @@ if ($LastExitCode -ne 0)
 }
 
 # publish build results to .\bin
-$filesToPublish = (Join-Path $scriptPath (Join-Path "UnityFx.Async\bin" $configuration))
+$filesToPublish = (Join-Path $scriptPath (Join-Path "UnityFx.Async\bin" (Join-Path $configuration "\*")))
 Copy-Item -Path $filesToPublish -Destination $binPath -Force -Recurse
