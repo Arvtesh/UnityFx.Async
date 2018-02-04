@@ -99,9 +99,12 @@ namespace UnityFx.Async
 		/// Transitions the operation to <see cref="AsyncOperationStatus.Scheduled"/> state.
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="SetRunning"/>
 		public void SetScheduled()
 		{
+			ThrowIfDisposed();
+
 			if (!TrySetStatusInternal(StatusScheduled))
 			{
 				throw new InvalidOperationException();
@@ -112,9 +115,12 @@ namespace UnityFx.Async
 		/// Transitions the operation to <see cref="AsyncOperationStatus.Running"/> state.
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="SetScheduled"/>
 		public void SetRunning()
 		{
+			ThrowIfDisposed();
+
 			if (!TrySetStatusInternal(StatusRunning))
 			{
 				throw new InvalidOperationException();
@@ -410,6 +416,11 @@ namespace UnityFx.Async
 		public bool TrySetException(Exception e, bool completedSynchronously)
 		{
 			ThrowIfDisposed();
+
+			if (e == null)
+			{
+				throw new ArgumentNullException(nameof(e));
+			}
 
 			var status = e is OperationCanceledException ? StatusCanceled : StatusFaulted;
 

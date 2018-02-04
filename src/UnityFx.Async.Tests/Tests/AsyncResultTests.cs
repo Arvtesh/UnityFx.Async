@@ -17,14 +17,7 @@ namespace UnityFx.Async
 			var op = new AsyncResult();
 
 			// Assert
-			Assert.Equal(AsyncOperationStatus.Created, op.Status);
-			Assert.False(op.IsCompleted);
-			Assert.False(op.CompletedSynchronously);
-			Assert.False(op.IsCompletedSuccessfully);
-			Assert.False(op.IsCanceled);
-			Assert.False(op.IsFaulted);
-			Assert.Null(op.Exception);
-			Assert.Null(op.AsyncState);
+			AssertNotCompleted(op, AsyncOperationStatus.Created);
 		}
 
 		[Fact]
@@ -34,14 +27,7 @@ namespace UnityFx.Async
 			var op = new AsyncResult(AsyncOperationStatus.Scheduled);
 
 			// Assert
-			Assert.Equal(AsyncOperationStatus.Scheduled, op.Status);
-			Assert.False(op.IsCompleted);
-			Assert.False(op.CompletedSynchronously);
-			Assert.False(op.IsCompletedSuccessfully);
-			Assert.False(op.IsCanceled);
-			Assert.False(op.IsFaulted);
-			Assert.Null(op.Exception);
-			Assert.Null(op.AsyncState);
+			AssertNotCompleted(op, AsyncOperationStatus.Scheduled);
 		}
 
 		[Fact]
@@ -51,14 +37,7 @@ namespace UnityFx.Async
 			var op = new AsyncResult(AsyncOperationStatus.Running);
 
 			// Assert
-			Assert.Equal(AsyncOperationStatus.Running, op.Status);
-			Assert.False(op.IsCompleted);
-			Assert.False(op.CompletedSynchronously);
-			Assert.False(op.IsCompletedSuccessfully);
-			Assert.False(op.IsCanceled);
-			Assert.False(op.IsFaulted);
-			Assert.Null(op.Exception);
-			Assert.Null(op.AsyncState);
+			AssertNotCompleted(op, AsyncOperationStatus.Running);
 		}
 
 		[Fact]
@@ -69,6 +48,43 @@ namespace UnityFx.Async
 
 			// Assert
 			AssertCompleted(op);
+			Assert.True(op.CompletedSynchronously);
+		}
+
+		[Fact]
+		public void Constructor_SetsStatusToFaulted()
+		{
+			// Act
+			var op = new AsyncResult(AsyncOperationStatus.Faulted);
+
+			// Assert
+			AssertFaulted(op);
+			Assert.True(op.CompletedSynchronously);
+		}
+
+		[Fact]
+		public void Constructor_SetsStatusToCanceled()
+		{
+			// Act
+			var op = new AsyncResult(AsyncOperationStatus.Canceled);
+
+			// Assert
+			AssertCanceled(op);
+			Assert.True(op.CompletedSynchronously);
+		}
+
+		[Fact]
+		public void Constructor_SetsException()
+		{
+			// Arrange
+			var e = new Exception();
+
+			// Act
+			var op = new AsyncResult(e);
+
+			// Assert
+			AssertFaulted(op, e);
+			Assert.True(op.CompletedSynchronously);
 		}
 
 		[Fact]
@@ -81,14 +97,8 @@ namespace UnityFx.Async
 			var op = new AsyncResult(null, state);
 
 			// Assert
+			AssertNotCompleted(op, AsyncOperationStatus.Created);
 			Assert.Equal(state, op.AsyncState);
-			Assert.Equal(AsyncOperationStatus.Created, op.Status);
-			Assert.False(op.IsCompleted);
-			Assert.False(op.CompletedSynchronously);
-			Assert.False(op.IsCompletedSuccessfully);
-			Assert.False(op.IsCanceled);
-			Assert.False(op.IsFaulted);
-			Assert.Null(op.Exception);
 		}
 
 		#endregion
@@ -172,67 +182,27 @@ namespace UnityFx.Async
 
 		#endregion
 
+		#region interface
+		#endregion
+
+		#region extensions
+		#endregion
+
 		#region IAsyncCompletionSource
 
-		#region SetCanceled
-
-		[Fact]
-		public void SetCanceled_SetsStatusToCanceled()
-		{
-			// Arrange
-			var op = new AsyncResult();
-
-			// Act
-			op.SetCanceled(true);
-
-			// Assert
-			AssertCanceled(op);
-		}
-
-		[Theory]
-		[InlineData(true)]
-		[InlineData(false)]
-		public void SetCanceled_SetsCompletedSynchronously(bool completedSynchronously)
-		{
-			// Arrange
-			var op = new AsyncResult();
-
-			// Act
-			op.SetCanceled(completedSynchronously);
-
-			// Assert
-			Assert.Equal(completedSynchronously, op.CompletedSynchronously);
-		}
+		#region SetCanceled/TrySetCanceled
 
 		[Fact]
 		public void SetCanceled_ThrowsIfOperationIsCompleted()
 		{
 			// Arrange
-			var op = new AsyncResult();
-			op.SetCompleted(false);
+			var op = new AsyncResult(AsyncOperationStatus.RanToCompletion);
 
 			// Act/Assert
-			Assert.Throws<InvalidOperationException>(() => op.SetCanceled(true));
-			Assert.False(op.CompletedSynchronously);
+			Assert.Throws<InvalidOperationException>(() => op.SetCanceled(false));
+			Assert.True(op.CompletedSynchronously);
 			AssertCompleted(op);
 		}
-
-		[Fact]
-		public void SetCanceled_ThrowsIfOperationIsDisposed()
-		{
-			// Arrange
-			var op = new AsyncResult();
-			op.SetCompleted(false);
-
-			// Act/Assert
-			Assert.Throws<InvalidOperationException>(() => op.SetCanceled(true));
-			Assert.False(op.CompletedSynchronously);
-			AssertCompleted(op);
-		}
-
-		#endregion
-
-		#region TrySetCanceled
 
 		[Fact]
 		public void TrySetCanceled_SetsStatusToCanceled()
@@ -267,23 +237,292 @@ namespace UnityFx.Async
 		public void TrySetCanceled_FailsIfOperationIsCompleted()
 		{
 			// Arrange
+			var op = new AsyncResult(AsyncOperationStatus.RanToCompletion);
+
+			// Act
+			var result = op.TrySetCanceled(false);
+
+			// Assert
+			Assert.False(result);
+			Assert.True(op.CompletedSynchronously);
+			AssertCompleted(op);
+		}
+
+		[Fact]
+		public void TrySetCanceled_ThrowsIfOperationIsDisposed()
+		{
+			// Arrange
+			var op = new AsyncResult(AsyncOperationStatus.RanToCompletion);
+			op.Dispose();
+
+			// Act/Assert
+			Assert.Throws<ObjectDisposedException>(() => op.TrySetCanceled(true));
+		}
+
+		#endregion
+
+		#region SetException/TrySetException
+
+		[Fact]
+		public void SetException_ThrowsIfOperationIsCompleted()
+		{
+			// Arrange
+			var e = new Exception();
+			var op = new AsyncResult(AsyncOperationStatus.RanToCompletion);
+
+			// Act/Assert
+			Assert.Throws<InvalidOperationException>(() => op.SetException(e, false));
+			Assert.True(op.CompletedSynchronously);
+			AssertCompleted(op);
+		}
+
+		[Fact]
+		public void TrySetException_SetsStatusToFaulted()
+		{
+			// Arrange
+			var e = new Exception();
 			var op = new AsyncResult();
-			op.SetCompleted(false);
+
+			// Act
+			var result = op.TrySetException(e, true);
+
+			// Assert
+			AssertFaulted(op, e);
+			Assert.True(result);
+		}
+
+		[Theory]
+		[InlineData(true)]
+		[InlineData(false)]
+		public void TrySetException_SetsCompletedSynchronously(bool completedSynchronously)
+		{
+			// Arrange
+			var e = new Exception();
+			var op = new AsyncResult();
+
+			// Act
+			op.TrySetException(e, completedSynchronously);
+
+			// Assert
+			Assert.Equal(completedSynchronously, op.CompletedSynchronously);
+		}
+
+		[Fact]
+		public void TrySetException_FailsIfOperationIsCompleted()
+		{
+			// Arrange
+			var op = new AsyncResult(AsyncOperationStatus.RanToCompletion);
 
 			// Act
 			var result = op.TrySetCanceled(true);
 
 			// Assert
 			Assert.False(result);
-			Assert.False(op.CompletedSynchronously);
+			Assert.True(op.CompletedSynchronously);
 			AssertCompleted(op);
+		}
+
+		[Fact]
+		public void TrySetException_ThrowsIfOperationIsDisposed()
+		{
+			// Arrange
+			var e = new Exception();
+			var op = new AsyncResult(AsyncOperationStatus.RanToCompletion);
+			op.Dispose();
+
+			// Act/Assert
+			Assert.Throws<ObjectDisposedException>(() => op.TrySetException(e, false));
+		}
+
+		#endregion
+
+		#region SetCompleted/TrySetCompleted
+
+		[Fact]
+		public void SetCompleted_ThrowsIfOperationIsCompleted()
+		{
+			// Arrange
+			var op = new AsyncResult(AsyncOperationStatus.Canceled);
+
+			// Act/Assert
+			Assert.Throws<InvalidOperationException>(() => op.SetCompleted(false));
+			Assert.True(op.CompletedSynchronously);
+			AssertCanceled(op);
+		}
+
+		[Fact]
+		public void TrySetCompleted_SetsStatusToRanToCompletion()
+		{
+			// Arrange
+			var op = new AsyncResult();
+
+			// Act
+			var result = op.TrySetCompleted(true);
+
+			// Assert
+			AssertCompleted(op);
+			Assert.True(result);
+		}
+
+		[Theory]
+		[InlineData(true)]
+		[InlineData(false)]
+		public void TrySetCompleted_SetsCompletedSynchronously(bool completedSynchronously)
+		{
+			// Arrange
+			var op = new AsyncResult();
+
+			// Act
+			op.TrySetCompleted(completedSynchronously);
+
+			// Assert
+			Assert.Equal(completedSynchronously, op.CompletedSynchronously);
+		}
+
+		[Fact]
+		public void TrySetCompleted_FailsIfOperationIsCompleted()
+		{
+			// Arrange
+			var op = new AsyncResult(AsyncOperationStatus.Canceled);
+
+			// Act
+			var result = op.TrySetCompleted(false);
+
+			// Assert
+			Assert.False(result);
+			Assert.True(op.CompletedSynchronously);
+			AssertCanceled(op);
+		}
+
+		[Fact]
+		public void TrySetCompleted_ThrowsIfOperationIsDisposed()
+		{
+			// Arrange
+			var op = new AsyncResult(AsyncOperationStatus.Canceled);
+			op.Dispose();
+
+			// Act/Assert
+			Assert.Throws<ObjectDisposedException>(() => op.TrySetCompleted(true));
+		}
+
+		#endregion
+
+		#region SetResult/TrySetResult
+
+		[Fact]
+		public void SetResult_ThrowsIfOperationIsCompleted()
+		{
+			// Arrange
+			var result = new object();
+			var op = new AsyncResult<object>(AsyncOperationStatus.Canceled);
+
+			// Act/Assert
+			Assert.Throws<InvalidOperationException>(() => op.SetResult(result, false));
+			Assert.True(op.CompletedSynchronously);
+			AssertCanceled(op);
+		}
+
+		[Fact]
+		public void TrySetResult_SetsStatusToRanToCompletion()
+		{
+			// Arrange
+			var resultValue = new object();
+			var op = new AsyncResult<object>();
+
+			// Act
+			var result = op.TrySetResult(resultValue, true);
+
+			// Assert
+			AssertCompletedWithResult(op, resultValue);
+			Assert.True(result);
+		}
+
+		[Theory]
+		[InlineData(true)]
+		[InlineData(false)]
+		public void TrySetResult_SetsCompletedSynchronously(bool completedSynchronously)
+		{
+			// Arrange
+			var result = new object();
+			var op = new AsyncResult<object>();
+
+			// Act
+			op.TrySetResult(result, completedSynchronously);
+
+			// Assert
+			Assert.Equal(completedSynchronously, op.CompletedSynchronously);
+		}
+
+		[Fact]
+		public void TrySetResult_FailsIfOperationIsCompleted()
+		{
+			// Arrange
+			var op = new AsyncResult<int>(AsyncOperationStatus.Canceled);
+
+			// Act
+			var result = op.TrySetResult(10, true);
+
+			// Assert
+			Assert.False(result);
+			Assert.True(op.CompletedSynchronously);
+			AssertCanceled(op);
+		}
+
+		[Fact]
+		public void TrySetResult_ThrowsIfOperationIsDisposed()
+		{
+			// Arrange
+			var op = new AsyncResult<int>(AsyncOperationStatus.Canceled);
+			op.Dispose();
+
+			// Act/Assert
+			Assert.Throws<ObjectDisposedException>(() => op.TrySetResult(15, false));
 		}
 
 		#endregion
 
 		#endregion
 
+		#region IAsyncOperationEvents
+		#endregion
+
+		#region IDisposable
+
+		[Fact]
+		public void Dispose_ThrowsIfOperationIsNotCompleted()
+		{
+			// Arrange
+			var op = new AsyncResult();
+
+			// Act/Assert
+			Assert.Throws<InvalidOperationException>(() => op.Dispose());
+		}
+
+		[Fact]
+		public void Dispose_CanBeCalledMultipleTimes()
+		{
+			// Arrange
+			var op = new AsyncResult(AsyncOperationStatus.Canceled);
+
+			// Act/Assert
+			op.Dispose();
+			op.Dispose();
+		}
+
+		#endregion
+
 		#region implementation
+
+		private void AssertNotCompleted(IAsyncOperation op, AsyncOperationStatus status)
+		{
+			Assert.Equal(status, op.Status);
+			Assert.False(op.IsCompleted);
+			Assert.False(op.IsCompletedSuccessfully);
+			Assert.False(op.IsCanceled);
+			Assert.False(op.IsFaulted);
+			Assert.False(op.CompletedSynchronously);
+			Assert.Null(op.Exception);
+		}
 
 		private void AssertCompleted(IAsyncOperation op)
 		{
@@ -320,6 +559,16 @@ namespace UnityFx.Async
 		{
 			Assert.Equal(AsyncOperationStatus.Faulted, op.Status);
 			Assert.Equal(e, op.Exception);
+			Assert.True(op.IsCompleted);
+			Assert.True(op.IsFaulted);
+			Assert.False(op.IsCompletedSuccessfully);
+			Assert.False(op.IsCanceled);
+		}
+
+		private void AssertFaulted(IAsyncOperation op)
+		{
+			Assert.Equal(AsyncOperationStatus.Faulted, op.Status);
+			Assert.NotNull(op.Exception);
 			Assert.True(op.IsCompleted);
 			Assert.True(op.IsFaulted);
 			Assert.False(op.IsCompletedSuccessfully);
