@@ -3,9 +3,9 @@
 
 using System;
 
-namespace UnityFx.Async.Tests
+namespace UnityFx.Async
 {
-	public class SampleTests
+	public class AsyncResultTests
 	{
 	}
 }

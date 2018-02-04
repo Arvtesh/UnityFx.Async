@@ -178,6 +178,28 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Creates a <see cref="IAsyncOperation"/> that is canceled.
+		/// </summary>
+		/// <returns>The canceled operation.</returns>
+		public static IAsyncOperation FromCanceled()
+		{
+			var op = new AsyncResult();
+			op.SetCanceled(true);
+			return op;
+		}
+
+		/// <summary>
+		/// Creates a <see cref="IAsyncOperation{T}"/> that is canceled.
+		/// </summary>
+		/// <returns>The canceled operation.</returns>
+		public static IAsyncOperation<T> FromCanceled<T>()
+		{
+			var op = new AsyncResult<T>();
+			op.SetCanceled(true);
+			return op;
+		}
+
+		/// <summary>
 		/// Creates a <see cref="IAsyncOperation"/> that has completed with a specified exception.
 		/// </summary>
 		/// <param name="e">The exception with which to complete the operation.</param>
