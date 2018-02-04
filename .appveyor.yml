@@ -49,4 +49,4 @@ deploy:
       secure: iJt9p5F/FKKj2Y+neRJ1SG7W2P6aUhZBU8Z6j1x+7rLD3PGe5gH7VEZ/drxrNIzc
     artifact: /.*\.nupkg/
     on:
-      branch: master, release/*, hotfix/*
+      branch: /master|(release\/.+)|(hotfix\/.+)/
