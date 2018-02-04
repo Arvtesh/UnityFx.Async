@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
-using System.Collections;
+using System.ComponentModel;
 #if !NET35
 using System.Runtime.ExceptionServices;
 #endif
@@ -16,6 +16,7 @@ namespace UnityFx.Async
 	/// <summary>
 	/// Extension methods for <see cref="IAsyncOperation"/> related classes.
 	/// </summary>
+	[EditorBrowsable(EditorBrowsableState.Advanced)]
 	public static class AsyncExtensions
 	{
 		#region IAsyncOperation
