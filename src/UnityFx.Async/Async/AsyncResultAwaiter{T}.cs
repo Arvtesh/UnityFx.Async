@@ -32,7 +32,7 @@ namespace UnityFx.Async
 		#region IAwaiter
 
 		/// <summary>
-		/// Returns <c>true</c> if the source awaitable is completed; <c>false</c> otherwise. Read only.
+		/// Returns <c>true</c> if the source awaitable is completed; <c>false</c> otherwise.
 		/// </summary>
 		public bool IsCompleted => _op.IsCompleted;
 

@@ -54,9 +54,9 @@ namespace UnityFx.Async
 	public interface IAsyncOperation : IAsyncOperationEvents, IAsyncResult, IDisposable
 	{
 		/// <summary>
-		/// Returns the operation status identifier. Read only.
+		/// Returns the operation status identifier.
 		/// </summary>
-		/// <value>The operation status identifier.</value>
+		/// <value>Identifier of the operation status.</value>
 		/// <seealso cref="IsCompletedSuccessfully"/>
 		/// <seealso cref="IsFaulted"/>
 		/// <seealso cref="IsCanceled"/>
@@ -64,7 +64,7 @@ namespace UnityFx.Async
 
 		/// <summary>
 		/// Returns an <see cref="System.Exception"/> that caused the operation to end prematurely. If the operation completed successfully
-		/// or has not yet thrown any exceptions, this will return <see langword="null"/>. Read only.
+		/// or has not yet thrown any exceptions, this will return <see langword="null"/>.
 		/// </summary>
 		/// <value>An exception that caused the operation to end prematurely.</value>
 		/// <seealso cref="IsFaulted"/>
@@ -72,7 +72,7 @@ namespace UnityFx.Async
 		Exception Exception { get; }
 
 		/// <summary>
-		/// Returns <see langword="true"/> if the operation has completed successfully, <see langword="false"/> otherwise. Read only.
+		/// Returns <see langword="true"/> if the operation has completed successfully, <see langword="false"/> otherwise.
 		/// </summary>
 		/// <value>A value indicating whether the operation has finished successfully.</value>
 		/// <seealso cref="IsFaulted"/>
@@ -81,8 +81,12 @@ namespace UnityFx.Async
 		bool IsCompletedSuccessfully { get; }
 
 		/// <summary>
-		/// Returns <see langword="true"/> if the operation has failed for any reason, <see langword="false"/> otherwise. Read only.
+		/// Returns <see langword="true"/> if the operation has failed for any reason, <see langword="false"/> otherwise.
 		/// </summary>
+		/// <remarks>
+		/// If <see cref="IsFaulted"/> is <see langword="true"/>, the operation's <see cref="Status"/> will be equal to
+		/// <see cref="AsyncOperationStatus.Faulted"/>, and its <see cref="Exception"/> property will be non-<see langword="null"/>.
+		/// </remarks>
 		/// <value>A value indicating whether the operation has failed.</value>
 		/// <seealso cref="Exception"/>
 		/// <seealso cref="IsCompletedSuccessfully"/>
@@ -91,9 +95,9 @@ namespace UnityFx.Async
 		bool IsFaulted { get; }
 
 		/// <summary>
-		/// Returns <see langword="true"/> if the operation has been canceled by user, <see langword="false"/> otherwise. Read only.
+		/// Returns <see langword="true"/> if the operation has completed execution due to being canceled, <see langword="false"/> otherwise.
 		/// </summary>
-		/// <value>A value indicating whether the operation has been canceled by user.</value>
+		/// <value>A value indicating whether the operation was canceled.</value>
 		/// <seealso cref="IsCompletedSuccessfully"/>
 		/// <seealso cref="IsFaulted"/>
 		/// <seealso cref="Status"/>

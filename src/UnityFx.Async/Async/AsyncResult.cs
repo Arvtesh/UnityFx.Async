@@ -42,7 +42,7 @@ namespace UnityFx.Async
 		#region interface
 
 		/// <summary>
-		/// Returns <see langword="true"/> if the operation is disposed; <see langword="false"/> otherwise. Read only.
+		/// Returns <see langword="true"/> if the operation is disposed; <see langword="false"/> otherwise.
 		/// </summary>
 		protected bool IsDisposed => (_flags & _flagDisposed) != 0;
 
@@ -133,7 +133,10 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Releases unmanaged resources used by the object.
 		/// </summary>
-		/// <param name="disposing">Should be <see langword="true"/> if the method is called from <see cref="Dispose()"/>; <see langword="false"/> otherwise.</param>
+		/// <remarks>
+		/// Unlike most of the members of <see cref="AsyncResult"/>, this method is not thread-safe.
+		/// </remarks>
+		/// <param name="disposing">A <see langword="bool"/> value that indicates whether this method is being called due to a call to <see cref="Dispose()"/>.</param>
 		/// <seealso cref="Dispose()"/>
 		/// <seealso cref="ThrowIfDisposed"/>
 		protected virtual void Dispose(bool disposing)
@@ -164,7 +167,7 @@ namespace UnityFx.Async
 		/// <remarks>
 		/// May not always return the same instance.
 		/// </remarks>
-		public static IAsyncOperation Completed
+		public static IAsyncOperation CompletedOperation
 		{
 			get
 			{
@@ -250,7 +253,7 @@ namespace UnityFx.Async
 
 			if (millisecondsDelay == 0)
 			{
-				return Completed;
+				return CompletedOperation;
 			}
 
 			if (millisecondsDelay == Timeout.Infinite)
@@ -500,7 +503,17 @@ namespace UnityFx.Async
 
 		#region IDisposable
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Disposes the <see cref="AsyncResult"/>, releasing all of its unmanaged resources.
+		/// </summary>
+		/// <remarks>
+		/// Unlike most of the members of <see cref="AsyncResult"/>, this method is not thread-safe.
+		/// Also, <see cref="Dispose()"/> may only be called on a <see cref="AsyncResult"/> that is in one of
+		/// the final states: <see cref="AsyncOperationStatus.RanToCompletion"/>, <see cref="AsyncOperationStatus.Faulted"/> or
+		/// <see cref="AsyncOperationStatus.Canceled"/>.
+		/// </remarks>
+		/// <exception cref="InvalidOperationException">Thrown if the operation is not completed.</exception>
+		/// <seealso cref="Dispose(bool)"/>
 		public void Dispose()
 		{
 			if (!IsCompleted)

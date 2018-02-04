@@ -17,7 +17,7 @@ namespace UnityFx.Async
 #endif
 	{
 		/// <summary>
-		/// Returns <c>true</c> if the source awaitable is completed; <c>false</c> otherwise. Read only.
+		/// Returns <c>true</c> if the source awaitable is completed; <c>false</c> otherwise.
 		/// </summary>
 		bool IsCompleted { get; }
 

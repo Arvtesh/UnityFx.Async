@@ -34,6 +34,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="e">An exception that caused the operation to end prematurely.</param>
 		/// <param name="completedSynchronously">A synchronous completion flag. Set to <see langword="false"/> if not sure.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="TrySetException(Exception, bool)"/>
@@ -44,6 +45,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="e">An exception that caused the operation to end prematurely.</param>
 		/// <param name="completedSynchronously">A synchronous completion flag. Set to <see langword="false"/> if not sure.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="SetException(Exception, bool)"/>
