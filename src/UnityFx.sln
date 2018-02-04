@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.15
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityFx.Async", "UnityFx.Async/UnityFx.Async.csproj", "{721C9B40-7633-4C2B-8820-BDAD9AA8BCF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnityFx.Async", "UnityFx.Async\UnityFx.Async.csproj", "{721C9B40-7633-4C2B-8820-BDAD9AA8BCF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityFx.Async.Tests", "UnityFx.Async.Tests\UnityFx.Async.Tests.csproj", "{3482943A-2DFA-44FB-A8E6-A180DB04EF83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{721C9B40-7633-4C2B-8820-BDAD9AA8BCF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{721C9B40-7633-4C2B-8820-BDAD9AA8BCF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{721C9B40-7633-4C2B-8820-BDAD9AA8BCF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3482943A-2DFA-44FB-A8E6-A180DB04EF83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3482943A-2DFA-44FB-A8E6-A180DB04EF83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3482943A-2DFA-44FB-A8E6-A180DB04EF83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3482943A-2DFA-44FB-A8E6-A180DB04EF83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {90F939BB-E483-46DB-A8AB-8944C990A324}
 	EndGlobalSection
 EndGlobal

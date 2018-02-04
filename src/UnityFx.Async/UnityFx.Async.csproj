@@ -17,13 +17,10 @@
 		<AssemblyVersion>0.7.0.0</AssemblyVersion>
 		<FileVersion>0.7.0.0</FileVersion>
 		<InformationalVersion>0.7.0.0</InformationalVersion>
-		<CodeAnalysisRuleSet>../CodingConventions/Cs/CsharpRules.ruleset</CodeAnalysisRuleSet>
-	</PropertyGroup>
-
-	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<RootNamespace>UnityFx.Async</RootNamespace>
+		<CodeAnalysisRuleSet>../CodingConventions/Cs/CsharpRules.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)' != 'net35'">
