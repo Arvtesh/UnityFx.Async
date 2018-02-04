@@ -89,8 +89,14 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class that is faulted.
 		/// </summary>
 		/// <param name="e">The exception to complete the operation with.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
 		public AsyncResult(Exception e)
 		{
+			if (e == null)
+			{
+				throw new ArgumentNullException(nameof(e));
+			}
+
 			_flags = StatusFaulted | _flagCompletedSynchronously;
 			_exception = e;
 		}
