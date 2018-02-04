@@ -31,7 +31,7 @@ namespace UnityFx.Async
 		public void Constructor_SetsStatusToScheduled()
 		{
 			// Act
-			var op = new AsyncResult(false);
+			var op = new AsyncResult(AsyncOperationStatus.Scheduled);
 
 			// Assert
 			Assert.Equal(AsyncOperationStatus.Scheduled, op.Status);
@@ -48,7 +48,7 @@ namespace UnityFx.Async
 		public void Constructor_SetsStatusToRunning()
 		{
 			// Act
-			var op = new AsyncResult(true);
+			var op = new AsyncResult(AsyncOperationStatus.Running);
 
 			// Assert
 			Assert.Equal(AsyncOperationStatus.Running, op.Status);
@@ -59,6 +59,16 @@ namespace UnityFx.Async
 			Assert.False(op.IsFaulted);
 			Assert.Null(op.Exception);
 			Assert.Null(op.AsyncState);
+		}
+
+		[Fact]
+		public void Constructor_SetsStatusToCompleted()
+		{
+			// Act
+			var op = new AsyncResult(AsyncOperationStatus.RanToCompletion);
+
+			// Assert
+			AssertCompleted(op);
 		}
 
 		[Fact]
@@ -164,6 +174,8 @@ namespace UnityFx.Async
 
 		#region IAsyncCompletionSource
 
+		#region SetCanceled
+
 		[Fact]
 		public void SetCanceled_SetsStatusToCanceled()
 		{
@@ -204,6 +216,23 @@ namespace UnityFx.Async
 			Assert.False(op.CompletedSynchronously);
 			AssertCompleted(op);
 		}
+
+		[Fact]
+		public void SetCanceled_ThrowsIfOperationIsDisposed()
+		{
+			// Arrange
+			var op = new AsyncResult();
+			op.SetCompleted(false);
+
+			// Act/Assert
+			Assert.Throws<InvalidOperationException>(() => op.SetCanceled(true));
+			Assert.False(op.CompletedSynchronously);
+			AssertCompleted(op);
+		}
+
+		#endregion
+
+		#region TrySetCanceled
 
 		[Fact]
 		public void TrySetCanceled_SetsStatusToCanceled()
@@ -249,6 +278,8 @@ namespace UnityFx.Async
 			Assert.False(op.CompletedSynchronously);
 			AssertCompleted(op);
 		}
+
+		#endregion
 
 		#endregion
 

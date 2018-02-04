@@ -20,7 +20,7 @@ namespace UnityFx.Async
 		#region interface
 
 		public DelayAsyncResult(int millisecondsDelay)
-			: base(true)
+			: base(AsyncOperationStatus.Running)
 		{
 			_timer = new Timer(TimerCompletionCallback, this, millisecondsDelay, Timeout.Infinite);
 		}

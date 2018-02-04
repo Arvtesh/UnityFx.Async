@@ -110,7 +110,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncResult(false);
+			var result = new AsyncResult(AsyncOperationStatus.Scheduled);
 
 			op.AddCompletionCallback(() =>
 			{
@@ -152,7 +152,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncResult(false);
+			var result = new AsyncResult(AsyncOperationStatus.Scheduled);
 
 			op.AddCompletionCallback(() =>
 			{
@@ -194,7 +194,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncResult<U>(false);
+			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
 
 			op.AddCompletionCallback(() =>
 			{
@@ -238,7 +238,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncResult<U>(false);
+			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
 
 			op.AddCompletionCallback(() =>
 			{
@@ -274,7 +274,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(resultTransformer));
 			}
 
-			var result = new AsyncResult<U>(false);
+			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
 
 			op.AddCompletionCallback(() =>
 			{

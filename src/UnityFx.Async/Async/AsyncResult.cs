@@ -65,12 +65,34 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class with the specified <see cref="Status"/>.
 		/// </summary>
-		/// <param name="setRunning">If set to <see langword="true"/> transitions the operation to <see cref="AsyncOperationStatus.Running"/> status; otherwise the status is set to <see cref="AsyncOperationStatus.Scheduled"/>.</param>
-		public AsyncResult(bool setRunning)
+		/// <param name="status">Value of the <see cref="Status"/> property.</param>
+		public AsyncResult(AsyncOperationStatus status)
 		{
-			_flags = setRunning ? StatusRunning : StatusScheduled;
+			var flags = (int)status;
+
+			if (flags == StatusFaulted)
+			{
+				_exception = new Exception();
+			}
+
+			if (flags > StatusRunning)
+			{
+				flags |= _flagCompletedSynchronously;
+			}
+
+			_flags = flags;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class that is faulted.
+		/// </summary>
+		/// <param name="e">The exception to complete the operation with.</param>
+		public AsyncResult(Exception e)
+		{
+			_flags = StatusFaulted | _flagCompletedSynchronously;
+			_exception = e;
 		}
 
 		/// <summary>
@@ -165,8 +187,9 @@ namespace UnityFx.Async
 		/// Returns an operation that's already been completed successfully.
 		/// </summary>
 		/// <remarks>
-		/// May not always return the same instance.
+		/// Note that <see cref="Dispose()"/> call have no effect on operations returned with the property. May not always return the same instance.
 		/// </remarks>
+		/// <value>Completed <see cref="IAsyncOperation"/> instance.</value>
 		public static IAsyncOperation CompletedOperation
 		{
 			get
@@ -184,46 +207,50 @@ namespace UnityFx.Async
 		/// Creates a <see cref="IAsyncOperation"/> that is canceled.
 		/// </summary>
 		/// <returns>The canceled operation.</returns>
+		/// <seealso cref="FromCanceled{T}"/>
+		/// <seealso cref="FromException(Exception)"/>
+		/// <seealso cref="FromResult{T}(T)"/>
 		public static IAsyncOperation FromCanceled()
 		{
-			var op = new AsyncResult();
-			op.SetCanceled(true);
-			return op;
+			return new AsyncResult(AsyncOperationStatus.Canceled);
 		}
 
 		/// <summary>
 		/// Creates a <see cref="IAsyncOperation{T}"/> that is canceled.
 		/// </summary>
 		/// <returns>The canceled operation.</returns>
+		/// <seealso cref="FromCanceled"/>
+		/// <seealso cref="FromException{T}(Exception)"/>
+		/// <seealso cref="FromResult{T}(T)"/>
 		public static IAsyncOperation<T> FromCanceled<T>()
 		{
-			var op = new AsyncResult<T>();
-			op.SetCanceled(true);
-			return op;
+			return new AsyncResult<T>(AsyncOperationStatus.Canceled);
 		}
 
 		/// <summary>
 		/// Creates a <see cref="IAsyncOperation"/> that has completed with a specified exception.
 		/// </summary>
-		/// <param name="e">The exception with which to complete the operation.</param>
+		/// <param name="e">The exception to complete the operation with.</param>
 		/// <returns>The faulted operation.</returns>
+		/// <seealso cref="FromException{T}(Exception)"/>
+		/// <seealso cref="FromCanceled"/>
+		/// <seealso cref="FromResult{T}(T)"/>
 		public static IAsyncOperation FromException(Exception e)
 		{
-			var op = new AsyncResult();
-			op.SetException(e, true);
-			return op;
+			return new AsyncResult(e);
 		}
 
 		/// <summary>
 		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with a specified exception.
 		/// </summary>
-		/// <param name="e">The exception with which to complete the operation.</param>
+		/// <param name="e">The exception to complete the operation with.</param>
 		/// <returns>The faulted operation.</returns>
+		/// <seealso cref="FromException(Exception)"/>
+		/// <seealso cref="FromCanceled{T}"/>
+		/// <seealso cref="FromResult{T}(T)"/>
 		public static IAsyncOperation<T> FromException<T>(Exception e)
 		{
-			var op = new AsyncResult<T>();
-			op.SetException(e, true);
-			return op;
+			return new AsyncResult<T>(e);
 		}
 
 		/// <summary>
@@ -231,11 +258,11 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="result">The result value with which to complete the operation.</param>
 		/// <returns>The completed operation.</returns>
+		/// <seealso cref="FromCanceled{T}"/>
+		/// <seealso cref="FromException{T}(Exception)"/>
 		public static IAsyncOperation<T> FromResult<T>(T result)
 		{
-			var op = new AsyncResult<T>();
-			op.SetResult(result, true);
-			return op;
+			return new AsyncResult<T>(result);
 		}
 
 		/// <summary>
@@ -244,6 +271,7 @@ namespace UnityFx.Async
 		/// <param name="millisecondsDelay">The number of milliseconds to wait before completing the returned operation, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="millisecondsDelay"/> is less than -1.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
+		/// <seealso cref="Delay(TimeSpan)"/>
 		public static IAsyncOperation Delay(int millisecondsDelay)
 		{
 			if (millisecondsDelay < 0)
@@ -270,6 +298,7 @@ namespace UnityFx.Async
 		/// <param name="delay">The time span to wait before completing the returned task, or <c>TimeSpan.FromMilliseconds(-1)</c> to wait indefinitely.</param>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="delay"/> represents a negative time interval other than <c>TimeSpan.FromMillseconds(-1)</c>.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
+		/// <seealso cref="Delay(int)"/>
 		public static IAsyncOperation Delay(TimeSpan delay)
 		{
 			var millisecondsDelay = (long)delay.TotalMilliseconds;
@@ -283,11 +312,11 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// tt
+		/// Initializes the <paramref name="waitHandle"/> passed with a new <see cref="EventWaitHandle"/> instance if needed.
 		/// </summary>
-		/// <param name="waitHandle"></param>
-		/// <param name="asyncResult"></param>
-		/// <returns></returns>
+		/// <param name="waitHandle">The wait handle reference to initialize.</param>
+		/// <param name="asyncResult">An <see cref="IAsyncResult"/> instance that owns the wait handle.</param>
+		/// <returns>Returns the resulting <paramref name="waitHandle"/> value.</returns>
 		public static EventWaitHandle TryCreateAsyncWaitHandle(ref EventWaitHandle waitHandle, IAsyncResult asyncResult)
 		{
 			if (waitHandle == null)
