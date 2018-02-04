@@ -5,7 +5,7 @@
 		<Description>Task-like asynchronous operations for Unity3d.</Description>
 		<Company />
 		<Authors>Alexander Bogarsukov</Authors>
-		<Copyright></Copyright>
+		<Copyright>Alexander Bogarsukov</Copyright>
 		<RepositoryUrl>https://github.com/Arvtesh/UnityFx.Async</RepositoryUrl>
 		<RepositoryType>Git</RepositoryType>
 		<PackageVersion>0.0.1-alpha0001</PackageVersion>
