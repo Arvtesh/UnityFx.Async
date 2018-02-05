@@ -134,6 +134,13 @@ namespace UnityFx.Async
 			}
 		}
 
+		/// <summary>
+		/// Returns the operation result value. Unlike <see cref="Result"/> never throws.
+		/// </summary>
+		/// <value>Result of the operation.</value>
+		/// <seealso cref="Result"/>
+		protected T ResultUnsafe => _result;
+
 		#endregion
 	}
 }
