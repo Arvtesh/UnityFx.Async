@@ -14,59 +14,53 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Canceled"/> state.
 		/// </summary>
-		/// <param name="completedSynchronously">A synchronous completion flag. Set to <see langword="false"/> if not sure.</param>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="TrySetCanceled(bool)"/>
-		void SetCanceled(bool completedSynchronously = false);
+		/// <seealso cref="TrySetCanceled"/>
+		void SetCanceled();
 
 		/// <summary>
 		/// Attempts to transition the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Canceled"/> state.
 		/// </summary>
-		/// <param name="completedSynchronously">A synchronous completion flag. Set to <see langword="false"/> if not sure.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Gets <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="SetCanceled(bool)"/>
-		bool TrySetCanceled(bool completedSynchronously = false);
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="SetCanceled"/>
+		bool TrySetCanceled();
 
 		/// <summary>
 		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
 		/// </summary>
 		/// <param name="e">An exception that caused the operation to end prematurely.</param>
-		/// <param name="completedSynchronously">A synchronous completion flag. Set to <see langword="false"/> if not sure.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="TrySetException(Exception, bool)"/>
-		void SetException(Exception e, bool completedSynchronously = false);
+		/// <seealso cref="TrySetException(Exception)"/>
+		void SetException(Exception e);
 
 		/// <summary>
 		/// Attempts to transition the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
 		/// </summary>
 		/// <param name="e">An exception that caused the operation to end prematurely.</param>
-		/// <param name="completedSynchronously">A synchronous completion flag. Set to <see langword="false"/> if not sure.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Gets <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="SetException(Exception, bool)"/>
-		bool TrySetException(Exception e, bool completedSynchronously = false);
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="SetException(Exception)"/>
+		bool TrySetException(Exception e);
 
 		/// <summary>
 		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
-		/// <param name="completedSynchronously">A synchronous completion flag. Set to <see langword="false"/> if not sure.</param>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="TrySetCompleted(bool)"/>
-		void SetCompleted(bool completedSynchronously = false);
+		/// <seealso cref="TrySetCompleted"/>
+		void SetCompleted();
 
 		/// <summary>
 		/// Attempts to transition the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
-		/// <param name="completedSynchronously">A synchronous completion flag. Set to <see langword="false"/> if not sure.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Gets <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="SetCompleted(bool)"/>
-		bool TrySetCompleted(bool completedSynchronously = false);
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="SetCompleted"/>
+		bool TrySetCompleted();
 	}
 }

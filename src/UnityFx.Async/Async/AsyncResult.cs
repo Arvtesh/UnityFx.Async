@@ -387,6 +387,15 @@ namespace UnityFx.Async
 		#region IAsyncOperationCompletionSource
 
 		/// <inheritdoc/>
+		public void SetCanceled() => SetCanceled(false);
+
+		/// <summary>
+		/// Transitions the operation into the <see cref="AsyncOperationStatus.Canceled"/> state.
+		/// </summary>
+		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetCanceled()"/>
 		public void SetCanceled(bool completedSynchronously)
 		{
 			if (!TrySetCanceled(completedSynchronously))
@@ -396,6 +405,15 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
+		public bool TrySetCanceled() => TrySetCanceled(false);
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Canceled"/> state.
+		/// </summary>
+		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetCanceled()"/>
 		public bool TrySetCanceled(bool completedSynchronously)
 		{
 			ThrowIfDisposed();
@@ -410,6 +428,17 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
+		public void SetException(Exception e) => SetException(e, false);
+
+		/// <summary>
+		/// Transitions the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="e">An exception that caused the operation to end prematurely.</param>
+		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetException(Exception)"/>
 		public void SetException(Exception e, bool completedSynchronously)
 		{
 			if (!TrySetException(e, completedSynchronously))
@@ -419,6 +448,17 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
+		public bool TrySetException(Exception e) => TrySetException(e, false);
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="e">An exception that caused the operation to end prematurely.</param>
+		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetException(Exception)"/>
 		public bool TrySetException(Exception e, bool completedSynchronously)
 		{
 			ThrowIfDisposed();
@@ -441,6 +481,15 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
+		public void SetCompleted() => SetCompleted(false);
+
+		/// <summary>
+		/// Transitions the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
+		/// </summary>
+		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetCompleted()"/>
 		public void SetCompleted(bool completedSynchronously)
 		{
 			if (!TrySetCompleted(completedSynchronously))
@@ -450,6 +499,15 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
+		public bool TrySetCompleted() => TrySetCompleted(false);
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
+		/// </summary>
+		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetCompleted()"/>
 		public bool TrySetCompleted(bool completedSynchronously)
 		{
 			ThrowIfDisposed();

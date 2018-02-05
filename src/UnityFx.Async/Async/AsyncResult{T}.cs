@@ -73,6 +73,16 @@ namespace UnityFx.Async
 		#region IAsyncOperationController
 
 		/// <inheritdoc/>
+		public void SetResult(T result) => SetResult(result, false);
+
+		/// <summary>
+		/// Transitions the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
+		/// </summary>
+		/// <param name="result">The operation result.</param>
+		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetResult(T)"/>
 		public void SetResult(T result, bool completedSynchronously)
 		{
 			if (!TrySetResult(result, completedSynchronously))
@@ -82,6 +92,16 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
+		public bool TrySetResult(T result) => TrySetResult(result, false);
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
+		/// </summary>
+		/// <param name="result">The operation result.</param>
+		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetResult(T)"/>
 		public bool TrySetResult(T result, bool completedSynchronously)
 		{
 			ThrowIfDisposed();
