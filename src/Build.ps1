@@ -36,9 +36,9 @@ Write-Host "Install/update GetVersion" -Foreground Blue
 
 # build projects
 Write-Host "Building projects" -Foreground Blue
-& $msbuildPath $solutionPath /m /t:Restore
+& $msbuildPath $solutionPath /m /v:m /t:Restore
 & $msbuildPath $solutionPath /m /t:Build /p:Configuration=$configuration
-& $msbuildPath $solutionPath /m /t:Pack /p:Configuration=$configuration
+& $msbuildPath $solutionPath /m /v:m /t:Pack /p:Configuration=$configuration
 
 # fail if solution build failed
 if ($LastExitCode -ne 0)
