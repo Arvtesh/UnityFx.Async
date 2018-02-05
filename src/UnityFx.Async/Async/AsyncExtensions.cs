@@ -295,7 +295,7 @@ namespace UnityFx.Async
 #if !NET35
 
 		/// <summary>
-		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
+		/// Gets the operation awaiter. This method is intended for compiler rather than use directly in code.
 		/// </summary>
 		public static AsyncResultAwaiter GetAwaiter(this IAsyncOperation op)
 		{
@@ -303,7 +303,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
+		/// Gets the operation awaiter. This method is intended for compiler rather than use directly in code.
 		/// </summary>
 		public static AsyncResultAwaiter<T> GetAwaiter<T>(this IAsyncOperation<T> op)
 		{

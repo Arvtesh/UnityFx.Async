@@ -25,7 +25,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="completedSynchronously">A synchronous completion flag. Set to <see langword="false"/> if not sure.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <returns>Gets <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="SetCanceled(bool)"/>
 		bool TrySetCanceled(bool completedSynchronously = false);
 
@@ -47,7 +47,7 @@ namespace UnityFx.Async
 		/// <param name="completedSynchronously">A synchronous completion flag. Set to <see langword="false"/> if not sure.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <returns>Gets <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="SetException(Exception, bool)"/>
 		bool TrySetException(Exception e, bool completedSynchronously = false);
 
@@ -65,7 +65,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="completedSynchronously">A synchronous completion flag. Set to <see langword="false"/> if not sure.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <returns>Gets <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="SetCompleted(bool)"/>
 		bool TrySetCompleted(bool completedSynchronously = false);
 	}

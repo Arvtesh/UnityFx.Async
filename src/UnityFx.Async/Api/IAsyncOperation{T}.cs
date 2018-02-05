@@ -13,7 +13,7 @@ namespace UnityFx.Async
 	public interface IAsyncOperation<out T> : IAsyncOperation
 	{
 		/// <summary>
-		/// Returns the result value of this operation.
+		/// Gets the result value of this operation.
 		/// </summary>
 		/// <remarks>
 		/// Once the result of an operation is available, it is stored and is returned immediately on subsequent calls to the <see cref="Result"/> property.

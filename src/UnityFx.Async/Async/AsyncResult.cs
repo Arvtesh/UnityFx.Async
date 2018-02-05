@@ -42,7 +42,7 @@ namespace UnityFx.Async
 		#region interface
 
 		/// <summary>
-		/// Returns <see langword="true"/> if the operation is disposed; <see langword="false"/> otherwise.
+		/// Gets <see langword="true"/> if the operation is disposed; <see langword="false"/> otherwise.
 		/// </summary>
 		protected bool IsDisposed => (_flags & _flagDisposed) != 0;
 
@@ -196,7 +196,7 @@ namespace UnityFx.Async
 		#region static interface
 
 		/// <summary>
-		/// Returns an operation that's already been completed successfully.
+		/// Gets an operation that's already been completed successfully.
 		/// </summary>
 		/// <remarks>
 		/// Note that <see cref="Dispose()"/> call have no effect on operations returned with the property. May not always return the same instance.
