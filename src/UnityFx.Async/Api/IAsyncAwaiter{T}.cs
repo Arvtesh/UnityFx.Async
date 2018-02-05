@@ -22,7 +22,7 @@ namespace UnityFx.Async
 		bool IsCompleted { get; }
 
 		/// <summary>
-		/// Gets the source result value.
+		/// Returns the source result value.
 		/// </summary>
 		T GetResult();
 

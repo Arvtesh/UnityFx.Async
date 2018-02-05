@@ -54,7 +54,7 @@ namespace UnityFx.Async
 	public interface IAsyncOperation : IAsyncOperationEvents, IAsyncResult, IDisposable
 	{
 		/// <summary>
-		/// Returns the operation status identifier.
+		/// Gets the operation status identifier.
 		/// </summary>
 		/// <value>Identifier of the operation status.</value>
 		/// <seealso cref="IsCompletedSuccessfully"/>
@@ -63,7 +63,7 @@ namespace UnityFx.Async
 		AsyncOperationStatus Status { get; }
 
 		/// <summary>
-		/// Returns an <see cref="System.Exception"/> that caused the operation to end prematurely. If the operation completed successfully
+		/// Gets an <see cref="System.Exception"/> that caused the operation to end prematurely. If the operation completed successfully
 		/// or has not yet thrown any exceptions, this will return <see langword="null"/>.
 		/// </summary>
 		/// <value>An exception that caused the operation to end prematurely.</value>
@@ -72,7 +72,7 @@ namespace UnityFx.Async
 		Exception Exception { get; }
 
 		/// <summary>
-		/// Returns <see langword="true"/> if the operation has completed successfully, <see langword="false"/> otherwise.
+		/// Gets whether the operation completed with successfully (i.e. with <see cref="AsyncOperationStatus.RanToCompletion"/> status).
 		/// </summary>
 		/// <value>A value indicating whether the operation has finished successfully.</value>
 		/// <seealso cref="IsFaulted"/>
@@ -81,7 +81,7 @@ namespace UnityFx.Async
 		bool IsCompletedSuccessfully { get; }
 
 		/// <summary>
-		/// Returns <see langword="true"/> if the operation has failed for any reason, <see langword="false"/> otherwise.
+		/// Gets whether the operation completed due to an unhandled exception (i.e. with <see cref="AsyncOperationStatus.Faulted"/> status).
 		/// </summary>
 		/// <remarks>
 		/// If <see cref="IsFaulted"/> is <see langword="true"/>, the operation's <see cref="Status"/> will be equal to
@@ -95,7 +95,7 @@ namespace UnityFx.Async
 		bool IsFaulted { get; }
 
 		/// <summary>
-		/// Returns <see langword="true"/> if the operation has completed execution due to being canceled, <see langword="false"/> otherwise.
+		/// Gets whether the operation completed due to being canceled (i.e. with <see cref="AsyncOperationStatus.Canceled"/> status).
 		/// </summary>
 		/// <value>A value indicating whether the operation was canceled.</value>
 		/// <seealso cref="IsCompletedSuccessfully"/>
