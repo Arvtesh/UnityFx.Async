@@ -19,7 +19,7 @@ namespace UnityFx.Async
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="TrySetResult(T, bool)"/>
-		void SetResult(T result, bool completedSynchronously);
+		void SetResult(T result, bool completedSynchronously = false);
 
 		/// <summary>
 		/// Attempts to transition the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
@@ -29,6 +29,6 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="SetResult(T, bool)"/>
-		bool TrySetResult(T result, bool completedSynchronously);
+		bool TrySetResult(T result, bool completedSynchronously = false);
 	}
 }

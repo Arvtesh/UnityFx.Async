@@ -18,7 +18,7 @@ namespace UnityFx.Async
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="TrySetCanceled(bool)"/>
-		void SetCanceled(bool completedSynchronously);
+		void SetCanceled(bool completedSynchronously = false);
 
 		/// <summary>
 		/// Attempts to transition the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Canceled"/> state.
@@ -27,7 +27,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="SetCanceled(bool)"/>
-		bool TrySetCanceled(bool completedSynchronously);
+		bool TrySetCanceled(bool completedSynchronously = false);
 
 		/// <summary>
 		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
@@ -38,7 +38,7 @@ namespace UnityFx.Async
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="TrySetException(Exception, bool)"/>
-		void SetException(Exception e, bool completedSynchronously);
+		void SetException(Exception e, bool completedSynchronously = false);
 
 		/// <summary>
 		/// Attempts to transition the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
@@ -49,7 +49,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="SetException(Exception, bool)"/>
-		bool TrySetException(Exception e, bool completedSynchronously);
+		bool TrySetException(Exception e, bool completedSynchronously = false);
 
 		/// <summary>
 		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
@@ -58,7 +58,7 @@ namespace UnityFx.Async
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="TrySetCompleted(bool)"/>
-		void SetCompleted(bool completedSynchronously);
+		void SetCompleted(bool completedSynchronously = false);
 
 		/// <summary>
 		/// Attempts to transition the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
@@ -67,6 +67,6 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="SetCompleted(bool)"/>
-		bool TrySetCompleted(bool completedSynchronously);
+		bool TrySetCompleted(bool completedSynchronously = false);
 	}
 }
