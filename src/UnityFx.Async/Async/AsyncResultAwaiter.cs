@@ -2,18 +2,19 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace UnityFx.Async
 {
 	/// <summary>
 	/// Provides an object that waits for the completion of an asynchronous operation. This type and its members are intended for compiler use only.
 	/// </summary>
-	/// <seealso cref="AsyncResult"/>
-	public struct AsyncResultAwaiter : IAsyncAwaiter
+	/// <seealso cref="IAsyncOperation"/>
+	public struct AsyncResultAwaiter : INotifyCompletion
 	{
 		#region data
 
-		private readonly IAsyncResult _op;
+		private readonly IAsyncOperation _op;
 
 		#endregion
 
@@ -22,18 +23,16 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResultAwaiter"/> struct.
 		/// </summary>
-		public AsyncResultAwaiter(IAsyncResult op)
-		{
-			_op = op;
-		}
+		public AsyncResultAwaiter(IAsyncOperation op) => _op = op;
 
 		#endregion
 
 		#region IAwaiter
 
 		/// <summary>
-		/// Gets <c>true</c> if the source awaitable is completed; <c>false</c> otherwise.
+		/// Gets whether the underlying operation is completed.
 		/// </summary>
+		/// <value>The operation completion flag.</value>
 		public bool IsCompleted => _op.IsCompleted;
 
 		/// <summary>
@@ -41,27 +40,14 @@ namespace UnityFx.Async
 		/// </summary>
 		public void GetResult()
 		{
-			// does nothing
 		}
 
 		#endregion
 
 		#region INotifyCompletion
 
-		/// <summary>
-		/// Schedules the continuation action that's invoked when the operation completes.
-		/// </summary>
-		public void OnCompleted(Action continuation)
-		{
-			if (_op is IAsyncOperationEvents c)
-			{
-				c.AddCompletionCallback(continuation);
-			}
-			else
-			{
-				throw new NotSupportedException();
-			}
-		}
+		/// <inheritdoc/>
+		public void OnCompleted(Action continuation) => _op.AddCompletionCallback(continuation);
 
 		#endregion
 	}

@@ -35,6 +35,10 @@
 		<AdditionalFiles Include="../CodingConventions/Common/stylecop.json" />
 	</ItemGroup>
 
+	<ItemGroup Condition="'$(TargetFramework)' == 'net35'">
+		<Compile Remove="Async/AsyncResultAwaiter*.cs" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<Content Include="README.txt">
 			<Pack>true</Pack>

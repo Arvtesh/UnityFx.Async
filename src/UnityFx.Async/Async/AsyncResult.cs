@@ -93,13 +93,8 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
 		public AsyncResult(Exception e)
 		{
-			if (e == null)
-			{
-				throw new ArgumentNullException(nameof(e));
-			}
-
+			_exception = e ?? throw new ArgumentNullException(nameof(e));
 			_flags = StatusFaulted | _flagCompletedSynchronously;
-			_exception = e;
 		}
 
 		/// <summary>
