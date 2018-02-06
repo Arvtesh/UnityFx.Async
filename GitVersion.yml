@@ -1,13 +1,5 @@
 mode: ContinuousDeployment
-tag-prefix: '[vV]'
 continuous-delivery-fallback-tag: ci
 branches:
-  release:
-    mode: ContinuousDeployment
-    tag: rc
-  hotfix:
-    mode: ContinuousDeployment
-    tag: beta
-  develop:
-    mode: ContinuousDeployment
-    tag: alpha
+  master:
+    mode: ContinuousDelivery
