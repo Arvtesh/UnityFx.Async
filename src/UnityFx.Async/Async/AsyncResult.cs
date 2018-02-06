@@ -560,7 +560,11 @@ namespace UnityFx.Async
 		public void RemoveCompletionCallback(Action action)
 		{
 			ThrowIfDisposed();
-			throw new NotImplementedException();
+
+			if (action != null)
+			{
+				TryRemoveContinuation(action);
+			}
 		}
 
 		#endregion
@@ -736,6 +740,56 @@ namespace UnityFx.Async
 					{
 						list.Add(valueToAdd);
 						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		private bool TryRemoveContinuation(object valueToRemove)
+		{
+			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
+			var value = _continuation;
+
+			if (value != _continuationCompletionSentinel)
+			{
+				var list = value as IList;
+
+				if (list == null)
+				{
+					// This is not a list. If we have a single object (the one we want to remove) we try to replace it with an empty list.
+					// Note we cannot go back to a null state, since it will mess up the TryAddContinuation logic.
+					if (Interlocked.CompareExchange(ref _continuation, new List<object>(), valueToRemove) == valueToRemove)
+					{
+						return true;
+					}
+					else
+					{
+						// If we fail it means that either TryAddContinuation won the race condition and _continuation is now a List
+						// that contains the element we want to remove. Or it set the _continuationCompletionSentinel.
+						// So we should try to get a list one more time.
+						list = value as IList;
+					}
+				}
+
+				// If list is null it means _continuationCompletionSentinel has been set already and there is nothing else to do.
+				if (list != null)
+				{
+					lock (list)
+					{
+						// There is a small chance that the operation completed since we took a local snapshot into
+						// list. In that case, just return; we don't want to be manipulating the continuation list as it is being processed.
+						if (_continuation != _continuationCompletionSentinel)
+						{
+							var index = list.IndexOf(valueToRemove);
+
+							if (index != -1)
+							{
+								list.RemoveAt(index);
+								return true;
+							}
+						}
 					}
 				}
 			}
