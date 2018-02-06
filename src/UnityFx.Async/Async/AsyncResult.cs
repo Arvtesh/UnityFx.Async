@@ -569,7 +569,20 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			if (IsCompleted || !TryAddContinuation(action))
+			TryAddContinuation(action);
+		}
+
+		/// <inheritdoc/>
+		public void AddOrInvokeCompletionCallback(Action action)
+		{
+			ThrowIfDisposed();
+
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			if (!TryAddContinuation(action))
 			{
 				action.Invoke();
 			}
@@ -723,42 +736,46 @@ namespace UnityFx.Async
 			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
 			var oldValue = _continuation;
 
-			// If no continuation is stored yet, try to store it as _continuation.
-			if (oldValue == null)
+			// Quick return if the operation is completed.
+			if (oldValue != _continuationCompletionSentinel)
 			{
-				oldValue = Interlocked.CompareExchange(ref _continuation, valueToAdd, null);
-
-				// Quick return if exchange succeeded.
+				// If no continuation is stored yet, try to store it as _continuation.
 				if (oldValue == null)
 				{
-					return true;
-				}
-			}
+					oldValue = Interlocked.CompareExchange(ref _continuation, valueToAdd, null);
 
-			// Logic for the case where we were previously storing a single continuation.
-			if (oldValue != _continuationCompletionSentinel && !(oldValue is IList))
-			{
-				var newList = new List<object>() { oldValue };
-
-				Interlocked.CompareExchange(ref _continuation, newList, oldValue);
-
-				// We might be racing against another thread converting the single into a list,
-				// or we might be racing against operation completion, so resample "list" below.
-			}
-
-			// If list is null, it can only mean that _continuationCompletionSentinel has been exchanged
-			// into _continuation. Thus, the task has completed and we should return false from this method,
-			// as we will not be queuing up the continuation.
-			if (_continuation is IList list)
-			{
-				lock (list)
-				{
-					// It is possible for the operation to complete right after we snap the copy of the list.
-					// If so, then fall through and return false without queuing the continuation.
-					if (_continuation != _continuationCompletionSentinel)
+					// Quick return if exchange succeeded.
+					if (oldValue == null)
 					{
-						list.Add(valueToAdd);
 						return true;
+					}
+				}
+
+				// Logic for the case where we were previously storing a single continuation.
+				if (oldValue != _continuationCompletionSentinel && !(oldValue is IList))
+				{
+					var newList = new List<object>() { oldValue };
+
+					Interlocked.CompareExchange(ref _continuation, newList, oldValue);
+
+					// We might be racing against another thread converting the single into a list,
+					// or we might be racing against operation completion, so resample "list" below.
+				}
+
+				// If list is null, it can only mean that _continuationCompletionSentinel has been exchanged
+				// into _continuation. Thus, the task has completed and we should return false from this method,
+				// as we will not be queuing up the continuation.
+				if (_continuation is IList list)
+				{
+					lock (list)
+					{
+						// It is possible for the operation to complete right after we snap the copy of the list.
+						// If so, then fall through and return false without queuing the continuation.
+						if (_continuation != _continuationCompletionSentinel)
+						{
+							list.Add(valueToAdd);
+							return true;
+						}
 					}
 				}
 			}

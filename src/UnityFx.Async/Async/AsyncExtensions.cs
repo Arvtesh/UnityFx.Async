@@ -113,7 +113,7 @@ namespace UnityFx.Async
 
 			var result = new AsyncResult(AsyncOperationStatus.Scheduled);
 
-			op.AddCompletionCallback(() =>
+			op.AddOrInvokeCompletionCallback(() =>
 			{
 				try
 				{
@@ -155,7 +155,7 @@ namespace UnityFx.Async
 
 			var result = new AsyncResult(AsyncOperationStatus.Scheduled);
 
-			op.AddCompletionCallback(() =>
+			op.AddOrInvokeCompletionCallback(() =>
 			{
 				try
 				{
@@ -197,7 +197,7 @@ namespace UnityFx.Async
 
 			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
 
-			op.AddCompletionCallback(() =>
+			op.AddOrInvokeCompletionCallback(() =>
 			{
 				try
 				{
@@ -241,7 +241,7 @@ namespace UnityFx.Async
 
 			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
 
-			op.AddCompletionCallback(() =>
+			op.AddOrInvokeCompletionCallback(() =>
 			{
 				try
 				{
@@ -277,7 +277,7 @@ namespace UnityFx.Async
 
 			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
 
-			op.AddCompletionCallback(() =>
+			op.AddOrInvokeCompletionCallback(() =>
 			{
 				try
 				{
@@ -317,7 +317,7 @@ namespace UnityFx.Async
 		{
 			var result = new TaskCompletionSource<object>();
 
-			op.AddCompletionCallback(() =>
+			op.AddOrInvokeCompletionCallback(() =>
 			{
 				if (op.IsCompletedSuccessfully)
 				{
@@ -343,7 +343,7 @@ namespace UnityFx.Async
 		{
 			var result = new TaskCompletionSource<T>();
 
-			op.AddCompletionCallback(() =>
+			op.AddOrInvokeCompletionCallback(() =>
 			{
 				if (op.IsCompletedSuccessfully)
 				{

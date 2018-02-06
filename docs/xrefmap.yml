@@ -430,6 +430,18 @@ references:
   commentId: Overload:UnityFx.Async.AsyncResult.AddCompletionCallback
   fullName: UnityFx.Async.AsyncResult.AddCompletionCallback
   nameWithType: AsyncResult.AddCompletionCallback
+- uid: UnityFx.Async.AsyncResult.AddOrInvokeCompletionCallback(System.Action)
+  name: AddOrInvokeCompletionCallback(Action)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_AddOrInvokeCompletionCallback_System_Action_
+  commentId: M:UnityFx.Async.AsyncResult.AddOrInvokeCompletionCallback(System.Action)
+  fullName: UnityFx.Async.AsyncResult.AddOrInvokeCompletionCallback(System.Action)
+  nameWithType: AsyncResult.AddOrInvokeCompletionCallback(Action)
+- uid: UnityFx.Async.AsyncResult.AddOrInvokeCompletionCallback*
+  name: AddOrInvokeCompletionCallback
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_AddOrInvokeCompletionCallback_
+  commentId: Overload:UnityFx.Async.AsyncResult.AddOrInvokeCompletionCallback
+  fullName: UnityFx.Async.AsyncResult.AddOrInvokeCompletionCallback
+  nameWithType: AsyncResult.AddOrInvokeCompletionCallback
 - uid: UnityFx.Async.AsyncResult.AsyncState
   name: AsyncState
   href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_AsyncState
@@ -1449,6 +1461,18 @@ references:
   commentId: Overload:UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback
   fullName: UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback
   nameWithType: IAsyncOperationEvents.AddCompletionCallback
+- uid: UnityFx.Async.IAsyncOperationEvents.AddOrInvokeCompletionCallback(System.Action)
+  name: AddOrInvokeCompletionCallback(Action)
+  href: api/netstandard2.0/UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddOrInvokeCompletionCallback_System_Action_
+  commentId: M:UnityFx.Async.IAsyncOperationEvents.AddOrInvokeCompletionCallback(System.Action)
+  fullName: UnityFx.Async.IAsyncOperationEvents.AddOrInvokeCompletionCallback(System.Action)
+  nameWithType: IAsyncOperationEvents.AddOrInvokeCompletionCallback(Action)
+- uid: UnityFx.Async.IAsyncOperationEvents.AddOrInvokeCompletionCallback*
+  name: AddOrInvokeCompletionCallback
+  href: api/netstandard2.0/UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddOrInvokeCompletionCallback_
+  commentId: Overload:UnityFx.Async.IAsyncOperationEvents.AddOrInvokeCompletionCallback
+  fullName: UnityFx.Async.IAsyncOperationEvents.AddOrInvokeCompletionCallback
+  nameWithType: IAsyncOperationEvents.AddOrInvokeCompletionCallback
 - uid: UnityFx.Async.IAsyncOperationEvents.Completed
   name: Completed
   href: api/netstandard2.0/UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_Completed
