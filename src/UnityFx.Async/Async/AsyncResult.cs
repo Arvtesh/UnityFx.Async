@@ -42,8 +42,9 @@ namespace UnityFx.Async
 		#region interface
 
 		/// <summary>
-		/// Gets whether the operation is disposed.
+		/// Gets whether the operation instance is disposed.
 		/// </summary>
+		/// <value>The disposed flag.</value>
 		protected bool IsDisposed => (_flags & _flagDisposed) != 0;
 
 		/// <summary>
