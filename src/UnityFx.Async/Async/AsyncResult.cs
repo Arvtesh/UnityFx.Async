@@ -677,12 +677,17 @@ namespace UnityFx.Async
 				var status0 = status & _statusMask;
 				var status1 = newStatus & _statusMask;
 
-				if (status0 < status1)
+				while (status0 < status1)
 				{
 					if (Interlocked.CompareExchange(ref _flags, newStatus, status) == status)
 					{
 						OnStatusChanged();
 						return true;
+					}
+					else
+					{
+						status = _flags;
+						status0 = status & _statusMask;
 					}
 				}
 			}
