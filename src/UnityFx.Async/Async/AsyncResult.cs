@@ -541,6 +541,25 @@ namespace UnityFx.Async
 		#region IAsyncOperationEvents
 
 		/// <inheritdoc/>
+		public event EventHandler Completed
+		{
+			add
+			{
+				if (value != null)
+				{
+					TryAddContinuation(value);
+				}
+			}
+			remove
+			{
+				if (value != null)
+				{
+					TryRemoveContinuation(value);
+				}
+			}
+		}
+
+		/// <inheritdoc/>
 		public void AddCompletionCallback(Action action)
 		{
 			ThrowIfDisposed();

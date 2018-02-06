@@ -12,6 +12,13 @@ namespace UnityFx.Async
 	public interface IAsyncOperationEvents
 	{
 		/// <summary>
+		/// Raised when the operation has completed.
+		/// </summary>
+		/// <seealso cref="AddCompletionCallback(Action)"/>
+		/// <seealso cref="RemoveCompletionCallback(Action)"/>
+		event EventHandler Completed;
+
+		/// <summary>
 		/// Adds a completion callback to be executed after the operation has finished. If the operation is already
 		/// in completed state just invokes the <paramref name="action"/>.
 		/// </summary>
@@ -19,6 +26,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="RemoveCompletionCallback(Action)"/>
+		/// <seealso cref="Completed"/>
 		void AddCompletionCallback(Action action);
 
 		/// <summary>
@@ -27,6 +35,7 @@ namespace UnityFx.Async
 		/// <param name="action">The callback to remove.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="AddCompletionCallback(Action)"/>
+		/// <seealso cref="Completed"/>
 		void RemoveCompletionCallback(Action action);
 	}
 }
