@@ -2,6 +2,8 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace UnityFx.Async
@@ -271,6 +273,28 @@ namespace UnityFx.Async
 		}
 
 		#endregion
+
+		#endregion
+
+		#region async/await
+
+		[Fact]
+		public async Task Await_CollbackIsTriggered()
+		{
+			// Arrange
+			var op = new AsyncResult();
+			var task = Task.Run(() =>
+			{
+				Thread.Sleep(10);
+				op.SetCompleted();
+			});
+
+			// Act
+			await op;
+
+			// Assert
+			AssertCompleted(op);
+		}
 
 		#endregion
 
@@ -723,9 +747,6 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#endregion
-
-		#region IAsyncOperationEvents
 		#endregion
 
 		#region IAsyncResult
