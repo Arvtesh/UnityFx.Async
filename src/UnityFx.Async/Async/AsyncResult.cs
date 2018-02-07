@@ -115,13 +115,16 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Called when the operation state has changed.
 		/// </summary>
-		protected virtual void OnStatusChanged()
+		/// <param name="status">The new status value.</param>
+		/// <seealso cref="Status"/>
+		protected virtual void OnStatusChanged(AsyncOperationStatus status)
 		{
 		}
 
 		/// <summary>
 		/// Called when the operation is completed.
 		/// </summary>
+		/// <seealso cref="Status"/>
 		protected virtual void OnCompleted()
 		{
 			_waitHandle?.Set();
@@ -406,7 +409,7 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 
-			if (!TrySetStatusInternal(StatusRunning))
+			if (TrySetStatusInternal(StatusRunning))
 			{
 				return true;
 			}
@@ -749,7 +752,7 @@ namespace UnityFx.Async
 				{
 					if (Interlocked.CompareExchange(ref _flags, newStatus, status) == status)
 					{
-						OnStatusChanged();
+						OnStatusChanged((AsyncOperationStatus)status1);
 						return true;
 					}
 					else
