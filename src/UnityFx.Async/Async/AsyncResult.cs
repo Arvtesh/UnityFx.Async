@@ -98,38 +98,6 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Transitions the operation to <see cref="AsyncOperationStatus.Scheduled"/> state.
-		/// </summary>
-		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="SetRunning"/>
-		public void SetScheduled()
-		{
-			ThrowIfDisposed();
-
-			if (!TrySetStatusInternal(StatusScheduled))
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <summary>
-		/// Transitions the operation to <see cref="AsyncOperationStatus.Running"/> state.
-		/// </summary>
-		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="SetScheduled"/>
-		public void SetRunning()
-		{
-			ThrowIfDisposed();
-
-			if (!TrySetStatusInternal(StatusRunning))
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <summary>
 		/// Throws <see cref="ObjectDisposedException"/> if this operation has been disposed.
 		/// </summary>
 		protected void ThrowIfDisposed()
@@ -381,6 +349,70 @@ namespace UnityFx.Async
 		#endregion
 
 		#region IAsyncOperationCompletionSource
+
+		/// <summary>
+		/// Transitions the operation to <see cref="AsyncOperationStatus.Scheduled"/> state.
+		/// </summary>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="TrySetScheduled"/>
+		/// <seealso cref="SetRunning"/>
+		public void SetScheduled()
+		{
+			if (!TrySetScheduled())
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Scheduled"/> state.
+		/// </summary>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetScheduled"/>
+		public bool TrySetScheduled()
+		{
+			ThrowIfDisposed();
+
+			if (TrySetStatusInternal(StatusScheduled))
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Transitions the operation to <see cref="AsyncOperationStatus.Running"/> state.
+		/// </summary>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="TrySetRunning"/>
+		/// <seealso cref="SetScheduled"/>
+		public void SetRunning()
+		{
+			if (!TrySetRunning())
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Running"/> state.
+		/// </summary>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetRunning"/>
+		public bool TrySetRunning()
+		{
+			ThrowIfDisposed();
+
+			if (!TrySetStatusInternal(StatusRunning))
+			{
+				return true;
+			}
+
+			return false;
+		}
 
 		/// <inheritdoc/>
 		public void SetCanceled() => SetCanceled(false);
