@@ -295,24 +295,27 @@ namespace UnityFx.Async
 #if UNITYFX_SUPPORT_TAP
 
 		/// <summary>
-		/// Gets the operation awaiter. This method is intended for compiler rather than use directly in code.
+		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
 		/// </summary>
+		/// <seealso cref="GetAwaiter{T}(IAsyncOperation{T})"/>
 		public static AsyncResultAwaiter GetAwaiter(this IAsyncOperation op)
 		{
 			return new AsyncResultAwaiter(op);
 		}
 
 		/// <summary>
-		/// Gets the operation awaiter. This method is intended for compiler rather than use directly in code.
+		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
 		/// </summary>
+		/// <seealso cref="GetAwaiter(IAsyncOperation)"/>
 		public static AsyncResultAwaiter<T> GetAwaiter<T>(this IAsyncOperation<T> op)
 		{
 			return new AsyncResultAwaiter<T>(op);
 		}
 
 		/// <summary>
-		/// Created a <see cref="Task"/> instance matching the source <see cref="IAsyncOperation"/>.
+		/// Creates a <see cref="Task"/> instance matching the source <see cref="IAsyncOperation"/>.
 		/// </summary>
+		/// <seealso cref="ToTask{T}(IAsyncOperation{T})"/>
 		public static Task ToTask(this IAsyncOperation op)
 		{
 			var result = new TaskCompletionSource<object>();
@@ -337,8 +340,9 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Created a <see cref="Task"/> instance matching the source <see cref="IAsyncOperation"/>.
+		/// Creates a <see cref="Task"/> instance matching the source <see cref="IAsyncOperation"/>.
 		/// </summary>
+		/// <seealso cref="ToTask(IAsyncOperation)"/>
 		public static Task<T> ToTask<T>(this IAsyncOperation<T> op)
 		{
 			var result = new TaskCompletionSource<T>();
@@ -360,6 +364,21 @@ namespace UnityFx.Async
 			});
 
 			return result.Task;
+		}
+
+#endif
+
+#if !NET35
+
+		/// <summary>
+		/// Creates a <see cref="IObservable{T}"/> instance that can be used to track the source operation progress.
+		/// </summary>
+		/// <typeparam name="T">Type of the operation result.</typeparam>
+		/// <param name="op">The operation to track.</param>
+		/// <returns>Returns an <see cref="IObservable{T}"/> instance that can be used to track the operation.</returns>
+		public static IObservable<T> ToObservable<T>(this IAsyncOperation<T> op)
+		{
+			return new AsyncObservable<T>(op);
 		}
 
 #endif
