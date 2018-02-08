@@ -2,14 +2,18 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace UnityFx.Async
 {
+#if UNITYFX_SUPPORT_TAP
+
 	/// <summary>
 	/// Provides an object that waits for the completion of an asynchronous operation. This type and its members are intended for compiler use only.
 	/// </summary>
 	/// <seealso cref="IAsyncOperation{T}"/>
+	[EditorBrowsable(EditorBrowsableState.Advanced)]
 	public struct AsyncResultAwaiter<T> : INotifyCompletion
 	{
 		#region data
@@ -50,4 +54,6 @@ namespace UnityFx.Async
 
 		#endregion
 	}
+
+#endif
 }

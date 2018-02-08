@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.Runtime.ExceptionServices;
 #endif
 using System.Threading;
-#if !NET35
+#if UNITYFX_SUPPORT_TAP
 using System.Threading.Tasks;
 #endif
 
@@ -292,7 +292,7 @@ namespace UnityFx.Async
 			return result;
 		}
 
-#if !NET35
+#if UNITYFX_SUPPORT_TAP
 
 		/// <summary>
 		/// Gets the operation awaiter. This method is intended for compiler rather than use directly in code.
@@ -362,7 +362,7 @@ namespace UnityFx.Async
 			return result.Task;
 		}
 
-		#endif
+#endif
 
 		#endregion
 	}
