@@ -92,9 +92,11 @@ namespace UnityFx.Async
 		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
 		/// </summary>
 		/// <remarks>
-		/// The <paramref name="action"/> is expected to start another asynchronous operation. When the operation is completed it
+		/// <para>The <paramref name="action"/> is expected to start another asynchronous operation. When that operation is completed it
 		/// should use the second <paramref name="action"/> argument to complete the continuation. If the <paramref name="op"/>
-		/// is already completed the <paramref name="action"/> is being called synchronously.
+		/// is already completed the <paramref name="action"/> is being called synchronously.</para>
+		/// <para>Continuation behaviour is very close to TPL: if <see cref="SynchronizationContext"/> is set the continuation posted onto it.
+		/// Otherwise it is executed on a thread that initiated the operation completion.</para>
 		/// </remarks>
 		/// <typeparam name="T">Type of the operation to continue.</typeparam>
 		/// <param name="op">The operation to continue.</param>
@@ -135,9 +137,7 @@ namespace UnityFx.Async
 		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
 		/// </summary>
 		/// <remarks>
-		/// The <paramref name="action"/> is expected to start another asynchronous operation. When the operation is completed it
-		/// should use the second <paramref name="action"/> argument to complete the continuation. If the <paramref name="op"/>
-		/// is already completed the <paramref name="action"/> is being called synchronously.
+		/// See <see cref="ContinueWith{T}(T, Action{T, IAsyncCompletionSource})">ContinueWith</see> remarks for details.
 		/// </remarks>
 		/// <typeparam name="T">Type of the operation to continue.</typeparam>
 		/// <param name="op">The operation to continue.</param>
@@ -179,9 +179,7 @@ namespace UnityFx.Async
 		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
 		/// </summary>
 		/// <remarks>
-		/// The <paramref name="action"/> is expected to start another asynchronous operation. When the operation is completed it
-		/// should use the second <paramref name="action"/> argument to complete the continuation. If the <paramref name="op"/>
-		/// is already completed the <paramref name="action"/> is being called synchronously.
+		/// See <see cref="ContinueWith{T}(T, Action{T, IAsyncCompletionSource})">ContinueWith</see> remarks for details.
 		/// </remarks>
 		/// <typeparam name="T">Type of the operation to continue.</typeparam>
 		/// <typeparam name="U">Result type of the continuation operation.</typeparam>
@@ -223,9 +221,7 @@ namespace UnityFx.Async
 		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
 		/// </summary>
 		/// <remarks>
-		/// The <paramref name="action"/> is expected to start another asynchronous operation. When the operation is completed it
-		/// should use the second <paramref name="action"/> argument to complete the continuation. If the <paramref name="op"/>
-		/// is already completed the <paramref name="action"/> is being called synchronously.
+		/// See <see cref="ContinueWith{T}(T, Action{T, IAsyncCompletionSource})">ContinueWith</see> remarks for details.
 		/// </remarks>
 		/// <typeparam name="T">Type of the operation to continue.</typeparam>
 		/// <typeparam name="U">Result type of the continuation operation.</typeparam>
