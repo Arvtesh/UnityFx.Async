@@ -4,23 +4,29 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// A FIFO queue of <see cref="AsyncResult"/> instances that are executed sequentially. Completed operations are removed from the queue automatically.
+	/// A FIFO queue of <see cref="AsyncResult"/> instances that are executed sequentially.
 	/// </summary>
+	/// <remarks>
+	/// Completed operations are removed from the queue automatically. All interaction with queued operations is done
+	/// through the <see cref="SynchronizationContext"/> that can be specified on queue construction.
+	/// </remarks>
 	/// <threadsafety static="true" instance="true"/>
 	/// <seealso cref="AsyncResult"/>
 	public class AsyncResultQueue<T> where T : AsyncResult
 	{
 		#region data
 
-		private static AsyncCallback _completionCallback;
+		private readonly SynchronizationContext _syncContext;
 
 		private int _maxOpsSize = 0;
 		private bool _suspended;
 		private List<T> _ops = new List<T>();
+		private SendOrPostCallback _startCallback;
 
 		#endregion
 
@@ -56,7 +62,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Gets or sets whether the queue in on pause.
+		/// Gets or sets whether the queue in on pause. When in suspended state queue does not change state of the operations.
 		/// </summary>
 		/// <value>The paused flag.</value>
 		public bool Suspended
@@ -71,7 +77,7 @@ namespace UnityFx.Async
 
 				if (!_suspended)
 				{
-					TryStart();
+					TryStart(null);
 				}
 			}
 		}
@@ -92,12 +98,30 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResultQueue{T}"/> class.
+		/// </summary>
+		public AsyncResultQueue()
+		{
+			_syncContext = SynchronizationContext.Current;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResultQueue{T}"/> class.
+		/// </summary>
+		/// <param name="syncContext">The synchronization context to to use for marshaling operation calls to specific thread. Can have <see langword="null"/> value.</param>
+		public AsyncResultQueue(SynchronizationContext syncContext)
+		{
+			_syncContext = syncContext;
+		}
+
+		/// <summary>
 		/// Adds a new operation to the end of the queue. Operation should have its status set to <see cref="AsyncOperationStatus.Created"/>.
 		/// </summary>
 		/// <param name="op">The operation to enqueue.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="op"/> is <see langword="null"/>.</exception>
 		/// <exception cref="InvalidOperationException">Thrown if either queue size exceeds <see cref="MaxCount"/> value or the operation status is not <see cref="AsyncOperationStatus.Created"/>.</exception>
 		/// <seealso cref="Remove(T)"/>
+		/// <seealso cref="Clear"/>
 		public void Add(T op)
 		{
 			if (op == null)
@@ -110,18 +134,24 @@ namespace UnityFx.Async
 				throw new InvalidOperationException();
 			}
 
-			if (_completionCallback == null)
+			if (op.TryAddCompletionCallback(CompletionCallback, _syncContext))
 			{
-				_completionCallback = OnOperationCompleted;
+				lock (_ops)
+				{
+					_ops.Add(op);
+					TryStart(op);
+				}
 			}
 
-			op.SetScheduled();
-			op.AddCompletionCallback(_completionCallback, false, true);
-
-			lock (_ops)
+			void CompletionCallback()
 			{
-				_ops.Add(op);
-				TryStart();
+				lock (_ops)
+				{
+					if (_ops.Remove(op))
+					{
+						TryStartUnsafe(null);
+					}
+				}
 			}
 		}
 
@@ -138,7 +168,7 @@ namespace UnityFx.Async
 			{
 				if (_ops.Remove(op))
 				{
-					TryStart();
+					TryStart(null);
 					return true;
 				}
 			}
@@ -174,36 +204,47 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		private bool TryStart()
+		private void TryStart(T op)
 		{
 			if (!_suspended)
 			{
+				if (_syncContext == null && _syncContext == SynchronizationContext.Current)
+				{
+					TryStartUnsafe(op);
+				}
+				else
+				{
+					if (_startCallback == null)
+					{
+						_startCallback = TryStartCallback;
+					}
+
+					_syncContext.Post(_startCallback, op);
+				}
+			}
+		}
+
+		private void TryStartUnsafe(T op)
+		{
+			if (!_suspended)
+			{
+				op?.TrySetScheduled();
+
 				while (_ops.Count > 0)
 				{
-					if (_ops[0].TrySetRunning())
-					{
-						return true;
-					}
-					else
+					if (!_ops[0].TrySetRunning())
 					{
 						_ops.RemoveAt(0);
 					}
 				}
 			}
-
-			return false;
 		}
 
-		private void OnOperationCompleted(IAsyncResult sender)
+		private void TryStartCallback(object args)
 		{
 			lock (_ops)
 			{
-				var op = sender as T;
-
-				if (_ops.Remove(op))
-				{
-					TryStart();
-				}
+				TryStartUnsafe(args as T);
 			}
 		}
 

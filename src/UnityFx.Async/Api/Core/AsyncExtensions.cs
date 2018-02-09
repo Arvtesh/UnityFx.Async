@@ -128,7 +128,6 @@ namespace UnityFx.Async
 						result.TrySetException(e, false);
 					}
 				},
-				true,
 				true);
 
 			return result;
@@ -171,7 +170,6 @@ namespace UnityFx.Async
 						result.TrySetException(e, false);
 					}
 				},
-				true,
 				true);
 
 			return result;
@@ -214,7 +212,6 @@ namespace UnityFx.Async
 						result.TrySetException(e, false);
 					}
 				},
-				true,
 				true);
 
 			return result;
@@ -259,7 +256,6 @@ namespace UnityFx.Async
 						result.TrySetException(e, false);
 					}
 				},
-				true,
 				true);
 
 			return result;
@@ -297,7 +293,6 @@ namespace UnityFx.Async
 						result.TrySetException(e, false);
 					}
 				},
-				true,
 				false);
 
 			return result;
@@ -347,7 +342,6 @@ namespace UnityFx.Async
 						result.TrySetException(op.Exception);
 					}
 				},
-				true,
 				false);
 
 			return result.Task;
@@ -377,7 +371,6 @@ namespace UnityFx.Async
 						result.TrySetException(op.Exception);
 					}
 				},
-				true,
 				false);
 
 			return result.Task;

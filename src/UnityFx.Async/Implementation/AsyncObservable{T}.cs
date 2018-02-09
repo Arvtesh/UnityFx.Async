@@ -49,7 +49,7 @@ namespace UnityFx.Async
 				}
 			};
 
-			_op.AddOrInvokeCompletionCallback(d);
+			_op.TryAddCompletionCallback(d, null);
 
 			return new AsyncObservableSubscription(_op, d);
 		}
