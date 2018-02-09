@@ -582,7 +582,7 @@ namespace UnityFx.Async
 			{
 				if (value != null)
 				{
-					TryAddContinuation(value, false);
+					TryAddContinuation(value, null);
 				}
 			}
 			remove
@@ -597,6 +597,15 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		public void AddCompletionCallback(Action action, bool invokeIfCompleted, bool continueOnCapturedContext)
 		{
+			if (!TryAddCompletionCallback(action, SynchronizationContext.Current) && invokeIfCompleted)
+			{
+				action.Invoke();
+			}
+		}
+
+		/// <inheritdoc/>
+		public bool TryAddCompletionCallback(Action action, SynchronizationContext syncContext)
+		{
 			ThrowIfDisposed();
 
 			if (action == null)
@@ -604,10 +613,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			if (!TryAddContinuation(action, continueOnCapturedContext) && invokeIfCompleted)
-			{
-				action.Invoke();
-			}
+			return TryAddContinuation(action, syncContext);
 		}
 
 		/// <inheritdoc/>
@@ -620,7 +626,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			if (!TryAddContinuation(action, continueOnCapturedContext) && invokeIfCompleted)
+			if (!TryAddContinuation(action, SynchronizationContext.Current) && invokeIfCompleted)
 			{
 				action.Invoke(this);
 			}
@@ -769,16 +775,11 @@ namespace UnityFx.Async
 			return false;
 		}
 
-		private bool TryAddContinuation(object continuation, bool continueOnCapturedContext)
+		private bool TryAddContinuation(object continuation, SynchronizationContext syncContext)
 		{
-			if (continueOnCapturedContext)
+			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
 			{
-				var syncContext = SynchronizationContext.Current;
-
-				if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
-				{
-					continuation = new AsyncContinuation(this, syncContext, continuation);
-				}
+				continuation = new AsyncContinuation(this, syncContext, continuation);
 			}
 
 			return TryAddContinuation(continuation);
