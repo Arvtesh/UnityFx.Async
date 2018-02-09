@@ -113,18 +113,20 @@ namespace UnityFx.Async
 
 			var result = new AsyncResult(AsyncOperationStatus.Scheduled);
 
-			op.AddOrInvokeCompletionCallback(() =>
-			{
-				try
+			op.AddOrInvokeCompletionCallback(
+				() =>
 				{
-					result.SetRunning();
-					action(op, result);
-				}
-				catch (Exception e)
-				{
-					result.TrySetException(e, false);
-				}
-			});
+					try
+					{
+						result.SetRunning();
+						action(op, result);
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e, false);
+					}
+				},
+				true);
 
 			return result;
 		}
@@ -155,18 +157,20 @@ namespace UnityFx.Async
 
 			var result = new AsyncResult(AsyncOperationStatus.Scheduled);
 
-			op.AddOrInvokeCompletionCallback(() =>
-			{
-				try
+			op.AddOrInvokeCompletionCallback(
+				() =>
 				{
-					result.SetRunning();
-					action(op, result, state);
-				}
-				catch (Exception e)
-				{
-					result.TrySetException(e, false);
-				}
-			});
+					try
+					{
+						result.SetRunning();
+						action(op, result, state);
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e, false);
+					}
+				},
+				true);
 
 			return result;
 		}
@@ -197,18 +201,20 @@ namespace UnityFx.Async
 
 			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
 
-			op.AddOrInvokeCompletionCallback(() =>
-			{
-				try
+			op.AddOrInvokeCompletionCallback(
+				() =>
 				{
-					result.SetRunning();
-					action(op, result);
-				}
-				catch (Exception e)
-				{
-					result.TrySetException(e, false);
-				}
-			});
+					try
+					{
+						result.SetRunning();
+						action(op, result);
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e, false);
+					}
+				},
+				true);
 
 			return result;
 		}
@@ -241,18 +247,20 @@ namespace UnityFx.Async
 
 			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
 
-			op.AddOrInvokeCompletionCallback(() =>
-			{
-				try
+			op.AddOrInvokeCompletionCallback(
+				() =>
 				{
-					result.SetRunning();
-					action(op, result, state);
-				}
-				catch (Exception e)
-				{
-					result.TrySetException(e, false);
-				}
-			});
+					try
+					{
+						result.SetRunning();
+						action(op, result, state);
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e, false);
+					}
+				},
+				true);
 
 			return result;
 		}
@@ -277,17 +285,19 @@ namespace UnityFx.Async
 
 			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
 
-			op.AddOrInvokeCompletionCallback(() =>
-			{
-				try
+			op.AddOrInvokeCompletionCallback(
+				() =>
 				{
-					result.SetResult(resultTransformer(op), false);
-				}
-				catch (Exception e)
-				{
-					result.TrySetException(e, false);
-				}
-			});
+					try
+					{
+						result.SetResult(resultTransformer(op), false);
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e, false);
+					}
+				},
+				false);
 
 			return result;
 		}
@@ -317,21 +327,23 @@ namespace UnityFx.Async
 		{
 			var result = new TaskCompletionSource<object>();
 
-			op.AddOrInvokeCompletionCallback(() =>
-			{
-				if (op.IsCompletedSuccessfully)
+			op.AddOrInvokeCompletionCallback(
+				() =>
 				{
-					result.TrySetResult(null);
-				}
-				else if (op.IsCanceled)
-				{
-					result.TrySetCanceled();
-				}
-				else
-				{
-					result.TrySetException(op.Exception);
-				}
-			});
+					if (op.IsCompletedSuccessfully)
+					{
+						result.TrySetResult(null);
+					}
+					else if (op.IsCanceled)
+					{
+						result.TrySetCanceled();
+					}
+					else
+					{
+						result.TrySetException(op.Exception);
+					}
+				},
+				false);
 
 			return result.Task;
 		}
@@ -343,21 +355,23 @@ namespace UnityFx.Async
 		{
 			var result = new TaskCompletionSource<T>();
 
-			op.AddOrInvokeCompletionCallback(() =>
-			{
-				if (op.IsCompletedSuccessfully)
+			op.AddOrInvokeCompletionCallback(
+				() =>
 				{
-					result.TrySetResult(op.Result);
-				}
-				else if (op.IsCanceled)
-				{
-					result.TrySetCanceled();
-				}
-				else
-				{
-					result.TrySetException(op.Exception);
-				}
-			});
+					if (op.IsCompletedSuccessfully)
+					{
+						result.TrySetResult(op.Result);
+					}
+					else if (op.IsCanceled)
+					{
+						result.TrySetCanceled();
+					}
+					else
+					{
+						result.TrySetException(op.Exception);
+					}
+				},
+				false);
 
 			return result.Task;
 		}

@@ -582,7 +582,7 @@ namespace UnityFx.Async
 			{
 				if (value != null)
 				{
-					TryAddContinuation(value);
+					TryAddContinuation(value, false);
 				}
 			}
 			remove
@@ -595,7 +595,7 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public void AddCompletionCallback(Action action)
+		public void AddCompletionCallback(Action action, bool continueOnCapturedContext)
 		{
 			ThrowIfDisposed();
 
@@ -604,11 +604,11 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			TryAddContinuation(action);
+			TryAddContinuation(action, continueOnCapturedContext);
 		}
 
 		/// <inheritdoc/>
-		public void AddOrInvokeCompletionCallback(Action action)
+		public void AddOrInvokeCompletionCallback(Action action, bool continueOnCapturedContext)
 		{
 			ThrowIfDisposed();
 
@@ -617,7 +617,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			if (!TryAddContinuation(action))
+			if (!TryAddContinuation(action, continueOnCapturedContext))
 			{
 				action.Invoke();
 			}
@@ -766,6 +766,21 @@ namespace UnityFx.Async
 			return false;
 		}
 
+		private bool TryAddContinuation(object continuation, bool continueOnCapturedContext)
+		{
+			if (continueOnCapturedContext)
+			{
+				var syncContext = SynchronizationContext.Current;
+
+				if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
+				{
+					continuation = new AsyncContinuation(this, syncContext, continuation);
+				}
+			}
+
+			return TryAddContinuation(continuation);
+		}
+
 		private bool TryAddContinuation(object valueToAdd)
 		{
 			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
@@ -893,17 +908,13 @@ namespace UnityFx.Async
 
 		private void InvokeContinuation(object continuation)
 		{
-			if (continuation is Action a)
+			if (continuation is AsyncContinuation c)
 			{
-				a.Invoke();
+				c.Invoke();
 			}
-			else if (continuation is AsyncCallback ac)
+			else
 			{
-				ac.Invoke(this);
-			}
-			else if (continuation is EventHandler eh)
-			{
-				eh.Invoke(this, EventArgs.Empty);
+				AsyncContinuation.Run(this, continuation);
 			}
 		}
 

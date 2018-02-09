@@ -340,7 +340,7 @@ namespace UnityFx.Async
 			var asyncCallbackCalled1 = false;
 			var asyncCallbackCalled2 = false;
 			var op = new AsyncResult(asyncResult => asyncCallbackCalled1 = true, null);
-			op.AddOrInvokeCompletionCallback(() => asyncCallbackCalled2 = true);
+			op.AddOrInvokeCompletionCallback(() => asyncCallbackCalled2 = true, false);
 
 			// Act
 			op.TrySetCanceled(true);
@@ -450,7 +450,7 @@ namespace UnityFx.Async
 			var asyncCallbackCalled1 = false;
 			var asyncCallbackCalled2 = false;
 			var op = new AsyncResult(asyncResult => asyncCallbackCalled1 = true, null);
-			op.AddOrInvokeCompletionCallback(() => asyncCallbackCalled2 = true);
+			op.AddOrInvokeCompletionCallback(() => asyncCallbackCalled2 = true, false);
 
 			// Act
 			op.TrySetException(e, true);
@@ -571,7 +571,7 @@ namespace UnityFx.Async
 			var asyncCallbackCalled1 = false;
 			var asyncCallbackCalled2 = false;
 			var op = new AsyncResult(asyncResult => asyncCallbackCalled1 = true, null);
-			op.AddOrInvokeCompletionCallback(() => asyncCallbackCalled2 = true);
+			op.AddOrInvokeCompletionCallback(() => asyncCallbackCalled2 = true, false);
 
 			// Act
 			op.TrySetCompleted(false);
@@ -679,7 +679,7 @@ namespace UnityFx.Async
 			var asyncCallbackCalled1 = false;
 			var asyncCallbackCalled2 = false;
 			var op = new AsyncResult<int>(asyncResult => asyncCallbackCalled1 = true, null);
-			op.AddOrInvokeCompletionCallback(() => asyncCallbackCalled2 = true);
+			op.AddOrInvokeCompletionCallback(() => asyncCallbackCalled2 = true, false);
 
 			// Act
 			op.TrySetResult(10, false);
