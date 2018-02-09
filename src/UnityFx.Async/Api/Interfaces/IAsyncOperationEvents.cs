@@ -27,7 +27,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="action">The callback to be executed when the operation has finished.</param>
 		/// <param name="invokeIfCompleted">If <see langword="true"/> and the operatin is completed the <paramref name="action"/> is invoked synchronously.</param>
-		/// <param name="continueOnCapturedContext">If <see langword="true"/> methods attempts to marshal the continuation back to the current synchronization context.
+		/// <param name="continueOnCapturedContext">If <see langword="true"/> method attempts to marshal the continuation back to the current synchronization context.
 		/// Otherwise the callback is run on a thread that initiated the operation completion.
 		/// </param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
@@ -41,7 +41,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="action">The callback to be executed when the operation has finished.</param>
 		/// <param name="invokeIfCompleted">If <see langword="true"/> and the operatin is completed the <paramref name="action"/> is invoked synchronously.</param>
-		/// <param name="continueOnCapturedContext">If <see langword="true"/> methods attempts to marshal the continuation back to the current synchronization context.
+		/// <param name="continueOnCapturedContext">If <see langword="true"/> method attempts to marshal the continuation back to the current synchronization context.
 		/// Otherwise the callback is run on a thread that initiated the operation completion.
 		/// </param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
