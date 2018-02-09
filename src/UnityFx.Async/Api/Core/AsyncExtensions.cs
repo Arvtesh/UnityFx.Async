@@ -115,7 +115,7 @@ namespace UnityFx.Async
 
 			var result = new AsyncResult(AsyncOperationStatus.Scheduled);
 
-			op.AddOrInvokeCompletionCallback(
+			op.AddCompletionCallback(
 				() =>
 				{
 					try
@@ -128,6 +128,7 @@ namespace UnityFx.Async
 						result.TrySetException(e, false);
 					}
 				},
+				true,
 				true);
 
 			return result;
@@ -157,7 +158,7 @@ namespace UnityFx.Async
 
 			var result = new AsyncResult(AsyncOperationStatus.Scheduled);
 
-			op.AddOrInvokeCompletionCallback(
+			op.AddCompletionCallback(
 				() =>
 				{
 					try
@@ -170,6 +171,7 @@ namespace UnityFx.Async
 						result.TrySetException(e, false);
 					}
 				},
+				true,
 				true);
 
 			return result;
@@ -199,7 +201,7 @@ namespace UnityFx.Async
 
 			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
 
-			op.AddOrInvokeCompletionCallback(
+			op.AddCompletionCallback(
 				() =>
 				{
 					try
@@ -212,6 +214,7 @@ namespace UnityFx.Async
 						result.TrySetException(e, false);
 					}
 				},
+				true,
 				true);
 
 			return result;
@@ -243,7 +246,7 @@ namespace UnityFx.Async
 
 			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
 
-			op.AddOrInvokeCompletionCallback(
+			op.AddCompletionCallback(
 				() =>
 				{
 					try
@@ -256,6 +259,7 @@ namespace UnityFx.Async
 						result.TrySetException(e, false);
 					}
 				},
+				true,
 				true);
 
 			return result;
@@ -281,7 +285,7 @@ namespace UnityFx.Async
 
 			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
 
-			op.AddOrInvokeCompletionCallback(
+			op.AddCompletionCallback(
 				() =>
 				{
 					try
@@ -293,6 +297,7 @@ namespace UnityFx.Async
 						result.TrySetException(e, false);
 					}
 				},
+				true,
 				false);
 
 			return result;
@@ -323,7 +328,7 @@ namespace UnityFx.Async
 		{
 			var result = new TaskCompletionSource<object>();
 
-			op.AddOrInvokeCompletionCallback(
+			op.AddCompletionCallback(
 				() =>
 				{
 					if (op.IsCompletedSuccessfully)
@@ -339,6 +344,7 @@ namespace UnityFx.Async
 						result.TrySetException(op.Exception);
 					}
 				},
+				true,
 				false);
 
 			return result.Task;
@@ -351,7 +357,7 @@ namespace UnityFx.Async
 		{
 			var result = new TaskCompletionSource<T>();
 
-			op.AddOrInvokeCompletionCallback(
+			op.AddCompletionCallback(
 				() =>
 				{
 					if (op.IsCompletedSuccessfully)
@@ -367,6 +373,7 @@ namespace UnityFx.Async
 						result.TrySetException(op.Exception);
 					}
 				},
+				true,
 				false);
 
 			return result.Task;

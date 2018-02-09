@@ -595,7 +595,7 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public void AddCompletionCallback(Action action, bool continueOnCapturedContext)
+		public void AddCompletionCallback(Action action, bool invokeIfCompleted, bool continueOnCapturedContext)
 		{
 			ThrowIfDisposed();
 
@@ -604,11 +604,14 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			TryAddContinuation(action, continueOnCapturedContext);
+			if (!TryAddContinuation(action, continueOnCapturedContext) && invokeIfCompleted)
+			{
+				action.Invoke();
+			}
 		}
 
 		/// <inheritdoc/>
-		public void AddOrInvokeCompletionCallback(Action action, bool continueOnCapturedContext)
+		public void AddCompletionCallback(AsyncCallback action, bool invokeIfCompleted, bool continueOnCapturedContext)
 		{
 			ThrowIfDisposed();
 
@@ -617,9 +620,9 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			if (!TryAddContinuation(action, continueOnCapturedContext))
+			if (!TryAddContinuation(action, continueOnCapturedContext) && invokeIfCompleted)
 			{
-				action.Invoke();
+				action.Invoke(this);
 			}
 		}
 
