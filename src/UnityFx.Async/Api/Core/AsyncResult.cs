@@ -582,7 +582,7 @@ namespace UnityFx.Async
 			{
 				if (value != null)
 				{
-					TryAddContinuation(value);
+					TryAddContinuation(value, null);
 				}
 			}
 			remove
@@ -595,20 +595,16 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public void AddCompletionCallback(Action action)
+		public void AddCompletionCallback(Action action, bool invokeIfCompleted, bool continueOnCapturedContext)
 		{
-			ThrowIfDisposed();
-
-			if (action == null)
+			if (!TryAddCompletionCallback(action, SynchronizationContext.Current) && invokeIfCompleted)
 			{
-				throw new ArgumentNullException(nameof(action));
+				action.Invoke();
 			}
-
-			TryAddContinuation(action);
 		}
 
 		/// <inheritdoc/>
-		public void AddOrInvokeCompletionCallback(Action action)
+		public bool TryAddCompletionCallback(Action action, SynchronizationContext syncContext)
 		{
 			ThrowIfDisposed();
 
@@ -617,9 +613,22 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			if (!TryAddContinuation(action))
+			return TryAddContinuation(action, syncContext);
+		}
+
+		/// <inheritdoc/>
+		public void AddCompletionCallback(AsyncCallback action, bool invokeIfCompleted, bool continueOnCapturedContext)
+		{
+			ThrowIfDisposed();
+
+			if (action == null)
 			{
-				action.Invoke();
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			if (!TryAddContinuation(action, SynchronizationContext.Current) && invokeIfCompleted)
+			{
+				action.Invoke(this);
 			}
 		}
 
@@ -766,6 +775,16 @@ namespace UnityFx.Async
 			return false;
 		}
 
+		private bool TryAddContinuation(object continuation, SynchronizationContext syncContext)
+		{
+			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
+			{
+				continuation = new AsyncContinuation(this, syncContext, continuation);
+			}
+
+			return TryAddContinuation(continuation);
+		}
+
 		private bool TryAddContinuation(object valueToAdd)
 		{
 			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
@@ -893,17 +912,13 @@ namespace UnityFx.Async
 
 		private void InvokeContinuation(object continuation)
 		{
-			if (continuation is Action a)
+			if (continuation is AsyncContinuation c)
 			{
-				a.Invoke();
+				c.Invoke();
 			}
-			else if (continuation is AsyncCallback ac)
+			else
 			{
-				ac.Invoke(this);
-			}
-			else if (continuation is EventHandler eh)
-			{
-				eh.Invoke(this, EventArgs.Empty);
+				AsyncContinuation.Run(this, continuation);
 			}
 		}
 

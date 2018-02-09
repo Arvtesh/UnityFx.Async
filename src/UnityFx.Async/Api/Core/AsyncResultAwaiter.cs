@@ -51,7 +51,7 @@ namespace UnityFx.Async
 		#region INotifyCompletion
 
 		/// <inheritdoc/>
-		public void OnCompleted(Action continuation) => _op.AddOrInvokeCompletionCallback(continuation);
+		public void OnCompleted(Action continuation) => _op.AddCompletionCallback(continuation, true, true);
 
 		#endregion
 	}

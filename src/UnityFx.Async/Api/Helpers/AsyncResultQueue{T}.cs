@@ -12,15 +12,14 @@ namespace UnityFx.Async
 	/// </summary>
 	/// <threadsafety static="true" instance="true"/>
 	/// <seealso cref="AsyncResult"/>
-#if NET35
 	public class AsyncResultQueue<T> where T : AsyncResult
-#else
-	public class AsyncResultQueue<T> where T : AsyncResult
-#endif
 	{
 		#region data
 
+		private static AsyncCallback _completionCallback;
+
 		private int _maxOpsSize = 0;
+		private bool _suspended;
 		private List<T> _ops = new List<T>();
 
 		#endregion
@@ -53,6 +52,27 @@ namespace UnityFx.Async
 				}
 
 				_maxOpsSize = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets whether the queue in on pause.
+		/// </summary>
+		/// <value>The paused flag.</value>
+		public bool Suspended
+		{
+			get
+			{
+				return _suspended;
+			}
+			set
+			{
+				_suspended = value;
+
+				if (!_suspended)
+				{
+					TryStart();
+				}
 			}
 		}
 
@@ -90,13 +110,18 @@ namespace UnityFx.Async
 				throw new InvalidOperationException();
 			}
 
+			if (_completionCallback == null)
+			{
+				_completionCallback = OnOperationCompleted;
+			}
+
 			op.SetScheduled();
-			op.Completed += OnOperationCompleted;
+			op.AddCompletionCallback(_completionCallback, false, true);
 
 			lock (_ops)
 			{
 				_ops.Add(op);
-				OnOperationAdded(op);
+				TryStart();
 			}
 		}
 
@@ -113,7 +138,7 @@ namespace UnityFx.Async
 			{
 				if (_ops.Remove(op))
 				{
-					OnOperationRemoved(op);
+					TryStart();
 					return true;
 				}
 			}
@@ -145,39 +170,31 @@ namespace UnityFx.Async
 			}
 		}
 
-		/// <summary>
-		/// Called when an operation has been added to the queue.
-		/// </summary>
-		/// <param name="op">The new operation.</param>
-		/// <seealso cref="OnOperationRemoved(T)"/>
-		/// <seealso cref="Add(T)"/>
-		protected virtual void OnOperationAdded(T op)
-		{
-			if (_ops.Count > 0)
-			{
-				_ops[0].TrySetRunning();
-			}
-		}
-
-		/// <summary>
-		/// Called when an operation has been removed from the queue.
-		/// </summary>
-		/// <param name="op">The operation removed.</param>
-		/// <seealso cref="OnOperationAdded(T)"/>
-		/// <seealso cref="Remove(T)"/>
-		protected virtual void OnOperationRemoved(T op)
-		{
-			if (_ops.Count > 0)
-			{
-				_ops[0].TrySetRunning();
-			}
-		}
-
 		#endregion
 
 		#region implementation
 
-		private void OnOperationCompleted(object sender, EventArgs args)
+		private bool TryStart()
+		{
+			if (!_suspended)
+			{
+				while (_ops.Count > 0)
+				{
+					if (_ops[0].TrySetRunning())
+					{
+						return true;
+					}
+					else
+					{
+						_ops.RemoveAt(0);
+					}
+				}
+			}
+
+			return false;
+		}
+
+		private void OnOperationCompleted(IAsyncResult sender)
 		{
 			lock (_ops)
 			{
@@ -185,7 +202,7 @@ namespace UnityFx.Async
 
 				if (_ops.Remove(op))
 				{
-					OnOperationRemoved(op);
+					TryStart();
 				}
 			}
 		}
