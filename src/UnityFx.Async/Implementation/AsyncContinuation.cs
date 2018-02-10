@@ -55,6 +55,10 @@ namespace UnityFx.Async
 			{
 				a.Invoke();
 			}
+			else if (continuation is AsyncOperationCallback aoc)
+			{
+				aoc.Invoke(op);
+			}
 			else if (continuation is AsyncCallback ac)
 			{
 				ac.Invoke(op);

@@ -32,7 +32,9 @@ namespace UnityFx.Async
 
 		#region Disposable
 
-		public void Dispose() { }
+		public void Dispose()
+		{
+		}
 
 		#endregion
 	}
