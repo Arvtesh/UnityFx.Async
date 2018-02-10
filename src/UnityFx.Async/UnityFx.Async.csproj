@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net35;net46;netstandard1.3;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net35;net46;netstandard2.0</TargetFrameworks>
 		<Description>Task-like asynchronous operations for Unity3d.</Description>
 		<Company />
 		<Authors>Alexander Bogarsukov</Authors>

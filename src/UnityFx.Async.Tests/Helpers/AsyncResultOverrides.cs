@@ -12,11 +12,11 @@ namespace UnityFx.Async
 		public bool OnCompletedCalled { get; private set; }
 		public bool DisposeCalled { get; private set; }
 
-		protected override void OnStatusChanged()
+		protected override void OnStatusChanged(AsyncOperationStatus status)
 		{
 			OnStatusChangedCalled = true;
 
-			base.OnStatusChanged();
+			base.OnStatusChanged(status);
 		}
 
 		protected override void OnCompleted()

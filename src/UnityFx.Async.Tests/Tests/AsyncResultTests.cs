@@ -2,6 +2,8 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace UnityFx.Async
@@ -274,6 +276,28 @@ namespace UnityFx.Async
 
 		#endregion
 
+		#region async/await
+
+		[Fact]
+		public async Task Await_CollbackIsTriggered()
+		{
+			// Arrange
+			var op = new AsyncResult();
+			var task = Task.Run(() =>
+			{
+				Thread.Sleep(10);
+				op.SetCompleted();
+			});
+
+			// Act
+			await op;
+
+			// Assert
+			AssertCompleted(op);
+		}
+
+		#endregion
+
 		#region IAsyncCompletionSource
 
 		#region SetCanceled/TrySetCanceled
@@ -316,7 +340,7 @@ namespace UnityFx.Async
 			var asyncCallbackCalled1 = false;
 			var asyncCallbackCalled2 = false;
 			var op = new AsyncResult(asyncResult => asyncCallbackCalled1 = true, null);
-			op.AddCompletionCallback(() => asyncCallbackCalled2 = true);
+			op.AddCompletionCallback(asyncOp => asyncCallbackCalled2 = true, false);
 
 			// Act
 			op.TrySetCanceled(true);
@@ -426,7 +450,7 @@ namespace UnityFx.Async
 			var asyncCallbackCalled1 = false;
 			var asyncCallbackCalled2 = false;
 			var op = new AsyncResult(asyncResult => asyncCallbackCalled1 = true, null);
-			op.AddCompletionCallback(() => asyncCallbackCalled2 = true);
+			op.AddCompletionCallback(asyncOp => asyncCallbackCalled2 = true, false);
 
 			// Act
 			op.TrySetException(e, true);
@@ -547,7 +571,7 @@ namespace UnityFx.Async
 			var asyncCallbackCalled1 = false;
 			var asyncCallbackCalled2 = false;
 			var op = new AsyncResult(asyncResult => asyncCallbackCalled1 = true, null);
-			op.AddCompletionCallback(() => asyncCallbackCalled2 = true);
+			op.AddCompletionCallback(asyncOp => asyncCallbackCalled2 = true, false);
 
 			// Act
 			op.TrySetCompleted(false);
@@ -655,7 +679,7 @@ namespace UnityFx.Async
 			var asyncCallbackCalled1 = false;
 			var asyncCallbackCalled2 = false;
 			var op = new AsyncResult<int>(asyncResult => asyncCallbackCalled1 = true, null);
-			op.AddCompletionCallback(() => asyncCallbackCalled2 = true);
+			op.AddCompletionCallback(asyncOp => asyncCallbackCalled2 = true, false);
 
 			// Act
 			op.TrySetResult(10, false);
@@ -723,9 +747,6 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#endregion
-
-		#region IAsyncOperationEvents
 		#endregion
 
 		#region IAsyncResult

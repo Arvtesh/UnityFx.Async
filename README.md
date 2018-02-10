@@ -1,17 +1,16 @@
 # UnityFx.Async
 
-Channel  | Branch | UnityFx.Async |
----------|--------|---------------|
-AppVeyor ([home](https://ci.appveyor.com/project/Arvtesh/unityfx-async)) | master | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/master?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/master)
-AppVeyor | develop | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/develop?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/develop)
+Channel  | UnityFx.Async |
+---------|---------------|
+AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/master?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/master)
+NuGet    | [![NuGet](https://img.shields.io/nuget/v/UnityFx.Async.svg)](https://www.nuget.org/packages/UnityFx.Async)
+Github   | [![GitHub release](https://img.shields.io/github/release/Arvtesh/UnityFx.Async.svg)](https://github.com/Arvtesh/UnityFx.Async/releases)
 
 ## Synopsis
 
-Unity3d extensions for asynchronous operations and coroutines. The library provides a set of classes and interfaces that can be used very much like [TPL](https://msdn.microsoft.com/ru-ru/library/dd460717(v=vs.110).aspx).
+Unity3d extensions for asynchronous operations. The library provides a set of classes and interfaces that can be used very much like [TPL](https://msdn.microsoft.com/ru-ru/library/dd460717(v=vs.110).aspx) tasks.
 
 Please see [CHANGELOG](CHANGELOG.md) for information on recent changes.
-
-Unity Asset Store [link](https://www.assetstore.unity3d.com/#!/content/96696).
 
 ## Documentation
 Please see the links below for extended information on the product:
@@ -29,4 +28,4 @@ Please see [contributing guide](CONTRIBUTING.md) for details.
 
 ## License
 
-Please see the [MIT license](LICENSE.md) for details.
+Please see the [![license](https://img.shields.io/github/license/Arvtesh/UnityFx.Async.svg)](LICENSE.md) for details.
