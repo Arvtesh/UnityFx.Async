@@ -1,0 +1,5 @@
+mode: ContinuousDeployment
+continuous-delivery-fallback-tag: ci
+branches:
+  master:
+    mode: ContinuousDelivery
