@@ -1,0 +1,14 @@
+SUMMARY
+The package provides lightweight Task-like asynchronous operations for Unity3d.
+
+LICENSE
+https://github.com/Arvtesh/UnityFx.Async/blob/master/LICENSE.md
+
+DOCUMENTATION
+https://arvtesh.github.io/UnityFx.Async
+
+SUPPORT
+mailto:arvtesh@gmail.com
+
+USEFUL LINKS
+Github project: https://github.com/Arvtesh/UnityFx.Async

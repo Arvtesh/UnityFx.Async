@@ -4,27 +4,35 @@ branches:
   only:
     - master
     - develop
+    - /release\/.+/
+    - /hotfix\/.+/
 
 skip_commits:
   files:
     - '**/*.md'
 
+install:
+  - cmd: git submodule -q update --init
+
 build_script:
   - ps: .\build.ps1
 
-test: off
-
 artifacts:
-  - path: .\Bin\net35
+  - path: .\bin\net35
     name: UnityFx.Async-net35
-  - path: .\Bin\net46
+  - path: .\bin\net46
     name: UnityFx.Async-net46
+  - path: .\bin\netstandard1.3
+    name: UnityFx.Async-netstandard1.3
+  - path: .\bin\netstandard2.0
+    name: UnityFx.Async-netstandard2.0
+  - path: .\bin\*.nupkg
 
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
   version: '$(GitVersion_MajorMinorPatch)'
-  package_version: '$(GitVersion_SemVer)'
+  package_version: '$(GitVersion_NuGetVersionV2)'
   assembly_version: '$(GitVersion_AssemblySemVer)'
   file_version: '$(GitVersion_MajorMinorPatch).$(GitVersion_CommitsSinceVersionSource)'
   informational_version: '$(GitVersion_InformationalVersion)'
@@ -37,3 +45,10 @@ deploy:
     force_update: false
     on:
       branch: master
+
+  - provider: NuGet
+    api_key:
+      secure: iJt9p5F/FKKj2Y+neRJ1SG7W2P6aUhZBU8Z6j1x+7rLD3PGe5gH7VEZ/drxrNIzc
+    artifact: /.*\.nupkg/
+    on:
+      branch: /master|(release\/.+)|(hotfix\/.+)/
