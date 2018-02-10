@@ -22,8 +22,6 @@ artifacts:
     name: UnityFx.Async-net35
   - path: .\bin\net46
     name: UnityFx.Async-net46
-  - path: .\bin\netstandard1.3
-    name: UnityFx.Async-netstandard1.3
   - path: .\bin\netstandard2.0
     name: UnityFx.Async-netstandard2.0
   - path: .\bin\*.nupkg
