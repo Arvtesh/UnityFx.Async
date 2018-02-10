@@ -4,6 +4,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace UnityFx.Async
 {
@@ -50,7 +51,17 @@ namespace UnityFx.Async
 		#region INotifyCompletion
 
 		/// <inheritdoc/>
-		public void OnCompleted(Action continuation) => _op.AddCompletionCallback(continuation, true);
+		public void OnCompleted(Action continuation)
+		{
+			if (_op is AsyncResult ar)
+			{
+				ar.SetContinuationForAwait(continuation);
+			}
+			else if (!_op.TryAddCompletionCallback(op => continuation(), SynchronizationContext.Current))
+			{
+				continuation();
+			}
+		}
 
 		#endregion
 	}

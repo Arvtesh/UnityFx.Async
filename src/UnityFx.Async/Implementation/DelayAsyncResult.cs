@@ -6,9 +6,6 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	/// <summary>
-	/// Helper class used in <see cref="AsyncResult.Delay(int)"/> implementation.
-	/// </summary>
 	internal class DelayAsyncResult : AsyncResult
 	{
 		#region data

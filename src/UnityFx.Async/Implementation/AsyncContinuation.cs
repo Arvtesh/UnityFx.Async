@@ -6,9 +6,6 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	/// <summary>
-	/// Helper class for <see cref="AsyncResult"/> continuations implementation.
-	/// </summary>
 	internal class AsyncContinuation
 	{
 		#region data

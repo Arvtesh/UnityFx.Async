@@ -12,7 +12,11 @@ namespace UnityFx.Async
 	/// <seealso cref="IAsyncResult"/>
 	/// <seealso cref="IAsyncOperation"/>
 	/// <seealso cref="AsyncResult"/>
+#if NET35
 	public class AsyncResult<T> : AsyncResult, IAsyncCompletionSource<T>, IAsyncOperation<T>
+#else
+	public class AsyncResult<T> : AsyncResult, IAsyncCompletionSource<T>, IAsyncOperation<T>, IObservable<T>
+#endif
 	{
 		#region data
 
@@ -132,6 +136,52 @@ namespace UnityFx.Async
 				return _result;
 			}
 		}
+
+		#endregion
+
+		#region IObservable
+
+#if !NET35
+
+		/// <inheritdoc/>
+		public IDisposable Subscribe(IObserver<T> observer)
+		{
+			ThrowIfDisposed();
+
+			if (observer == null)
+			{
+				throw new ArgumentNullException(nameof(observer));
+			}
+
+			AsyncOperationCallback completionCallback = op =>
+			{
+				if (IsCompletedSuccessfully)
+				{
+					observer.OnNext(_result);
+					observer.OnCompleted();
+				}
+				else if (IsFaulted)
+				{
+					observer.OnError(Exception);
+				}
+				else
+				{
+					observer.OnCompleted();
+				}
+			};
+
+			if (TryAddCompletionCallback(completionCallback, null))
+			{
+				return new AsyncObservableSubscription(this, completionCallback);
+			}
+			else
+			{
+				completionCallback(this);
+				return EmptyDisposable.Instance;
+			}
+		}
+
+#endif
 
 		#endregion
 	}

@@ -7,21 +7,18 @@ namespace UnityFx.Async
 {
 #if !NET35
 
-	/// <summary>
-	/// A disposable subscription for <see cref="AsyncObservable{T}"/>.
-	/// </summary>
 	internal class AsyncObservableSubscription : IDisposable
 	{
 		#region data
 
 		private readonly IAsyncOperation _op;
-		private readonly Action _completionCallback;
+		private readonly AsyncOperationCallback _completionCallback;
 
 		#endregion
 
 		#region interface
 
-		public AsyncObservableSubscription(IAsyncOperation op, Action d)
+		public AsyncObservableSubscription(IAsyncOperation op, AsyncOperationCallback d)
 		{
 			_op = op;
 			_completionCallback = d;

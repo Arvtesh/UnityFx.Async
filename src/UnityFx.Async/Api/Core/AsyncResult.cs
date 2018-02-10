@@ -349,6 +349,16 @@ namespace UnityFx.Async
 			return TrySetStatusInternal(status);
 		}
 
+		internal void SetContinuationForAwait(Action action)
+		{
+			ThrowIfDisposed();
+
+			if (!TryAddContinuation(action, SynchronizationContext.Current))
+			{
+				action();
+			}
+		}
+
 		#endregion
 
 		#region IAsyncOperationCompletionSource
@@ -595,16 +605,7 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public void AddCompletionCallback(Action action, bool continueOnCapturedContext)
-		{
-			if (!TryAddCompletionCallback(action, continueOnCapturedContext ? SynchronizationContext.Current : null))
-			{
-				action.Invoke();
-			}
-		}
-
-		/// <inheritdoc/>
-		public bool TryAddCompletionCallback(Action action, SynchronizationContext syncContext)
+		public bool TryAddCompletionCallback(AsyncOperationCallback action, SynchronizationContext syncContext)
 		{
 			ThrowIfDisposed();
 
@@ -617,14 +618,16 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public void RemoveCompletionCallback(Action action)
+		public bool RemoveCompletionCallback(AsyncOperationCallback action)
 		{
 			ThrowIfDisposed();
 
 			if (action != null)
 			{
-				TryRemoveContinuation(action);
+				return TryRemoveContinuation(action);
 			}
+
+			return false;
 		}
 
 		#endregion

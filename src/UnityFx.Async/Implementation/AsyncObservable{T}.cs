@@ -8,9 +8,6 @@ namespace UnityFx.Async
 {
 #if !NET35
 
-	/// <summary>
-	/// Helper class used for <see cref="AsyncExtensions.ToObservable{T}(IAsyncOperation{T})"/> implementation.
-	/// </summary>
 	internal class AsyncObservable<T> : IObservable<T>
 	{
 		#region data
@@ -32,7 +29,12 @@ namespace UnityFx.Async
 
 		public IDisposable Subscribe(IObserver<T> observer)
 		{
-			Action d = () =>
+			if (observer == null)
+			{
+				throw new ArgumentNullException(nameof(observer));
+			}
+
+			AsyncOperationCallback d = op =>
 			{
 				if (_op.IsCompletedSuccessfully)
 				{
@@ -49,9 +51,14 @@ namespace UnityFx.Async
 				}
 			};
 
-			_op.TryAddCompletionCallback(d, null);
-
-			return new AsyncObservableSubscription(_op, d);
+			if (_op.TryAddCompletionCallback(d, null))
+			{
+				return new AsyncObservableSubscription(_op, d);
+			}
+			else
+			{
+				return EmptyDisposable.Instance;
+			}
 		}
 
 		#endregion

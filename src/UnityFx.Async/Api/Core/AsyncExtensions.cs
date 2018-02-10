@@ -89,6 +89,27 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Adds a completion callback to be executed after the operation has finished. If the operation is completed the <paramref name="action"/> is invoked synchronously.
+		/// </summary>
+		/// <param name="op">The target operation.</param>
+		/// <param name="action">The callback to be executed when the operation has completed.</param>
+		/// <param name="continueOnCapturedContext">If <see langword="true"/> method attempts to marshal the continuation back to the current synchronization context.
+		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
+		/// </param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="IAsyncOperationEvents"/>
+		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action, bool continueOnCapturedContext)
+		{
+			var context = continueOnCapturedContext ? SynchronizationContext.Current : null;
+
+			if (!op.TryAddCompletionCallback(action, context))
+			{
+				action(op);
+			}
+		}
+
+		/// <summary>
 		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
 		/// </summary>
 		/// <remarks>
@@ -116,7 +137,7 @@ namespace UnityFx.Async
 			var result = new AsyncResult(AsyncOperationStatus.Scheduled);
 
 			op.AddCompletionCallback(
-				() =>
+				asyncOp =>
 				{
 					try
 					{
@@ -158,7 +179,7 @@ namespace UnityFx.Async
 			var result = new AsyncResult(AsyncOperationStatus.Scheduled);
 
 			op.AddCompletionCallback(
-				() =>
+				asyncOp =>
 				{
 					try
 					{
@@ -200,7 +221,7 @@ namespace UnityFx.Async
 			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
 
 			op.AddCompletionCallback(
-				() =>
+				asyncOp =>
 				{
 					try
 					{
@@ -244,7 +265,7 @@ namespace UnityFx.Async
 			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
 
 			op.AddCompletionCallback(
-				() =>
+				asyncOp =>
 				{
 					try
 					{
@@ -282,7 +303,7 @@ namespace UnityFx.Async
 			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
 
 			op.AddCompletionCallback(
-				() =>
+				asyncOp =>
 				{
 					try
 					{
@@ -327,19 +348,19 @@ namespace UnityFx.Async
 			var result = new TaskCompletionSource<object>();
 
 			op.AddCompletionCallback(
-				() =>
+				asyncOp =>
 				{
-					if (op.IsCompletedSuccessfully)
+					if (asyncOp.IsCompletedSuccessfully)
 					{
 						result.TrySetResult(null);
 					}
-					else if (op.IsCanceled)
+					else if (asyncOp.IsCanceled)
 					{
 						result.TrySetCanceled();
 					}
 					else
 					{
-						result.TrySetException(op.Exception);
+						result.TrySetException(asyncOp.Exception);
 					}
 				},
 				false);
@@ -356,7 +377,7 @@ namespace UnityFx.Async
 			var result = new TaskCompletionSource<T>();
 
 			op.AddCompletionCallback(
-				() =>
+				asyncOp =>
 				{
 					if (op.IsCompletedSuccessfully)
 					{
@@ -388,6 +409,11 @@ namespace UnityFx.Async
 		/// <returns>Returns an <see cref="IObservable{T}"/> instance that can be used to track the operation.</returns>
 		public static IObservable<T> ToObservable<T>(this IAsyncOperation<T> op)
 		{
+			if (op is AsyncResult<T> ar)
+			{
+				return ar;
+			}
+
 			return new AsyncObservable<T>(op);
 		}
 

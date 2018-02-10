@@ -27,6 +27,7 @@ namespace UnityFx.Async
 		private bool _suspended;
 		private List<T> _ops = new List<T>();
 		private SendOrPostCallback _startCallback;
+		private AsyncOperationCallback _completionCallback;
 
 		#endregion
 
@@ -102,7 +103,6 @@ namespace UnityFx.Async
 		/// </summary>
 		public AsyncResultQueue()
 		{
-			_syncContext = SynchronizationContext.Current;
 		}
 
 		/// <summary>
@@ -115,14 +115,14 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Adds a new operation to the end of the queue. Operation should have its status set to <see cref="AsyncOperationStatus.Created"/>.
+		/// Adds a new operation to the end of the queue. Operation is expected to have its status set to <see cref="AsyncOperationStatus.Created"/>.
 		/// </summary>
 		/// <param name="op">The operation to enqueue.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="op"/> is <see langword="null"/>.</exception>
-		/// <exception cref="InvalidOperationException">Thrown if either queue size exceeds <see cref="MaxCount"/> value or the operation status is not <see cref="AsyncOperationStatus.Created"/>.</exception>
+		/// <seealso cref="Add(T)"/>
 		/// <seealso cref="Remove(T)"/>
 		/// <seealso cref="Clear"/>
-		public void Add(T op)
+		public bool TryAdd(T op)
 		{
 			if (op == null)
 			{
@@ -131,27 +131,40 @@ namespace UnityFx.Async
 
 			if (_maxOpsSize > 0 && _ops.Count >= _maxOpsSize)
 			{
-				throw new InvalidOperationException();
+				return false;
 			}
 
-			if (op.TryAddCompletionCallback(CompletionCallback, _syncContext))
+			if (_completionCallback == null)
+			{
+				_completionCallback = OnCompletedCallback;
+			}
+
+			if (op.TryAddCompletionCallback(_completionCallback, _syncContext))
 			{
 				lock (_ops)
 				{
 					_ops.Add(op);
 					TryStart(op);
+					return true;
 				}
 			}
 
-			void CompletionCallback()
+			return false;
+		}
+
+		/// <summary>
+		/// Adds a new operation to the end of the queue. Operation is expected to have its status set to <see cref="AsyncOperationStatus.Created"/>.
+		/// </summary>
+		/// <param name="op">The operation to enqueue.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="op"/> is <see langword="null"/>.</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the operation cannot be added.</exception>
+		/// <seealso cref="Remove(T)"/>
+		/// <seealso cref="Clear"/>
+		public void Add(T op)
+		{
+			if (!TryAdd(op))
 			{
-				lock (_ops)
-				{
-					if (_ops.Remove(op))
-					{
-						TryStartUnsafe(null);
-					}
-				}
+				throw new InvalidOperationException();
 			}
 		}
 
@@ -160,7 +173,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="op">The operation to remove. Can be <see langword="null"/>.</param>
 		/// <returns>Returns <see langword="true"/> if the operation is removed; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="Add(T)"/>
+		/// <seealso cref="TryAdd(T)"/>
 		/// <seealso cref="Clear"/>
 		public bool Remove(T op)
 		{
@@ -168,6 +181,7 @@ namespace UnityFx.Async
 			{
 				if (_ops.Remove(op))
 				{
+					op.RemoveCompletionCallback(_completionCallback);
 					TryStart(null);
 					return true;
 				}
@@ -184,7 +198,34 @@ namespace UnityFx.Async
 		{
 			lock (_ops)
 			{
+				foreach (var op in _ops)
+				{
+					op.RemoveCompletionCallback(_completionCallback);
+				}
+
 				_ops.Clear();
+			}
+		}
+
+		/// <summary>
+		/// Removes all operations from the queue and return them.
+		/// </summary>
+		/// <seealso cref="Remove(T)"/>
+		public T[] Release()
+		{
+			lock (_ops)
+			{
+				var result = new T[_ops.Count];
+
+				for (var i = 0; i < result.Length; ++i)
+				{
+					var op = _ops[i];
+					op.RemoveCompletionCallback(_completionCallback);
+					result[i] = op;
+				}
+
+				_ops.Clear();
+				return result;
 			}
 		}
 
@@ -208,7 +249,7 @@ namespace UnityFx.Async
 		{
 			if (!_suspended)
 			{
-				if (_syncContext == null && _syncContext == SynchronizationContext.Current)
+				if (_syncContext == null || _syncContext == SynchronizationContext.Current)
 				{
 					TryStartUnsafe(op);
 				}
@@ -216,7 +257,7 @@ namespace UnityFx.Async
 				{
 					if (_startCallback == null)
 					{
-						_startCallback = TryStartCallback;
+						_startCallback = OnStartCallback;
 					}
 
 					_syncContext.Post(_startCallback, op);
@@ -240,11 +281,22 @@ namespace UnityFx.Async
 			}
 		}
 
-		private void TryStartCallback(object args)
+		private void OnStartCallback(object args)
 		{
 			lock (_ops)
 			{
 				TryStartUnsafe(args as T);
+			}
+		}
+
+		private void OnCompletedCallback(IAsyncOperation op)
+		{
+			lock (_ops)
+			{
+				if (_ops.Remove(op as T))
+				{
+					TryStartUnsafe(null);
+				}
 			}
 		}
 

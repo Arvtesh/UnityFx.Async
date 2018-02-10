@@ -6,12 +6,6 @@ using System;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// References a method to be called when a corresponding operation completes.
-	/// </summary>
-	/// <param name="op">The asynchronous operation.</param>
-	public delegate void AsyncOperationCallback(IAsyncOperation op);
-
-	/// <summary>
 	/// Enumerates possible status values for <see cref="IAsyncOperation"/>.
 	/// </summary>
 	/// <seealso cref="IAsyncOperation"/>
