@@ -98,6 +98,30 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Spins until the operation has completed.
+		/// </summary>
+		protected void SpinUntilCompleted()
+		{
+#if NET35
+
+			while (!IsCompleted)
+			{
+				Thread.SpinWait(1);
+			}
+
+#else
+
+			var sw = new SpinWait();
+
+			while (!IsCompleted)
+			{
+				sw.SpinOnce();
+			}
+
+#endif
+		}
+
+		/// <summary>
 		/// Throws <see cref="ObjectDisposedException"/> if this operation has been disposed.
 		/// </summary>
 		protected void ThrowIfDisposed()
@@ -464,6 +488,10 @@ namespace UnityFx.Async
 				OnCompleted();
 				return true;
 			}
+			else if (!IsCompleted)
+			{
+				SpinUntilCompleted();
+			}
 
 			return false;
 		}
@@ -517,6 +545,65 @@ namespace UnityFx.Async
 				OnCompleted();
 				return true;
 			}
+			else if (!IsCompleted)
+			{
+				SpinUntilCompleted();
+			}
+
+			return false;
+		}
+
+		/// <inheritdoc/>
+		public void SetException(IEnumerable<Exception> exceptions) => SetException(exceptions, false);
+
+		/// <summary>
+		/// Transitions the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
+		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetException(Exception)"/>
+		public void SetException(IEnumerable<Exception> exceptions, bool completedSynchronously)
+		{
+			if (!TrySetException(exceptions, completedSynchronously))
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <inheritdoc/>
+		public bool TrySetException(IEnumerable<Exception> exceptions) => TrySetException(exceptions, false);
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
+		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetException(Exception)"/>
+		public bool TrySetException(IEnumerable<Exception> exceptions, bool completedSynchronously)
+		{
+			ThrowIfDisposed();
+
+			if (exceptions == null)
+			{
+				throw new ArgumentNullException(nameof(exceptions));
+			}
+
+			if (TrySetStatus(StatusFaulted, completedSynchronously))
+			{
+				_exception = new AggregateException(exceptions);
+				OnCompleted();
+				return true;
+			}
+			else if (!IsCompleted)
+			{
+				SpinUntilCompleted();
+			}
 
 			return false;
 		}
@@ -557,6 +644,10 @@ namespace UnityFx.Async
 			{
 				OnCompleted();
 				return true;
+			}
+			else if (!IsCompleted)
+			{
+				SpinUntilCompleted();
 			}
 
 			return false;

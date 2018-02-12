@@ -514,7 +514,7 @@ namespace UnityFx.Async
 			var op = new AsyncResult();
 
 			// Act/Assert
-			Assert.Throws<ArgumentNullException>(() => op.TrySetException(null, false));
+			Assert.Throws<ArgumentNullException>(() => op.TrySetException(default(Exception), false));
 		}
 
 		[Fact]
