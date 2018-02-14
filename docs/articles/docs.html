@@ -71,23 +71,18 @@
 
 <p>TODO</p>
 <h1 id="code-samples">Code samples</h1>
-<p>1) The simpliest way of creating asyncronous operations is using <code>AsyncResult</code> static helpers. No <code>MonoBehaviour</code> is needed.</p>
+<p>1) The simpliest way of creating asyncronous operations is using <code>AsyncResult</code> static helpers.</p>
 <pre><code class="lang-csharp">var op1 = AsyncResult.FromEnumerator(GetEnum());
 var op2 = AsyncResult.FromCoroutine(StartCoroutine(GetEnum()));
 var op3 = AsyncResult.FromCoroutine(new WaitForSeconds(2));
 var op4 = AsyncResult.FromAsyncOperation(SceneManager.LoadSceneAsync(&quot;TestScene&quot;));
 var op5 = AsyncResult.FromUpdateCallback&lt;int&gt;(c =&gt; c.SetResult(20));
 </code></pre><p>2) There are several helpers that create completed operations:</p>
-<pre><code class="lang-csharp">var op1 = AsyncResult.Completed;
-var op2 = AsyncResult.Canceled;
+<pre><code class="lang-csharp">var op1 = AsyncResult.CompletedOperation;
+var op2 = AsyncResult.FromCanceled();
 var op3 = AsyncResult.FromException(new Exception());
-var op4 = AsyncResult.FromException&lt;SomeClass&gt;(new Exception());
-var op5 = AsyncResult.FromResult&lt;int&gt;(20);
-</code></pre><p>3) To execute an operation on a specific <code>MonoBehaviour</code> use <code>AsyncFactory</code>:</p>
-<pre><code class="lang-csharp">var factory = new AsyncFactory(monoBehaviour);
-var op1 = factory.FromEnumerator(GetEnum());
-var op2 = factory.FromUpdateCallback(c =&gt; c.SetCompleted());
-</code></pre><p>4) You can use <code>yield</code> and <code>await</code> to wait for <code>IAsyncOperation</code> instances without blocking the calling thread:</p>
+var op5 = AsyncResult.FromResult(20);
+</code></pre><p>3) You can use <code>yield</code> and <code>await</code> to wait for <code>IAsyncOperation</code> instances without blocking the calling thread (obviously <code>await</code> cannot be used on .NET 3.5):</p>
 <pre><code class="lang-csharp">IEnumerator TestYield()
 {
     yield return AsyncResult.FromEnumerator(GetEnum());
@@ -97,7 +92,7 @@ async Task TestAwait()
 {
     await AsyncResult.FromEnumerator(GetEnum());
 }
-</code></pre><p>5) Each <code>IAsyncOperation</code> maintains its status value (just like <a href="https://msdn.microsoft.com/ru-ru/library/system.threading.tasks.task(v=vs.110).aspx">Task</a>):</p>
+</code></pre><p>4) Each <code>IAsyncOperation</code> maintains its status value (just like <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a>:</p>
 <pre><code class="lang-csharp">var op = AsyncResult.FromEnumerator(GetEnum());
 yield return op;
 
@@ -105,11 +100,7 @@ if (op.IsCompletedSuccessfully)
 {
     // could also check op.Status
 }
-</code></pre><p>6) Several operations (basically everything that derives <a href="https://msdn.microsoft.com/en-us/library/system.iasyncresult(v=vs.110).aspx">IAsyncResult</a>) can be combited into single operation:</p>
-<pre><code class="lang-csharp">var op1 = AsyncResult.FromUpdateCallback(c =&gt; c.SetCanceled());
-var op2 = Task.Run(() =&gt; ThreadSleep(100));
-var op3 = AsyncResult.WhenAll(op1, op2);
-</code></pre><p>7) Operations can be chained together very much like <a href="https://msdn.microsoft.com/ru-ru/library/system.threading.tasks.task(v=vs.110).aspx">Tasks</a>:</p>
+</code></pre><p>5) Operations can be chained together very much like <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Tasks</a> instances:</p>
 <pre><code class="lang-csharp">var op1 = AsyncResult.Delay(TimeSpan.FromSeconds(10));
 var op2 = op1.ContinueWith(op =&gt; AsyncResult.FromEnumerator(GetEnum()));
 </code></pre></article>
@@ -120,7 +111,7 @@ var op2 = op1.ContinueWith(op =&gt; AsyncResult.FromEnumerator(GetEnum()));
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/release/0.7.0/src/DocFx/articles/docs.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/DocFx/articles/docs.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
