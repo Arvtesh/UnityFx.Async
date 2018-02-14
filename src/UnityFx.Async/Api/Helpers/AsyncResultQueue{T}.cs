@@ -36,8 +36,17 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Gets the number of operations contained in the queue.
 		/// </summary>
+		/// <value>Number of elements in the queue.</value>
+		/// <seealso cref="IsEmpty"/>
 		/// <seealso cref="MaxCount"/>
 		public int Count => _ops.Count;
+
+		/// <summary>
+		/// Gets whether the queue is empty.
+		/// </summary>
+		/// <value>The empty flag.</value>
+		/// <seealso cref="Count"/>
+		public bool IsEmpty => _ops.Count == 0;
 
 		/// <summary>
 		/// Gets or sets maximum queue size. Default is 0 (no constraints).
