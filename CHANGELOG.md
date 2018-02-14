@@ -6,8 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ## [0.7.1] - 2018-02-14
 
 ### Added
-- Added possibility to store multiple exceptions in AsyncResult.
+- Added possibility to store multiple exceptions in `AsyncResult`.
 - Added `AggregateException` class for `net35` target.
+- Added `IsEmpty` property to `AsyncResultQueue`.
 
 ### Changed
 - `AsyncResult` implemenatino is changed to prevent returning null operation result when the operation is completed in some cases.
