@@ -19,10 +19,11 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private const int _flagCompleted = 0x00100000;
-		private const int _flagSynchronous = 0x00200000;
+		private const int _flagCompletionReserved = 0x00100000;
+		private const int _flagCompleted = 0x00200000;
+		private const int _flagSynchronous = 0x00400000;
 		private const int _flagCompletedSynchronously = _flagCompleted | _flagSynchronous;
-		private const int _flagDisposed = 0x00400000;
+		private const int _flagDisposed = 0x01000000;
 		private const int _flagDoNotDispose = 0x10000000;
 		private const int _statusMask = 0x0000000f;
 
@@ -358,19 +359,106 @@ namespace UnityFx.Async
 		internal const int StatusCanceled = 4;
 		internal const int StatusFaulted = 5;
 
-		internal bool TrySetStatus(int status, bool completedSynchronously)
+		internal bool TrySetStatus(int newStatus)
 		{
-			if (status > StatusRunning)
-			{
-				status |= _flagCompleted;
+			Debug.Assert(newStatus < StatusRanToCompletion);
 
-				if (completedSynchronously)
+			do
+			{
+				var flags = _flags;
+
+				if ((flags & (_flagCompleted | _flagCompletionReserved)) != 0)
 				{
-					status |= _flagSynchronous;
+					return false;
+				}
+
+				var status = flags & _statusMask;
+
+				if (status >= newStatus)
+				{
+					return false;
+				}
+
+				var newFlags = (flags & ~_statusMask) | newStatus;
+
+				if (Interlocked.CompareExchange(ref _flags, newFlags, flags) == flags)
+				{
+					OnStatusChanged((AsyncOperationStatus)newStatus);
+					return true;
 				}
 			}
+			while (true);
+		}
 
-			return TrySetStatusInternal(status);
+		internal bool TryReserveCompletion()
+		{
+			do
+			{
+				var flags = _flags;
+
+				if ((flags & (_flagCompletionReserved | _flagCompleted)) != 0)
+				{
+					return false;
+				}
+
+				if (Interlocked.CompareExchange(ref _flags, flags | _flagCompletionReserved, flags) == flags)
+				{
+					return true;
+				}
+			}
+			while (true);
+		}
+
+		internal bool TrySetCompleted(int status, bool completedSynchronously)
+		{
+			Debug.Assert(status > StatusRunning);
+
+			status |= _flagCompleted | _flagCompletionReserved;
+
+			if (completedSynchronously)
+			{
+				status |= _flagSynchronous;
+			}
+
+			do
+			{
+				var flags = _flags;
+
+				if ((flags & (_flagCompleted | _flagCompletionReserved)) != 0)
+				{
+					return false;
+				}
+
+				var newFlags = (flags & ~_statusMask) | status;
+
+				if (Interlocked.CompareExchange(ref _flags, newFlags, flags) == flags)
+				{
+					return true;
+				}
+			}
+			while (true);
+		}
+
+		internal void SetCompleted(int status, bool completedSynchronously)
+		{
+			Debug.Assert(status > StatusRunning);
+			Debug.Assert((_flags & _flagCompletionReserved) != 0);
+			Debug.Assert((_flags & _statusMask) < StatusRanToCompletion);
+
+			var oldFlags = _flags & ~_statusMask;
+			var newFlags = status | _flagCompleted;
+
+			if (completedSynchronously)
+			{
+				newFlags |= _flagSynchronous;
+			}
+
+			// Set completed status. After this call IsCompleted will return true.
+			Interlocked.Exchange(ref _flags, oldFlags | newFlags);
+
+			// Invoke completion callbacks.
+			OnStatusChanged((AsyncOperationStatus)status);
+			OnCompleted();
 		}
 
 		internal void SetContinuationForAwait(Action action)
@@ -411,7 +499,7 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 
-			if (TrySetStatusInternal(StatusScheduled))
+			if (TrySetStatus(StatusScheduled))
 			{
 				return true;
 			}
@@ -443,7 +531,7 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 
-			if (TrySetStatusInternal(StatusRunning))
+			if (TrySetStatus(StatusRunning))
 			{
 				return true;
 			}
@@ -483,8 +571,9 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 
-			if (TrySetStatus(StatusCanceled, completedSynchronously))
+			if (TrySetCompleted(StatusCanceled, completedSynchronously))
 			{
+				OnStatusChanged(AsyncOperationStatus.Canceled);
 				OnCompleted();
 				return true;
 			}
@@ -537,12 +626,12 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(e));
 			}
 
-			var status = e is OperationCanceledException ? StatusCanceled : StatusFaulted;
-
-			if (TrySetStatus(status, completedSynchronously))
+			if (TryReserveCompletion())
 			{
+				var status = e is OperationCanceledException ? StatusCanceled : StatusFaulted;
+
 				_exception = e;
-				OnCompleted();
+				SetCompleted(status, completedSynchronously);
 				return true;
 			}
 			else if (!IsCompleted)
@@ -594,10 +683,10 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(exceptions));
 			}
 
-			if (TrySetStatus(StatusFaulted, completedSynchronously))
+			if (TryReserveCompletion())
 			{
 				_exception = new AggregateException(exceptions);
-				OnCompleted();
+				SetCompleted(StatusFaulted, completedSynchronously);
 				return true;
 			}
 			else if (!IsCompleted)
@@ -640,8 +729,9 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 
-			if (TrySetStatus(StatusRanToCompletion, completedSynchronously))
+			if (TrySetCompleted(StatusRanToCompletion, completedSynchronously))
 			{
+				OnStatusChanged(AsyncOperationStatus.RanToCompletion);
 				OnCompleted();
 				return true;
 			}
@@ -824,33 +914,6 @@ namespace UnityFx.Async
 		private AsyncResult(int flags)
 		{
 			_flags = flags;
-		}
-
-		private bool TrySetStatusInternal(int newStatus)
-		{
-			var status = _flags;
-
-			if ((status & _flagCompleted) == 0)
-			{
-				var status0 = status & _statusMask;
-				var status1 = newStatus & _statusMask;
-
-				while (status0 < status1)
-				{
-					if (Interlocked.CompareExchange(ref _flags, newStatus, status) == status)
-					{
-						OnStatusChanged((AsyncOperationStatus)status1);
-						return true;
-					}
-					else
-					{
-						status = _flags;
-						status0 = status & _statusMask;
-					}
-				}
-			}
-
-			return false;
 		}
 
 		private bool TryAddContinuation(object continuation, SynchronizationContext syncContext)

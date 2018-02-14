@@ -109,10 +109,10 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 
-			if (TrySetStatus(StatusRanToCompletion, completedSynchronously))
+			if (TryReserveCompletion())
 			{
 				_result = result;
-				OnCompleted();
+				SetCompleted(StatusRanToCompletion, completedSynchronously);
 				return true;
 			}
 
