@@ -22,7 +22,7 @@ namespace UnityFx.Async
 		private const int _flagCompletionReserved = 0x00100000;
 		private const int _flagCompleted = 0x00200000;
 		private const int _flagSynchronous = 0x00400000;
-		private const int _flagCompletedSynchronously = _flagCompleted | _flagSynchronous;
+		private const int _flagCompletedSynchronously = _flagCompleted | _flagCompletionReserved | _flagSynchronous;
 		private const int _flagDisposed = 0x01000000;
 		private const int _flagDoNotDispose = 0x10000000;
 		private const int _statusMask = 0x0000000f;
@@ -359,6 +359,9 @@ namespace UnityFx.Async
 		internal const int StatusCanceled = 4;
 		internal const int StatusFaulted = 5;
 
+		/// <summary>
+		/// Special status setter for <see cref="AsyncOperationStatus.Scheduled"/> and <see cref="AsyncOperationStatus.Running"/>.
+		/// </summary>
 		internal bool TrySetStatus(int newStatus)
 		{
 			Debug.Assert(newStatus < StatusRanToCompletion);
@@ -390,6 +393,43 @@ namespace UnityFx.Async
 			while (true);
 		}
 
+		/// <summary>
+		/// Sets the operation status to one of <see cref="AsyncOperationStatus.RanToCompletion"/>/<see cref="AsyncOperationStatus.Canceled"/>/<see cref="AsyncOperationStatus.Faulted"/>.
+		/// The call does the same as calling <see cref="TryReserveCompletion"/> and <see cref="SetCompleted(int, bool)"/> but uses one interlocked operation instead of two.
+		/// </summary>
+		internal bool TrySetCompleted(int status, bool completedSynchronously)
+		{
+			Debug.Assert(status > StatusRunning);
+
+			status |= _flagCompleted | _flagCompletionReserved;
+
+			if (completedSynchronously)
+			{
+				status |= _flagSynchronous;
+			}
+
+			do
+			{
+				var flags = _flags;
+
+				if ((flags & (_flagCompletionReserved | _flagCompleted)) != 0)
+				{
+					return false;
+				}
+
+				var newFlags = (flags & ~_statusMask) | status;
+
+				if (Interlocked.CompareExchange(ref _flags, newFlags, flags) == flags)
+				{
+					return true;
+				}
+			}
+			while (true);
+		}
+
+		/// <summary>
+		/// Initiates operation completion. Should only be used in pair with <see cref="SetCompleted(int, bool)"/>.
+		/// </summary>
 		internal bool TryReserveCompletion()
 		{
 			do
@@ -409,36 +449,10 @@ namespace UnityFx.Async
 			while (true);
 		}
 
-		internal bool TrySetCompleted(int status, bool completedSynchronously)
-		{
-			Debug.Assert(status > StatusRunning);
-
-			status |= _flagCompleted | _flagCompletionReserved;
-
-			if (completedSynchronously)
-			{
-				status |= _flagSynchronous;
-			}
-
-			do
-			{
-				var flags = _flags;
-
-				if ((flags & (_flagCompleted | _flagCompletionReserved)) != 0)
-				{
-					return false;
-				}
-
-				var newFlags = (flags & ~_statusMask) | status;
-
-				if (Interlocked.CompareExchange(ref _flags, newFlags, flags) == flags)
-				{
-					return true;
-				}
-			}
-			while (true);
-		}
-
+		/// <summary>
+		/// Unconditionally sets the operation status to one of <see cref="AsyncOperationStatus.RanToCompletion"/>/<see cref="AsyncOperationStatus.Canceled"/>/<see cref="AsyncOperationStatus.Faulted"/>.
+		/// Should only be called if <see cref="TryReserveCompletion"/> call succeeded.
+		/// </summary>
 		internal void SetCompleted(int status, bool completedSynchronously)
 		{
 			Debug.Assert(status > StatusRunning);
@@ -461,6 +475,9 @@ namespace UnityFx.Async
 			OnCompleted();
 		}
 
+		/// <summary>
+		/// Special continuation for the awaiter.
+		/// </summary>
 		internal void SetContinuationForAwait(Action action)
 		{
 			ThrowIfDisposed();
