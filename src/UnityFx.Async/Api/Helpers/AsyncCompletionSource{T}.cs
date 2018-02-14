@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 
 namespace UnityFx.Async
 {
@@ -33,9 +34,18 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public void SetException(Exception e)
+		public void SetException(Exception exception)
 		{
-			if (!TrySetException(e))
+			if (!TrySetException(exception))
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <inheritdoc/>
+		public void SetException(IEnumerable<Exception> exceptions)
+		{
+			if (!TrySetException(exceptions))
 			{
 				throw new InvalidOperationException();
 			}
@@ -48,7 +58,10 @@ namespace UnityFx.Async
 		public abstract bool TrySetResult(T result);
 
 		/// <inheritdoc/>
-		public abstract bool TrySetException(Exception e);
+		public abstract bool TrySetException(Exception exception);
+
+		/// <inheritdoc/>
+		public abstract bool TrySetException(IEnumerable<Exception> exceptions);
 
 		#endregion
 	}

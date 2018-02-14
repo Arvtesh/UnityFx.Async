@@ -19,10 +19,11 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private const int _flagCompleted = 0x00100000;
-		private const int _flagSynchronous = 0x00200000;
-		private const int _flagCompletedSynchronously = _flagCompleted | _flagSynchronous;
-		private const int _flagDisposed = 0x00400000;
+		private const int _flagCompletionReserved = 0x00100000;
+		private const int _flagCompleted = 0x00200000;
+		private const int _flagSynchronous = 0x00400000;
+		private const int _flagCompletedSynchronously = _flagCompleted | _flagCompletionReserved | _flagSynchronous;
+		private const int _flagDisposed = 0x01000000;
 		private const int _flagDoNotDispose = 0x10000000;
 		private const int _statusMask = 0x0000000f;
 
@@ -95,6 +96,30 @@ namespace UnityFx.Async
 		{
 			_exception = e ?? throw new ArgumentNullException(nameof(e));
 			_flags = StatusFaulted | _flagCompletedSynchronously;
+		}
+
+		/// <summary>
+		/// Spins until the operation has completed.
+		/// </summary>
+		protected void SpinUntilCompleted()
+		{
+#if NET35
+
+			while (!IsCompleted)
+			{
+				Thread.SpinWait(1);
+			}
+
+#else
+
+			var sw = new SpinWait();
+
+			while (!IsCompleted)
+			{
+				sw.SpinOnce();
+			}
+
+#endif
 		}
 
 		/// <summary>
@@ -334,21 +359,125 @@ namespace UnityFx.Async
 		internal const int StatusCanceled = 4;
 		internal const int StatusFaulted = 5;
 
-		internal bool TrySetStatus(int status, bool completedSynchronously)
+		/// <summary>
+		/// Special status setter for <see cref="AsyncOperationStatus.Scheduled"/> and <see cref="AsyncOperationStatus.Running"/>.
+		/// </summary>
+		internal bool TrySetStatus(int newStatus)
 		{
-			if (status > StatusRunning)
-			{
-				status |= _flagCompleted;
+			Debug.Assert(newStatus < StatusRanToCompletion);
 
-				if (completedSynchronously)
+			do
+			{
+				var flags = _flags;
+
+				if ((flags & (_flagCompleted | _flagCompletionReserved)) != 0)
 				{
-					status |= _flagSynchronous;
+					return false;
+				}
+
+				var status = flags & _statusMask;
+
+				if (status >= newStatus)
+				{
+					return false;
+				}
+
+				var newFlags = (flags & ~_statusMask) | newStatus;
+
+				if (Interlocked.CompareExchange(ref _flags, newFlags, flags) == flags)
+				{
+					OnStatusChanged((AsyncOperationStatus)newStatus);
+					return true;
 				}
 			}
-
-			return TrySetStatusInternal(status);
+			while (true);
 		}
 
+		/// <summary>
+		/// Sets the operation status to one of <see cref="AsyncOperationStatus.RanToCompletion"/>/<see cref="AsyncOperationStatus.Canceled"/>/<see cref="AsyncOperationStatus.Faulted"/>.
+		/// The call does the same as calling <see cref="TryReserveCompletion"/> and <see cref="SetCompleted(int, bool)"/> but uses one interlocked operation instead of two.
+		/// </summary>
+		internal bool TrySetCompleted(int status, bool completedSynchronously)
+		{
+			Debug.Assert(status > StatusRunning);
+
+			status |= _flagCompleted | _flagCompletionReserved;
+
+			if (completedSynchronously)
+			{
+				status |= _flagSynchronous;
+			}
+
+			do
+			{
+				var flags = _flags;
+
+				if ((flags & (_flagCompletionReserved | _flagCompleted)) != 0)
+				{
+					return false;
+				}
+
+				var newFlags = (flags & ~_statusMask) | status;
+
+				if (Interlocked.CompareExchange(ref _flags, newFlags, flags) == flags)
+				{
+					return true;
+				}
+			}
+			while (true);
+		}
+
+		/// <summary>
+		/// Initiates operation completion. Should only be used in pair with <see cref="SetCompleted(int, bool)"/>.
+		/// </summary>
+		internal bool TryReserveCompletion()
+		{
+			do
+			{
+				var flags = _flags;
+
+				if ((flags & (_flagCompletionReserved | _flagCompleted)) != 0)
+				{
+					return false;
+				}
+
+				if (Interlocked.CompareExchange(ref _flags, flags | _flagCompletionReserved, flags) == flags)
+				{
+					return true;
+				}
+			}
+			while (true);
+		}
+
+		/// <summary>
+		/// Unconditionally sets the operation status to one of <see cref="AsyncOperationStatus.RanToCompletion"/>/<see cref="AsyncOperationStatus.Canceled"/>/<see cref="AsyncOperationStatus.Faulted"/>.
+		/// Should only be called if <see cref="TryReserveCompletion"/> call succeeded.
+		/// </summary>
+		internal void SetCompleted(int status, bool completedSynchronously)
+		{
+			Debug.Assert(status > StatusRunning);
+			Debug.Assert((_flags & _flagCompletionReserved) != 0);
+			Debug.Assert((_flags & _statusMask) < StatusRanToCompletion);
+
+			var oldFlags = _flags & ~_statusMask;
+			var newFlags = status | _flagCompleted;
+
+			if (completedSynchronously)
+			{
+				newFlags |= _flagSynchronous;
+			}
+
+			// Set completed status. After this call IsCompleted will return true.
+			Interlocked.Exchange(ref _flags, oldFlags | newFlags);
+
+			// Invoke completion callbacks.
+			OnStatusChanged((AsyncOperationStatus)status);
+			OnCompleted();
+		}
+
+		/// <summary>
+		/// Special continuation for the awaiter.
+		/// </summary>
 		internal void SetContinuationForAwait(Action action)
 		{
 			ThrowIfDisposed();
@@ -387,7 +516,7 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 
-			if (TrySetStatusInternal(StatusScheduled))
+			if (TrySetStatus(StatusScheduled))
 			{
 				return true;
 			}
@@ -419,7 +548,7 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 
-			if (TrySetStatusInternal(StatusRunning))
+			if (TrySetStatus(StatusRunning))
 			{
 				return true;
 			}
@@ -459,10 +588,15 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 
-			if (TrySetStatus(StatusCanceled, completedSynchronously))
+			if (TrySetCompleted(StatusCanceled, completedSynchronously))
 			{
+				OnStatusChanged(AsyncOperationStatus.Canceled);
 				OnCompleted();
 				return true;
+			}
+			else if (!IsCompleted)
+			{
+				SpinUntilCompleted();
 			}
 
 			return false;
@@ -509,13 +643,72 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(e));
 			}
 
-			var status = e is OperationCanceledException ? StatusCanceled : StatusFaulted;
-
-			if (TrySetStatus(status, completedSynchronously))
+			if (TryReserveCompletion())
 			{
+				var status = e is OperationCanceledException ? StatusCanceled : StatusFaulted;
+
 				_exception = e;
-				OnCompleted();
+				SetCompleted(status, completedSynchronously);
 				return true;
+			}
+			else if (!IsCompleted)
+			{
+				SpinUntilCompleted();
+			}
+
+			return false;
+		}
+
+		/// <inheritdoc/>
+		public void SetException(IEnumerable<Exception> exceptions) => SetException(exceptions, false);
+
+		/// <summary>
+		/// Transitions the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
+		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetException(Exception)"/>
+		public void SetException(IEnumerable<Exception> exceptions, bool completedSynchronously)
+		{
+			if (!TrySetException(exceptions, completedSynchronously))
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <inheritdoc/>
+		public bool TrySetException(IEnumerable<Exception> exceptions) => TrySetException(exceptions, false);
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
+		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetException(Exception)"/>
+		public bool TrySetException(IEnumerable<Exception> exceptions, bool completedSynchronously)
+		{
+			ThrowIfDisposed();
+
+			if (exceptions == null)
+			{
+				throw new ArgumentNullException(nameof(exceptions));
+			}
+
+			if (TryReserveCompletion())
+			{
+				_exception = new AggregateException(exceptions);
+				SetCompleted(StatusFaulted, completedSynchronously);
+				return true;
+			}
+			else if (!IsCompleted)
+			{
+				SpinUntilCompleted();
 			}
 
 			return false;
@@ -553,10 +746,15 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 
-			if (TrySetStatus(StatusRanToCompletion, completedSynchronously))
+			if (TrySetCompleted(StatusRanToCompletion, completedSynchronously))
 			{
+				OnStatusChanged(AsyncOperationStatus.RanToCompletion);
 				OnCompleted();
 				return true;
+			}
+			else if (!IsCompleted)
+			{
+				SpinUntilCompleted();
 			}
 
 			return false;
@@ -733,33 +931,6 @@ namespace UnityFx.Async
 		private AsyncResult(int flags)
 		{
 			_flags = flags;
-		}
-
-		private bool TrySetStatusInternal(int newStatus)
-		{
-			var status = _flags;
-
-			if ((status & _flagCompleted) == 0)
-			{
-				var status0 = status & _statusMask;
-				var status1 = newStatus & _statusMask;
-
-				while (status0 < status1)
-				{
-					if (Interlocked.CompareExchange(ref _flags, newStatus, status) == status)
-					{
-						OnStatusChanged((AsyncOperationStatus)status1);
-						return true;
-					}
-					else
-					{
-						status = _flags;
-						status0 = status & _statusMask;
-					}
-				}
-			}
-
-			return false;
 		}
 
 		private bool TryAddContinuation(object continuation, SynchronizationContext syncContext)
