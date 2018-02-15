@@ -282,9 +282,15 @@ namespace UnityFx.Async
 
 				while (_ops.Count > 0)
 				{
-					if (!_ops[0].TrySetRunning())
+					var firstOp = _ops[0];
+
+					if (firstOp.IsCompleted)
 					{
 						_ops.RemoveAt(0);
+					}
+					else
+					{
+						firstOp.TrySetRunning();
 					}
 				}
 			}
