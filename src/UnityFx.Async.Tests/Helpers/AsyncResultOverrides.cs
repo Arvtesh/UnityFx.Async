@@ -12,6 +12,11 @@ namespace UnityFx.Async
 		public bool OnCompletedCalled { get; private set; }
 		public bool DisposeCalled { get; private set; }
 
+		public bool TrySetCanceled() => TrySetCanceled(false);
+		public bool TrySetException(Exception e) => TrySetException(e, false);
+		public bool TrySetCompleted() => TrySetCompleted(false);
+		public bool TrySetResult(int result) => TrySetResult(result, false);
+
 		protected override void OnStatusChanged(AsyncOperationStatus status)
 		{
 			OnStatusChangedCalled = true;

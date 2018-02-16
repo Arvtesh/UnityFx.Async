@@ -135,7 +135,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncResult(AsyncOperationStatus.Scheduled);
+			var result = new AsyncResultController(AsyncOperationStatus.Scheduled);
 
 			op.AddCompletionCallback(
 				asyncOp =>
@@ -177,7 +177,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncResult(AsyncOperationStatus.Scheduled);
+			var result = new AsyncResultController(AsyncOperationStatus.Scheduled);
 
 			op.AddCompletionCallback(
 				asyncOp =>
@@ -219,7 +219,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
+			var result = new AsyncResultController<U>(AsyncOperationStatus.Scheduled);
 
 			op.AddCompletionCallback(
 				asyncOp =>
@@ -263,7 +263,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
+			var result = new AsyncResultController<U>(AsyncOperationStatus.Scheduled);
 
 			op.AddCompletionCallback(
 				asyncOp =>
@@ -301,14 +301,14 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(resultTransformer));
 			}
 
-			var result = new AsyncResult<U>(AsyncOperationStatus.Scheduled);
+			var result = new AsyncResultController<U>(AsyncOperationStatus.Scheduled);
 
 			op.AddCompletionCallback(
 				asyncOp =>
 				{
 					try
 					{
-						result.SetResult(resultTransformer(op), false);
+						result.SetResult(resultTransformer(op));
 					}
 					catch (Exception e)
 					{

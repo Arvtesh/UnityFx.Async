@@ -13,9 +13,9 @@ namespace UnityFx.Async
 	/// <seealso cref="IAsyncOperation"/>
 	/// <seealso cref="AsyncResult"/>
 #if NET35
-	public class AsyncResult<T> : AsyncResult, IAsyncCompletionSource<T>, IAsyncOperation<T>
+	public class AsyncResult<T> : AsyncResult, IAsyncOperation<T>
 #else
-	public class AsyncResult<T> : AsyncResult, IAsyncCompletionSource<T>, IAsyncOperation<T>, IObservable<T>
+	public class AsyncResult<T> : AsyncResult, IAsyncOperation<T>, IObservable<T>
 #endif
 	{
 		#region data
@@ -82,32 +82,6 @@ namespace UnityFx.Async
 			_result = result;
 		}
 
-		#endregion
-
-		#region IAsyncOperationController
-
-		/// <inheritdoc/>
-		public void SetResult(T result) => SetResult(result, false);
-
-		/// <summary>
-		/// Transitions the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
-		/// </summary>
-		/// <param name="result">The operation result.</param>
-		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
-		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="SetResult(T)"/>
-		public void SetResult(T result, bool completedSynchronously)
-		{
-			if (!TrySetResult(result, completedSynchronously))
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <inheritdoc/>
-		public bool TrySetResult(T result) => TrySetResult(result, false);
-
 		/// <summary>
 		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
@@ -115,8 +89,7 @@ namespace UnityFx.Async
 		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="TrySetResult(T)"/>
-		public bool TrySetResult(T result, bool completedSynchronously)
+		protected internal bool TrySetResult(T result, bool completedSynchronously)
 		{
 			ThrowIfDisposed();
 

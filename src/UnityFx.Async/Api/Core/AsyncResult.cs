@@ -15,7 +15,7 @@ namespace UnityFx.Async
 	/// <seealso href="https://blogs.msdn.microsoft.com/nikos/2011/03/14/how-to-implement-the-iasyncresult-design-pattern/"/>
 	/// <seealso cref="IAsyncResult"/>
 	[DebuggerDisplay("{DebuggerDisplay,nq}")]
-	public class AsyncResult : IAsyncOperation, IAsyncCompletionSource, IEnumerator
+	public class AsyncResult : IAsyncOperation, IEnumerator
 	{
 		#region data
 
@@ -109,6 +109,152 @@ namespace UnityFx.Async
 		{
 			_exception = e ?? throw new ArgumentNullException(nameof(e));
 			_flags = StatusFaulted | _flagCompletedSynchronously;
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Scheduled"/> state.
+		/// </summary>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="TrySetRunning"/>
+		protected internal bool TrySetScheduled()
+		{
+			ThrowIfDisposed();
+
+			if (TrySetStatus(StatusScheduled))
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Running"/> state.
+		/// </summary>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="TrySetScheduled"/>
+		protected internal bool TrySetRunning()
+		{
+			ThrowIfDisposed();
+
+			if (TrySetStatus(StatusRunning))
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Canceled"/> state.
+		/// </summary>
+		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		protected internal bool TrySetCanceled(bool completedSynchronously)
+		{
+			ThrowIfDisposed();
+
+			if (TrySetCompleted(StatusCanceled, completedSynchronously))
+			{
+				OnStatusChanged(AsyncOperationStatus.Canceled);
+				OnCompleted();
+				return true;
+			}
+			else if (!IsCompleted)
+			{
+				SpinUntilCompleted();
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="e">An exception that caused the operation to end prematurely.</param>
+		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		protected internal bool TrySetException(Exception e, bool completedSynchronously)
+		{
+			ThrowIfDisposed();
+
+			if (e == null)
+			{
+				throw new ArgumentNullException(nameof(e));
+			}
+
+			if (TryReserveCompletion())
+			{
+				var status = e is OperationCanceledException ? StatusCanceled : StatusFaulted;
+
+				_exception = e;
+				SetCompleted(status, completedSynchronously);
+				return true;
+			}
+			else if (!IsCompleted)
+			{
+				SpinUntilCompleted();
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
+		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		protected internal bool TrySetExceptions(IEnumerable<Exception> exceptions, bool completedSynchronously)
+		{
+			ThrowIfDisposed();
+
+			if (exceptions == null)
+			{
+				throw new ArgumentNullException(nameof(exceptions));
+			}
+
+			if (TryReserveCompletion())
+			{
+				_exception = new AggregateException(exceptions);
+				SetCompleted(StatusFaulted, completedSynchronously);
+				return true;
+			}
+			else if (!IsCompleted)
+			{
+				SpinUntilCompleted();
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
+		/// </summary>
+		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		protected internal bool TrySetCompleted(bool completedSynchronously)
+		{
+			ThrowIfDisposed();
+
+			if (TrySetCompleted(StatusRanToCompletion, completedSynchronously))
+			{
+				OnStatusChanged(AsyncOperationStatus.RanToCompletion);
+				OnCompleted();
+				return true;
+			}
+			else if (!IsCompleted)
+			{
+				SpinUntilCompleted();
+			}
+
+			return false;
 		}
 
 		/// <summary>
@@ -499,278 +645,6 @@ namespace UnityFx.Async
 			{
 				action();
 			}
-		}
-
-		#endregion
-
-		#region IAsyncOperationCompletionSource
-
-		/// <summary>
-		/// Transitions the operation to <see cref="AsyncOperationStatus.Scheduled"/> state.
-		/// </summary>
-		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="TrySetScheduled"/>
-		/// <seealso cref="SetRunning"/>
-		public void SetScheduled()
-		{
-			if (!TrySetScheduled())
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <summary>
-		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Scheduled"/> state.
-		/// </summary>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="SetScheduled"/>
-		public bool TrySetScheduled()
-		{
-			ThrowIfDisposed();
-
-			if (TrySetStatus(StatusScheduled))
-			{
-				return true;
-			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// Transitions the operation to <see cref="AsyncOperationStatus.Running"/> state.
-		/// </summary>
-		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="TrySetRunning"/>
-		/// <seealso cref="SetScheduled"/>
-		public void SetRunning()
-		{
-			if (!TrySetRunning())
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <summary>
-		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Running"/> state.
-		/// </summary>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="SetRunning"/>
-		public bool TrySetRunning()
-		{
-			ThrowIfDisposed();
-
-			if (TrySetStatus(StatusRunning))
-			{
-				return true;
-			}
-
-			return false;
-		}
-
-		/// <inheritdoc/>
-		public void SetCanceled() => SetCanceled(false);
-
-		/// <summary>
-		/// Transitions the operation into the <see cref="AsyncOperationStatus.Canceled"/> state.
-		/// </summary>
-		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
-		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="SetCanceled()"/>
-		public void SetCanceled(bool completedSynchronously)
-		{
-			if (!TrySetCanceled(completedSynchronously))
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <inheritdoc/>
-		public bool TrySetCanceled() => TrySetCanceled(false);
-
-		/// <summary>
-		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Canceled"/> state.
-		/// </summary>
-		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="TrySetCanceled()"/>
-		public bool TrySetCanceled(bool completedSynchronously)
-		{
-			ThrowIfDisposed();
-
-			if (TrySetCompleted(StatusCanceled, completedSynchronously))
-			{
-				OnStatusChanged(AsyncOperationStatus.Canceled);
-				OnCompleted();
-				return true;
-			}
-			else if (!IsCompleted)
-			{
-				SpinUntilCompleted();
-			}
-
-			return false;
-		}
-
-		/// <inheritdoc/>
-		public void SetException(Exception e) => SetException(e, false);
-
-		/// <summary>
-		/// Transitions the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
-		/// </summary>
-		/// <param name="e">An exception that caused the operation to end prematurely.</param>
-		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
-		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="SetException(Exception)"/>
-		public void SetException(Exception e, bool completedSynchronously)
-		{
-			if (!TrySetException(e, completedSynchronously))
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <inheritdoc/>
-		public bool TrySetException(Exception e) => TrySetException(e, false);
-
-		/// <summary>
-		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
-		/// </summary>
-		/// <param name="e">An exception that caused the operation to end prematurely.</param>
-		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="TrySetException(Exception)"/>
-		public bool TrySetException(Exception e, bool completedSynchronously)
-		{
-			ThrowIfDisposed();
-
-			if (e == null)
-			{
-				throw new ArgumentNullException(nameof(e));
-			}
-
-			if (TryReserveCompletion())
-			{
-				var status = e is OperationCanceledException ? StatusCanceled : StatusFaulted;
-
-				_exception = e;
-				SetCompleted(status, completedSynchronously);
-				return true;
-			}
-			else if (!IsCompleted)
-			{
-				SpinUntilCompleted();
-			}
-
-			return false;
-		}
-
-		/// <inheritdoc/>
-		public void SetExceptions(IEnumerable<Exception> exceptions) => SetExceptions(exceptions, false);
-
-		/// <summary>
-		/// Transitions the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
-		/// </summary>
-		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
-		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
-		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="SetException(Exception)"/>
-		public void SetExceptions(IEnumerable<Exception> exceptions, bool completedSynchronously)
-		{
-			if (!TrySetExceptions(exceptions, completedSynchronously))
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <inheritdoc/>
-		public bool TrySetExceptions(IEnumerable<Exception> exceptions) => TrySetExceptions(exceptions, false);
-
-		/// <summary>
-		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
-		/// </summary>
-		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
-		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="TrySetException(Exception)"/>
-		public bool TrySetExceptions(IEnumerable<Exception> exceptions, bool completedSynchronously)
-		{
-			ThrowIfDisposed();
-
-			if (exceptions == null)
-			{
-				throw new ArgumentNullException(nameof(exceptions));
-			}
-
-			if (TryReserveCompletion())
-			{
-				_exception = new AggregateException(exceptions);
-				SetCompleted(StatusFaulted, completedSynchronously);
-				return true;
-			}
-			else if (!IsCompleted)
-			{
-				SpinUntilCompleted();
-			}
-
-			return false;
-		}
-
-		/// <inheritdoc/>
-		public void SetCompleted() => SetCompleted(false);
-
-		/// <summary>
-		/// Transitions the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
-		/// </summary>
-		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
-		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="SetCompleted()"/>
-		public void SetCompleted(bool completedSynchronously)
-		{
-			if (!TrySetCompleted(completedSynchronously))
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <inheritdoc/>
-		public bool TrySetCompleted() => TrySetCompleted(false);
-
-		/// <summary>
-		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
-		/// </summary>
-		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="TrySetCompleted()"/>
-		public bool TrySetCompleted(bool completedSynchronously)
-		{
-			ThrowIfDisposed();
-
-			if (TrySetCompleted(StatusRanToCompletion, completedSynchronously))
-			{
-				OnStatusChanged(AsyncOperationStatus.RanToCompletion);
-				OnCompleted();
-				return true;
-			}
-			else if (!IsCompleted)
-			{
-				SpinUntilCompleted();
-			}
-
-			return false;
 		}
 
 		#endregion
