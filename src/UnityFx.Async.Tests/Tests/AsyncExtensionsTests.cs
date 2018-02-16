@@ -16,7 +16,7 @@ namespace UnityFx.Async
 		public void ToObservable_OnNextIsCalled()
 		{
 			// Arrange
-			var op = new AsyncResultController<int>();
+			var op = new AsyncCompletionSource<int>();
 			var observer = new Observer<int>();
 			var observable = op.ToObservable().Subscribe(observer);
 
@@ -32,7 +32,7 @@ namespace UnityFx.Async
 		public void ToObservable_OnCompletedIsCalledAfterOnNext()
 		{
 			// Arrange
-			var op = new AsyncResultController<int>();
+			var op = new AsyncCompletionSource<int>();
 			var observer = new Observer<int>();
 			var observable = op.ToObservable().Subscribe(observer);
 
@@ -47,7 +47,7 @@ namespace UnityFx.Async
 		public void ToObservable_OnCompletedIsCalledOnCancellation()
 		{
 			// Arrange
-			var op = new AsyncResultController<int>();
+			var op = new AsyncCompletionSource<int>();
 			var observer = new Observer<int>();
 			var observable = op.ToObservable().Subscribe(observer);
 
@@ -62,7 +62,7 @@ namespace UnityFx.Async
 		public void ToObservable_OnCompletedIsNotCalledOnError()
 		{
 			// Arrange
-			var op = new AsyncResultController<int>();
+			var op = new AsyncCompletionSource<int>();
 			var observer = new Observer<int>();
 			var observable = op.ToObservable().Subscribe(observer);
 
@@ -78,7 +78,7 @@ namespace UnityFx.Async
 		{
 			// Arrange
 			var e = new Exception();
-			var op = new AsyncResultController<int>();
+			var op = new AsyncCompletionSource<int>();
 			var observer = new Observer<int>();
 			var observable = op.ToObservable().Subscribe(observer);
 

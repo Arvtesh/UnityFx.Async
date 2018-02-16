@@ -7,55 +7,56 @@ using System.Collections.Generic;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// tt
+	/// Represents an asynchronous operation with external completion control.
 	/// </summary>
-	public sealed class AsyncResultController : AsyncResult, IAsyncCompletionSource
+	/// <seealso cref="AsyncCompletionSource"/>
+	public sealed class AsyncCompletionSource<T> : AsyncResult<T>, IAsyncCompletionSource<T>
 	{
 		#region interface
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResultController"/> class.
+		/// Initializes a new instance of the <see cref="AsyncCompletionSource{T}"/> class.
 		/// </summary>
-		public AsyncResultController()
+		public AsyncCompletionSource()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResultController"/> class.
+		/// Initializes a new instance of the <see cref="AsyncCompletionSource{T}"/> class.
 		/// </summary>
 		/// <param name="asyncCallback">User-defined completion callback.</param>
 		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
-		public AsyncResultController(AsyncCallback asyncCallback, object asyncState)
+		public AsyncCompletionSource(AsyncCallback asyncCallback, object asyncState)
 			: base(asyncCallback, asyncState)
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResultController"/> class.
+		/// Initializes a new instance of the <see cref="AsyncCompletionSource{T}"/> class.
 		/// </summary>
 		/// <param name="status">Initial value of the <see cref="AsyncResult.Status"/> property.</param>
-		public AsyncResultController(AsyncOperationStatus status)
+		public AsyncCompletionSource(AsyncOperationStatus status)
 			: base(status)
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResultController"/> class.
+		/// Initializes a new instance of the <see cref="AsyncCompletionSource{T}"/> class.
 		/// </summary>
 		/// <param name="status">Initial value of the <see cref="AsyncResult.Status"/> property.</param>
 		/// <param name="asyncCallback">User-defined completion callback.</param>
 		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
-		public AsyncResultController(AsyncOperationStatus status, AsyncCallback asyncCallback, object asyncState)
+		public AsyncCompletionSource(AsyncOperationStatus status, AsyncCallback asyncCallback, object asyncState)
 			: base(status, asyncCallback, asyncState)
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResultController"/> class that is faulted.
+		/// Initializes a new instance of the <see cref="AsyncCompletionSource{T}"/> class that is faulted.
 		/// </summary>
 		/// <param name="e">The exception to complete the operation with.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
-		public AsyncResultController(Exception e)
+		public AsyncCompletionSource(Exception e)
 			: base(e)
 		{
 		}
@@ -69,18 +70,19 @@ namespace UnityFx.Async
 		/// <seealso cref="SetRunning"/>
 		public void SetScheduled()
 		{
-			if (!TrySetScheduled())
+			if (!base.TrySetScheduled())
 			{
 				throw new InvalidOperationException();
 			}
 		}
 
 		/// <summary>
-		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Scheduled"/> state.
+		/// Attempts to transition the underlying operation into the <see cref="AsyncOperationStatus.Scheduled"/> state.
 		/// </summary>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the underlying operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="SetScheduled"/>
+		/// <seealso cref="TrySetRunning"/>
 		public new bool TrySetScheduled() => base.TrySetScheduled();
 
 		/// <summary>
@@ -92,18 +94,19 @@ namespace UnityFx.Async
 		/// <seealso cref="SetScheduled"/>
 		public void SetRunning()
 		{
-			if (!TrySetRunning())
+			if (!base.TrySetRunning())
 			{
 				throw new InvalidOperationException();
 			}
 		}
 
 		/// <summary>
-		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Running"/> state.
+		/// Attempts to transition the underlying operation into the <see cref="AsyncOperationStatus.Running"/> state.
 		/// </summary>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the underlying operation is disposed.</exception>
 		/// <seealso cref="SetRunning"/>
+		/// <seealso cref="TrySetScheduled"/>
 		public new bool TrySetRunning() => base.TrySetRunning();
 
 		/// <summary>
@@ -112,6 +115,8 @@ namespace UnityFx.Async
 		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="TrySetCanceled(bool)"/>
+		/// <seealso cref="TrySetCanceled()"/>
 		public void SetCanceled(bool completedSynchronously)
 		{
 			if (!base.TrySetCanceled(completedSynchronously))
@@ -126,6 +131,8 @@ namespace UnityFx.Async
 		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="SetCanceled(bool)"/>
+		/// <seealso cref="TrySetCanceled()"/>
 		public new bool TrySetCanceled(bool completedSynchronously) => base.TrySetCanceled(completedSynchronously);
 
 		/// <summary>
@@ -135,6 +142,8 @@ namespace UnityFx.Async
 		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="TrySetException(Exception, bool)"/>
+		/// <seealso cref="TrySetException(Exception)"/>
 		public void SetException(Exception exception, bool completedSynchronously)
 		{
 			if (!base.TrySetException(exception, completedSynchronously))
@@ -150,6 +159,8 @@ namespace UnityFx.Async
 		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="SetException(Exception, bool)"/>
+		/// <seealso cref="TrySetException(Exception)"/>
 		public new bool TrySetException(Exception exception, bool completedSynchronously) => base.TrySetException(exception, completedSynchronously);
 
 		/// <summary>
@@ -159,6 +170,8 @@ namespace UnityFx.Async
 		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="TrySetExceptions(IEnumerable{Exception}, bool)"/>
+		/// <seealso cref="TrySetExceptions(IEnumerable{Exception})"/>
 		public void SetExceptions(IEnumerable<Exception> exceptions, bool completedSynchronously)
 		{
 			if (!base.TrySetExceptions(exceptions, completedSynchronously))
@@ -174,17 +187,22 @@ namespace UnityFx.Async
 		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="SetExceptions(IEnumerable{Exception}, bool)"/>
+		/// <seealso cref="TrySetExceptions(IEnumerable{Exception})"/>
 		public new bool TrySetExceptions(IEnumerable<Exception> exceptions, bool completedSynchronously) => base.TrySetExceptions(exceptions, completedSynchronously);
 
 		/// <summary>
 		/// Transitions the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
+		/// <param name="result">The operation result.</param>
 		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		public void SetCompleted(bool completedSynchronously)
+		/// <seealso cref="TrySetResult(T, bool)"/>
+		/// <seealso cref="TrySetResult(T)"/>
+		public void SetResult(T result, bool completedSynchronously)
 		{
-			if (!base.TrySetCompleted(completedSynchronously))
+			if (!base.TrySetResult(result, completedSynchronously))
 			{
 				throw new InvalidOperationException();
 			}
@@ -193,29 +211,40 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
+		/// <param name="result">The operation result.</param>
 		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		public new bool TrySetCompleted(bool completedSynchronously) => base.TrySetCompleted(completedSynchronously);
+		/// <seealso cref="SetResult(T, bool)"/>
+		/// <seealso cref="TrySetResult(T)"/>
+		public new bool TrySetResult(T result, bool completedSynchronously) => base.TrySetResult(result, completedSynchronously);
 
 		#endregion
 
 		#region IAsyncCompletionSource
 
 		/// <inheritdoc/>
-		public IAsyncOperation Operation => this;
+		public IAsyncOperation<T> Operation => this;
 
 		/// <inheritdoc/>
+		/// <seealso cref="TrySetCanceled(bool)"/>
+		/// <seealso cref="SetCanceled(bool)"/>
 		public bool TrySetCanceled() => base.TrySetCanceled(false);
 
 		/// <inheritdoc/>
-		public bool TrySetCompleted() => base.TrySetCompleted(false);
-
-		/// <inheritdoc/>
+		/// <seealso cref="TrySetException(Exception, bool)"/>
+		/// <seealso cref="SetException(Exception, bool)"/>
 		public bool TrySetException(Exception exception) => base.TrySetException(exception, false);
 
 		/// <inheritdoc/>
+		/// <seealso cref="TrySetExceptions(IEnumerable{Exception}, bool)"/>
+		/// <seealso cref="SetExceptions(IEnumerable{Exception}, bool)"/>
 		public bool TrySetExceptions(IEnumerable<Exception> exceptions) => base.TrySetExceptions(exceptions, false);
+
+		/// <inheritdoc/>
+		/// <seealso cref="TrySetResult(T, bool)"/>
+		/// <seealso cref="SetResult(T, bool)"/>
+		public bool TrySetResult(T result) => base.TrySetResult(result, false);
 
 		#endregion
 	}
