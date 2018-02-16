@@ -23,6 +23,9 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetException(Exception)"/>
+		/// <seealso cref="TrySetExceptions(IEnumerable{Exception})"/>
+		/// <seealso cref="TrySetCompleted"/>
 		bool TrySetCanceled();
 
 		/// <summary>
@@ -32,6 +35,9 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetExceptions(IEnumerable{Exception})"/>
+		/// <seealso cref="TrySetCanceled"/>
+		/// <seealso cref="TrySetCompleted"/>
 		bool TrySetException(Exception exception);
 
 		/// <summary>
@@ -41,6 +47,9 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetException(Exception)"/>
+		/// <seealso cref="TrySetCanceled"/>
+		/// <seealso cref="TrySetCompleted"/>
 		bool TrySetExceptions(IEnumerable<Exception> exceptions);
 
 		/// <summary>
@@ -48,6 +57,9 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetCanceled"/>
+		/// <seealso cref="TrySetException(Exception)"/>
+		/// <seealso cref="TrySetExceptions(IEnumerable{Exception})"/>
 		bool TrySetCompleted();
 	}
 }

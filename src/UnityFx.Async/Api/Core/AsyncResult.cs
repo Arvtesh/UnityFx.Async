@@ -112,6 +112,22 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
+		/// </summary>
+		/// <exception cref="InvalidOperationException">Thrown if the transition has failed.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="TrySetRunning"/>
+		public void Start()
+		{
+			ThrowIfDisposed();
+
+			if (!TrySetStatus(StatusRunning))
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
 		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Scheduled"/> state.
 		/// </summary>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
