@@ -16,42 +16,6 @@ namespace UnityFx.Async
 		#region IAsyncCompletionSource
 
 		/// <inheritdoc/>
-		public void SetCanceled()
-		{
-			if (!TrySetCanceled())
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <inheritdoc/>
-		public void SetCompleted()
-		{
-			if (!TrySetCompleted())
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <inheritdoc/>
-		public void SetException(Exception exception)
-		{
-			if (!TrySetException(exception))
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <inheritdoc/>
-		public void SetException(IEnumerable<Exception> exceptions)
-		{
-			if (!TrySetException(exceptions))
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <inheritdoc/>
 		public abstract bool TrySetCanceled();
 
 		/// <inheritdoc/>
@@ -61,7 +25,7 @@ namespace UnityFx.Async
 		public abstract bool TrySetException(Exception exception);
 
 		/// <inheritdoc/>
-		public abstract bool TrySetException(IEnumerable<Exception> exceptions);
+		public abstract bool TrySetExceptions(IEnumerable<Exception> exceptions);
 
 		#endregion
 	}

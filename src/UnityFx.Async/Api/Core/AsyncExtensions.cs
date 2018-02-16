@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 #if !NET35
 using System.Runtime.ExceptionServices;
@@ -418,6 +419,155 @@ namespace UnityFx.Async
 		}
 
 #endif
+
+		#endregion
+
+		#region IAsyncCompletionSource
+
+		/// <summary>
+		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Canceled"/> state.
+		/// </summary>
+		/// <param name="completionSource">The completion source instance.</param>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetException(IAsyncCompletionSource, Exception)"/>
+		/// <seealso cref="SetExceptions(IAsyncCompletionSource, IEnumerable{Exception})"/>
+		/// <seealso cref="SetCompleted(IAsyncCompletionSource)"/>
+		public static void SetCanceled(this IAsyncCompletionSource completionSource)
+		{
+			if (!completionSource.TrySetCanceled())
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="completionSource">The completion source instance.</param>
+		/// <param name="exception">An exception that caused the operation to end prematurely.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetExceptions(IAsyncCompletionSource, IEnumerable{Exception})"/>
+		/// <seealso cref="SetCanceled(IAsyncCompletionSource)"/>
+		/// <seealso cref="SetCompleted(IAsyncCompletionSource)"/>
+		public static void SetException(this IAsyncCompletionSource completionSource, Exception exception)
+		{
+			if (!completionSource.TrySetException(exception))
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="completionSource">The completion source instance.</param>
+		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetException(IAsyncCompletionSource, Exception)"/>
+		/// <seealso cref="SetCanceled(IAsyncCompletionSource)"/>
+		/// <seealso cref="SetCompleted(IAsyncCompletionSource)"/>
+		public static void SetExceptions(this IAsyncCompletionSource completionSource, IEnumerable<Exception> exceptions)
+		{
+			if (!completionSource.TrySetExceptions(exceptions))
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
+		/// </summary>
+		/// <param name="completionSource">The completion source instance.</param>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetCanceled(IAsyncCompletionSource)"/>
+		/// <seealso cref="SetException(IAsyncCompletionSource, Exception)"/>
+		/// <seealso cref="SetExceptions(IAsyncCompletionSource, IEnumerable{Exception})"/>
+		public static void SetCompleted(this IAsyncCompletionSource completionSource)
+		{
+			if (!completionSource.TrySetCompleted())
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Transitions the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.Canceled"/> state.
+		/// </summary>
+		/// <param name="completionSource">The completion source instance.</param>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetException{T}(IAsyncCompletionSource{T}, Exception)"/>
+		/// <seealso cref="SetExceptions{T}(IAsyncCompletionSource{T}, IEnumerable{Exception})"/>
+		/// <seealso cref="SetResult{T}(IAsyncCompletionSource{T}, T)"/>
+		public static void SetCanceled<T>(this IAsyncCompletionSource<T> completionSource)
+		{
+			if (!completionSource.TrySetCanceled())
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Transitions the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="completionSource">The completion source instance.</param>
+		/// <param name="exception">An exception that caused the operation to end prematurely.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetException{T}(IAsyncCompletionSource{T}, Exception)"/>
+		/// <seealso cref="SetCanceled{T}(IAsyncCompletionSource{T})"/>
+		/// <seealso cref="SetResult{T}(IAsyncCompletionSource{T}, T)"/>
+		public static void SetException<T>(this IAsyncCompletionSource<T> completionSource, Exception exception)
+		{
+			if (!completionSource.TrySetException(exception))
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Transitions the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="completionSource">The completion source instance.</param>
+		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetException{T}(IAsyncCompletionSource{T}, Exception)"/>
+		/// <seealso cref="SetCanceled{T}(IAsyncCompletionSource{T})"/>
+		/// <seealso cref="SetResult{T}(IAsyncCompletionSource{T}, T)"/>
+		public static void SetExceptions<T>(this IAsyncCompletionSource<T> completionSource, IEnumerable<Exception> exceptions)
+		{
+			if (!completionSource.TrySetExceptions(exceptions))
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Transitions the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
+		/// </summary>
+		/// <param name="completionSource">The completion source instance.</param>
+		/// <param name="result">The operation result.</param>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetCanceled{T}(IAsyncCompletionSource{T})"/>
+		/// <seealso cref="SetException{T}(IAsyncCompletionSource{T}, Exception)"/>
+		/// <seealso cref="SetExceptions{T}(IAsyncCompletionSource{T}, IEnumerable{Exception})"/>
+		public static void SetResult<T>(this IAsyncCompletionSource<T> completionSource, T result)
+		{
+			if (!completionSource.TrySetResult(result))
+			{
+				throw new InvalidOperationException();
+			}
+		}
 
 		#endregion
 	}
