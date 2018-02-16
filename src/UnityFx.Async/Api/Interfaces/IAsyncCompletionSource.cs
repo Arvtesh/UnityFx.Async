@@ -7,11 +7,17 @@ using System.Collections.Generic;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Controls completion of a <see cref="IAsyncOperation"/> instance.
+	/// Represents the producer side of a <see cref="IAsyncOperation"/> unbound to a delegate, providing access to the consumer side through the <see cref="Operation"/> property.
 	/// </summary>
 	/// <seealso cref="IAsyncOperation"/>
 	public interface IAsyncCompletionSource
 	{
+		/// <summary>
+		/// Gets the operation being controller by the source.
+		/// </summary>
+		/// <value>The underlying operation instance.</value>
+		IAsyncOperation Operation { get; }
+
 		/// <summary>
 		/// Attempts to transition the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Canceled"/> state.
 		/// </summary>

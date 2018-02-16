@@ -203,6 +203,9 @@ namespace UnityFx.Async
 		#region IAsyncCompletionSource
 
 		/// <inheritdoc/>
+		public IAsyncOperation Operation => this;
+
+		/// <inheritdoc/>
 		public bool TrySetCanceled() => base.TrySetCanceled(false);
 
 		/// <inheritdoc/>
