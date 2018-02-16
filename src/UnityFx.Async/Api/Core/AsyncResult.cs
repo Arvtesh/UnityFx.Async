@@ -69,7 +69,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class with the specified <see cref="Status"/>.
 		/// </summary>
-		/// <param name="status">Value of the <see cref="Status"/> property.</param>
+		/// <param name="status">Initial value of the <see cref="Status"/> property.</param>
 		public AsyncResult(AsyncOperationStatus status)
 		{
 			var flags = (int)status;
@@ -85,6 +85,19 @@ namespace UnityFx.Async
 			}
 
 			_flags = flags;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class with the specified <see cref="Status"/>.
+		/// </summary>
+		/// <param name="status">Initial value of the <see cref="Status"/> property.</param>
+		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
+		public AsyncResult(AsyncOperationStatus status, AsyncCallback asyncCallback, object asyncState)
+			: this(status)
+		{
+			_asyncState = asyncState;
+			_continuation = asyncCallback;
 		}
 
 		/// <summary>

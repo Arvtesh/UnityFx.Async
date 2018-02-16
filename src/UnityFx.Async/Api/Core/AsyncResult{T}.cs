@@ -55,6 +55,17 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
+		/// <param name="status">Status value of the operation.</param>
+		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
+		public AsyncResult(AsyncOperationStatus status, AsyncCallback asyncCallback, object asyncState)
+			: base(status, asyncCallback, asyncState)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// </summary>
 		/// <param name="e">The exception to complete the operation with.</param>
 		internal AsyncResult(Exception e)
 			: base(e)
