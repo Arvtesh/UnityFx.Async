@@ -119,9 +119,7 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetRunning"/>
 		public void Start()
 		{
-			ThrowIfDisposed();
-
-			if (!TrySetStatus(StatusRunning))
+			if (!TrySetRunning())
 			{
 				throw new InvalidOperationException();
 			}
@@ -155,6 +153,7 @@ namespace UnityFx.Async
 
 			if (TrySetStatus(StatusRunning))
 			{
+				OnStarted();
 				return true;
 			}
 
@@ -318,6 +317,14 @@ namespace UnityFx.Async
 		/// <param name="status">The new status value.</param>
 		/// <seealso cref="Status"/>
 		protected virtual void OnStatusChanged(AsyncOperationStatus status)
+		{
+		}
+
+		/// <summary>
+		/// Called when the operation is started (status is set to <see cref="AsyncOperationStatus.Running"/>).
+		/// </summary>
+		/// <seealso cref="Status"/>
+		protected virtual void OnStarted()
 		{
 		}
 
