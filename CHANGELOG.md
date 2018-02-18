@@ -3,6 +3,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
+-----------------------
+## [0.8.0] - unreleased
+
+### Added
+- Added `IAsyncCompletionSource.Operation` property to match `TaskCompletionSource` interface.
+- Added new constructor to `AsyncResult`.
+- Added `AsyncResult.Start` method to match `Task` interface.
+- Added `AsyncResult.OnStarted` virtual method.
+
+### Changed
+- Modified `AsyncResultAwaiter` implementation to throw if the operation was canceled or faulted (to match `TaskAwaiter` behaviour).
+- Made `AsyncCompletionSource` a sealed analog of `TaskCompletionSource`.
+- Removed public completion methods from `AsyncResult` (moved the to `AsyncCompletionSource`).
+- Made `SpinUntilCompleted` an extension method (was `AsyncResult` instance method).
+
+### Fixed
+- `AsyncResultQueue` now does not remove uncompleted operations from the queue.
+
+-----------------------
 ## [0.7.1] - 2018-02-14
 
 ### Added
@@ -13,6 +32,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ### Changed
 - `AsyncResult` implemenatino is changed to prevent returning null operation result when the operation is completed in some cases.
 
+-----------------------
 ## [0.7.0] - 2018-02-10
 
 ### Added
@@ -26,6 +46,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ### Changed
 - Renamed `AsyncOperationStatus` values to match [TastStatus](https://msdn.microsoft.com/ru-ru/library/system.threading.tasks.taskstatus(v=vs.110).aspx).
 
+-----------------------
 ## [0.3.1] - 2017-08-01
 
 ### Added
