@@ -296,6 +296,61 @@ namespace UnityFx.Async
 			AssertCompleted(op);
 		}
 
+		[Fact]
+		public async Task Await_ShouldThrowIfFaulted()
+		{
+			// Arrange
+			var op = new AsyncCompletionSource();
+			var expectedException = new Exception();
+			var actualException = default(Exception);
+			var task = Task.Run(() =>
+			{
+				Thread.Sleep(10);
+				op.SetException(expectedException);
+			});
+
+			// Act
+			try
+			{
+				await op;
+			}
+			catch (Exception e)
+			{
+				actualException = e;
+			}
+
+			// Assert
+			Assert.Equal(expectedException, actualException);
+			AssertFaulted(op);
+		}
+
+		[Fact]
+		public async Task Await_ShouldThrowIfCanceled()
+		{
+			// Arrange
+			var op = new AsyncCompletionSource();
+			var actualException = default(Exception);
+			var task = Task.Run(() =>
+			{
+				Thread.Sleep(10);
+				op.SetCanceled();
+			});
+
+			// Act
+			try
+			{
+				await op;
+			}
+			catch (Exception e)
+			{
+				actualException = e;
+			}
+
+			// Assert
+			Assert.IsType<OperationCanceledException>(actualException);
+			AssertCanceled(op);
+		}
+
 		#endregion
 
 		#region IAsyncCompletionSource

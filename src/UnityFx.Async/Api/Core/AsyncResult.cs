@@ -5,6 +5,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+#if !NET35
+using System.Runtime.ExceptionServices;
+#endif
 using System.Threading;
 
 namespace UnityFx.Async
@@ -335,7 +338,7 @@ namespace UnityFx.Async
 		protected virtual void OnCompleted()
 		{
 			_waitHandle?.Set();
-			InvokeContinuation();
+			InvokeContinuations();
 		}
 
 		/// <summary>
@@ -955,7 +958,7 @@ namespace UnityFx.Async
 			return false;
 		}
 
-		private void InvokeContinuation()
+		private void InvokeContinuations()
 		{
 			var continuation = Interlocked.Exchange(ref _continuation, _continuationCompletionSentinel);
 

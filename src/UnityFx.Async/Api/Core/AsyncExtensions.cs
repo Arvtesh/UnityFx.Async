@@ -64,11 +64,22 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Throws exception if the operation has failed.
 		/// </summary>
-		public static void ThrowIfFaulted(this IAsyncOperation op)
+		internal static void ThrowIfFaulted(IAsyncOperation op)
 		{
-			if (op.IsFaulted)
+			if (op.Status == AsyncOperationStatus.Faulted)
 			{
 				var e = op.Exception;
+
+				if (e is AggregateException ae)
+				{
+					var aes = ae.InnerExceptions;
+
+					// Always throw the first exception from the list.
+					if (aes.Count > 0)
+					{
+						e = aes[0];
+					}
+				}
 
 				if (e != null)
 				{
@@ -78,14 +89,53 @@ namespace UnityFx.Async
 					throw e;
 #endif
 				}
-				else if (op.IsCanceled)
+				else
 				{
-					throw new OperationCanceledException(op.ToString());
+					// Should never get here. If faulted state excpetion should not be null.
+					throw new Exception(op.ToString());
+				}
+			}
+		}
+
+		/// <summary>
+		/// Throws exception if the operation has failed or canceled.
+		/// </summary>
+		internal static void ThrowIfFaultedOrCanceled(IAsyncOperation op)
+		{
+			var status = op.Status;
+
+			if (status == AsyncOperationStatus.Faulted)
+			{
+				var e = op.Exception;
+
+				if (e is AggregateException ae)
+				{
+					var aes = ae.InnerExceptions;
+
+					// Always throw the first exception from the list.
+					if (aes.Count > 0)
+					{
+						e = aes[0];
+					}
+				}
+
+				if (e != null)
+				{
+#if !NET35
+					ExceptionDispatchInfo.Capture(e).Throw();
+#else
+					throw e;
+#endif
 				}
 				else
 				{
+					// Should never get here. If faulted state excpetion should not be null.
 					throw new Exception(op.ToString());
 				}
+			}
+			else if (status == AsyncOperationStatus.Canceled)
+			{
+				throw new OperationCanceledException(op.ToString());
 			}
 		}
 

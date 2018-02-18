@@ -44,7 +44,11 @@ namespace UnityFx.Async
 		/// Returns the source result value.
 		/// </summary>
 		/// <returns>Returns the underlying operation result.</returns>
-		public T GetResult() => _op.Result;
+		public T GetResult()
+		{
+			AsyncExtensions.ThrowIfFaultedOrCanceled(_op);
+			return _op.Result;
+		}
 
 		#endregion
 
