@@ -45,7 +45,10 @@ namespace UnityFx.Async
 		/// </summary>
 		public void GetResult()
 		{
-			AsyncExtensions.ThrowIfFaultedOrCanceled(_op);
+			if (!_op.IsCompletedSuccessfully)
+			{
+				AsyncExtensions.ThrowIfFaultedOrCanceled(_op);
+			}
 		}
 
 		#endregion

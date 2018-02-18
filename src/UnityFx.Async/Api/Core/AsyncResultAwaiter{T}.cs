@@ -46,7 +46,11 @@ namespace UnityFx.Async
 		/// <returns>Returns the underlying operation result.</returns>
 		public T GetResult()
 		{
-			AsyncExtensions.ThrowIfFaultedOrCanceled(_op);
+			if (!_op.IsCompletedSuccessfully)
+			{
+				AsyncExtensions.ThrowIfFaultedOrCanceled(_op);
+			}
+
 			return _op.Result;
 		}
 

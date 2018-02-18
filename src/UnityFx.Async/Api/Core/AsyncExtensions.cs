@@ -62,6 +62,30 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Spins until the operation has completed.
+		/// </summary>
+		public static void SpinUntilCompleted(this IAsyncOperation op)
+		{
+#if NET35
+
+			while (!op.IsCompleted)
+			{
+				Thread.SpinWait(1);
+			}
+
+#else
+
+			var sw = new SpinWait();
+
+			while (!op.IsCompleted)
+			{
+				sw.SpinOnce();
+			}
+
+#endif
+		}
+
+		/// <summary>
 		/// Throws exception if the operation has failed.
 		/// </summary>
 		internal static void ThrowIfFaulted(IAsyncOperation op)

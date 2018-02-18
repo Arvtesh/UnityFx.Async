@@ -181,7 +181,7 @@ namespace UnityFx.Async
 			}
 			else if (!IsCompleted)
 			{
-				SpinUntilCompleted();
+				AsyncExtensions.SpinUntilCompleted(this);
 			}
 
 			return false;
@@ -214,7 +214,7 @@ namespace UnityFx.Async
 			}
 			else if (!IsCompleted)
 			{
-				SpinUntilCompleted();
+				AsyncExtensions.SpinUntilCompleted(this);
 			}
 
 			return false;
@@ -245,7 +245,7 @@ namespace UnityFx.Async
 			}
 			else if (!IsCompleted)
 			{
-				SpinUntilCompleted();
+				AsyncExtensions.SpinUntilCompleted(this);
 			}
 
 			return false;
@@ -269,40 +269,16 @@ namespace UnityFx.Async
 			}
 			else if (!IsCompleted)
 			{
-				SpinUntilCompleted();
+				AsyncExtensions.SpinUntilCompleted(this);
 			}
 
 			return false;
 		}
 
 		/// <summary>
-		/// Spins until the operation has completed.
-		/// </summary>
-		protected void SpinUntilCompleted()
-		{
-#if NET35
-
-			while (!IsCompleted)
-			{
-				Thread.SpinWait(1);
-			}
-
-#else
-
-			var sw = new SpinWait();
-
-			while (!IsCompleted)
-			{
-				sw.SpinOnce();
-			}
-
-#endif
-		}
-
-		/// <summary>
 		/// Throws <see cref="ObjectDisposedException"/> if this operation has been disposed.
 		/// </summary>
-		protected void ThrowIfDisposed()
+		protected internal void ThrowIfDisposed()
 		{
 			if ((_flags & _flagDisposed) != 0)
 			{
