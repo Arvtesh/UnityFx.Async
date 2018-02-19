@@ -470,7 +470,7 @@ namespace UnityFx.Async
 				return new AsyncResult();
 			}
 
-			return new DelayAsyncResult(millisecondsDelay);
+			return new DelayResult(millisecondsDelay);
 		}
 
 		/// <summary>
