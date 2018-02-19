@@ -226,6 +226,7 @@ namespace UnityFx.Async
 		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
 		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="exceptions"/> is empty.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		protected internal bool TrySetExceptions(IEnumerable<Exception> exceptions, bool completedSynchronously)
@@ -239,7 +240,22 @@ namespace UnityFx.Async
 
 			if (TryReserveCompletion())
 			{
-				_exception = new AggregateException(exceptions);
+				var list = new List<Exception>(exceptions);
+
+				if (list.Count == 0)
+				{
+					throw new ArgumentException("At least one exception is needed.", nameof(exceptions));
+				}
+
+				if (list.Count == 1)
+				{
+					_exception = list[0];
+				}
+				else
+				{
+					_exception = new AggregateException(list);
+				}
+
 				SetCompleted(StatusFaulted, completedSynchronously);
 				return true;
 			}
