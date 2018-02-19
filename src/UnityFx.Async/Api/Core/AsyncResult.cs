@@ -555,6 +555,30 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Creates an operation that will complete when any of the specified objects in an enumerable collection have completed.
+		/// </summary>
+		/// <param name="ops">The operations to wait on for completion.</param>
+		/// <returns>An operation that represents the completion of any of the supplied operations.</returns>
+		/// <exception cref="ArgumentNullException">Throws if <paramref name="ops"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="WhenAny{T}(T[])"/>
+		public static IAsyncOperation<T> WhenAny<T>(IEnumerable<T> ops) where T : IAsyncOperation
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Creates an operation that will complete when any of the specified objects in an array have completed.
+		/// </summary>
+		/// <param name="ops">The operations to wait on for completion.</param>
+		/// <returns>An operation that represents the completion of any of the supplied operations.</returns>
+		/// <exception cref="ArgumentNullException">Throws if <paramref name="ops"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="WhenAny{T}(IEnumerable{T})"/>
+		public static IAsyncOperation<T> WhenAny<T>(params T[] ops) where T : IAsyncOperation
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
 		/// Initializes the <paramref name="waitHandle"/> passed with a new <see cref="EventWaitHandle"/> instance if needed.
 		/// </summary>
 		/// <param name="waitHandle">The wait handle reference to initialize.</param>
@@ -1045,11 +1069,6 @@ namespace UnityFx.Async
 			{
 				AsyncContinuation.Run(this, continuation);
 			}
-		}
-
-		private static AsyncResult WhenAllInternal(IAsyncOperation[] ops)
-		{
-			throw new NotImplementedException();
 		}
 
 		#endregion
