@@ -387,7 +387,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Creates a <see cref="IAsyncOperation"/> that is canceled.
 		/// </summary>
-		/// <returns>The canceled operation.</returns>
+		/// <returns>A canceled operation.</returns>
 		/// <seealso cref="FromCanceled{T}"/>
 		/// <seealso cref="FromException(Exception)"/>
 		/// <seealso cref="FromResult{T}(T)"/>
@@ -399,7 +399,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Creates a <see cref="IAsyncOperation{T}"/> that is canceled.
 		/// </summary>
-		/// <returns>The canceled operation.</returns>
+		/// <returns>A canceled operation.</returns>
 		/// <seealso cref="FromCanceled"/>
 		/// <seealso cref="FromException{T}(Exception)"/>
 		/// <seealso cref="FromResult{T}(T)"/>
@@ -412,7 +412,7 @@ namespace UnityFx.Async
 		/// Creates a <see cref="IAsyncOperation"/> that has completed with a specified exception.
 		/// </summary>
 		/// <param name="e">The exception to complete the operation with.</param>
-		/// <returns>The faulted operation.</returns>
+		/// <returns>A faulted operation.</returns>
 		/// <seealso cref="FromException{T}(Exception)"/>
 		/// <seealso cref="FromCanceled"/>
 		/// <seealso cref="FromResult{T}(T)"/>
@@ -425,7 +425,7 @@ namespace UnityFx.Async
 		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with a specified exception.
 		/// </summary>
 		/// <param name="e">The exception to complete the operation with.</param>
-		/// <returns>The faulted operation.</returns>
+		/// <returns>A faulted operation.</returns>
 		/// <seealso cref="FromException(Exception)"/>
 		/// <seealso cref="FromCanceled{T}"/>
 		/// <seealso cref="FromResult{T}(T)"/>
@@ -438,7 +438,7 @@ namespace UnityFx.Async
 		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with a specified result.
 		/// </summary>
 		/// <param name="result">The result value with which to complete the operation.</param>
-		/// <returns>The completed operation.</returns>
+		/// <returns>A completed operation with the specified result value.</returns>
 		/// <seealso cref="FromCanceled{T}"/>
 		/// <seealso cref="FromException{T}(Exception)"/>
 		public static IAsyncOperation<T> FromResult<T>(T result)
@@ -490,6 +490,68 @@ namespace UnityFx.Async
 			}
 
 			return Delay((int)millisecondsDelay);
+		}
+
+		/// <summary>
+		/// Creates an operation that will complete when all of the specified objects in an enumerable collection have completed.
+		/// </summary>
+		/// <param name="ops">The operations to wait on for completion.</param>
+		/// <returns>An operation that represents the completion of all of the supplied operations.</returns>
+		/// <exception cref="ArgumentNullException">Throws if <paramref name="ops"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="WhenAll(IAsyncOperation[])"/>
+		public static IAsyncOperation WhenAll(IEnumerable<IAsyncOperation> ops)
+		{
+			if (ops == null)
+			{
+				throw new ArgumentNullException(nameof(ops));
+			}
+
+			if (ops is IAsyncOperation[] opArray)
+			{
+				if (opArray.Length == 0)
+				{
+					return CompletedOperation;
+				}
+
+				return new WhenAllResult(opArray);
+			}
+
+			if (ops is ICollection<IAsyncOperation> opCollection)
+			{
+				if (opCollection.Count == 0)
+				{
+					return CompletedOperation;
+				}
+
+				var array = new IAsyncOperation[opCollection.Count];
+				opCollection.CopyTo(array, 0);
+				return new WhenAllResult(array);
+			}
+
+			var opList = new List<IAsyncOperation>(ops);
+			return new WhenAllResult(opList.ToArray());
+		}
+
+		/// <summary>
+		/// Creates an operation that will complete when all of the specified objects in an array have completed.
+		/// </summary>
+		/// <param name="ops">The operations to wait on for completion.</param>
+		/// <returns>An operation that represents the completion of all of the supplied operations.</returns>
+		/// <exception cref="ArgumentNullException">Throws if <paramref name="ops"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="WhenAll(IEnumerable{IAsyncOperation})"/>
+		public static IAsyncOperation WhenAll(params IAsyncOperation[] ops)
+		{
+			if (ops == null)
+			{
+				throw new ArgumentNullException(nameof(ops));
+			}
+
+			if (ops.Length == 0)
+			{
+				return CompletedOperation;
+			}
+
+			return new WhenAllResult(ops);
 		}
 
 		/// <summary>
@@ -983,6 +1045,11 @@ namespace UnityFx.Async
 			{
 				AsyncContinuation.Run(this, continuation);
 			}
+		}
+
+		private static AsyncResult WhenAllInternal(IAsyncOperation[] ops)
+		{
+			throw new NotImplementedException();
 		}
 
 		#endregion
