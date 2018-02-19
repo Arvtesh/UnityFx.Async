@@ -66,7 +66,7 @@ namespace UnityFx.Async
 		/// Gets an <see cref="System.Exception"/> that caused the operation to end prematurely. If the operation completed successfully
 		/// or has not yet thrown any exceptions, this will return <see langword="null"/>.
 		/// </summary>
-		/// <value>An exception that caused the operation to end prematurely.</value>
+		/// <value>An exception that caused the operation to end prematurely. If there are more than one exception returns an instance of <see cref="AggregateException"/>.</value>
 		/// <seealso cref="IsFaulted"/>
 		/// <seealso cref="Status"/>
 		Exception Exception { get; }

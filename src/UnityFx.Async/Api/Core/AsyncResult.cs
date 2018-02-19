@@ -563,7 +563,41 @@ namespace UnityFx.Async
 		/// <seealso cref="WhenAny{T}(T[])"/>
 		public static IAsyncOperation<T> WhenAny<T>(IEnumerable<T> ops) where T : IAsyncOperation
 		{
-			throw new NotImplementedException();
+			if (ops == null)
+			{
+				throw new ArgumentNullException(nameof(ops));
+			}
+
+			if (ops is T[] opArray)
+			{
+				if (opArray.Length == 0)
+				{
+					throw new ArgumentException("The list is empty", nameof(ops));
+				}
+
+				return new WhenAnyResult<T>(opArray);
+			}
+
+			if (ops is ICollection<T> opCollection)
+			{
+				if (opCollection.Count == 0)
+				{
+					throw new ArgumentException("The list is empty", nameof(ops));
+				}
+
+				var array = new T[opCollection.Count];
+				opCollection.CopyTo(array, 0);
+				return new WhenAnyResult<T>(array);
+			}
+
+			var opList = new List<T>(ops);
+
+			if (opList.Count == 0)
+			{
+				throw new ArgumentException("The list is empty", nameof(ops));
+			}
+
+			return new WhenAnyResult<T>(opList.ToArray());
 		}
 
 		/// <summary>
@@ -575,7 +609,17 @@ namespace UnityFx.Async
 		/// <seealso cref="WhenAny{T}(IEnumerable{T})"/>
 		public static IAsyncOperation<T> WhenAny<T>(params T[] ops) where T : IAsyncOperation
 		{
-			throw new NotImplementedException();
+			if (ops == null)
+			{
+				throw new ArgumentNullException(nameof(ops));
+			}
+
+			if (ops.Length == 0)
+			{
+				throw new ArgumentException("The list is empty", nameof(ops));
+			}
+
+			return new WhenAnyResult<T>(ops);
 		}
 
 		/// <summary>
