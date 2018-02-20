@@ -24,9 +24,10 @@ namespace UnityFx.Async
 		/// Raised when the operation has completed.
 		/// </summary>
 		/// <remarks>
-		/// The event handler is invoked on a thread that initiated the operation completion (not on a thread that registered it).
-		/// If the operation is already completed the event handler is not called.
+		/// The event handler is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
+		/// If the operation is already completed the event handler is called synchronously.
 		/// </remarks>
+		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered in <see langword="null"/>.</exception>
 		/// <seealso cref="TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)"/>
 		/// <seealso cref="RemoveCompletionCallback(AsyncOperationCallback)"/>
 		event EventHandler Completed;

@@ -5,15 +5,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-#if !NET35
-using System.Runtime.ExceptionServices;
-#endif
 using System.Threading;
 
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Implementation of <see cref="IAsyncOperation"/>.
+	/// A lightweight net35-compatible analog of Task for Unity3d.
 	/// </summary>
 	/// <seealso href="https://blogs.msdn.microsoft.com/nikos/2011/03/14/how-to-implement-the-iasyncresult-design-pattern/"/>
 	/// <seealso cref="IAsyncResult"/>
@@ -831,9 +828,14 @@ namespace UnityFx.Async
 		{
 			add
 			{
-				if (value != null)
+				if (value == null)
 				{
-					TryAddContinuation(value, null);
+					throw new ArgumentNullException(nameof(value));
+				}
+
+				if (!TryAddContinuation(value, SynchronizationContext.Current))
+				{
+					value(this, EventArgs.Empty);
 				}
 			}
 			remove

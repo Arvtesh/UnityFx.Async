@@ -43,11 +43,13 @@ namespace UnityFx.Async
 	}
 
 	/// <summary>
-	/// A disposable <see cref="IAsyncResult"/> with status information.
+	/// A disposable <see cref="IAsyncResult"/> with completion status information.
 	/// </summary>
 	/// <remarks>
-	/// The interface is designed to be as close to the TLP Task as possible. All interface methods are expected to be thread-safe.
-	/// The only exception to this rule is <see cref="IDisposable.Dispose"/>.
+	/// <para>The interface is designed to be as close to <see href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</see> as possible.
+	/// </para>
+	/// <para>All interface methods are expected to be thread-safe. The only exception to this rule is <see cref="IDisposable.Dispose"/>.
+	/// </para>
 	/// </remarks>
 	/// <seealso cref="IAsyncResult"/>
 	/// <seealso cref="IAsyncOperation{T}"/>
