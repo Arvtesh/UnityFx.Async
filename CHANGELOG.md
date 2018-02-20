@@ -11,12 +11,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added new constructor to `AsyncResult`.
 - Added `AsyncResult.Start` method to match `Task` interface.
 - Added `AsyncResult.OnStarted` virtual method.
+- Added `WhenAll`/`WhenAny` static helpers for `AsyncResult`.
 
 ### Changed
 - Modified `AsyncResultAwaiter` implementation to throw if the operation was canceled or faulted (to match `TaskAwaiter` behaviour).
-- Made `AsyncCompletionSource` a sealed analog of `TaskCompletionSource`.
-- Removed public completion methods from `AsyncResult` (moved the to `AsyncCompletionSource`).
+- Implemented `AsyncCompletionSource` as a sealed analog of `TaskCompletionSource`.
+- Removed public completion methods from `AsyncResult` (moved them to `AsyncCompletionSource`).
 - Made `SpinUntilCompleted` an extension method (was `AsyncResult` instance method).
+- Changed `IAsyncOperation.Exception` type to `AggregateException` to match `Task`.
 
 ### Fixed
 - `AsyncResultQueue` now does not remove uncompleted operations from the queue.
