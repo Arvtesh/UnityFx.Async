@@ -94,23 +94,13 @@ namespace UnityFx.Async
 			{
 				var e = op.Exception;
 
-				if (e is AggregateException ae)
-				{
-					var aes = ae.InnerExceptions;
-
-					// Always throw the first exception from the list.
-					if (aes.Count > 0)
-					{
-						e = aes[0];
-					}
-				}
-
 				if (e != null)
 				{
+					var inner = e.InnerException ?? e;
 #if !NET35
-					ExceptionDispatchInfo.Capture(e).Throw();
+					ExceptionDispatchInfo.Capture(inner).Throw();
 #else
-					throw e;
+					throw inner;
 #endif
 				}
 				else
@@ -132,23 +122,13 @@ namespace UnityFx.Async
 			{
 				var e = op.Exception;
 
-				if (e is AggregateException ae)
-				{
-					var aes = ae.InnerExceptions;
-
-					// Always throw the first exception from the list.
-					if (aes.Count > 0)
-					{
-						e = aes[0];
-					}
-				}
-
 				if (e != null)
 				{
+					var inner = e.InnerException ?? e;
 #if !NET35
-					ExceptionDispatchInfo.Capture(e).Throw();
+					ExceptionDispatchInfo.Capture(inner).Throw();
 #else
-					throw e;
+					throw inner;
 #endif
 				}
 				else

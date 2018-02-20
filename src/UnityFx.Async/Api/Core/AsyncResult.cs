@@ -36,7 +36,7 @@ namespace UnityFx.Async
 		private static object _continuationCompletionSentinel = new object();
 
 		private EventWaitHandle _waitHandle;
-		private Exception _exception;
+		private AggregateException _exception;
 
 		private volatile object _continuation;
 		private volatile int _flags;
@@ -79,7 +79,7 @@ namespace UnityFx.Async
 
 			if (flags == StatusFaulted)
 			{
-				_exception = new Exception();
+				_exception = new AggregateException();
 			}
 
 			if (flags > StatusRunning)
@@ -110,7 +110,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
 		public AsyncResult(Exception e)
 		{
-			_exception = e ?? throw new ArgumentNullException(nameof(e));
+			_exception = new AggregateException(e) ?? throw new ArgumentNullException(nameof(e));
 			_flags = StatusFaulted | _flagCompletedSynchronously;
 		}
 
@@ -188,28 +188,34 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> (or <see cref="AsyncOperationStatus.Canceled"/> if the exception is <see cref="OperationCanceledException"/>) state.
 		/// </summary>
-		/// <param name="e">An exception that caused the operation to end prematurely.</param>
+		/// <param name="exception">An exception that caused the operation to end prematurely.</param>
 		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		protected internal bool TrySetException(Exception e, bool completedSynchronously)
+		protected internal bool TrySetException(Exception exception, bool completedSynchronously)
 		{
 			ThrowIfDisposed();
 
-			if (e == null)
+			if (exception == null)
 			{
-				throw new ArgumentNullException(nameof(e));
+				throw new ArgumentNullException(nameof(exception));
 			}
 
 			if (TryReserveCompletion())
 			{
-				var status = e is OperationCanceledException ? StatusCanceled : StatusFaulted;
+				if (exception is OperationCanceledException)
+				{
+					SetCompleted(StatusCanceled, completedSynchronously);
+				}
+				else
+				{
+					_exception = new AggregateException(exception);
+					SetCompleted(StatusFaulted, completedSynchronously);
+				}
 
-				_exception = e;
-				SetCompleted(status, completedSynchronously);
 				return true;
 			}
 			else if (!IsCompleted)
@@ -238,24 +244,26 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(exceptions));
 			}
 
+			var list = new List<Exception>();
+
+			foreach (var e in exceptions)
+			{
+				if (e == null)
+				{
+					throw new ArgumentException("Null exceptions are not allowed.", nameof(exceptions));
+				}
+
+				list.Add(e);
+			}
+
+			if (list.Count == 0)
+			{
+				throw new ArgumentException("At least one exception is needed.", nameof(exceptions));
+			}
+
 			if (TryReserveCompletion())
 			{
-				var list = new List<Exception>(exceptions);
-
-				if (list.Count == 0)
-				{
-					throw new ArgumentException("At least one exception is needed.", nameof(exceptions));
-				}
-
-				if (list.Count == 1)
-				{
-					_exception = list[0];
-				}
-				else
-				{
-					_exception = new AggregateException(list);
-				}
-
+				_exception = new AggregateException(list);
 				SetCompleted(StatusFaulted, completedSynchronously);
 				return true;
 			}
@@ -803,7 +811,7 @@ namespace UnityFx.Async
 		public AsyncOperationStatus Status => (AsyncOperationStatus)(_flags & _statusMask);
 
 		/// <inheritdoc/>
-		public Exception Exception => _exception;
+		public AggregateException Exception => _exception;
 
 		/// <inheritdoc/>
 		public bool IsCompletedSuccessfully => (_flags & _statusMask) == StatusRanToCompletion;

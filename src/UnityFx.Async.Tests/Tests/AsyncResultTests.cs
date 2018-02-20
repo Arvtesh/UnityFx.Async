@@ -905,7 +905,7 @@ namespace UnityFx.Async
 		private void AssertFaulted(IAsyncOperation op, Exception e)
 		{
 			Assert.Equal(AsyncOperationStatus.Faulted, op.Status);
-			Assert.Equal(e, op.Exception);
+			Assert.Equal(e, op.Exception.InnerException);
 			Assert.True(op.IsCompleted);
 			Assert.True(op.IsFaulted);
 			Assert.False(op.IsCompletedSuccessfully);

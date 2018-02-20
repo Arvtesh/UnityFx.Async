@@ -63,13 +63,13 @@ namespace UnityFx.Async
 		AsyncOperationStatus Status { get; }
 
 		/// <summary>
-		/// Gets an <see cref="System.Exception"/> that caused the operation to end prematurely. If the operation completed successfully
+		/// Gets an <see cref="AggregateException"/> that caused the operation to end prematurely. If the operation completed successfully
 		/// or has not yet thrown any exceptions, this will return <see langword="null"/>.
 		/// </summary>
-		/// <value>An exception that caused the operation to end prematurely. If there are more than one exception returns an instance of <see cref="AggregateException"/>.</value>
+		/// <value>An exception that caused the operation to end prematurely.</value>
 		/// <seealso cref="IsFaulted"/>
 		/// <seealso cref="Status"/>
-		Exception Exception { get; }
+		AggregateException Exception { get; }
 
 		/// <summary>
 		/// Gets whether the operation completed with successfully (i.e. with <see cref="AsyncOperationStatus.RanToCompletion"/> status).

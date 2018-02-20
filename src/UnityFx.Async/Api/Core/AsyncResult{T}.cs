@@ -146,7 +146,7 @@ namespace UnityFx.Async
 				}
 				else if (IsFaulted)
 				{
-					observer.OnError(Exception);
+					observer.OnError(Exception.InnerException);
 				}
 				else
 				{
