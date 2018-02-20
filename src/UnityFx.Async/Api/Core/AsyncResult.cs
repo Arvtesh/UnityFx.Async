@@ -828,6 +828,8 @@ namespace UnityFx.Async
 		{
 			add
 			{
+				ThrowIfDisposed();
+
 				if (value == null)
 				{
 					throw new ArgumentNullException(nameof(value));
@@ -840,6 +842,8 @@ namespace UnityFx.Async
 			}
 			remove
 			{
+				ThrowIfDisposed();
+
 				if (value != null)
 				{
 					TryRemoveContinuation(value);

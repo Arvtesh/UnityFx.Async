@@ -28,6 +28,7 @@ namespace UnityFx.Async
 		/// If the operation is already completed the event handler is called synchronously.
 		/// </remarks>
 		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered in <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)"/>
 		/// <seealso cref="RemoveCompletionCallback(AsyncOperationCallback)"/>
 		event EventHandler Completed;

@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Removed public completion methods from `AsyncResult` (moved them to `AsyncCompletionSource`).
 - Made `SpinUntilCompleted` an extension method (was `AsyncResult` instance method).
 - Changed `IAsyncOperation.Exception` type to `AggregateException` to match `Task`.
+- Changed `IAsyncOperationEvents.Completed` event behaviour to always execute handler (event if it was registered after the comperation has copleted).
 
 ### Fixed
 - `AsyncResultQueue` now does not remove uncompleted operations from the queue.
