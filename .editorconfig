@@ -6,6 +6,8 @@ root = true
 # Use tabs for indentation.
 [*]
 indent_style = tab
+trim_trailing_whitespace = true
+insert_final_newline = true
 # (Please don't specify an indent_size here; that has too many unintended consequences.)
 
 # Code files
@@ -18,6 +20,11 @@ indent_size = 2
 
 # Xml config files
 [*.{props,targets,ruleset,config,nuspec,resx,vsixmanifest,vsct}]
+indent_size = 2
+
+# Yml config files
+[*.{yml,yaml}]
+indent_style = space
 indent_size = 2
 
 # JSON files
