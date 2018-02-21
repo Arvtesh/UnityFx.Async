@@ -17,7 +17,11 @@ namespace UnityFx.Async
 	/// </remarks>
 	/// <threadsafety static="true" instance="true"/>
 	/// <seealso cref="AsyncResult"/>
-	public class AsyncResultQueue<T> where T : AsyncResult
+#if NET35
+	public class AsyncResultQueue<T> : ICollection<T> where T : AsyncResult
+#else
+	public class AsyncResultQueue<T> : ICollection<T>, IReadOnlyCollection<T> where T : AsyncResult
+#endif
 	{
 		#region data
 
@@ -32,14 +36,6 @@ namespace UnityFx.Async
 		#endregion
 
 		#region interface
-
-		/// <summary>
-		/// Gets the number of operations contained in the queue.
-		/// </summary>
-		/// <value>Number of elements in the queue.</value>
-		/// <seealso cref="IsEmpty"/>
-		/// <seealso cref="MaxCount"/>
-		public int Count => _ops.Count;
 
 		/// <summary>
 		/// Gets whether the queue is empty.
@@ -162,61 +158,6 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Adds a new operation to the end of the queue. Operation is expected to have its status set to <see cref="AsyncOperationStatus.Created"/>.
-		/// </summary>
-		/// <param name="op">The operation to enqueue.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="op"/> is <see langword="null"/>.</exception>
-		/// <exception cref="InvalidOperationException">Thrown if the operation cannot be added.</exception>
-		/// <seealso cref="Remove(T)"/>
-		/// <seealso cref="Clear"/>
-		public void Add(T op)
-		{
-			if (!TryAdd(op))
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <summary>
-		/// Removes the specified operation from the queue.
-		/// </summary>
-		/// <param name="op">The operation to remove. Can be <see langword="null"/>.</param>
-		/// <returns>Returns <see langword="true"/> if the operation is removed; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="TryAdd(T)"/>
-		/// <seealso cref="Clear"/>
-		public bool Remove(T op)
-		{
-			lock (_ops)
-			{
-				if (_ops.Remove(op))
-				{
-					op.RemoveCompletionCallback(_completionCallback);
-					TryStart(null);
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// Removes all operations from the queue.
-		/// </summary>
-		/// <seealso cref="Remove(T)"/>
-		public void Clear()
-		{
-			lock (_ops)
-			{
-				foreach (var op in _ops)
-				{
-					op.RemoveCompletionCallback(_completionCallback);
-				}
-
-				_ops.Clear();
-			}
-		}
-
-		/// <summary>
 		/// Removes all operations from the queue and return them.
 		/// </summary>
 		/// <seealso cref="Remove(T)"/>
@@ -248,6 +189,121 @@ namespace UnityFx.Async
 			{
 				return _ops.ToArray();
 			}
+		}
+
+		#endregion
+
+		#region ICollection
+
+		/// <inheritdoc/>
+		public int Count => _ops.Count;
+
+		/// <inheritdoc/>
+		public bool IsReadOnly => false;
+
+		/// <inheritdoc/>
+		public void Add(T op)
+		{
+			if (!TryAdd(op))
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <inheritdoc/>
+		public bool Remove(T op)
+		{
+			lock (_ops)
+			{
+				if (_ops.Remove(op))
+				{
+					op.RemoveCompletionCallback(_completionCallback);
+					TryStart(null);
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/// <inheritdoc/>
+		public bool Contains(T item)
+		{
+			lock (_ops)
+			{
+				return _ops.Contains(item);
+			}
+		}
+
+		/// <inheritdoc/>
+		public void CopyTo(T[] array, int arrayIndex)
+		{
+			lock (_ops)
+			{
+				_ops.CopyTo(array, arrayIndex);
+			}
+		}
+
+		/// <inheritdoc/>
+		public void Clear()
+		{
+			lock (_ops)
+			{
+				foreach (var op in _ops)
+				{
+					op.RemoveCompletionCallback(_completionCallback);
+				}
+
+				_ops.Clear();
+			}
+		}
+
+		#endregion
+
+		#region IEnumerable
+
+		private class Enumerator : IEnumerator<T>
+		{
+			private List<T> _list;
+			private List<T>.Enumerator _enumerator;
+
+			public Enumerator(List<T> list)
+			{
+				Monitor.Enter(list);
+
+				_list = list;
+				_enumerator = list.GetEnumerator();
+			}
+
+			public T Current => _enumerator.Current;
+
+			object IEnumerator.Current => _enumerator.Current;
+
+			public bool MoveNext() => _enumerator.MoveNext();
+
+			public void Reset() => throw new NotSupportedException();
+
+			public void Dispose()
+			{
+				if (_list != null)
+				{
+					_enumerator.Dispose();
+					Monitor.Exit(_list);
+					_list = null;
+				}
+			}
+		}
+
+		/// <inheritdoc/>
+		public IEnumerator<T> GetEnumerator()
+		{
+			return new Enumerator(_ops);
+		}
+
+		/// <inheritdoc/>
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return new Enumerator(_ops);
 		}
 
 		#endregion
