@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `AsyncResult.Start` method to match `Task` interface.
 - Added `AsyncResult.OnStarted` virtual method.
 - Added `WhenAll`/`WhenAny` static helpers for `AsyncResult`.
+- Added `ConfigureAwait` extensions for `IAsyncOperation`.
 
 ### Changed
 - Modified `AsyncResultAwaiter` implementation to throw if the operation was canceled or faulted (to match `TaskAwaiter` behaviour).

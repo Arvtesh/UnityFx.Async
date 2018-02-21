@@ -790,11 +790,11 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Special continuation for the awaiter.
 		/// </summary>
-		internal void SetContinuationForAwait(Action action)
+		internal void SetContinuationForAwait(Action action, SynchronizationContext syncContext)
 		{
 			ThrowIfDisposed();
 
-			if (!TryAddContinuation(action, SynchronizationContext.Current))
+			if (!TryAddContinuation(action, syncContext))
 			{
 				action();
 			}

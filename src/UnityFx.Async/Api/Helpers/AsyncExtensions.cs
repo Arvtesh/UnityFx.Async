@@ -379,24 +379,49 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
 		/// </summary>
+		/// <param name="op">The operation to await.</param>
 		/// <seealso cref="GetAwaiter{T}(IAsyncOperation{T})"/>
-		public static AsyncResultAwaiter GetAwaiter(this IAsyncOperation op)
+		public static AsyncAwaiter GetAwaiter(this IAsyncOperation op)
 		{
-			return new AsyncResultAwaiter(op);
+			return new AsyncAwaiter(op, true);
 		}
 
 		/// <summary>
 		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
 		/// </summary>
+		/// <param name="op">The operation to await.</param>
 		/// <seealso cref="GetAwaiter(IAsyncOperation)"/>
-		public static AsyncResultAwaiter<T> GetAwaiter<T>(this IAsyncOperation<T> op)
+		public static AsyncAwaiter<T> GetAwaiter<T>(this IAsyncOperation<T> op)
 		{
-			return new AsyncResultAwaiter<T>(op);
+			return new AsyncAwaiter<T>(op, true);
+		}
+
+		/// <summary>
+		/// Configures an awaiter used to await this operation.
+		/// </summary>
+		/// <param name="op">The operation to await.</param>
+		/// <param name="continueOnCapturedContext">If <see langword="true"/> attempts to marshal the continuation back to the original context captured.</param>
+		/// <returns>An object used to await the operation.</returns>
+		public static ConfiguredAsyncAwaitable ConfigureAwait(this IAsyncOperation op, bool continueOnCapturedContext)
+		{
+			return new ConfiguredAsyncAwaitable(op, continueOnCapturedContext);
+		}
+
+		/// <summary>
+		/// Configures an awaiter used to await this operation.
+		/// </summary>
+		/// <param name="op">The operation to await.</param>
+		/// <param name="continueOnCapturedContext">If <see langword="true"/> attempts to marshal the continuation back to the original context captured.</param>
+		/// <returns>An object used to await the operation.</returns>
+		public static ConfiguredAsyncAwaitable<T> ConfigureAwait<T>(this IAsyncOperation<T> op, bool continueOnCapturedContext)
+		{
+			return new ConfiguredAsyncAwaitable<T>(op, continueOnCapturedContext);
 		}
 
 		/// <summary>
 		/// Creates a <see cref="Task"/> instance matching the source <see cref="IAsyncOperation"/>.
 		/// </summary>
+		/// <param name="op">The target operation.</param>
 		/// <seealso cref="ToTask{T}(IAsyncOperation{T})"/>
 		public static Task ToTask(this IAsyncOperation op)
 		{
@@ -426,6 +451,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Creates a <see cref="Task"/> instance matching the source <see cref="IAsyncOperation"/>.
 		/// </summary>
+		/// <param name="op">The target operation.</param>
 		/// <seealso cref="ToTask(IAsyncOperation)"/>
 		public static Task<T> ToTask<T>(this IAsyncOperation<T> op)
 		{

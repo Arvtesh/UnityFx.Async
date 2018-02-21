@@ -13,22 +13,27 @@ namespace UnityFx.Async
 	/// <summary>
 	/// Provides an object that waits for the completion of an asynchronous operation. This type and its members are intended for compiler use only.
 	/// </summary>
-	/// <seealso cref="IAsyncOperation"/>
+	/// <seealso cref="IAsyncOperation{T}"/>
 	[EditorBrowsable(EditorBrowsableState.Advanced)]
-	public struct AsyncResultAwaiter : INotifyCompletion
+	public struct AsyncAwaiter<T> : INotifyCompletion
 	{
 		#region data
 
-		private readonly IAsyncOperation _op;
+		private readonly IAsyncOperation<T> _op;
+		private readonly bool _continueOnCapturedContext;
 
 		#endregion
 
 		#region interface
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResultAwaiter"/> struct.
+		/// Initializes a new instance of the <see cref="AsyncAwaiter{T}"/> struct.
 		/// </summary>
-		public AsyncResultAwaiter(IAsyncOperation op) => _op = op;
+		public AsyncAwaiter(IAsyncOperation<T> op, bool continueOnCapturedContext)
+		{
+			_op = op;
+			_continueOnCapturedContext = continueOnCapturedContext;
+	}
 
 		#endregion
 
@@ -43,12 +48,11 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns the source result value.
 		/// </summary>
-		public void GetResult()
+		/// <returns>Returns the underlying operation result.</returns>
+		public T GetResult()
 		{
-			if (!_op.IsCompletedSuccessfully)
-			{
-				AsyncExtensions.ThrowIfFaultedOrCanceled(_op);
-			}
+			AsyncAwaiter.GetResultInternal(_op);
+			return _op.Result;
 		}
 
 		#endregion
@@ -58,14 +62,7 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		public void OnCompleted(Action continuation)
 		{
-			if (_op is AsyncResult ar)
-			{
-				ar.SetContinuationForAwait(continuation);
-			}
-			else if (!_op.TryAddCompletionCallback(op => continuation(), SynchronizationContext.Current))
-			{
-				continuation();
-			}
+			AsyncAwaiter.OnCompletedInternal(_op, continuation, _continueOnCapturedContext);
 		}
 
 		#endregion
