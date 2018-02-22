@@ -154,6 +154,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="IAsyncOperationEvents"/>
+		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, SynchronizationContext)"/>
 		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action, bool continueOnCapturedContext)
 		{
 			var context = continueOnCapturedContext ? SynchronizationContext.Current : null;
@@ -161,6 +162,33 @@ namespace UnityFx.Async
 			if (!op.TryAddCompletionCallback(action, context))
 			{
 				action(op);
+			}
+		}
+
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has finished. If the operation is completed the <paramref name="action"/> is invoked synchronously.
+		/// </summary>
+		/// <param name="op">The target operation.</param>
+		/// <param name="action">The callback to be executed when the operation has completed.</param>
+		/// <param name="synchronizationContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
+		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
+		/// </param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="IAsyncOperationEvents"/>
+		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, bool)"/>
+		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action, SynchronizationContext synchronizationContext)
+		{
+			if (!op.TryAddCompletionCallback(action, synchronizationContext))
+			{
+				if (synchronizationContext == null || synchronizationContext.GetType() == typeof(SynchronizationContext) || synchronizationContext == SynchronizationContext.Current)
+				{
+					action(op);
+				}
+				else
+				{
+					synchronizationContext.Post(args => action(op), op);
+				}
 			}
 		}
 
