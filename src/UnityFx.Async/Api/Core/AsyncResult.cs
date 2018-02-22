@@ -10,60 +10,48 @@ using System.Threading;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// A lightweight <c>net35</c>-compatible analog of <c>Task</c> for Unity3d.
+	/// A lightweight <c>net35</c>-compatible analog of <c>Task</c> for <c>Unity3d</c>.
 	/// </summary>
 	/// <remarks>
-	/// <para>This class is the core entity of the library. In many aspects it mimics <c>Task</c> interface and behaviour.
-	/// For example, any <see cref="AsyncResult"/> instance can have any number of continuations (added either explicitly
-	/// via <see cref="TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)"/> call or implicitly via
-	/// <c>async</c>/<c>await</c> usage). These continuations can be invoked on a captured <see cref="SynchronizationContext"/>
-	/// (if any). The class inherits <see cref="IAsyncResult"/> (just like <c>Task</c>) and can be used for implementation of
-	/// <see href="https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/asynchronous-programming-model-apm">Asynchronous Programming Model (APM)</see>.
-	/// There is a number of operation state accessors that can be used exactly like matching properties of <c>Task</c>.
+	/// <para>This class is the core entity of the library. In many aspects it mimics <see href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</see>
+	/// interface and behaviour. For example, any <see cref="AsyncResult"/> instance can have any number of continuations (added either explicitly via
+	/// <see cref="TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)">TryAddCompletionCallback</see> call or implicitly using
+	/// <c>async</c>/<c>await</c> keywords). These continuations can be invoked on a captured <see cref="SynchronizationContext"/> (if any). The class
+	/// inherits <see cref="IAsyncResult"/> (just like <see href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</see>)
+	/// and can be used for to implement <see href="https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/asynchronous-programming-model-apm">Asynchronous Programming Model (APM)</see>.
+	/// There is a number of operation state accessors that can be used exactly like corresponding properties of <see href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</see>.
 	/// </para>
 	/// <para>Design goals for <see cref="AsyncResult"/> are:
 	/// </para>
 	/// <list type="bullet">
-	/// <item>
-	///   <term>Minimum size.</term>
-	///   <description>That means just storing <see cref="IAsyncOperation"/> properties.</description>
-	/// </item>
-	/// <item>
-	///   <term>Multithreading support.</term>
-	///   <description>All class methods exception <see cref="Dispose()"/> are thread-safe.</description>
-	/// </item>
-	/// <item>
-	///   <term><c>Task</c>-like interface and behaviour.</term>
-	///   <description>This includes <c>async</c>/<c>await</c> (net46+ only), continuations and <see cref="SynchronizationContext"/> switching support.</description>
-	/// </item>
-	/// <item>
-	///   <term>Unity3d compatibility.</term>
-	///   <description>This includes possibility to <c>yield</c> any <see cref="AsyncResult"/> in coroutines and net35-compilance.</description>
-	/// </item>
+	///   <item><description>Minimum size and allocations.</description></item>
+	///   <item><description>Multithreading support. All class methods except <see cref="Dispose()"/> are thread-safe.</description></item>
+	///   <item><description><see href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</see>-like interface and behaviour. This includes <c>async</c>/<c>await</c> (net46+ only), continuations and <see cref="SynchronizationContext"/> capturing support.</description></item>
+	///   <item><description><see href="https://unity3d.com">Unity3d</see> compatibility. This includes possibility to <c>yield</c> any <see cref="AsyncResult"/> in coroutines and net35-compilance.</description></item>
 	/// </list>
 	/// <para>The class implements <see cref="IDisposable"/> interface. So strictly speaking <see cref="Dispose()"/> should be called when the operation
 	/// is no longed in use. In practice that is only required if <see cref="AsyncWaitHandle"/> property was used. Also keep in mind that <see cref="Dispose()"/>
 	/// implementation is not thread-safe.
 	/// </para>
-	/// <para>Please note that while the class is designed as a lightweight and portable Task-like object, it's NOT a replacement for .NET <c>Task</c>.
-	/// It is recommended to use <c>Task</c> when possible and only switch to <see cref="AsyncResult"/> only if one of the following applies:
+	/// <para>Please note that while the class is designed as a lightweight and portable Task-like object, it's NOT a replacement for .NET <see href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</see>.
+	/// It is recommended to use <see href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</see> when possible and only switch to <see cref="AsyncResult"/> only if one of the following applies:
 	/// </para>
 	/// <list type="bullet">
-	///   <item><c>net35</c> compatibility is required.</item>
-	///   <item>The operation should be used in Unity3d coroutines.</item>
-	///   <item>Memory usage is your concern.</item>
-	///   <item>You are implementing <see href="https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/asynchronous-programming-model-apm">Asynchronous Programming Model (APM)</see> and need <see cref="IAsyncResult"/> implementation.</item>
+	///   <item><description><c>net35</c> compatibility is required.</description></item>
+	///   <item><description>The operation should be used in <see href="https://unity3d.com">Unity3d</see> coroutines.</description></item>
+	///   <item><description>Memory usage is a concern.</description></item>
+	///   <item><description>You follow <see href="https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/asynchronous-programming-model-apm">Asynchronous Programming Model (APM)</see> and need <see cref="IAsyncResult"/> implementation.</description></item>
 	/// </list>
 	/// </remarks>
 	/// <example>
-	/// <see cref="AsyncResult"/> class can be used very similarly to <c>Task</c>:
+	/// <see cref="AsyncResult"/> class can be used very similarly to <see href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</see>:
 	/// <code>
 	/// async Task Foo()
 	/// {
 	///     await AsyncResult.Delay(10);
 	/// }
 	/// </code>
-	/// Or (in Unity3d) it can be used in coroutines:
+	/// Or (in <see href="https://unity3d.com">Unity3d</see>) it can be used in coroutines:
 	/// <code>
 	/// IEnumerator FooEnum()
 	/// {
@@ -75,7 +63,7 @@ namespace UnityFx.Async
 	///     return StartCoroutine(FooEnum());
 	/// }
 	/// </code>
-	/// <see cref="AsyncCompletionSource"/> can be used much like <c>TaskCompletionSource</c>:
+	/// <see cref="AsyncCompletionSource"/> can be used much like <see href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskcompletionsource-1">TaskCompletionSource</see>:
 	/// <code>
 	/// IAsyncOperation&lt;int&gt; Foo()
 	/// {
@@ -85,10 +73,10 @@ namespace UnityFx.Async
 	/// }
 	/// </code>
 	/// </example>
-	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</seealso>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming">Task-based Asynchronous Pattern (TAP)</seealso>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/asynchronous-programming-model-apm">Asynchronous Programming Model (APM)</seealso>
 	/// <seealso href="https://blogs.msdn.microsoft.com/nikos/2011/03/14/how-to-implement-the-iasyncresult-design-pattern/">How to implement the IAsyncResult design pattern</seealso>
+	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</seealso>
 	/// <seealso cref="AsyncCompletionSource"/>
 	/// <seealso cref="AsyncResult{T}"/>
 	/// <seealso cref="IAsyncResult"/>

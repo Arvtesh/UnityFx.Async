@@ -8,8 +8,9 @@ namespace UnityFx.Async
 	/// <summary>
 	/// Extends an <see cref="IAsyncOperation"/> interface with a result value.
 	/// </summary>
-	/// <seealso cref="IAsyncResult"/>
+	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task</seealso>
 	/// <seealso cref="IAsyncOperation"/>
+	/// <seealso cref="IAsyncResult"/>
 	public interface IAsyncOperation<out T> : IAsyncOperation
 	{
 		/// <summary>

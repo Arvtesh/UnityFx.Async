@@ -8,6 +8,7 @@ namespace UnityFx.Async
 	/// <summary>
 	/// Enumerates possible status values for <see cref="IAsyncOperation"/>.
 	/// </summary>
+	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskstatus">TaskStatus</seealso>
 	/// <seealso cref="IAsyncOperation"/>
 	public enum AsyncOperationStatus
 	{
@@ -51,8 +52,9 @@ namespace UnityFx.Async
 	/// <para>All interface methods are expected to be thread-safe. The only exception to this rule is <see cref="IDisposable.Dispose"/>.
 	/// </para>
 	/// </remarks>
-	/// <seealso cref="IAsyncResult"/>
+	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</seealso>
 	/// <seealso cref="IAsyncOperation{T}"/>
+	/// <seealso cref="IAsyncResult"/>
 	public interface IAsyncOperation : IAsyncOperationEvents, IAsyncResult, IDisposable
 	{
 		/// <summary>

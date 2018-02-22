@@ -6,7 +6,7 @@ using System;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// A lightweight net35-compatible analog of <c>Task{T}</c> for Unity3d.
+	/// A lightweight net35-compatible analog of <c>Task&lt;T&gt;</c> for <c>Unity3d</c>.
 	/// </summary>
 	/// <typeparam name="T">Type of the operation result.</typeparam>
 	/// <seealso cref="AsyncCompletionSource{T}"/>
