@@ -10,9 +10,56 @@ using System.Threading;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// A lightweight net35-compatible analog of Task for Unity3d.
+	/// A lightweight net35-compatible analog of <c>Task</c> for Unity3d.
 	/// </summary>
+	/// <remarks>
+	/// This class is the core entity of the library. The design goals for this class are:
+	/// <list type="bullet">
+	/// <item>
+	///   <term>Minimum size.</term>
+	///   <description>That means just storing <see cref="IAsyncOperation"/> properties.</description>
+	/// </item>
+	/// <item>
+	///   <term>Multithreading support.</term>
+	///   <description>All class methods exception <see cref="Dispose()"/> are thread-safe.</description>
+	/// </item>
+	/// <item>
+	///   <term><c>Task</c>-like interface and behaviour.</term>
+	///   <description>This includes <c>async</c>/<c>await</c> (net46+ only), continuations and <see cref="SynchronizationContext"/> switching support.</description>
+	/// </item>
+	/// <item>
+	///   <term>Unity3d compatibility.</term>
+	///   <description>This includes possibility to <c>yield</c> any <see cref="AsyncResult"/> in coroutines and net35-compilance.</description>
+	/// </item>
+	/// </list>
+	/// Please note that while the class is designed as a lightweight and portable Task-like object, it's NOT a replacement for .NET <c>Task</c>.
+	/// Its behaviour is still a bit different and it does not support many of the <c>Task</c> features (cancellation for instance).
+	/// </remarks>
+	/// <example>
+	/// The class can be used as a <c>Task</c>:
+	/// <code>
+	/// async Task Foo()
+	/// {
+	///     await AsyncResult.Delay(10);
+	/// }
+	/// </code>
+	/// Or (in Unity3d) it can be used in coroutines:
+	/// <code>
+	/// IEnumerator FooEnum()
+	/// {
+	///     yield return AsyncResult.Delay(10);
+	/// }
+	///
+	/// Coroutine Foo()
+	/// {
+	///     return StartCoroutine(FooEnum());
+	/// }
+	/// </code>
+	/// </example>
+	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming"/>
 	/// <seealso href="https://blogs.msdn.microsoft.com/nikos/2011/03/14/how-to-implement-the-iasyncresult-design-pattern/"/>
+	/// <seealso cref="AsyncCompletionSource"/>
+	/// <seealso cref="AsyncResult{T}"/>
 	/// <seealso cref="IAsyncResult"/>
 	[DebuggerDisplay("{DebuggerDisplay,nq}")]
 	public class AsyncResult : IAsyncOperation, IEnumerator
@@ -27,10 +74,10 @@ namespace UnityFx.Async
 		private const int _flagDoNotDispose = 0x10000000;
 		private const int _statusMask = 0x0000000f;
 
-		private readonly object _asyncState;
-
 		private static AsyncResult _completedOperation;
 		private static object _continuationCompletionSentinel = new object();
+
+		private readonly object _asyncState;
 
 		private EventWaitHandle _waitHandle;
 		private AggregateException _exception;

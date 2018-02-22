@@ -16,6 +16,7 @@ namespace UnityFx.Async
 	/// <summary>
 	/// Represents one or more errors that occur during application execution.
 	/// </summary>
+	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/data-structures-for-parallel-programming#aggregate-exceptions"/>
 	/// <seealso cref="IAsyncOperation"/>
 	[Serializable]
 	[DebuggerDisplay("{DebuggerDisplay,nq}")]

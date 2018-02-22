@@ -6,12 +6,12 @@ using System;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Implementation of <see cref="IAsyncOperation{T}"/>.
+	/// A lightweight net35-compatible analog of <c>Task{T}</c> for Unity3d.
 	/// </summary>
 	/// <typeparam name="T">Type of the operation result.</typeparam>
-	/// <seealso cref="IAsyncResult"/>
-	/// <seealso cref="IAsyncOperation"/>
+	/// <seealso cref="AsyncCompletionSource{T}"/>
 	/// <seealso cref="AsyncResult"/>
+	/// <seealso cref="IAsyncResult"/>
 #if NET35
 	public class AsyncResult<T> : AsyncResult, IAsyncOperation<T>
 #else
