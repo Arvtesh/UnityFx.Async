@@ -29,7 +29,7 @@ namespace UnityFx.Async
 
 		private readonly object _asyncState;
 
-		private static IAsyncOperation _completedOperation;
+		private static AsyncResult _completedOperation;
 		private static object _continuationCompletionSentinel = new object();
 
 		private EventWaitHandle _waitHandle;
@@ -116,13 +116,27 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown if the transition has failed.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="TryStart"/>
 		/// <seealso cref="TrySetRunning"/>
+		/// <seealso cref="OnStarted"/>
 		public void Start()
 		{
 			if (!TrySetRunning())
 			{
 				throw new InvalidOperationException();
 			}
+		}
+
+		/// <summary>
+		/// Attempts to transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
+		/// </summary>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="Start"/>
+		/// <seealso cref="TrySetRunning"/>
+		/// <seealso cref="OnStarted"/>
+		public bool TryStart()
+		{
+			return TrySetRunning();
 		}
 
 		/// <summary>
@@ -316,6 +330,12 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="status">The new status value.</param>
 		/// <seealso cref="Status"/>
+		/// <seealso cref="TrySetScheduled"/>
+		/// <seealso cref="TrySetRunning"/>
+		/// <seealso cref="TrySetCanceled(bool)"/>
+		/// <seealso cref="TrySetCompleted(bool)"/>
+		/// <seealso cref="TrySetException(System.Exception, bool)"/>
+		/// <seealso cref="TrySetExceptions(IEnumerable{System.Exception}, bool)"/>
 		protected virtual void OnStatusChanged(AsyncOperationStatus status)
 		{
 		}
@@ -324,14 +344,21 @@ namespace UnityFx.Async
 		/// Called when the operation is started (status is set to <see cref="AsyncOperationStatus.Running"/>).
 		/// </summary>
 		/// <seealso cref="Status"/>
+		/// <seealso cref="Start"/>
+		/// <seealso cref="TryStart"/>
+		/// <seealso cref="TrySetRunning"/>
 		protected virtual void OnStarted()
 		{
 		}
 
 		/// <summary>
-		/// Called when the operation is completed.
+		/// Called when the operation is completed. Default implementation invokes completion handlers registered.
 		/// </summary>
 		/// <seealso cref="Status"/>
+		/// <seealso cref="TrySetCanceled(bool)"/>
+		/// <seealso cref="TrySetCompleted(bool)"/>
+		/// <seealso cref="TrySetException(System.Exception, bool)"/>
+		/// <seealso cref="TrySetExceptions(IEnumerable{System.Exception}, bool)"/>
 		protected virtual void OnCompleted()
 		{
 			_waitHandle?.Set();
@@ -376,7 +403,7 @@ namespace UnityFx.Async
 		/// Note that <see cref="Dispose()"/> call have no effect on operations returned with the property. May not always return the same instance.
 		/// </remarks>
 		/// <value>Completed <see cref="IAsyncOperation"/> instance.</value>
-		public static IAsyncOperation CompletedOperation
+		public static AsyncResult CompletedOperation
 		{
 			get
 			{
@@ -396,7 +423,7 @@ namespace UnityFx.Async
 		/// <seealso cref="FromCanceled{T}"/>
 		/// <seealso cref="FromException(Exception)"/>
 		/// <seealso cref="FromResult{T}(T)"/>
-		public static IAsyncOperation FromCanceled()
+		public static AsyncResult FromCanceled()
 		{
 			return new AsyncResult(AsyncOperationStatus.Canceled);
 		}
@@ -408,7 +435,7 @@ namespace UnityFx.Async
 		/// <seealso cref="FromCanceled"/>
 		/// <seealso cref="FromException{T}(Exception)"/>
 		/// <seealso cref="FromResult{T}(T)"/>
-		public static IAsyncOperation<T> FromCanceled<T>()
+		public static AsyncResult<T> FromCanceled<T>()
 		{
 			return new AsyncResult<T>(AsyncOperationStatus.Canceled);
 		}
@@ -421,7 +448,7 @@ namespace UnityFx.Async
 		/// <seealso cref="FromException{T}(Exception)"/>
 		/// <seealso cref="FromCanceled"/>
 		/// <seealso cref="FromResult{T}(T)"/>
-		public static IAsyncOperation FromException(Exception e)
+		public static AsyncResult FromException(Exception e)
 		{
 			return new AsyncResult(e);
 		}
@@ -434,7 +461,7 @@ namespace UnityFx.Async
 		/// <seealso cref="FromException(Exception)"/>
 		/// <seealso cref="FromCanceled{T}"/>
 		/// <seealso cref="FromResult{T}(T)"/>
-		public static IAsyncOperation<T> FromException<T>(Exception e)
+		public static AsyncResult<T> FromException<T>(Exception e)
 		{
 			return new AsyncResult<T>(e);
 		}
@@ -446,7 +473,7 @@ namespace UnityFx.Async
 		/// <returns>A completed operation with the specified result value.</returns>
 		/// <seealso cref="FromCanceled{T}"/>
 		/// <seealso cref="FromException{T}(Exception)"/>
-		public static IAsyncOperation<T> FromResult<T>(T result)
+		public static AsyncResult<T> FromResult<T>(T result)
 		{
 			return new AsyncResult<T>(result);
 		}
@@ -458,7 +485,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="millisecondsDelay"/> is less than -1.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
 		/// <seealso cref="Delay(TimeSpan)"/>
-		public static IAsyncOperation Delay(int millisecondsDelay)
+		public static AsyncResult Delay(int millisecondsDelay)
 		{
 			if (millisecondsDelay < 0)
 			{
@@ -485,7 +512,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="delay"/> represents a negative time interval other than <c>TimeSpan.FromMillseconds(-1)</c>.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
 		/// <seealso cref="Delay(int)"/>
-		public static IAsyncOperation Delay(TimeSpan delay)
+		public static AsyncResult Delay(TimeSpan delay)
 		{
 			var millisecondsDelay = (long)delay.TotalMilliseconds;
 
@@ -504,7 +531,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that represents the completion of all of the supplied operations.</returns>
 		/// <exception cref="ArgumentNullException">Throws if <paramref name="ops"/> is <see langword="null"/>.</exception>
 		/// <seealso cref="WhenAll(IAsyncOperation[])"/>
-		public static IAsyncOperation WhenAll(IEnumerable<IAsyncOperation> ops)
+		public static AsyncResult WhenAll(IEnumerable<IAsyncOperation> ops)
 		{
 			if (ops == null)
 			{
@@ -544,7 +571,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that represents the completion of all of the supplied operations.</returns>
 		/// <exception cref="ArgumentNullException">Throws if <paramref name="ops"/> is <see langword="null"/>.</exception>
 		/// <seealso cref="WhenAll(IEnumerable{IAsyncOperation})"/>
-		public static IAsyncOperation WhenAll(params IAsyncOperation[] ops)
+		public static AsyncResult WhenAll(params IAsyncOperation[] ops)
 		{
 			if (ops == null)
 			{
@@ -566,7 +593,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that represents the completion of any of the supplied operations.</returns>
 		/// <exception cref="ArgumentNullException">Throws if <paramref name="ops"/> is <see langword="null"/>.</exception>
 		/// <seealso cref="WhenAny{T}(T[])"/>
-		public static IAsyncOperation<T> WhenAny<T>(IEnumerable<T> ops) where T : IAsyncOperation
+		public static AsyncResult<T> WhenAny<T>(IEnumerable<T> ops) where T : IAsyncOperation
 		{
 			if (ops == null)
 			{
@@ -612,7 +639,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that represents the completion of any of the supplied operations.</returns>
 		/// <exception cref="ArgumentNullException">Throws if <paramref name="ops"/> is <see langword="null"/>.</exception>
 		/// <seealso cref="WhenAny{T}(IEnumerable{T})"/>
-		public static IAsyncOperation<T> WhenAny<T>(params T[] ops) where T : IAsyncOperation
+		public static AsyncResult<T> WhenAny<T>(params T[] ops) where T : IAsyncOperation
 		{
 			if (ops == null)
 			{
@@ -962,7 +989,14 @@ namespace UnityFx.Async
 
 				if (IsFaulted && _exception != null)
 				{
-					state += " (" + _exception.GetType().Name + ')';
+					if (_exception.InnerException != null)
+					{
+						state += " (" + _exception.InnerException.GetType().Name + ')';
+					}
+					else
+					{
+						state += " (" + _exception.GetType().Name + ')';
+					}
 				}
 
 				result += ", Status = ";
