@@ -43,6 +43,44 @@ namespace UnityFx.Async
 		#region interface
 
 		/// <summary>
+		/// Raised when the operation has completed.
+		/// </summary>
+		/// <remarks>
+		/// The event handler is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
+		/// If the operation is already completed the event handler is called synchronously.
+		/// </remarks>
+		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered in <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)"/>
+		/// <seealso cref="RemoveCompletionCallback(AsyncOperationCallback)"/>
+		public event EventHandler Completed
+		{
+			add
+			{
+				ThrowIfDisposed();
+
+				if (value == null)
+				{
+					throw new ArgumentNullException(nameof(value));
+				}
+
+				if (!TryAddContinuation(value, SynchronizationContext.Current))
+				{
+					value(this, EventArgs.Empty);
+				}
+			}
+			remove
+			{
+				ThrowIfDisposed();
+
+				if (value != null)
+				{
+					TryRemoveContinuation(value);
+				}
+			}
+		}
+
+		/// <summary>
 		/// Gets whether the operation instance is disposed.
 		/// </summary>
 		/// <value>The disposed flag.</value>
@@ -849,34 +887,6 @@ namespace UnityFx.Async
 		#endregion
 
 		#region IAsyncOperationEvents
-
-		/// <inheritdoc/>
-		public event EventHandler Completed
-		{
-			add
-			{
-				ThrowIfDisposed();
-
-				if (value == null)
-				{
-					throw new ArgumentNullException(nameof(value));
-				}
-
-				if (!TryAddContinuation(value, SynchronizationContext.Current))
-				{
-					value(this, EventArgs.Empty);
-				}
-			}
-			remove
-			{
-				ThrowIfDisposed();
-
-				if (value != null)
-				{
-					TryRemoveContinuation(value);
-				}
-			}
-		}
 
 		/// <inheritdoc/>
 		public bool TryAddCompletionCallback(AsyncOperationCallback action, SynchronizationContext syncContext)

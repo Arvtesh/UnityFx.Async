@@ -21,19 +21,6 @@ namespace UnityFx.Async
 	public interface IAsyncOperationEvents
 	{
 		/// <summary>
-		/// Raised when the operation has completed.
-		/// </summary>
-		/// <remarks>
-		/// The event handler is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
-		/// If the operation is already completed the event handler is called synchronously.
-		/// </remarks>
-		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered in <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)"/>
-		/// <seealso cref="RemoveCompletionCallback(AsyncOperationCallback)"/>
-		event EventHandler Completed;
-
-		/// <summary>
 		/// Attempts to add a completion callback to be executed after the operation has finished. If the operation is already completed
 		/// the method does nothing and just returns <see langword="false"/>.
 		/// </summary>
@@ -45,7 +32,6 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="RemoveCompletionCallback(AsyncOperationCallback)"/>
-		/// <seealso cref="Completed"/>
 		bool TryAddCompletionCallback(AsyncOperationCallback action, SynchronizationContext syncContext);
 
 		/// <summary>
@@ -55,7 +41,6 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if the <paramref name="action"/> was removed; <see langword="false"/> otherwise.</returns>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)"/>
-		/// <seealso cref="Completed"/>
 		bool RemoveCompletionCallback(AsyncOperationCallback action);
 	}
 }
