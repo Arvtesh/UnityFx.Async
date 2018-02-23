@@ -211,7 +211,20 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
 		public AsyncResult(Exception e)
 		{
-			_exception = new AggregateException(e) ?? throw new ArgumentNullException(nameof(e));
+			if (e == null)
+			{
+				throw new ArgumentNullException(nameof(e));
+			}
+
+			if (e is AggregateException ae)
+			{
+				_exception = ae;
+			}
+			else
+			{
+				_exception = new AggregateException(e);
+			}
+
 			_flags = StatusFaulted | _flagCompletedSynchronously;
 		}
 
@@ -303,7 +316,8 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> (or <see cref="AsyncOperationStatus.Canceled"/> if the exception is <see cref="OperationCanceledException"/>) state.
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> (or <see cref="AsyncOperationStatus.Canceled"/>
+		/// if the exception is <see cref="OperationCanceledException"/>) state.
 		/// </summary>
 		/// <param name="exception">An exception that caused the operation to end prematurely.</param>
 		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
@@ -327,7 +341,15 @@ namespace UnityFx.Async
 				}
 				else
 				{
-					_exception = new AggregateException(exception);
+					if (exception is AggregateException ae)
+					{
+						_exception = ae;
+					}
+					else
+					{
+						_exception = new AggregateException(exception);
+					}
+
 					SetCompleted(StatusFaulted, completedSynchronously);
 				}
 
