@@ -259,6 +259,56 @@ namespace UnityFx.Async
 		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
 		/// </summary>
 		/// <remarks>
+		/// <para>The <paramref name="action"/> is expected to start another asynchronous operation. If the <paramref name="op"/>
+		/// is already completed the <paramref name="action"/> is being called synchronously.</para>
+		/// <para>Continuation behaviour is very close to TPL: if <see cref="SynchronizationContext"/> is set the continuation posted onto it.
+		/// Otherwise it is executed on a thread that initiated the operation completion.</para>
+		/// </remarks>
+		/// <typeparam name="T">Type of the operation to continue.</typeparam>
+		/// <param name="op">The operation to continue.</param>
+		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncCompletionSource, object}, object)"/>
+		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncCompletionSource{U}})"/>
+		/// <seealso cref="TransformWith{T, U}(T, Func{T, U})"/>
+		public static IAsyncOperation ContinueWith<T>(this T op, Func<T, IAsyncOperation> action) where T : IAsyncOperation
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			var result = new AsyncCompletionSource(AsyncOperationStatus.Scheduled);
+
+			op.AddCompletionCallback(
+				asyncOp =>
+				{
+					try
+					{
+						result.SetRunning();
+
+						action(op).AddCompletionCallback(
+							asyncOp2 =>
+							{
+								result.CopyCompletionState(asyncOp2, false);
+							},
+							false);
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e, false);
+					}
+				},
+				true);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <remarks>
 		/// See <see cref="ContinueWith{T}(T, Action{T, IAsyncCompletionSource})">ContinueWith</see> remarks for details.
 		/// </remarks>
 		/// <typeparam name="T">Type of the operation to continue.</typeparam>
@@ -286,6 +336,57 @@ namespace UnityFx.Async
 					{
 						result.SetRunning();
 						action(op, result, state);
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e, false);
+					}
+				},
+				true);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <remarks>
+		/// <para>The <paramref name="action"/> is expected to start another asynchronous operation. If the <paramref name="op"/>
+		/// is already completed the <paramref name="action"/> is being called synchronously.</para>
+		/// <para>Continuation behaviour is very close to TPL: if <see cref="SynchronizationContext"/> is set the continuation posted onto it.
+		/// Otherwise it is executed on a thread that initiated the operation completion.</para>
+		/// </remarks>
+		/// <typeparam name="T">Type of the operation to continue.</typeparam>
+		/// <param name="op">The operation to continue.</param>
+		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
+		/// <param name="state">User-defined state that is passed as last argument of <paramref name="action"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncCompletionSource, object}, object)"/>
+		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncCompletionSource{U}})"/>
+		/// <seealso cref="TransformWith{T, U}(T, Func{T, U})"/>
+		public static IAsyncOperation ContinueWith<T>(this T op, Func<T, object, IAsyncOperation> action, object state) where T : IAsyncOperation
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			var result = new AsyncCompletionSource(AsyncOperationStatus.Scheduled);
+
+			op.AddCompletionCallback(
+				asyncOp =>
+				{
+					try
+					{
+						result.SetRunning();
+
+						action(op, state).AddCompletionCallback(
+							asyncOp2 =>
+							{
+								result.CopyCompletionState(asyncOp2, false);
+							},
+							false);
 					}
 					catch (Exception e)
 					{
@@ -343,6 +444,57 @@ namespace UnityFx.Async
 		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
 		/// </summary>
 		/// <remarks>
+		/// <para>The <paramref name="action"/> is expected to start another asynchronous operation. If the <paramref name="op"/>
+		/// is already completed the <paramref name="action"/> is being called synchronously.</para>
+		/// <para>Continuation behaviour is very close to TPL: if <see cref="SynchronizationContext"/> is set the continuation posted onto it.
+		/// Otherwise it is executed on a thread that initiated the operation completion.</para>
+		/// </remarks>
+		/// <typeparam name="T">Type of the operation to continue.</typeparam>
+		/// <typeparam name="U">Result type of the continuation operation.</typeparam>
+		/// <param name="op">The operation to continue.</param>
+		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncCompletionSource, object}, object)"/>
+		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncCompletionSource{U}})"/>
+		/// <seealso cref="TransformWith{T, U}(T, Func{T, U})"/>
+		public static IAsyncOperation<U> ContinueWith<T, U>(this T op, Func<T, IAsyncOperation<U>> action) where T : IAsyncOperation
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			var result = new AsyncCompletionSource<U>(AsyncOperationStatus.Scheduled);
+
+			op.AddCompletionCallback(
+				asyncOp =>
+				{
+					try
+					{
+						result.SetRunning();
+
+						action(op).AddCompletionCallback(
+							asyncOp2 =>
+							{
+								result.CopyCompletionState(asyncOp2 as IAsyncOperation<U>, false);
+							},
+							false);
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e, false);
+					}
+				},
+				true);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <remarks>
 		/// See <see cref="ContinueWith{T}(T, Action{T, IAsyncCompletionSource})">ContinueWith</see> remarks for details.
 		/// </remarks>
 		/// <typeparam name="T">Type of the operation to continue.</typeparam>
@@ -372,6 +524,58 @@ namespace UnityFx.Async
 					{
 						result.SetRunning();
 						action(op, result, state);
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e, false);
+					}
+				},
+				true);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <remarks>
+		/// <para>The <paramref name="action"/> is expected to start another asynchronous operation. If the <paramref name="op"/>
+		/// is already completed the <paramref name="action"/> is being called synchronously.</para>
+		/// <para>Continuation behaviour is very close to TPL: if <see cref="SynchronizationContext"/> is set the continuation posted onto it.
+		/// Otherwise it is executed on a thread that initiated the operation completion.</para>
+		/// </remarks>
+		/// <typeparam name="T">Type of the operation to continue.</typeparam>
+		/// <typeparam name="U">Result type of the continuation operation.</typeparam>
+		/// <param name="op">The operation to continue.</param>
+		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
+		/// <param name="state">User-defined state that is passed as last argument of <paramref name="action"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{T}(T, Action{T, IAsyncCompletionSource, object}, object)"/>
+		/// <seealso cref="ContinueWith{T, U}(T, Action{T, IAsyncCompletionSource{U}})"/>
+		/// <seealso cref="TransformWith{T, U}(T, Func{T, U})"/>
+		public static IAsyncOperation<U> ContinueWith<T, U>(this T op, Func<T, object, IAsyncOperation<U>> action, object state) where T : IAsyncOperation
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			var result = new AsyncCompletionSource<U>(AsyncOperationStatus.Scheduled);
+
+			op.AddCompletionCallback(
+				asyncOp =>
+				{
+					try
+					{
+						result.SetRunning();
+
+						action(op, state).AddCompletionCallback(
+							asyncOp2 =>
+							{
+								result.CopyCompletionState(asyncOp2 as IAsyncOperation<U>, false);
+							},
+							false);
 					}
 					catch (Exception e)
 					{
