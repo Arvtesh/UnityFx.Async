@@ -148,6 +148,23 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="op">The target operation.</param>
 		/// <param name="action">The callback to be executed when the operation has completed.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="IAsyncOperationEvents"/>
+		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, bool)"/>
+		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action)
+		{
+			if (!op.TryAddCompletionCallback(action, SynchronizationContext.Current))
+			{
+				action(op);
+			}
+		}
+
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has finished. If the operation is completed the <paramref name="action"/> is invoked synchronously.
+		/// </summary>
+		/// <param name="op">The target operation.</param>
+		/// <param name="action">The callback to be executed when the operation has completed.</param>
 		/// <param name="continueOnCapturedContext">If <see langword="true"/> method attempts to marshal the continuation back to the current synchronization context.
 		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
 		/// </param>
@@ -166,7 +183,8 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Adds a completion callback to be executed after the operation has finished. If the operation is completed the <paramref name="action"/> is invoked synchronously.
+		/// Adds a completion callback to be executed after the operation has finished. If the operation is completed the <paramref name="action"/> is invoked
+		/// on the <paramref name="synchronizationContext"/> specified.
 		/// </summary>
 		/// <param name="op">The target operation.</param>
 		/// <param name="action">The callback to be executed when the operation has completed.</param>
