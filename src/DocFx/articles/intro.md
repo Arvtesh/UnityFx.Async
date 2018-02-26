@@ -1,6 +1,6 @@
 # What is this?
 
-*UnityFx.Async* is a set of of classes and interfaces that extend [Unity3d](https://unity3d.com) asynchronous operations and can be used very much like [Task-based Asynchronous Pattern (TAP)](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming) in .NET. At its core library defines a container (`AsyncResult`) for an asynchronous operation state and result value (aka `promise` or `future`). In many aspects it mimics [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task). For example, any `AsyncResult` instance can have any number of continuations (added either explicitly via `TryAddCompletionCallback` call or implicitly using `async`/`await` keywords). These continuations can be invoked on a captured [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) (if any). The class inherits [IAsyncResult](https://docs.microsoft.com/en-us/dotnet/api/system.iasyncresult) (just like [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)) and can be used for to implement [Asynchronous Programming Model (APM)](https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/asynchronous-programming-model-apm).
+*UnityFx.Async* is a set of of classes and interfaces that extend [Unity3d](https://unity3d.com) asynchronous operations and can be used very much like [Task-based Asynchronous Pattern (TAP)](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming) in .NET. At its core library defines a container (`AsyncResult`) for an asynchronous operation state and result value (aka `promise` or `future`). In many aspects it mimics [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task). For example, any `AsyncResult` instance can have any number of continuations (added either explicitly via `TryAddCompletionCallback` call or implicitly using `async`/`await` keywords). These continuations can be invoked on a captured [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) (if any). The class inherits [IAsyncResult](https://docs.microsoft.com/en-us/dotnet/api/system.iasyncresult) (just like [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)) and can be used for [Asynchronous Programming Model (APM)](https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/asynchronous-programming-model-apm) implementation.
 
 Quick [Unity3d](https://unity3d.com) example:
 ```csharp
@@ -22,7 +22,7 @@ Processing a result of asynchronous operation:
 ```csharp
 void Foo(IAsyncOperation<int> op)
 {
-	// The callback defined will be called event if the operation is already completed
+	// The callback will be called even if the operation is already completed
 	op.AddCompletionCallback(o =>
 	{
 		if (o.IsCompletedSuccessfully)
@@ -41,7 +41,7 @@ void Foo(IAsyncOperation<int> op)
 	});
 }
 ```
-Wrapping an asynchronous callback with `AsyncResult` promise:
+Wrapping a [Task&lt;T&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1) with `AsyncResult` promise:
 ```csharp
 IAsyncOperation<int> Foo(Task<int> task)
 {
