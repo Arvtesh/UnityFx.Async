@@ -900,5 +900,73 @@ namespace UnityFx.Async
 		}
 
 		#endregion
+
+		#region Task
+
+#if UNITYFX_SUPPORT_TAP
+
+		/// <summary>
+		/// Creates an <see cref="IAsyncOperation"/> instance that completes when the specified <paramref name="task"/> completes.
+		/// </summary>
+		/// <param name="task">The task to convert to <see cref="IAsyncOperation"/>.</param>
+		/// <returns>An <see cref="IAsyncOperation"/> that represents the <paramref name="task"/>.</returns>
+		public static IAsyncOperation ToAsync(this Task task)
+		{
+			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
+
+			task.ContinueWith(
+				t =>
+				{
+					if (t.IsFaulted)
+					{
+						result.SetException(t.Exception);
+					}
+					else if (t.IsCanceled)
+					{
+						result.SetCanceled();
+					}
+					else
+					{
+						result.SetCompleted();
+					}
+				},
+				TaskContinuationOptions.ExecuteSynchronously);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an <see cref="IAsyncOperation"/> instance that completes when the specified <paramref name="task"/> completes.
+		/// </summary>
+		/// <param name="task">The task to convert to <see cref="IAsyncOperation"/>.</param>
+		/// <returns>An <see cref="IAsyncOperation"/> that represents the <paramref name="task"/>.</returns>
+		public static IAsyncOperation<T> ToAsync<T>(this Task<T> task)
+		{
+			var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running);
+
+			task.ContinueWith(
+				t =>
+				{
+					if (t.IsFaulted)
+					{
+						result.SetException(t.Exception);
+					}
+					else if (t.IsCanceled)
+					{
+						result.SetCanceled();
+					}
+					else
+					{
+						result.SetResult(t.Result);
+					}
+				},
+				TaskContinuationOptions.ExecuteSynchronously);
+
+			return result;
+		}
+
+#endif
+
+		#endregion
 	}
 }
