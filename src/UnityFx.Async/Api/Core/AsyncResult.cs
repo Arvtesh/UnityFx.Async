@@ -24,7 +24,7 @@ namespace UnityFx.Async
 	/// </para>
 	/// <para>Design goals for <see cref="AsyncResult"/> are:
 	///   - Minimum size and allocations.
-	///   - Multithreading support. All class methods except <see cref="Dispose()"/> are thread-safe.
+	///   - Multithreading support. All class methods except <see cref="Dispose()"/> and <see cref="Reset"/> are thread-safe.
 	///   - <c>Task</c>-like interface and behaviour. This includes <c>async</c>/<c>await</c> (net46+ only),
 	///     continuations and <see cref="SynchronizationContext"/> capturing support.
 	///   - <c>Unity3d</c> compatibility. This includes possibility to <c>yield</c> any <see cref="AsyncResult"/>
@@ -33,7 +33,7 @@ namespace UnityFx.Async
 	/// <para>The class implements <see cref="IDisposable"/> interface. So strictly speaking <see cref="Dispose()"/>
 	/// should be called when the operation is no longed in use. In practice that is only required
 	/// if <see cref="AsyncWaitHandle"/> property was used. Also keep in mind that <see cref="Dispose()"/>
-	/// implementation is not thread-safe.
+	/// (as well as <see cref="Reset()"/>) implementation is not thread-safe.
 	/// </para>
 	/// <para>Please note that while the class is designed as a lightweight and portable <c>Task</c>-like object,
 	/// it's NOT a replacement for .NET <c>Task</c>. It is recommended to use <c>Task</c> when possible
@@ -94,6 +94,7 @@ namespace UnityFx.Async
 		private const int _flagDisposed = 0x01000000;
 		private const int _flagDoNotDispose = 0x10000000;
 		private const int _statusMask = 0x0000000f;
+		private const int _resetMask = 0x70000000;
 
 		private static AsyncResult _completedOperation;
 		private static object _continuationCompletionSentinel = new object();
@@ -465,7 +466,7 @@ namespace UnityFx.Async
 		#region virtual interface
 
 		/// <summary>
-		/// Called when the operation state has changed.
+		/// Called when the operation state has changed. Default implementation does nothing.
 		/// </summary>
 		/// <param name="status">The new status value.</param>
 		/// <seealso cref="Status"/>
@@ -480,8 +481,10 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Called when the operation is started (status is set to <see cref="AsyncOperationStatus.Running"/>).
+		/// Called when the operation is started (<see cref="Status"/> is set to <see cref="AsyncOperationStatus.Running"/>). Default implementation does nothing.
 		/// </summary>
+		/// <seealso cref="OnCompleted"/>
+		/// <seealso cref="OnReset"/>
 		/// <seealso cref="Status"/>
 		/// <seealso cref="Start"/>
 		/// <seealso cref="TryStart"/>
@@ -493,6 +496,8 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Called when the operation is completed. Default implementation invokes completion handlers registered.
 		/// </summary>
+		/// <seealso cref="OnStarted"/>
+		/// <seealso cref="OnReset"/>
 		/// <seealso cref="Status"/>
 		/// <seealso cref="TrySetCanceled(bool)"/>
 		/// <seealso cref="TrySetCompleted(bool)"/>
@@ -502,6 +507,26 @@ namespace UnityFx.Async
 		{
 			_waitHandle?.Set();
 			InvokeContinuations();
+		}
+
+		/// <summary>
+		/// Called when the operation is being reset. Default implementation resets the operation state.
+		/// </summary>
+		/// <seealso cref="OnStarted"/>
+		/// <seealso cref="OnCompleted"/>
+		protected virtual bool OnReset()
+		{
+			if ((_flags & _flagDoNotDispose) == 0)
+			{
+				_flags = _flags & _resetMask;
+				_exception = null;
+				_continuation = null;
+
+				ReleaseWaitHandle();
+				return true;
+			}
+
+			return false;
 		}
 
 		/// <summary>
@@ -518,16 +543,7 @@ namespace UnityFx.Async
 			if (disposing && (_flags & _flagDoNotDispose) == 0)
 			{
 				_flags |= _flagDisposed;
-
-				if (_waitHandle != null)
-				{
-#if NET35
-					_waitHandle.Close();
-#else
-					_waitHandle.Dispose();
-#endif
-					_waitHandle = null;
-				}
+				ReleaseWaitHandle();
 			}
 		}
 
@@ -1101,8 +1117,30 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		bool IEnumerator.MoveNext() => _flags == StatusRunning;
 
-		/// <inheritdoc/>
-		void IEnumerator.Reset() => throw new NotSupportedException();
+		/// <summary>
+		/// Resets the operation state to default (<see cref="Status"/> is set to <see cref="AsyncOperationStatus.Created"/>).
+		/// </summary>
+		/// <remarks>
+		/// Unlike most of the members of <see cref="AsyncResult"/>, this method is not thread-safe.
+		/// Also, <see cref="Reset()"/> may only be called on an <see cref="AsyncResult"/> that is in one of
+		/// the final states: <see cref="AsyncOperationStatus.RanToCompletion"/>, <see cref="AsyncOperationStatus.Faulted"/> or
+		/// <see cref="AsyncOperationStatus.Canceled"/>.
+		/// </remarks>
+		/// <exception cref="InvalidOperationException">Thrown if the operation is not completed.</exception>
+		/// <exception cref="NotSupportedException">Thrown if the operation does not support resetting.</exception>
+		/// <seealso cref="OnReset"/>
+		public void Reset()
+		{
+			if (!IsCompleted)
+			{
+				throw new InvalidOperationException("Cannot reset non-completed operation.");
+			}
+
+			if (!OnReset())
+			{
+				throw new NotSupportedException();
+			}
+		}
 
 		#endregion
 
@@ -1113,7 +1151,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <remarks>
 		/// Unlike most of the members of <see cref="AsyncResult"/>, this method is not thread-safe.
-		/// Also, <see cref="Dispose()"/> may only be called on a <see cref="AsyncResult"/> that is in one of
+		/// Also, <see cref="Dispose()"/> may only be called on an <see cref="AsyncResult"/> that is in one of
 		/// the final states: <see cref="AsyncOperationStatus.RanToCompletion"/>, <see cref="AsyncOperationStatus.Faulted"/> or
 		/// <see cref="AsyncOperationStatus.Canceled"/>.
 		/// </remarks>
@@ -1324,6 +1362,19 @@ namespace UnityFx.Async
 			else
 			{
 				AsyncContinuation.Run(this, continuation);
+			}
+		}
+
+		private void ReleaseWaitHandle()
+		{
+			if (_waitHandle != null)
+			{
+#if NET35
+				_waitHandle.Close();
+#else
+				_waitHandle.Dispose();
+#endif
+				_waitHandle = null;
 			}
 		}
 

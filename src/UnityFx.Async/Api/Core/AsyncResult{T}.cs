@@ -115,6 +115,22 @@ namespace UnityFx.Async
 
 		#endregion
 
+		#region AsyncResult
+
+		/// <inheritdoc/>
+		protected override bool OnReset()
+		{
+			if (base.OnReset())
+			{
+				_result = default(T);
+				return true;
+			}
+
+			return false;
+		}
+
+		#endregion
+
 		#region IAsyncOperation
 
 		/// <inheritdoc/>
