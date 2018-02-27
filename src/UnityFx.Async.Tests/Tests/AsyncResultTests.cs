@@ -76,20 +76,6 @@ namespace UnityFx.Async
 		}
 
 		[Fact]
-		public void Constructor_SetsException()
-		{
-			// Arrange
-			var e = new Exception();
-
-			// Act
-			var op = new AsyncResult(e);
-
-			// Assert
-			AssertFaulted(op, e);
-			Assert.True(op.CompletedSynchronously);
-		}
-
-		[Fact]
 		public void Constructor_SetsAsyncState()
 		{
 			// Arrange

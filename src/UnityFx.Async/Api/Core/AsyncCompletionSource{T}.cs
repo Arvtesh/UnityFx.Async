@@ -52,16 +52,6 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncCompletionSource{T}"/> class that is faulted.
-		/// </summary>
-		/// <param name="e">The exception to complete the operation with.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
-		public AsyncCompletionSource(Exception e)
-			: base(e)
-		{
-		}
-
-		/// <summary>
 		/// Transitions the operation to <see cref="AsyncOperationStatus.Scheduled"/> state.
 		/// </summary>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>

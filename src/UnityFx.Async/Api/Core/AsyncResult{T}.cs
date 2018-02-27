@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 
 namespace UnityFx.Async
 {
@@ -66,9 +67,18 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
-		/// <param name="e">The exception to complete the operation with.</param>
-		internal AsyncResult(Exception e)
-			: base(e)
+		/// <param name="exception">The exception to complete the operation with.</param>
+		internal AsyncResult(Exception exception)
+			: base(exception)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// </summary>
+		/// <param name="exceptions">Exceptions to complete the operation with.</param>
+		internal AsyncResult(IEnumerable<Exception> exceptions)
+			: base(exceptions)
 		{
 		}
 

@@ -209,24 +209,35 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class that is faulted.
 		/// </summary>
-		/// <param name="e">The exception to complete the operation with.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
-		public AsyncResult(Exception e)
+		/// <param name="exception">The exception to complete the operation with.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
+		internal AsyncResult(Exception exception)
 		{
-			if (e == null)
-			{
-				throw new ArgumentNullException(nameof(e));
-			}
-
-			if (e is AggregateException ae)
+			if (exception is AggregateException ae)
 			{
 				_exception = ae;
 			}
 			else
 			{
-				_exception = new AggregateException(e);
+				_exception = new AggregateException(exception);
 			}
 
+			_flags = StatusFaulted | _flagCompletedSynchronously;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class that is faulted.
+		/// </summary>
+		/// <param name="exceptions">Exceptions to complete the operation with.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
+		internal AsyncResult(IEnumerable<Exception> exceptions)
+		{
+			if (exceptions == null)
+			{
+				throw new ArgumentNullException(nameof(exceptions));
+			}
+
+			_exception = new AggregateException(exceptions);
 			_flags = StatusFaulted | _flagCompletedSynchronously;
 		}
 
@@ -550,6 +561,7 @@ namespace UnityFx.Async
 		/// <returns>A canceled operation.</returns>
 		/// <seealso cref="FromCanceled{T}"/>
 		/// <seealso cref="FromException(Exception)"/>
+		/// <seealso cref="FromExceptions(IEnumerable{System.Exception})"/>
 		/// <seealso cref="FromResult{T}(T)"/>
 		public static AsyncResult FromCanceled()
 		{
@@ -562,6 +574,7 @@ namespace UnityFx.Async
 		/// <returns>A canceled operation.</returns>
 		/// <seealso cref="FromCanceled"/>
 		/// <seealso cref="FromException{T}(Exception)"/>
+		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception})"/>
 		/// <seealso cref="FromResult{T}(T)"/>
 		public static AsyncResult<T> FromCanceled<T>()
 		{
@@ -571,27 +584,77 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Creates a <see cref="IAsyncOperation"/> that has completed with a specified exception.
 		/// </summary>
-		/// <param name="e">The exception to complete the operation with.</param>
+		/// <param name="exception">The exception to complete the operation with.</param>
 		/// <returns>A faulted operation.</returns>
+		/// <seealso cref="FromExceptions(IEnumerable{System.Exception})"/>
 		/// <seealso cref="FromException{T}(Exception)"/>
 		/// <seealso cref="FromCanceled"/>
 		/// <seealso cref="FromResult{T}(T)"/>
-		public static AsyncResult FromException(Exception e)
+		public static AsyncResult FromException(Exception exception)
 		{
-			return new AsyncResult(e);
+			if (exception == null)
+			{
+				throw new ArgumentNullException(nameof(exception));
+			}
+
+			return new AsyncResult(exception);
+		}
+
+		/// <summary>
+		/// Creates a <see cref="IAsyncOperation"/> that has completed with specified exceptions.
+		/// </summary>
+		/// <param name="exceptions">Exceptions to complete the operation with.</param>
+		/// <returns>A faulted operation.</returns>
+		/// <seealso cref="FromException(System.Exception)"/>
+		/// <seealso cref="FromException{T}(Exception)"/>
+		/// <seealso cref="FromCanceled"/>
+		/// <seealso cref="FromResult{T}(T)"/>
+		public static AsyncResult FromExceptions(IEnumerable<Exception> exceptions)
+		{
+			if (exceptions == null)
+			{
+				throw new ArgumentNullException(nameof(exceptions));
+			}
+
+			return new AsyncResult(exceptions);
 		}
 
 		/// <summary>
 		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with a specified exception.
 		/// </summary>
-		/// <param name="e">The exception to complete the operation with.</param>
+		/// <param name="exception">The exception to complete the operation with.</param>
 		/// <returns>A faulted operation.</returns>
+		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception})"/>
 		/// <seealso cref="FromException(Exception)"/>
 		/// <seealso cref="FromCanceled{T}"/>
 		/// <seealso cref="FromResult{T}(T)"/>
-		public static AsyncResult<T> FromException<T>(Exception e)
+		public static AsyncResult<T> FromException<T>(Exception exception)
 		{
-			return new AsyncResult<T>(e);
+			if (exception == null)
+			{
+				throw new ArgumentNullException(nameof(exception));
+			}
+
+			return new AsyncResult<T>(exception);
+		}
+
+		/// <summary>
+		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with specified exceptions.
+		/// </summary>
+		/// <param name="exceptions">Exceptions to complete the operation with.</param>
+		/// <returns>A faulted operation.</returns>
+		/// <seealso cref="FromException{T}(System.Exception)"/>
+		/// <seealso cref="FromException(Exception)"/>
+		/// <seealso cref="FromCanceled{T}"/>
+		/// <seealso cref="FromResult{T}(T)"/>
+		public static AsyncResult<T> FromExceptions<T>(IEnumerable<Exception> exceptions)
+		{
+			if (exceptions == null)
+			{
+				throw new ArgumentNullException(nameof(exceptions));
+			}
+
+			return new AsyncResult<T>(exceptions);
 		}
 
 		/// <summary>
@@ -601,6 +664,7 @@ namespace UnityFx.Async
 		/// <returns>A completed operation with the specified result value.</returns>
 		/// <seealso cref="FromCanceled{T}"/>
 		/// <seealso cref="FromException{T}(Exception)"/>
+		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception})"/>
 		public static AsyncResult<T> FromResult<T>(T result)
 		{
 			return new AsyncResult<T>(result);
