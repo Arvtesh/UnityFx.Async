@@ -107,7 +107,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="TrySetCanceled(bool)"/>
 		/// <seealso cref="TrySetCanceled()"/>
-		public void SetCanceled(bool completedSynchronously)
+		public void SetCanceled(bool completedSynchronously = false)
 		{
 			if (!base.TrySetCanceled(completedSynchronously))
 			{
@@ -134,7 +134,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="TrySetException(Exception, bool)"/>
 		/// <seealso cref="TrySetException(Exception)"/>
-		public void SetException(Exception exception, bool completedSynchronously)
+		public void SetException(Exception exception, bool completedSynchronously = false)
 		{
 			if (!base.TrySetException(exception, completedSynchronously))
 			{
@@ -162,7 +162,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="TrySetExceptions(IEnumerable{Exception}, bool)"/>
 		/// <seealso cref="TrySetExceptions(IEnumerable{Exception})"/>
-		public void SetExceptions(IEnumerable<Exception> exceptions, bool completedSynchronously)
+		public void SetExceptions(IEnumerable<Exception> exceptions, bool completedSynchronously = false)
 		{
 			if (!base.TrySetExceptions(exceptions, completedSynchronously))
 			{
@@ -190,7 +190,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="TrySetResult(T, bool)"/>
 		/// <seealso cref="TrySetResult(T)"/>
-		public void SetResult(T result, bool completedSynchronously)
+		public void SetResult(T result, bool completedSynchronously = false)
 		{
 			if (!base.TrySetResult(result, completedSynchronously))
 			{
