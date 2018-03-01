@@ -150,7 +150,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Gets whether the operation instance is disposed.
+		/// Gets a value indicating whether the operation instance is disposed.
 		/// </summary>
 		/// <value>The disposed flag.</value>
 		protected bool IsDisposed => (_flags & _flagDisposed) != 0;

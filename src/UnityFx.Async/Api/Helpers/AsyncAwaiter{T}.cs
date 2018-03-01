@@ -40,7 +40,7 @@ namespace UnityFx.Async
 		#region IAwaiter
 
 		/// <summary>
-		/// Gets whether the underlying operation is completed.
+		/// Gets a value indicating whether the underlying operation is completed.
 		/// </summary>
 		/// <value>The operation completion flag.</value>
 		public bool IsCompleted => _op.IsCompleted;

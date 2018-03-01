@@ -76,7 +76,7 @@ namespace UnityFx.Async
 		AggregateException Exception { get; }
 
 		/// <summary>
-		/// Gets whether the operation completed with successfully (i.e. with <see cref="AsyncOperationStatus.RanToCompletion"/> status).
+		/// Gets a value indicating whether the operation completed with successfully (i.e. with <see cref="AsyncOperationStatus.RanToCompletion"/> status).
 		/// </summary>
 		/// <value>A value indicating whether the operation has finished successfully.</value>
 		/// <seealso cref="IsFaulted"/>
@@ -85,7 +85,7 @@ namespace UnityFx.Async
 		bool IsCompletedSuccessfully { get; }
 
 		/// <summary>
-		/// Gets whether the operation completed due to an unhandled exception (i.e. with <see cref="AsyncOperationStatus.Faulted"/> status).
+		/// Gets a value indicating whether the operation completed due to an unhandled exception (i.e. with <see cref="AsyncOperationStatus.Faulted"/> status).
 		/// </summary>
 		/// <remarks>
 		/// If <see cref="IsFaulted"/> is <see langword="true"/>, the operation's <see cref="Status"/> will be equal to
@@ -99,7 +99,7 @@ namespace UnityFx.Async
 		bool IsFaulted { get; }
 
 		/// <summary>
-		/// Gets whether the operation completed due to being canceled (i.e. with <see cref="AsyncOperationStatus.Canceled"/> status).
+		/// Gets a value indicating whether the operation completed due to being canceled (i.e. with <see cref="AsyncOperationStatus.Canceled"/> status).
 		/// </summary>
 		/// <value>A value indicating whether the operation was canceled.</value>
 		/// <seealso cref="IsCompletedSuccessfully"/>
