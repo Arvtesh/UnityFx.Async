@@ -45,7 +45,7 @@ namespace UnityFx.Async
 		public static void Join(this IAsyncOperation op)
 		{
 			Wait(op);
-			ThrowIfFaulted(op);
+			ThrowIfFaultedOrCanceled(op);
 		}
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace UnityFx.Async
 		public static T Join<T>(this IAsyncOperation<T> op)
 		{
 			Wait(op);
-			ThrowIfFaulted(op);
+			ThrowIfFaultedOrCanceled(op);
 			return op.Result;
 		}
 
