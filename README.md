@@ -3,7 +3,7 @@
 Channel  | UnityFx.Async |
 ---------|---------------|
 AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/master?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/master)
-NuGet    | [![NuGet](https://img.shields.io/nuget/v/UnityFx.Async.svg)](https://www.nuget.org/packages/UnityFx.Async)
+NuGet    | [![NuGet](https://img.shields.io/nuget/v/UnityFx.Async.svg)](https://www.nuget.org/packages/UnityFx.Async) [![NuGet](https://img.shields.io/nuget/vpre/UnityFx.Async.svg)](https://www.nuget.org/packages/UnityFx.Async)
 Github   | [![GitHub release](https://img.shields.io/github/release/Arvtesh/UnityFx.Async.svg)](https://github.com/Arvtesh/UnityFx.Async/releases)
 
 ## Synopsis
@@ -50,9 +50,8 @@ private IEnumerator LoadTextureInternal(AsyncCompletionSource<Texture2D> op, str
     }
 }
 ```
-Once that is done we can use `LoadTextureAsync()` in many ways:
+Once that is done we can use `LoadTextureAsync()` result in many ways. For example we can yield the it in Unity coroutine to wait for its completion:
 ```csharp
-// Unity3d coroutines.
 IEnumerator TestLoadTextureAsync()
 {
     var op = LoadtextureAsync("http://my_texture_url.jpg");
@@ -71,8 +70,9 @@ IEnumerator TestLoadTextureAsync()
         Debug.LogWarning("The operation was canceled.");
     }
 }
-
-// async/await sample. This code requires Unity 2017+.
+```
+With Unity 2017+ and .NET 4.6 scripting backed it can be used just like a [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task):
+```csharp
 async Task TestLoadTextureAsync2()
 {
     try
@@ -89,8 +89,9 @@ async Task TestLoadTextureAsync2()
         Debug.LogException(e);
     }
 }
-
-// Completion callbacks.
+```
+An operation can have any number of completion callbacks registered:
+```csharp
 void TestLoadTextureAsync3()
 {
     LoadTextureAsync("http://my_texture_url.jpg").AddCompletionCallback(op =>
@@ -109,8 +110,9 @@ void TestLoadTextureAsync3()
         }
     });
 }
-
-// Waiting the operation completion on another thread.
+```
+Also one can access/wait for operations from other threads:
+```csharp
 void TestLoadTextureAsync4()
 {
     var op = LoadTextureAsync("http://my_texture_url.jpg");
