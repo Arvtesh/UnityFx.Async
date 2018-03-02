@@ -53,8 +53,8 @@ namespace UnityFx.Async
 		private const int _statusMask = 0x0000000f;
 		private const int _resetMask = 0x70000000;
 
+		private static readonly object _continuationCompletionSentinel = new object();
 		private static AsyncResult _completedOperation;
-		private static object _continuationCompletionSentinel = new object();
 
 		private readonly object _asyncState;
 
@@ -869,39 +869,6 @@ namespace UnityFx.Async
 			return new WhenAnyResult<T>(ops);
 		}
 
-		/// <summary>
-		/// Initializes the <paramref name="waitHandle"/> passed with a new <see cref="EventWaitHandle"/> instance if needed.
-		/// </summary>
-		/// <param name="waitHandle">The wait handle reference to initialize.</param>
-		/// <param name="asyncResult">An <see cref="IAsyncResult"/> instance that owns the wait handle.</param>
-		/// <returns>Returns the resulting <paramref name="waitHandle"/> value.</returns>
-		public static EventWaitHandle TryCreateAsyncWaitHandle(ref EventWaitHandle waitHandle, IAsyncResult asyncResult)
-		{
-			if (waitHandle == null)
-			{
-				var done = asyncResult.IsCompleted;
-				var mre = new ManualResetEvent(done);
-
-				if (Interlocked.CompareExchange(ref waitHandle, mre, null) != null)
-				{
-					// Another thread created this object's event; dispose the event we just created.
-#if NET35
-					mre.Close();
-#else
-					mre.Dispose();
-#endif
-				}
-				else if (!done && asyncResult.IsCompleted)
-				{
-					// We published the event as unset, but the operation has subsequently completed;
-					// set the event state properly so that callers do not deadlock.
-					waitHandle.Set();
-				}
-			}
-
-			return waitHandle;
-		}
-
 		#endregion
 
 		#region internals
@@ -1101,7 +1068,30 @@ namespace UnityFx.Async
 			get
 			{
 				ThrowIfDisposed();
-				return TryCreateAsyncWaitHandle(ref _waitHandle, this);
+
+				if (_waitHandle == null)
+				{
+					var done = IsCompleted;
+					var mre = new ManualResetEvent(done);
+
+					if (Interlocked.CompareExchange(ref _waitHandle, mre, null) != null)
+					{
+						// Another thread created this object's event; dispose the event we just created.
+#if NET35
+						mre.Close();
+#else
+						mre.Dispose();
+#endif
+					}
+					else if (!done && IsCompleted)
+					{
+						// We published the event as unset, but the operation has subsequently completed;
+						// set the event state properly so that callers do not deadlock.
+						_waitHandle.Set();
+					}
+				}
+
+				return _waitHandle;
 			}
 		}
 
