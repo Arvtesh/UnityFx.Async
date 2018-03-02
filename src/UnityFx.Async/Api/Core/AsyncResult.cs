@@ -671,9 +671,9 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates a task that completes after a specified time interval.
+		/// Creates an operation that completes after a specified time interval.
 		/// </summary>
-		/// <param name="delay">The time span to wait before completing the returned task, or <c>TimeSpan.FromMilliseconds(-1)</c> to wait indefinitely.</param>
+		/// <param name="delay">The time span to wait before completing the returned operation, or <c>TimeSpan.FromMilliseconds(-1)</c> to wait indefinitely.</param>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="delay"/> represents a negative time interval other than <c>TimeSpan.FromMillseconds(-1)</c>.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
 		/// <seealso cref="Delay(int)"/>
@@ -687,6 +687,56 @@ namespace UnityFx.Async
 			}
 
 			return Delay((int)millisecondsDelay);
+		}
+
+		/// <summary>
+		/// Creates an operation that completes when the source operation is completed successfully or maximum number of retries exceeded.
+		/// </summary>
+		/// <param name="opFactory">A delegate that initiates the source operation.</param>
+		/// <param name="millisecondsRetryDelay">The number of milliseconds to wait after a failed try before starting a new operation.</param>
+		/// <param name="maxRetryCount">Maximum number of retries. Zero means no limits.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="opFactory"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="millisecondsRetryDelay"/> or <paramref name="maxRetryCount"/> is less than zero.</exception>
+		/// <returns>An operation that represents the retry process.</returns>
+		public static AsyncResult<T> Retry<T>(Func<IAsyncOperation<T>> opFactory, int millisecondsRetryDelay, int maxRetryCount = 0)
+		{
+			if (opFactory == null)
+			{
+				throw new ArgumentNullException(nameof(opFactory));
+			}
+
+			if (millisecondsRetryDelay < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay));
+			}
+
+			if (maxRetryCount < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(maxRetryCount));
+			}
+
+			return new RetryResult<T>(opFactory, millisecondsRetryDelay, maxRetryCount);
+		}
+
+		/// <summary>
+		/// Creates an operation that completes when the source operation is completed successfully or maximum number of retries exceeded.
+		/// </summary>
+		/// <param name="opFactory">A delegate that initiates the source operation.</param>
+		/// <param name="retryDelay">The time to wait after a failed try before starting a new operation.</param>
+		/// <param name="maxRetryCount">Maximum number of retries. Zero means no limits.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="opFactory"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="retryDelay"/> or <paramref name="maxRetryCount"/> is less than zero.</exception>
+		/// <returns>An operation that represents the retry process.</returns>
+		public static AsyncResult<T> Retry<T>(Func<IAsyncOperation<T>> opFactory, TimeSpan retryDelay, int maxRetryCount = 0)
+		{
+			var millisecondsDelay = (long)retryDelay.TotalMilliseconds;
+
+			if (millisecondsDelay > int.MaxValue)
+			{
+				throw new ArgumentOutOfRangeException(nameof(retryDelay));
+			}
+
+			return Retry(opFactory, (int)millisecondsDelay, maxRetryCount);
 		}
 
 		/// <summary>
