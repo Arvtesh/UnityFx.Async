@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `ConfigureAwait` extensions for `IAsyncOperation`.
 - Added `Task` extension methods to that convert it to an `AsyncResult` instance.
 - Added possibility to reset `AsyncResult` state to default via `Reset` method.
+- Added `AsyncResult.Retry` methods.
 
 ### Changed
 - Modified `AsyncResultAwaiter` implementation to throw if the operation was canceled or faulted (to match `TaskAwaiter` behaviour).
@@ -25,6 +26,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Changed `IAsyncOperationEvents.Completed` event behaviour to always execute handler (event if it was registered after the comperation has copleted).
 - Removed `Completed` event from `IAsyncOperationEvents`.
 - Removed `AsyncResult` constructors that accepted exceptions.
+
+### Removed
+- Removed `AsyncResult.TryCreateAsyncWaitHandle` helper.
 
 ### Fixed
 - `AsyncResultQueue` now does not remove uncompleted operations from the queue.
