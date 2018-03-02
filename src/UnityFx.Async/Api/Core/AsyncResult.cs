@@ -44,6 +44,11 @@ namespace UnityFx.Async
 	{
 		#region data
 
+		private const string _errorListIsEmpty = "The list cannot be empty.";
+		private const string _errorListElementIsNull = "The list elements cannot be null.";
+		private const string _errorValueIsLessThanZero = "The valus cannot be less than zero.";
+		private const string _errorOperationIsNotCompleted = "The operation should be completed.";
+
 		private const int _flagCompletionReserved = 0x00100000;
 		private const int _flagCompleted = 0x00200000;
 		private const int _flagSynchronous = 0x00400000;
@@ -358,7 +363,7 @@ namespace UnityFx.Async
 			{
 				if (e == null)
 				{
-					throw new ArgumentException("Null exceptions are not allowed.", nameof(exceptions));
+					throw new ArgumentException(_errorListElementIsNull, nameof(exceptions));
 				}
 
 				list.Add(e);
@@ -366,7 +371,7 @@ namespace UnityFx.Async
 
 			if (list.Count == 0)
 			{
-				throw new ArgumentException("At least one exception is needed.", nameof(exceptions));
+				throw new ArgumentException(_errorListIsEmpty, nameof(exceptions));
 			}
 
 			if (TryReserveCompletion())
@@ -654,7 +659,7 @@ namespace UnityFx.Async
 		{
 			if (millisecondsDelay < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(millisecondsDelay));
+				throw new ArgumentOutOfRangeException(nameof(millisecondsDelay), millisecondsDelay, _errorValueIsLessThanZero);
 			}
 
 			if (millisecondsDelay == 0)
@@ -707,12 +712,12 @@ namespace UnityFx.Async
 
 			if (millisecondsRetryDelay < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay));
+				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay), millisecondsRetryDelay, _errorValueIsLessThanZero);
 			}
 
 			if (maxRetryCount < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(maxRetryCount));
+				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, _errorValueIsLessThanZero);
 			}
 
 			return new RetryResult<T>(opFactory, millisecondsRetryDelay, maxRetryCount);
@@ -819,7 +824,7 @@ namespace UnityFx.Async
 			{
 				if (opArray.Length == 0)
 				{
-					throw new ArgumentException("The list is empty", nameof(ops));
+					throw new ArgumentException(_errorListIsEmpty, nameof(ops));
 				}
 
 				return new WhenAnyResult<T>(opArray);
@@ -829,7 +834,7 @@ namespace UnityFx.Async
 			{
 				if (opCollection.Count == 0)
 				{
-					throw new ArgumentException("The list is empty", nameof(ops));
+					throw new ArgumentException(_errorListIsEmpty, nameof(ops));
 				}
 
 				var array = new T[opCollection.Count];
@@ -841,7 +846,7 @@ namespace UnityFx.Async
 
 			if (opList.Count == 0)
 			{
-				throw new ArgumentException("The list is empty", nameof(ops));
+				throw new ArgumentException(_errorListIsEmpty, nameof(ops));
 			}
 
 			return new WhenAnyResult<T>(opList.ToArray());
@@ -863,7 +868,7 @@ namespace UnityFx.Async
 
 			if (ops.Length == 0)
 			{
-				throw new ArgumentException("The list is empty", nameof(ops));
+				throw new ArgumentException(_errorListIsEmpty, nameof(ops));
 			}
 
 			return new WhenAnyResult<T>(ops);
@@ -1130,7 +1135,7 @@ namespace UnityFx.Async
 		{
 			if (!IsCompleted)
 			{
-				throw new InvalidOperationException("Cannot reset non-completed operation.");
+				throw new InvalidOperationException(_errorOperationIsNotCompleted);
 			}
 
 			if (!OnReset())
@@ -1158,7 +1163,7 @@ namespace UnityFx.Async
 		{
 			if (!IsCompleted)
 			{
-				throw new InvalidOperationException("Cannot dispose non-completed operation.");
+				throw new InvalidOperationException(_errorOperationIsNotCompleted);
 			}
 
 			Dispose(true);
