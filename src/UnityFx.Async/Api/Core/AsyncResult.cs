@@ -25,7 +25,7 @@ namespace UnityFx.Async
 	/// <para>The class implements <see cref="IDisposable"/> interface. So strictly speaking <see cref="Dispose()"/>
 	/// should be called when the operation is no longed in use. In practice that is only required
 	/// if <see cref="AsyncWaitHandle"/> property was used. Also keep in mind that <see cref="Dispose()"/>
-	/// (as well as <see cref="Reset()"/>) implementation is not thread-safe.
+	/// implementation is not thread-safe.
 	/// </para>
 	/// <para>Please note that while the class is designed as a lightweight and portable <c>Task</c>-like object,
 	/// it's NOT a replacement for .NET <c>Task</c>. It is recommended to use <c>Task</c> in general.
@@ -472,26 +472,6 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Called when the operation is being reset. Default implementation resets the operation state.
-		/// </summary>
-		/// <seealso cref="OnStarted"/>
-		/// <seealso cref="OnCompleted"/>
-		protected virtual bool OnReset()
-		{
-			if ((_flags & _flagDoNotDispose) == 0)
-			{
-				_flags = _flags & _resetMask;
-				_exception = null;
-				_continuation = null;
-
-				ReleaseWaitHandle();
-				return true;
-			}
-
-			return false;
-		}
-
-		/// <summary>
 		/// Releases unmanaged resources used by the object.
 		/// </summary>
 		/// <remarks>
@@ -505,7 +485,16 @@ namespace UnityFx.Async
 			if (disposing && (_flags & _flagDoNotDispose) == 0)
 			{
 				_flags |= _flagDisposed;
-				ReleaseWaitHandle();
+
+				if (_waitHandle != null)
+				{
+#if NET35
+					_waitHandle.Close();
+#else
+					_waitHandle.Dispose();
+#endif
+					_waitHandle = null;
+				}
 			}
 		}
 
@@ -1119,30 +1108,8 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		bool IEnumerator.MoveNext() => _flags == StatusRunning;
 
-		/// <summary>
-		/// Resets the operation state to default (<see cref="Status"/> is set to <see cref="AsyncOperationStatus.Created"/>).
-		/// </summary>
-		/// <remarks>
-		/// Unlike most of the members of <see cref="AsyncResult"/>, this method is not thread-safe.
-		/// Also, <see cref="Reset()"/> may only be called on an <see cref="AsyncResult"/> that is in one of
-		/// the final states: <see cref="AsyncOperationStatus.RanToCompletion"/>, <see cref="AsyncOperationStatus.Faulted"/> or
-		/// <see cref="AsyncOperationStatus.Canceled"/>.
-		/// </remarks>
-		/// <exception cref="InvalidOperationException">Thrown if the operation is not completed.</exception>
-		/// <exception cref="NotSupportedException">Thrown if the operation does not support resetting.</exception>
-		/// <seealso cref="OnReset"/>
-		public void Reset()
-		{
-			if (!IsCompleted)
-			{
-				throw new InvalidOperationException(_errorOperationIsNotCompleted);
-			}
-
-			if (!OnReset())
-			{
-				throw new NotSupportedException();
-			}
-		}
+		/// <inheritdoc/>
+		public void Reset() => throw new NotSupportedException();
 
 		#endregion
 
@@ -1364,19 +1331,6 @@ namespace UnityFx.Async
 			else
 			{
 				AsyncContinuation.Run(this, continuation);
-			}
-		}
-
-		private void ReleaseWaitHandle()
-		{
-			if (_waitHandle != null)
-			{
-#if NET35
-				_waitHandle.Close();
-#else
-				_waitHandle.Dispose();
-#endif
-				_waitHandle = null;
 			}
 		}
 
