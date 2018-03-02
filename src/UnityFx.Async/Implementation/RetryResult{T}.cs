@@ -18,7 +18,7 @@ namespace UnityFx.Async
 
 		private Timer _timer;
 		private TimerCallback _timerCallback;
-		private IAsyncOperation _lastOp;
+		private IAsyncOperation _op;
 		private int _numberOfRetriesLeft;
 
 		#endregion
@@ -41,15 +41,15 @@ namespace UnityFx.Async
 
 		#region AsyncResult
 
-		protected override void Dispose(bool disposing)
+		protected override void OnCompleted()
 		{
-			if (disposing)
+			base.OnCompleted();
+
+			if (_timer != null)
 			{
-				_timer?.Dispose();
+				_timer.Dispose();
 				_timer = null;
 			}
-
-			base.Dispose(disposing);
 		}
 
 		#endregion
@@ -60,30 +60,28 @@ namespace UnityFx.Async
 		{
 			try
 			{
-				IAsyncOperation op;
-
 				if (_opFactory is Func<IAsyncOperation> f1)
 				{
-					op = f1();
+					_op = f1();
 				}
 				else if (_opFactory is Func<IAsyncOperation<T>> f2)
 				{
-					op = f2();
+					_op = f2();
 				}
 				else
 				{
 					throw new InvalidOperationException("Invalid delegate type.");
 				}
 
-				if (!op.TryAddCompletionCallback(_opCompletionCallback, null))
+				if (!_op.TryAddCompletionCallback(_opCompletionCallback, null))
 				{
-					if (op.IsCompletedSuccessfully)
+					if (_op.IsCompletedSuccessfully)
 					{
-						TrySetCompleted(op, calledFromConstructor);
+						SetResult(calledFromConstructor);
 					}
 					else
 					{
-						TrySetException(op.Exception, calledFromConstructor);
+						Retry(calledFromConstructor);
 					}
 				}
 			}
@@ -95,60 +93,76 @@ namespace UnityFx.Async
 
 		private void OnOperationCompleted(IAsyncOperation op)
 		{
-			_lastOp = op;
+			Debug.Assert(_op == op);
+			Debug.Assert(_op.IsCompleted);
 
-			if (op.IsCompletedSuccessfully)
+			if (!IsCompleted)
 			{
-				TrySetCompleted(op, false);
-			}
-			else if (_millisecondsRetryDelay > 0)
-			{
-				if (_timerCallback == null)
+				if (_op.IsCompletedSuccessfully)
 				{
-					_timerCallback = OnTimer;
+					SetResult(false);
 				}
-
-				if (_timer == null)
+				else if (_millisecondsRetryDelay > 0)
 				{
-					_timer = new Timer(_timerCallback, null, _millisecondsRetryDelay, Timeout.Infinite);
+					if (_timerCallback == null)
+					{
+						_timerCallback = OnTimer;
+					}
+
+					if (_timer == null)
+					{
+						_timer = new Timer(_timerCallback, null, _millisecondsRetryDelay, Timeout.Infinite);
+					}
+					else
+					{
+						_timer.Change(_millisecondsRetryDelay, Timeout.Infinite);
+					}
 				}
 				else
 				{
-					_timer.Change(_millisecondsRetryDelay, Timeout.Infinite);
+					Retry(false);
 				}
-			}
-			else
-			{
-				OnTimer(null);
 			}
 		}
 
 		private void OnTimer(object args)
 		{
+			if (!IsCompleted)
+			{
+				Retry(false);
+			}
+		}
+
+		private void Retry(bool calledFromConstructor)
+		{
+			Debug.Assert(_op != null);
+			Debug.Assert(!_op.IsCompletedSuccessfully);
+
 			if (_maxRetryCount == 0 || --_numberOfRetriesLeft > 0)
 			{
-				StartOperation(false);
+				StartOperation(calledFromConstructor);
 			}
-			else if (_lastOp.IsFaulted)
+			else if (_op.IsFaulted)
 			{
-				TrySetException(_lastOp.Exception, false);
+				TrySetException(_op.Exception, calledFromConstructor);
 			}
-			else if (_lastOp.IsCanceled)
+			else if (_op.IsCanceled)
 			{
-				TrySetCanceled(false);
+				TrySetCanceled(calledFromConstructor);
 			}
 			else
 			{
 				// NOTE: should not get here.
-				TrySetException(new Exception("Maximum number of retries exceeded."), false);
+				TrySetException(new Exception("Maximum number of retries exceeded."), calledFromConstructor);
 			}
 		}
 
-		private void TrySetCompleted(IAsyncOperation op, bool completedSynchronously)
+		private void SetResult(bool completedSynchronously)
 		{
-			Debug.Assert(op.IsCompletedSuccessfully);
+			Debug.Assert(_op != null);
+			Debug.Assert(_op.IsCompletedSuccessfully);
 
-			if (op is IAsyncOperation<T> rop)
+			if (_op is IAsyncOperation<T> rop)
 			{
 				TrySetResult(rop.Result, completedSynchronously);
 			}
