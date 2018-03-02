@@ -17,8 +17,8 @@ namespace UnityFx.Async
 	/// interface and behaviour. For example, any <see cref="AsyncResult"/> instance can have any
 	/// number of continuations (added either explicitly via <see cref="TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)"/>
 	/// call or implicitly using <c>async</c>/<c>await</c> keywords). These continuations can be
-	/// invoked on a captured <see cref="SynchronizationContext"/> (if any). The class inherits <see cref="IAsyncResult"/>
-	/// (just like <c>Task</c>) and can be used for to implement Asynchronous Programming Model (APM).
+	/// invoked on a captured <see cref="SynchronizationContext"/>. The class inherits <see cref="IAsyncResult"/>
+	/// (just like <c>Task</c>) and can be used to implement Asynchronous Programming Model (APM).
 	/// There is a number of operation state accessors that can be used exactly like corresponding
 	/// properties of <c>Task</c>.
 	/// </para>
@@ -28,7 +28,8 @@ namespace UnityFx.Async
 	/// implementation is not thread-safe.
 	/// </para>
 	/// <para>Please note that while the class is designed as a lightweight and portable <c>Task</c>-like object,
-	/// it's NOT a replacement for .NET <c>Task</c>. It is recommended to use <c>Task</c> in general.
+	/// it's NOT a replacement for .NET <c>Task</c>. It is recommended to use <c>Task</c> in general and only switch
+	/// to this class if Unity/net35 compatibility is a concern.
 	/// </para>
 	/// </remarks>
 	/// <seealso href="https://blogs.msdn.microsoft.com/nikos/2011/03/14/how-to-implement-the-iasyncresult-design-pattern/">How to implement the IAsyncResult design pattern</seealso>
@@ -446,7 +447,6 @@ namespace UnityFx.Async
 		/// Called when the operation is started (<see cref="Status"/> is set to <see cref="AsyncOperationStatus.Running"/>). Default implementation does nothing.
 		/// </summary>
 		/// <seealso cref="OnCompleted"/>
-		/// <seealso cref="OnReset"/>
 		/// <seealso cref="Status"/>
 		/// <seealso cref="Start"/>
 		/// <seealso cref="TryStart"/>
@@ -459,7 +459,6 @@ namespace UnityFx.Async
 		/// Called when the operation is completed. Default implementation invokes completion handlers registered.
 		/// </summary>
 		/// <seealso cref="OnStarted"/>
-		/// <seealso cref="OnReset"/>
 		/// <seealso cref="Status"/>
 		/// <seealso cref="TrySetCanceled(bool)"/>
 		/// <seealso cref="TrySetCompleted(bool)"/>
@@ -692,6 +691,59 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="opFactory"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="millisecondsRetryDelay"/> or <paramref name="maxRetryCount"/> is less than zero.</exception>
 		/// <returns>An operation that represents the retry process.</returns>
+		/// <seealso cref="Retry(Func{IAsyncOperation}, TimeSpan, int)"/>
+		public static AsyncResult Retry(Func<IAsyncOperation> opFactory, int millisecondsRetryDelay, int maxRetryCount = 0)
+		{
+			if (opFactory == null)
+			{
+				throw new ArgumentNullException(nameof(opFactory));
+			}
+
+			if (millisecondsRetryDelay < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay), millisecondsRetryDelay, _errorValueIsLessThanZero);
+			}
+
+			if (maxRetryCount < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, _errorValueIsLessThanZero);
+			}
+
+			return new RetryResult<object>(opFactory, millisecondsRetryDelay, maxRetryCount);
+		}
+
+		/// <summary>
+		/// Creates an operation that completes when the source operation is completed successfully or maximum number of retries exceeded.
+		/// </summary>
+		/// <param name="opFactory">A delegate that initiates the source operation.</param>
+		/// <param name="retryDelay">The time to wait after a failed try before starting a new operation.</param>
+		/// <param name="maxRetryCount">Maximum number of retries. Zero means no limits.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="opFactory"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="retryDelay"/> or <paramref name="maxRetryCount"/> is less than zero.</exception>
+		/// <returns>An operation that represents the retry process.</returns>
+		/// <seealso cref="Retry(Func{IAsyncOperation}, int, int)"/>
+		public static AsyncResult Retry(Func<IAsyncOperation> opFactory, TimeSpan retryDelay, int maxRetryCount = 0)
+		{
+			var millisecondsDelay = (long)retryDelay.TotalMilliseconds;
+
+			if (millisecondsDelay > int.MaxValue)
+			{
+				throw new ArgumentOutOfRangeException(nameof(retryDelay));
+			}
+
+			return Retry(opFactory, (int)millisecondsDelay, maxRetryCount);
+		}
+
+		/// <summary>
+		/// Creates an operation that completes when the source operation is completed successfully or maximum number of retries exceeded.
+		/// </summary>
+		/// <param name="opFactory">A delegate that initiates the source operation.</param>
+		/// <param name="millisecondsRetryDelay">The number of milliseconds to wait after a failed try before starting a new operation.</param>
+		/// <param name="maxRetryCount">Maximum number of retries. Zero means no limits.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="opFactory"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="millisecondsRetryDelay"/> or <paramref name="maxRetryCount"/> is less than zero.</exception>
+		/// <returns>An operation that represents the retry process.</returns>
+		/// <seealso cref="Retry{T}(Func{IAsyncOperation{T}}, TimeSpan, int)"/>
 		public static AsyncResult<T> Retry<T>(Func<IAsyncOperation<T>> opFactory, int millisecondsRetryDelay, int maxRetryCount = 0)
 		{
 			if (opFactory == null)
@@ -721,6 +773,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="opFactory"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="retryDelay"/> or <paramref name="maxRetryCount"/> is less than zero.</exception>
 		/// <returns>An operation that represents the retry process.</returns>
+		/// <seealso cref="Retry{T}(Func{IAsyncOperation{T}}, int, int)"/>
 		public static AsyncResult<T> Retry<T>(Func<IAsyncOperation<T>> opFactory, TimeSpan retryDelay, int maxRetryCount = 0)
 		{
 			var millisecondsDelay = (long)retryDelay.TotalMilliseconds;
@@ -730,7 +783,7 @@ namespace UnityFx.Async
 				throw new ArgumentOutOfRangeException(nameof(retryDelay));
 			}
 
-			return Retry(opFactory, (int)millisecondsDelay, maxRetryCount);
+			return Retry<T>(opFactory, (int)millisecondsDelay, maxRetryCount);
 		}
 
 		/// <summary>

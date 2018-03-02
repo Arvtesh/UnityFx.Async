@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Diagnostics;
 using System.Threading;
 
 namespace UnityFx.Async
@@ -10,8 +11,7 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private readonly Func<IAsyncOperation<T>> _opFactory;
-		private readonly AsyncResult<T> _op;
+		private readonly object _opFactory;
 		private readonly AsyncOperationCallback _opCompletionCallback;
 		private readonly int _millisecondsRetryDelay;
 		private readonly int _maxRetryCount;
@@ -25,22 +25,10 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public RetryResult(Func<IAsyncOperation<T>> opFactory, int millisecondsRetryDelay, int maxRetryCount)
+		internal RetryResult(object opFactory, int millisecondsRetryDelay, int maxRetryCount)
 			: base(AsyncOperationStatus.Running)
 		{
 			_opFactory = opFactory;
-			_millisecondsRetryDelay = millisecondsRetryDelay;
-			_maxRetryCount = maxRetryCount;
-			_opCompletionCallback = OnOperationCompleted;
-			_numberOfRetriesLeft = maxRetryCount;
-
-			StartOperation(true);
-		}
-
-		public RetryResult(AsyncResult<T> op, int millisecondsRetryDelay, int maxRetryCount)
-			: base(AsyncOperationStatus.Running)
-		{
-			_op = op;
 			_millisecondsRetryDelay = millisecondsRetryDelay;
 			_maxRetryCount = maxRetryCount;
 			_opCompletionCallback = OnOperationCompleted;
@@ -72,18 +60,26 @@ namespace UnityFx.Async
 		{
 			try
 			{
-				var op = _op ?? _opFactory();
+				IAsyncOperation op;
 
-				if (_op != null)
+				if (_opFactory is Func<IAsyncOperation> f1)
 				{
-					_op.TryStart();
+					op = f1();
+				}
+				else if (_opFactory is Func<IAsyncOperation<T>> f2)
+				{
+					op = f2();
+				}
+				else
+				{
+					throw new InvalidOperationException("Invalid delegate type.");
 				}
 
 				if (!op.TryAddCompletionCallback(_opCompletionCallback, null))
 				{
 					if (op.IsCompletedSuccessfully)
 					{
-						TrySetResult(op.Result, calledFromConstructor);
+						TrySetCompleted(op, calledFromConstructor);
 					}
 					else
 					{
@@ -103,7 +99,7 @@ namespace UnityFx.Async
 
 			if (op.IsCompletedSuccessfully)
 			{
-				TrySetResult((op as IAsyncOperation<T>).Result, false);
+				TrySetCompleted(op, false);
 			}
 			else if (_millisecondsRetryDelay > 0)
 			{
@@ -131,22 +127,7 @@ namespace UnityFx.Async
 		{
 			if (_maxRetryCount == 0 || --_numberOfRetriesLeft > 0)
 			{
-				if (_op != null)
-				{
-					try
-					{
-						_op.Reset();
-						StartOperation(false);
-					}
-					catch (Exception e)
-					{
-						TrySetException(e, false);
-					}
-				}
-				else
-				{
-					StartOperation(false);
-				}
+				StartOperation(false);
 			}
 			else if (_lastOp.IsFaulted)
 			{
@@ -160,6 +141,20 @@ namespace UnityFx.Async
 			{
 				// NOTE: should not get here.
 				TrySetException(new Exception("Maximum number of retries exceeded."), false);
+			}
+		}
+
+		private void TrySetCompleted(IAsyncOperation op, bool completedSynchronously)
+		{
+			Debug.Assert(op.IsCompletedSuccessfully);
+
+			if (op is IAsyncOperation<T> rop)
+			{
+				TrySetResult(rop.Result, completedSynchronously);
+			}
+			else
+			{
+				TrySetCompleted(completedSynchronously);
 			}
 		}
 
