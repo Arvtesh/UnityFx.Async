@@ -10,7 +10,7 @@ using System.Threading;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// A lightweight <c>net35</c>-compatible analog of <c>Task</c> for <c>Unity3d</c>.
+	/// A lightweight <c>net35</c>-compatible asynchronous operation for <c>Unity3d</c>.
 	/// </summary>
 	/// <remarks>
 	/// <para>This class is the core entity of the library. In many aspects it mimics <c>Task</c>
@@ -22,58 +22,15 @@ namespace UnityFx.Async
 	/// There is a number of operation state accessors that can be used exactly like corresponding
 	/// properties of <c>Task</c>.
 	/// </para>
-	/// <para>Design goals for <see cref="AsyncResult"/> are:
-	///   - Minimum size and allocations.
-	///   - Multithreading support. All class methods except <see cref="Dispose()"/> and <see cref="Reset"/> are thread-safe.
-	///   - <c>Task</c>-like interface and behaviour. This includes <c>async</c>/<c>await</c> (net46+ only),
-	///     continuations and <see cref="SynchronizationContext"/> capturing support.
-	///   - <c>Unity3d</c> compatibility. This includes possibility to <c>yield</c> any <see cref="AsyncResult"/>
-	///     in coroutines and net35-compilance.
-	/// </para>
 	/// <para>The class implements <see cref="IDisposable"/> interface. So strictly speaking <see cref="Dispose()"/>
 	/// should be called when the operation is no longed in use. In practice that is only required
 	/// if <see cref="AsyncWaitHandle"/> property was used. Also keep in mind that <see cref="Dispose()"/>
 	/// (as well as <see cref="Reset()"/>) implementation is not thread-safe.
 	/// </para>
 	/// <para>Please note that while the class is designed as a lightweight and portable <c>Task</c>-like object,
-	/// it's NOT a replacement for .NET <c>Task</c>. It is recommended to use <c>Task</c> when possible
-	/// and only switch to <see cref="AsyncResult"/> only if one of the following applies:
-	///   - <c>net35</c> compatibility is required.
-	///   - The operation should be used in <c>Unity3d</c> coroutines.
-	///   - Memory usage is a concern.
-	///   - You follow Asynchronous Programming Model (APM) and need <see cref="IAsyncResult"/> implementation.
+	/// it's NOT a replacement for .NET <c>Task</c>. It is recommended to use <c>Task</c> in general.
 	/// </para>
 	/// </remarks>
-	/// <example>
-	/// <see cref="AsyncResult"/> class can be used very similarly to <see href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</see>:
-	/// <code>
-	/// async Task Foo()
-	/// {
-	///     await AsyncResult.Delay(10);
-	/// }
-	/// </code>
-	/// Or (in <see href="https://unity3d.com">Unity3d</see>) it can be used in coroutines:
-	/// <code>
-	/// IEnumerator FooEnum()
-	/// {
-	///     yield return AsyncResult.Delay(10);
-	/// }
-	///
-	/// Coroutine Foo()
-	/// {
-	///     return StartCoroutine(FooEnum());
-	/// }
-	/// </code>
-	/// <see cref="AsyncCompletionSource"/> can be used much like <see href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskcompletionsource-1">TaskCompletionSource</see>:
-	/// <code>
-	/// IAsyncOperation&lt;int&gt; Foo()
-	/// {
-	///     var op = new AsyncCompletionSource&lt;int&gt;();
-	///     op.SetResult(25);
-	///     return op; // Can use op.Operation here as well
-	/// }
-	/// </code>
-	/// </example>
 	/// <seealso href="https://blogs.msdn.microsoft.com/nikos/2011/03/14/how-to-implement-the-iasyncresult-design-pattern/">How to implement the IAsyncResult design pattern</seealso>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming">Task-based Asynchronous Pattern (TAP)</seealso>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/asynchronous-programming-model-apm">Asynchronous Programming Model (APM)</seealso>
