@@ -141,20 +141,8 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="status">Initial value of the <see cref="Status"/> property.</param>
 		public AsyncResult(AsyncOperationStatus status)
+			: this((int)status)
 		{
-			var flags = (int)status;
-
-			if (flags == StatusFaulted)
-			{
-				_exception = new AggregateException();
-			}
-
-			if (flags > StatusRunning)
-			{
-				flags |= _flagCompletedSynchronously;
-			}
-
-			_flags = flags;
 		}
 
 		/// <summary>
@@ -186,6 +174,7 @@ namespace UnityFx.Async
 				_exception = new AggregateException(exception);
 			}
 
+			_continuation = _continuationCompletionSentinel;
 			_flags = StatusFaulted | _flagCompletedSynchronously;
 		}
 
@@ -202,6 +191,7 @@ namespace UnityFx.Async
 			}
 
 			_exception = new AggregateException(exceptions);
+			_continuation = _continuationCompletionSentinel;
 			_flags = StatusFaulted | _flagCompletedSynchronously;
 		}
 
@@ -1237,7 +1227,20 @@ namespace UnityFx.Async
 
 		private AsyncResult(int flags)
 		{
-			_flags = flags;
+			if (flags == StatusFaulted)
+			{
+				_exception = new AggregateException();
+			}
+
+			if (flags > StatusRunning)
+			{
+				_continuation = _continuationCompletionSentinel;
+				_flags = flags | _flagCompletedSynchronously;
+			}
+			else
+			{
+				_flags = flags;
+			}
 		}
 
 		private bool TryAddContinuation(object continuation, SynchronizationContext syncContext)
