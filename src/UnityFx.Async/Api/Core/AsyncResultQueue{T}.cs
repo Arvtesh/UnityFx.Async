@@ -347,6 +347,7 @@ namespace UnityFx.Async
 					else
 					{
 						firstOp.TrySetRunning();
+						break;
 					}
 				}
 			}
