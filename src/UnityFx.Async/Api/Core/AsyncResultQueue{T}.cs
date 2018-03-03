@@ -60,7 +60,7 @@ namespace UnityFx.Async
 			{
 				if (value < 0)
 				{
-					throw new ArgumentOutOfRangeException(nameof(MaxCount), value, "MaxCount value should be >= 0");
+					throw new ArgumentOutOfRangeException(nameof(MaxCount), value, Constants.ErrorValueIsLessThanZero);
 				}
 
 				_maxOpsSize = value;

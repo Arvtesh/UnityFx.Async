@@ -48,11 +48,6 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private const string _errorListIsEmpty = "The list cannot be empty.";
-		private const string _errorListElementIsNull = "The list elements cannot be null.";
-		private const string _errorValueIsLessThanZero = "The valus cannot be less than zero.";
-		private const string _errorOperationIsNotCompleted = "The operation should be completed.";
-
 		private const int _flagCompletionReserved = 0x00100000;
 		private const int _flagCompleted = 0x00200000;
 		private const int _flagSynchronous = 0x00400000;
@@ -358,7 +353,7 @@ namespace UnityFx.Async
 			{
 				if (e == null)
 				{
-					throw new ArgumentException(_errorListElementIsNull, nameof(exceptions));
+					throw new ArgumentException(Constants.ErrorListElementIsNull, nameof(exceptions));
 				}
 
 				list.Add(e);
@@ -366,7 +361,7 @@ namespace UnityFx.Async
 
 			if (list.Count == 0)
 			{
-				throw new ArgumentException(_errorListIsEmpty, nameof(exceptions));
+				throw new ArgumentException(Constants.ErrorListIsEmpty, nameof(exceptions));
 			}
 
 			if (TryReserveCompletion())
@@ -663,7 +658,7 @@ namespace UnityFx.Async
 		{
 			if (millisecondsDelay < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(millisecondsDelay), millisecondsDelay, _errorValueIsLessThanZero);
+				throw new ArgumentOutOfRangeException(nameof(millisecondsDelay), millisecondsDelay, Constants.ErrorValueIsLessThanZero);
 			}
 
 			if (millisecondsDelay == 0)
@@ -717,12 +712,12 @@ namespace UnityFx.Async
 
 			if (millisecondsRetryDelay < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay), millisecondsRetryDelay, _errorValueIsLessThanZero);
+				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay), millisecondsRetryDelay, Constants.ErrorValueIsLessThanZero);
 			}
 
 			if (maxRetryCount < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, _errorValueIsLessThanZero);
+				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, Constants.ErrorValueIsLessThanZero);
 			}
 
 			return new RetryResult<object>(opFactory, millisecondsRetryDelay, maxRetryCount);
@@ -769,12 +764,12 @@ namespace UnityFx.Async
 
 			if (millisecondsRetryDelay < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay), millisecondsRetryDelay, _errorValueIsLessThanZero);
+				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay), millisecondsRetryDelay, Constants.ErrorValueIsLessThanZero);
 			}
 
 			if (maxRetryCount < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, _errorValueIsLessThanZero);
+				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, Constants.ErrorValueIsLessThanZero);
 			}
 
 			return new RetryResult<T>(opFactory, millisecondsRetryDelay, maxRetryCount);
@@ -882,7 +877,7 @@ namespace UnityFx.Async
 			{
 				if (opArray.Length == 0)
 				{
-					throw new ArgumentException(_errorListIsEmpty, nameof(ops));
+					throw new ArgumentException(Constants.ErrorListIsEmpty, nameof(ops));
 				}
 
 				return new WhenAnyResult<T>(opArray);
@@ -892,7 +887,7 @@ namespace UnityFx.Async
 			{
 				if (opCollection.Count == 0)
 				{
-					throw new ArgumentException(_errorListIsEmpty, nameof(ops));
+					throw new ArgumentException(Constants.ErrorListIsEmpty, nameof(ops));
 				}
 
 				var array = new T[opCollection.Count];
@@ -904,7 +899,7 @@ namespace UnityFx.Async
 
 			if (opList.Count == 0)
 			{
-				throw new ArgumentException(_errorListIsEmpty, nameof(ops));
+				throw new ArgumentException(Constants.ErrorListIsEmpty, nameof(ops));
 			}
 
 			return new WhenAnyResult<T>(opList.ToArray());
@@ -926,7 +921,7 @@ namespace UnityFx.Async
 
 			if (ops.Length == 0)
 			{
-				throw new ArgumentException(_errorListIsEmpty, nameof(ops));
+				throw new ArgumentException(Constants.ErrorListIsEmpty, nameof(ops));
 			}
 
 			return new WhenAnyResult<T>(ops);
@@ -1219,7 +1214,7 @@ namespace UnityFx.Async
 		{
 			if (!IsCompleted)
 			{
-				throw new InvalidOperationException(_errorOperationIsNotCompleted);
+				throw new InvalidOperationException(Constants.ErrorOperationIsNotCompleted);
 			}
 
 			Dispose(true);

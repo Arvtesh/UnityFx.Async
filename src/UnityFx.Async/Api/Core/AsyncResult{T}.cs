@@ -21,8 +21,6 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private const string _errorResultNotAvailable = "The operation result is not available.";
-
 		private T _result;
 
 		#endregion
@@ -126,7 +124,7 @@ namespace UnityFx.Async
 			{
 				if (!IsCompletedSuccessfully)
 				{
-					throw new InvalidOperationException(_errorResultNotAvailable);
+					throw new InvalidOperationException(Constants.ErrorResultNotAvailable);
 				}
 
 				return _result;
