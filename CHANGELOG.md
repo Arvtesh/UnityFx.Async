@@ -14,7 +14,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `WhenAll`/`WhenAny` static helpers for `AsyncResult`.
 - Added `ConfigureAwait` extensions for `IAsyncOperation`.
 - Added `Task` extension methods to that convert it to an `AsyncResult` instance.
-- Added possibility to reset `AsyncResult` state to default via `Reset` method.
 - Added `AsyncResult.Retry` methods.
 
 ### Changed
@@ -43,7 +42,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `IsEmpty` property to `AsyncResultQueue`.
 
 ### Changed
-- `AsyncResult` implemenatino is changed to prevent returning null operation result when the operation is completed in some cases.
+- `AsyncResult` implemenation is changed to prevent returning null operation result when the operation is completed in some cases.
 
 -----------------------
 ## [0.7.0] - 2018-02-10
