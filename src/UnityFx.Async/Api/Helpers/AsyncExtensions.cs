@@ -4,9 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-#if !NET35
-using System.Runtime.ExceptionServices;
-#endif
 using System.Threading;
 #if UNITYFX_SUPPORT_TAP
 using System.Threading.Tasks;
@@ -86,60 +83,30 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Throws exception if the operation has failed.
-		/// </summary>
-		internal static void ThrowIfFaulted(IAsyncOperation op)
-		{
-			if (op.Status == AsyncOperationStatus.Faulted)
-			{
-				var e = op.Exception;
-
-				if (e != null)
-				{
-					var inner = e.InnerException ?? e;
-#if !NET35
-					ExceptionDispatchInfo.Capture(inner).Throw();
-#else
-					throw inner;
-#endif
-				}
-				else
-				{
-					// Should never get here. If faulted state excpetion should not be null.
-					throw new Exception(op.ToString());
-				}
-			}
-		}
-
-		/// <summary>
 		/// Throws exception if the operation has failed or canceled.
 		/// </summary>
 		internal static void ThrowIfFaultedOrCanceled(IAsyncOperation op)
 		{
-			var status = op.Status;
-
-			if (status == AsyncOperationStatus.Faulted)
+			if (op is AsyncResult ar)
 			{
-				var e = op.Exception;
-
-				if (e != null)
-				{
-					var inner = e.InnerException ?? e;
-#if !NET35
-					ExceptionDispatchInfo.Capture(inner).Throw();
-#else
-					throw inner;
-#endif
-				}
-				else
-				{
-					// Should never get here. If faulted state excpetion should not be null.
-					throw new Exception(op.ToString());
-				}
+				ar.ThrowIfNonSuccess();
 			}
-			else if (status == AsyncOperationStatus.Canceled)
+			else
 			{
-				throw new OperationCanceledException(op.ToString());
+				var status = op.Status;
+
+				if (status == AsyncOperationStatus.Faulted)
+				{
+					if (!AsyncResult.TryThrowException(op.Exception))
+					{
+						// Should never get here. If faulted state excpetion should not be null.
+						throw new Exception(op.ToString());
+					}
+				}
+				else if (status == AsyncOperationStatus.Canceled)
+				{
+					throw new OperationCanceledException();
+				}
 			}
 		}
 

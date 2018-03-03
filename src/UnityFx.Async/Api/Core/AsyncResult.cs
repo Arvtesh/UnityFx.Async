@@ -5,6 +5,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+#if !NET35
+using System.Runtime.ExceptionServices;
+#endif
 using System.Threading;
 
 namespace UnityFx.Async
@@ -268,10 +271,10 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 
-			if (TrySetCompleted(StatusCanceled, completedSynchronously))
+			if (TryReserveCompletion())
 			{
-				OnStatusChanged(AsyncOperationStatus.Canceled);
-				OnCompleted();
+				_exception = new AggregateException(new OperationCanceledException());
+				SetCompleted(StatusCanceled, completedSynchronously);
 				return true;
 			}
 			else if (!IsCompleted)
@@ -304,6 +307,7 @@ namespace UnityFx.Async
 			{
 				if (exception is OperationCanceledException)
 				{
+					_exception = new AggregateException(exception);
 					SetCompleted(StatusCanceled, completedSynchronously);
 				}
 				else
@@ -391,8 +395,6 @@ namespace UnityFx.Async
 
 			if (TrySetCompleted(StatusRanToCompletion, completedSynchronously))
 			{
-				OnStatusChanged(AsyncOperationStatus.RanToCompletion);
-				OnCompleted();
 				return true;
 			}
 			else if (!IsCompleted)
@@ -401,6 +403,30 @@ namespace UnityFx.Async
 			}
 
 			return false;
+		}
+
+		/// <summary>
+		/// Throws exception if the operation has failed or canceled.
+		/// </summary>
+		protected internal void ThrowIfNonSuccess()
+		{
+			var status = _flags & _statusMask;
+
+			if (status == StatusFaulted)
+			{
+				if (!TryThrowException(_exception))
+				{
+					// Should never get here. In faulted state excpetion should not be null.
+					throw new Exception(ToString());
+				}
+			}
+			else if (status == StatusCanceled)
+			{
+				if (!TryThrowException(_exception))
+				{
+					throw new OperationCanceledException();
+				}
+			}
 		}
 
 		/// <summary>
@@ -979,6 +1005,8 @@ namespace UnityFx.Async
 
 				if (Interlocked.CompareExchange(ref _flags, newFlags, flags) == flags)
 				{
+					OnStatusChanged((AsyncOperationStatus)status);
+					OnCompleted();
 					return true;
 				}
 			}
@@ -1044,6 +1072,24 @@ namespace UnityFx.Async
 			{
 				action();
 			}
+		}
+
+		/// <summary>
+		/// Rethrows the specified <see cref="AggregateException"/>.
+		/// </summary>
+		internal static bool TryThrowException(AggregateException e)
+		{
+			if (e != null)
+			{
+				var inner = e.InnerException ?? e;
+#if !NET35
+				ExceptionDispatchInfo.Capture(inner).Throw();
+#else
+				throw inner;
+#endif
+			}
+
+			return false;
 		}
 
 		#endregion
