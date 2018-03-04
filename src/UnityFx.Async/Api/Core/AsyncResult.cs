@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 #if !NET35
 using System.Runtime.ExceptionServices;
 #endif
@@ -794,7 +795,7 @@ namespace UnityFx.Async
 				throw new ArgumentOutOfRangeException(nameof(retryDelay));
 			}
 
-			return Retry<T>(opFactory, (int)millisecondsDelay, maxRetryCount);
+			return Retry(opFactory, (int)millisecondsDelay, maxRetryCount);
 		}
 
 		/// <summary>
@@ -1086,6 +1087,95 @@ namespace UnityFx.Async
 
 			return false;
 		}
+
+		#endregion
+
+		#region async/await
+
+#if UNITYFX_SUPPORT_TAP
+
+		/// <summary>
+		/// Provides an object that waits for the completion of <see cref="AsyncResult"/>. This type and its members are intended for compiler use only.
+		/// </summary>
+		public struct AsyncAwaiter : INotifyCompletion
+		{
+			private readonly AsyncResult _op;
+			private readonly bool _continueOnCapturedContext;
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="AsyncAwaiter"/> struct.
+			/// </summary>
+			public AsyncAwaiter(AsyncResult op, bool continueOnCapturedContext)
+			{
+				_op = op;
+				_continueOnCapturedContext = continueOnCapturedContext;
+			}
+
+			/// <summary>
+			/// Gets a value indicating whether the underlying operation is completed.
+			/// </summary>
+			/// <value>The operation completion flag.</value>
+			public bool IsCompleted => _op.IsCompleted;
+
+			/// <summary>
+			/// Returns the source result value.
+			/// </summary>
+			public void GetResult()
+			{
+				_op.ThrowIfNonSuccess();
+			}
+
+			/// <inheritdoc/>
+			public void OnCompleted(Action continuation)
+			{
+				var syncContext = _continueOnCapturedContext ? SynchronizationContext.Current : null;
+				_op.SetContinuationForAwait(continuation, syncContext);
+			}
+		}
+
+		/// <summary>
+		/// Provides an awaitable object that allows for configured awaits on <see cref="AsyncResult"/>. This type is intended for compiler use only.
+		/// </summary>
+		public struct ConfiguredAsyncAwaitable
+		{
+			private readonly AsyncAwaiter _awaiter;
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="ConfiguredAsyncAwaitable"/> struct.
+			/// </summary>
+			public ConfiguredAsyncAwaitable(AsyncResult op, bool continueOnCapturedContext)
+			{
+				_awaiter = new AsyncAwaiter(op, continueOnCapturedContext);
+			}
+
+			/// <summary>
+			/// Returns the awaiter.
+			/// </summary>
+			public AsyncAwaiter GetAwaiter()
+			{
+				return _awaiter;
+			}
+		}
+
+		/// <summary>
+		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
+		/// </summary>
+		public AsyncAwaiter GetAwaiter()
+		{
+			return new AsyncAwaiter(this, true);
+		}
+
+		/// <summary>
+		/// Configures an awaiter used to await this operation.
+		/// </summary>
+		/// <param name="continueOnCapturedContext">If <see langword="true"/> attempts to marshal the continuation back to the original context captured.</param>
+		/// <returns>An object used to await the operation.</returns>
+		public ConfiguredAsyncAwaitable ConfigureAwait(bool continueOnCapturedContext)
+		{
+			return new ConfiguredAsyncAwaitable(this, continueOnCapturedContext);
+		}
+
+#endif
 
 		#endregion
 
