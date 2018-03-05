@@ -15,6 +15,7 @@
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<RootNamespace>UnityFx.Async.Samples</RootNamespace>
 		<IsPackable>false</IsPackable>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<CodeAnalysisRuleSet>../CodingConventions/Cs/CsharpRules.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
