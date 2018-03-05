@@ -25,6 +25,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Changed `IAsyncOperationEvents.Completed` event behaviour to always execute handler (event if it was registered after the comperation has copleted).
 - Removed `Completed` event from `IAsyncOperationEvents`.
 - Removed `AsyncResult` constructors that accepted exceptions.
+- Changed `AsyncResult.Result` property to throw `AggregateException` when faulted or canceled to mathch `Task` behaviour.
 
 ### Removed
 - Removed `AsyncResult.TryCreateAsyncWaitHandle` helper.
