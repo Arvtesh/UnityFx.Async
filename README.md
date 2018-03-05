@@ -47,10 +47,10 @@ public IAsyncOperation<Texture2D> LoadTextureAsync(string textureUrl)
     return result.Operation;
 }
 
-private IEnumerator LoadTextureInternal(AsyncCompletionSource<Texture2D> op, string textureUrl)
+private IEnumerator LoadTextureInternal(IAsyncCompletionSource<Texture2D> op, string textureUrl)
 {
-    var www = UnityWebRequest.GetTexture(textureUrl);
-    yield return www.SendWebRequest();
+    var www = UnityWebRequestTexture.GetTexture(textureUrl);
+    yield return www.Send();
 
     if (www.isNetworkError || www.isHttpError)
     {
@@ -64,9 +64,9 @@ private IEnumerator LoadTextureInternal(AsyncCompletionSource<Texture2D> op, str
 ```
 Once that is done we can use `LoadTextureAsync()` result in many ways. For example we can yield it in Unity coroutine to wait for its completion:
 ```csharp
-IEnumerator TestLoadTextureAsync()
+IEnumerator WaitForLoadOperationInCoroutine(string textureUrl)
 {
-    var op = LoadtextureAsync("http://my_texture_url.jpg");
+    var op = LoadTextureAsync(textureUrl);
     yield return op;
 
     if (op.IsCompletedSuccessfully)
@@ -85,14 +85,14 @@ IEnumerator TestLoadTextureAsync()
 ```
 With Unity 2017+ and .NET 4.6 scripting backed it can be used just like a [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task). The await continuation is scheduled on the captured [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) (if any):
 ```csharp
-async Task TestLoadTextureAsync2()
+async Task WaitForLoadOperationWithAwait(string textureUrl)
 {
     try
     {
-        var texture = await LoadtextureAsync("http://my_texture_url.jpg");
+        var texture = await LoadTextureAsync(textureUrl);
         Debug.Log("Yay! The texture is loaded!");
     }
-    catch (OperationCanceledException e)
+    catch (OperationCanceledException)
     {
         Debug.LogWarning("The operation was canceled.");
     }
@@ -104,12 +104,13 @@ async Task TestLoadTextureAsync2()
 ```
 An operation can have any number of completion callbacks registered:
 ```csharp
-void TestLoadTextureAsync3()
+void WaitForLoadOperationInCompletionCallback(string textureUrl)
 {
-    LoadTextureAsync("http://my_texture_url.jpg").AddCompletionCallback(op =>
+    LoadTextureAsync(textureUrl).AddCompletionCallback(op =>
     {
         if (op.IsCompletedSuccessfully)
         {
+            var texture = (op as IAsyncOperation<Texture2D>).Result;
             Debug.Log("Yay!");
         }
         else if (op.IsFaulted)
@@ -125,23 +126,24 @@ void TestLoadTextureAsync3()
 ```
 Also one can access/wait for operations from other threads:
 ```csharp
-void TestLoadTextureAsync4()
+void WaitForLoadOperationInAnotherThread(string textureUrl)
 {
-    var op = LoadTextureAsync("http://my_texture_url.jpg");
+    var op = LoadTextureAsync(textureUrl);
 
     ThreadPool.QueueUserWorkItem(
         args =>
         {
             try
             {
-                var texture = (args as IAsyncOperation<Texture>).Join();
+                var texture = (args as IAsyncOperation<Texture2D>).Join();
+
                 // The texture is loaded
             }
-            catch (OperationCanceledException e)
+            catch (OperationCanceledException)
             {
                 // The operation was canceled
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // Load failed
             }
