@@ -404,23 +404,52 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Throws exception if the operation has failed or canceled.
 		/// </summary>
-		protected internal void ThrowIfNonSuccess()
+		protected internal void ThrowIfNonSuccess(bool throwAggregate)
 		{
 			var status = _flags & _statusMask;
 
-			if (status == StatusFaulted)
+			if (throwAggregate)
 			{
-				if (!TryThrowException(_exception))
+				if (status == StatusFaulted)
 				{
-					// Should never get here. In faulted state excpetion should not be null.
-					throw new Exception(ToString());
+					if (_exception != null)
+					{
+						throw _exception;
+					}
+					else
+					{
+						// Should never get here. Exception should never be null in faulted state.
+						throw new AggregateException();
+					}
+				}
+				else if (status == StatusCanceled)
+				{
+					if (_exception != null)
+					{
+						throw _exception;
+					}
+					else
+					{
+						throw new AggregateException(new OperationCanceledException());
+					}
 				}
 			}
-			else if (status == StatusCanceled)
+			else
 			{
-				if (!TryThrowException(_exception))
+				if (status == StatusFaulted)
 				{
-					throw new OperationCanceledException();
+					if (!TryThrowException(_exception))
+					{
+						// Should never get here. Exception should never be null in faulted state.
+						throw new Exception();
+					}
+				}
+				else if (status == StatusCanceled)
+				{
+					if (!TryThrowException(_exception))
+					{
+						throw new OperationCanceledException();
+					}
 				}
 			}
 		}
@@ -1122,7 +1151,7 @@ namespace UnityFx.Async
 			/// </summary>
 			public void GetResult()
 			{
-				_op.ThrowIfNonSuccess();
+				_op.ThrowIfNonSuccess(false);
 			}
 
 			/// <inheritdoc/>

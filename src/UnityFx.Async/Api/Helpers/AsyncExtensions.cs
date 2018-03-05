@@ -89,7 +89,7 @@ namespace UnityFx.Async
 		{
 			if (op is AsyncResult ar)
 			{
-				ar.ThrowIfNonSuccess();
+				ar.ThrowIfNonSuccess(false);
 			}
 			else
 			{

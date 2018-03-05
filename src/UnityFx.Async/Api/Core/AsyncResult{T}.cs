@@ -152,7 +152,7 @@ namespace UnityFx.Async
 			/// </summary>
 			public T GetResult()
 			{
-				_op.ThrowIfNonSuccess();
+				_op.ThrowIfNonSuccess(false);
 				return _op.Result;
 			}
 
@@ -217,11 +217,12 @@ namespace UnityFx.Async
 		{
 			get
 			{
-				if (!IsCompletedSuccessfully)
+				if (!IsCompleted)
 				{
 					throw new InvalidOperationException(Constants.ErrorResultNotAvailable);
 				}
 
+				ThrowIfNonSuccess(true);
 				return _result;
 			}
 		}
