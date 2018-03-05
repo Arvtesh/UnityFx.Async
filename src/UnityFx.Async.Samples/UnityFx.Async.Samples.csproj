@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net35;net46</TargetFrameworks>
+		<Description>Sample code for UnityFx.Async.</Description>
+		<Company />
+		<Authors>Alexander Bogarsukov</Authors>
+		<Copyright>Alexander Bogarsukov</Copyright>
+		<RepositoryUrl>https://github.com/Arvtesh/UnityFx.Async</RepositoryUrl>
+		<RepositoryType>Git</RepositoryType>
+		<Version>0.7.0</Version>
+		<AssemblyVersion>0.7.0.0</AssemblyVersion>
+		<FileVersion>0.7.0.0</FileVersion>
+		<InformationalVersion>0.7.0.0</InformationalVersion>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<RootNamespace>UnityFx.Async.Samples</RootNamespace>
+		<IsPackable>false</IsPackable>
+		<CodeAnalysisRuleSet>../CodingConventions/Cs/CsharpRules.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Reference Include="UnityEngine">
+			<HintPath>..\Dependencies\UnityEngine.dll</HintPath>
+		</Reference>
+		<ProjectReference Include="..\UnityFx.Async\UnityFx.Async.csproj" />
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)' != 'net35'">
+		<DefineConstants>UNITYFX_SUPPORT_TAP</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta006" PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AdditionalFiles Include="../CodingConventions/Common/stylecop.json" />
+	</ItemGroup>
+
+</Project>
