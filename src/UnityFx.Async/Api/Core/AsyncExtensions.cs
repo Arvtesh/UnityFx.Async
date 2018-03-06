@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading;
 #if UNITYFX_SUPPORT_TAP
 using System.Threading.Tasks;
@@ -594,6 +595,130 @@ namespace UnityFx.Async
 #if UNITYFX_SUPPORT_TAP
 
 		/// <summary>
+		/// Provides an object that waits for the completion of an asynchronous operation. This type and its members are intended for compiler use only.
+		/// </summary>
+		/// <seealso cref="IAsyncOperation"/>
+		public struct AsyncAwaiter : INotifyCompletion
+		{
+			private readonly IAsyncOperation _op;
+			private readonly bool _continueOnCapturedContext;
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="AsyncAwaiter"/> struct.
+			/// </summary>
+			public AsyncAwaiter(IAsyncOperation op, bool continueOnCapturedContext)
+			{
+				_op = op;
+				_continueOnCapturedContext = continueOnCapturedContext;
+			}
+
+			/// <summary>
+			/// Gets a value indicating whether the underlying operation is completed.
+			/// </summary>
+			/// <value>The operation completion flag.</value>
+			public bool IsCompleted => _op.IsCompleted;
+
+			/// <summary>
+			/// Returns the source result value.
+			/// </summary>
+			public void GetResult()
+			{
+				GetAwaiterResult(_op);
+			}
+
+			/// <inheritdoc/>
+			public void OnCompleted(Action continuation)
+			{
+				SetAwaitedCompletionCallback(_op, continuation, _continueOnCapturedContext);
+			}
+		}
+
+		/// <summary>
+		/// Provides an object that waits for the completion of an asynchronous operation. This type and its members are intended for compiler use only.
+		/// </summary>
+		/// <seealso cref="IAsyncOperation{T}"/>
+		public struct AsyncAwaiter<T> : INotifyCompletion
+		{
+			private readonly IAsyncOperation<T> _op;
+			private readonly bool _continueOnCapturedContext;
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="AsyncAwaiter{T}"/> struct.
+			/// </summary>
+			public AsyncAwaiter(IAsyncOperation<T> op, bool continueOnCapturedContext)
+			{
+				_op = op;
+				_continueOnCapturedContext = continueOnCapturedContext;
+			}
+
+			/// <summary>
+			/// Gets a value indicating whether the underlying operation is completed.
+			/// </summary>
+			/// <value>The operation completion flag.</value>
+			public bool IsCompleted => _op.IsCompleted;
+
+			/// <summary>
+			/// Returns the source result value.
+			/// </summary>
+			/// <returns>Returns the underlying operation result.</returns>
+			public T GetResult()
+			{
+				GetAwaiterResult(_op);
+				return _op.Result;
+			}
+
+			/// <inheritdoc/>
+			public void OnCompleted(Action continuation)
+			{
+				SetAwaitedCompletionCallback(_op, continuation, _continueOnCapturedContext);
+			}
+		}
+
+		/// <summary>
+		/// Provides an awaitable object that allows for configured awaits on <see cref="IAsyncOperation"/>. This type is intended for compiler use only.
+		/// </summary>
+		/// <seealso cref="IAsyncOperation"/>
+		public struct ConfiguredAsyncAwaitable
+		{
+			private readonly AsyncAwaiter _awaiter;
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="ConfiguredAsyncAwaitable"/> struct.
+			/// </summary>
+			public ConfiguredAsyncAwaitable(IAsyncOperation op, bool continueOnCapturedContext)
+			{
+				_awaiter = new AsyncAwaiter(op, continueOnCapturedContext);
+			}
+
+			/// <summary>
+			/// Returns the awaiter.
+			/// </summary>
+			public AsyncAwaiter GetAwaiter() => _awaiter;
+		}
+
+		/// <summary>
+		/// Provides an awaitable object that allows for configured awaits on <see cref="IAsyncOperation{T}"/>. This type is intended for compiler use only.
+		/// </summary>
+		/// <seealso cref="IAsyncOperation{T}"/>
+		public struct ConfiguredAsyncAwaitable<T>
+		{
+			private readonly AsyncAwaiter<T> _awaiter;
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="ConfiguredAsyncAwaitable{T}"/> struct.
+			/// </summary>
+			public ConfiguredAsyncAwaitable(IAsyncOperation<T> op, bool continueOnCapturedContext)
+			{
+				_awaiter = new AsyncAwaiter<T>(op, continueOnCapturedContext);
+			}
+
+			/// <summary>
+			/// Returns the awaiter.
+			/// </summary>
+			public AsyncAwaiter<T> GetAwaiter() => _awaiter;
+		}
+
+		/// <summary>
 		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
@@ -693,6 +818,28 @@ namespace UnityFx.Async
 				false);
 
 			return result.Task;
+		}
+
+		private static void SetAwaitedCompletionCallback(IAsyncOperation op, Action continuation, bool continueOnCapturedContext)
+		{
+			var syncContext = continueOnCapturedContext ? SynchronizationContext.Current : null;
+
+			if (op is AsyncResult ar)
+			{
+				ar.SetContinuationForAwait(continuation, syncContext);
+			}
+			else if (!op.TryAddCompletionCallback(o => continuation(), syncContext))
+			{
+				continuation();
+			}
+		}
+
+		private static void GetAwaiterResult(IAsyncOperation op)
+		{
+			if (!op.IsCompletedSuccessfully)
+			{
+				ThrowIfFaultedOrCanceled(op);
+			}
 		}
 
 #endif
@@ -877,7 +1024,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="task">The task to convert to <see cref="IAsyncOperation"/>.</param>
 		/// <returns>An <see cref="IAsyncOperation"/> that represents the <paramref name="task"/>.</returns>
-		public static IAsyncOperation ToAsync(this Task task)
+		public static AsyncResult ToAsync(this Task task)
 		{
 			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
 
@@ -907,7 +1054,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="task">The task to convert to <see cref="IAsyncOperation"/>.</param>
 		/// <returns>An <see cref="IAsyncOperation"/> that represents the <paramref name="task"/>.</returns>
-		public static IAsyncOperation<T> ToAsync<T>(this Task<T> task)
+		public static AsyncResult<T> ToAsync<T>(this Task<T> task)
 		{
 			var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running);
 
