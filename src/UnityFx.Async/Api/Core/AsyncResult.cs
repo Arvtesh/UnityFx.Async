@@ -74,44 +74,6 @@ namespace UnityFx.Async
 		#region interface
 
 		/// <summary>
-		/// Raised when the operation has completed.
-		/// </summary>
-		/// <remarks>
-		/// The event handler is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
-		/// If the operation is already completed the event handler is called synchronously.
-		/// </remarks>
-		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered in <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)"/>
-		/// <seealso cref="RemoveCompletionCallback(AsyncOperationCallback)"/>
-		public event EventHandler Completed
-		{
-			add
-			{
-				ThrowIfDisposed();
-
-				if (value == null)
-				{
-					throw new ArgumentNullException(nameof(value));
-				}
-
-				if (!TryAddContinuation(value, SynchronizationContext.Current))
-				{
-					value(this, EventArgs.Empty);
-				}
-			}
-			remove
-			{
-				ThrowIfDisposed();
-
-				if (value != null)
-				{
-					TryRemoveContinuation(value);
-				}
-			}
-		}
-
-		/// <summary>
 		/// Gets a value indicating whether the operation instance is disposed.
 		/// </summary>
 		/// <value>The disposed flag.</value>
@@ -562,6 +524,8 @@ namespace UnityFx.Async
 			}
 		}
 
+		#region From*
+
 		/// <summary>
 		/// Creates a <see cref="IAsyncOperation"/> that is canceled.
 		/// </summary>
@@ -677,6 +641,10 @@ namespace UnityFx.Async
 			return new AsyncResult<T>(result);
 		}
 
+		#endregion
+
+		#region Delay
+
 		/// <summary>
 		/// Creates an operation that completes after a time delay.
 		/// </summary>
@@ -722,6 +690,10 @@ namespace UnityFx.Async
 
 			return Delay((int)millisecondsDelay);
 		}
+
+		#endregion
+
+		#region Retry
 
 		/// <summary>
 		/// Creates an operation that completes when the source operation is completed successfully or maximum number of retries exceeded.
@@ -827,6 +799,10 @@ namespace UnityFx.Async
 			return Retry(opFactory, (int)millisecondsDelay, maxRetryCount);
 		}
 
+		#endregion
+
+		#region WhenAll
+
 		/// <summary>
 		/// Creates an operation that will complete when all of the specified objects in an enumerable collection have completed.
 		/// </summary>
@@ -888,6 +864,10 @@ namespace UnityFx.Async
 
 			return new WhenAllResult(ops);
 		}
+
+		#endregion
+
+		#region WhenAny
 
 		/// <summary>
 		/// Creates an operation that will complete when any of the specified objects in an enumerable collection have completed.
@@ -956,6 +936,8 @@ namespace UnityFx.Async
 
 			return new WhenAnyResult<T>(ops);
 		}
+
+		#endregion
 
 		#endregion
 
@@ -1228,6 +1210,34 @@ namespace UnityFx.Async
 		#endregion
 
 		#region IAsyncOperationEvents
+
+		/// <inheritdoc/>
+		public event AsyncOperationCallback Completed
+		{
+			add
+			{
+				ThrowIfDisposed();
+
+				if (value == null)
+				{
+					throw new ArgumentNullException(nameof(value));
+				}
+
+				if (!TryAddContinuation(value, SynchronizationContext.Current))
+				{
+					value(this);
+				}
+			}
+			remove
+			{
+				ThrowIfDisposed();
+
+				if (value != null)
+				{
+					TryRemoveContinuation(value);
+				}
+			}
+		}
 
 		/// <inheritdoc/>
 		public bool TryAddCompletionCallback(AsyncOperationCallback action, SynchronizationContext syncContext)

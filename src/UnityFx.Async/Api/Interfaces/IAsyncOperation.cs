@@ -46,10 +46,6 @@ namespace UnityFx.Async
 	/// <summary>
 	/// A disposable <see cref="IAsyncResult"/> with completion status information.
 	/// </summary>
-	/// <remarks>
-	/// <para>The interface is designed to be as close to <see href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</see> as possible.
-	/// </para>
-	/// </remarks>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</seealso>
 	/// <seealso cref="IAsyncOperation{T}"/>
 	/// <seealso cref="IAsyncResult"/>

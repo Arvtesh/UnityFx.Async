@@ -21,28 +21,17 @@ namespace UnityFx.Async
 		#region IAsyncOperation
 
 		/// <summary>
-		/// Blocks calling thread until the operation is completed.
+		/// Blocks calling thread until the operation is completed. After that rethrows the operation exception (if any).
 		/// </summary>
-		/// <param name="op">The operation to wait for.</param>
-		/// <seealso cref="Join(IAsyncOperation)"/>
+		/// <param name="op">The operation to join.</param>
 		/// <seealso cref="Join{T}(IAsyncOperation{T})"/>
-		public static void Wait(this IAsyncOperation op)
+		public static void Join(this IAsyncOperation op)
 		{
 			if (!op.IsCompleted)
 			{
 				op.AsyncWaitHandle.WaitOne();
 			}
-		}
 
-		/// <summary>
-		/// Blocks calling thread until the operation is completed. After that rethrows the operation exception (if any).
-		/// </summary>
-		/// <param name="op">The operation to join.</param>
-		/// <seealso cref="Join{T}(IAsyncOperation{T})"/>
-		/// <seealso cref="Wait(IAsyncOperation)"/>
-		public static void Join(this IAsyncOperation op)
-		{
-			Wait(op);
 			ThrowIfFaultedOrCanceled(op);
 		}
 
@@ -51,10 +40,13 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="op">The operation to join.</param>
 		/// <seealso cref="Join(IAsyncOperation)"/>
-		/// <seealso cref="Wait(IAsyncOperation)"/>
 		public static T Join<T>(this IAsyncOperation<T> op)
 		{
-			Wait(op);
+			if (!op.IsCompleted)
+			{
+				op.AsyncWaitHandle.WaitOne();
+			}
+
 			ThrowIfFaultedOrCanceled(op);
 			return op.Result;
 		}
@@ -205,20 +197,18 @@ namespace UnityFx.Async
 
 			var result = new AsyncCompletionSource(AsyncOperationStatus.Scheduled);
 
-			op.AddCompletionCallback(
-				asyncOp =>
+			op.Completed += asyncOp =>
+			{
+				try
 				{
-					try
-					{
-						result.SetRunning();
-						action(op, result);
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				},
-				true);
+					result.SetRunning();
+					action(op, result);
+				}
+				catch (Exception e)
+				{
+					result.TrySetException(e, false);
+				}
+			};
 
 			return result;
 		}
@@ -249,26 +239,24 @@ namespace UnityFx.Async
 
 			var result = new AsyncCompletionSource(AsyncOperationStatus.Scheduled);
 
-			op.AddCompletionCallback(
-				asyncOp =>
+			op.Completed += asyncOp =>
+			{
+				try
 				{
-					try
-					{
-						result.SetRunning();
+					result.SetRunning();
 
-						action(op).AddCompletionCallback(
-							asyncOp2 =>
-							{
-								result.CopyCompletionState(asyncOp2, false);
-							},
-							false);
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				},
-				true);
+					action(op).AddCompletionCallback(
+						asyncOp2 =>
+						{
+							result.CopyCompletionState(asyncOp2, false);
+						},
+						false);
+				}
+				catch (Exception e)
+				{
+					result.TrySetException(e, false);
+				}
+			};
 
 			return result;
 		}
@@ -297,20 +285,18 @@ namespace UnityFx.Async
 
 			var result = new AsyncCompletionSource(AsyncOperationStatus.Scheduled);
 
-			op.AddCompletionCallback(
-				asyncOp =>
+			op.Completed += asyncOp =>
+			{
+				try
 				{
-					try
-					{
-						result.SetRunning();
-						action(op, result, state);
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				},
-				true);
+					result.SetRunning();
+					action(op, result, state);
+				}
+				catch (Exception e)
+				{
+					result.TrySetException(e, false);
+				}
+			};
 
 			return result;
 		}
@@ -342,26 +328,24 @@ namespace UnityFx.Async
 
 			var result = new AsyncCompletionSource(AsyncOperationStatus.Scheduled);
 
-			op.AddCompletionCallback(
-				asyncOp =>
+			op.Completed += asyncOp =>
+			{
+				try
 				{
-					try
-					{
-						result.SetRunning();
+					result.SetRunning();
 
-						action(op, state).AddCompletionCallback(
-							asyncOp2 =>
-							{
-								result.CopyCompletionState(asyncOp2, false);
-							},
-							false);
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				},
-				true);
+					action(op, state).AddCompletionCallback(
+						asyncOp2 =>
+						{
+							result.CopyCompletionState(asyncOp2, false);
+						},
+						false);
+				}
+				catch (Exception e)
+				{
+					result.TrySetException(e, false);
+				}
+			};
 
 			return result;
 		}
@@ -390,20 +374,18 @@ namespace UnityFx.Async
 
 			var result = new AsyncCompletionSource<U>(AsyncOperationStatus.Scheduled);
 
-			op.AddCompletionCallback(
-				asyncOp =>
+			op.Completed += asyncOp =>
+			{
+				try
 				{
-					try
-					{
-						result.SetRunning();
-						action(op, result);
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				},
-				true);
+					result.SetRunning();
+					action(op, result);
+				}
+				catch (Exception e)
+				{
+					result.TrySetException(e, false);
+				}
+			};
 
 			return result;
 		}
@@ -435,26 +417,24 @@ namespace UnityFx.Async
 
 			var result = new AsyncCompletionSource<U>(AsyncOperationStatus.Scheduled);
 
-			op.AddCompletionCallback(
-				asyncOp =>
+			op.Completed += asyncOp =>
+			{
+				try
 				{
-					try
-					{
-						result.SetRunning();
+					result.SetRunning();
 
-						action(op).AddCompletionCallback(
-							asyncOp2 =>
-							{
-								result.CopyCompletionState(asyncOp2 as IAsyncOperation<U>, false);
-							},
-							false);
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				},
-				true);
+					action(op).AddCompletionCallback(
+						asyncOp2 =>
+						{
+							result.CopyCompletionState(asyncOp2 as IAsyncOperation<U>, false);
+						},
+						false);
+				}
+				catch (Exception e)
+				{
+					result.TrySetException(e, false);
+				}
+			};
 
 			return result;
 		}
@@ -485,20 +465,18 @@ namespace UnityFx.Async
 
 			var result = new AsyncCompletionSource<U>(AsyncOperationStatus.Scheduled);
 
-			op.AddCompletionCallback(
-				asyncOp =>
+			op.Completed += asyncOp =>
+			{
+				try
 				{
-					try
-					{
-						result.SetRunning();
-						action(op, result, state);
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				},
-				true);
+					result.SetRunning();
+					action(op, result, state);
+				}
+				catch (Exception e)
+				{
+					result.TrySetException(e, false);
+				}
+			};
 
 			return result;
 		}
@@ -531,26 +509,24 @@ namespace UnityFx.Async
 
 			var result = new AsyncCompletionSource<U>(AsyncOperationStatus.Scheduled);
 
-			op.AddCompletionCallback(
-				asyncOp =>
+			op.Completed += asyncOp =>
+			{
+				try
 				{
-					try
-					{
-						result.SetRunning();
+					result.SetRunning();
 
-						action(op, state).AddCompletionCallback(
-							asyncOp2 =>
-							{
-								result.CopyCompletionState(asyncOp2 as IAsyncOperation<U>, false);
-							},
-							false);
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				},
-				true);
+					action(op, state).AddCompletionCallback(
+						asyncOp2 =>
+						{
+							result.CopyCompletionState(asyncOp2 as IAsyncOperation<U>, false);
+						},
+						false);
+				}
+				catch (Exception e)
+				{
+					result.TrySetException(e, false);
+				}
+			};
 
 			return result;
 		}
