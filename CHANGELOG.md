@@ -4,7 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
 -----------------------
-## [0.8.0] - unreleased
+## [Unreleased]
+
+-----------------------
+## [0.8.0] - 2018-03-10
 
 ### Added
 - Added `IAsyncCompletionSource.Operation` property to match `TaskCompletionSource` interface.
@@ -17,6 +20,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `AsyncResult.Retry` methods.
 - Added `Wait` overloads to match `Task` interface.
 
+### Removed
+- Removed `AsyncResult.TryCreateAsyncWaitHandle` helper.
+
 ### Changed
 - Modified `AsyncResultAwaiter` implementation to throw if the operation was canceled or faulted (to match `TaskAwaiter` behaviour).
 - Implemented `AsyncCompletionSource` as a sealed analog of `TaskCompletionSource`.
@@ -26,9 +32,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Changed `IAsyncOperationEvents.Completed` event signature & behaviour to always execute handler (event if it was registered after the comperation has copleted).
 - Removed `AsyncResult` constructors that accepted exceptions.
 - Changed `AsyncResult.Result` property to throw `AggregateException` when faulted or canceled to mathch `Task` behaviour.
-
-### Removed
-- Removed `AsyncResult.TryCreateAsyncWaitHandle` helper.
 
 ### Fixed
 - `AsyncResultQueue` now does not remove uncompleted operations from the queue.
