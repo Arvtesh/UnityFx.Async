@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class WhenAllResult : AsyncResult
+	internal class WhenAllResult<T> : AsyncResult<T[]>
 	{
 		#region data
 
@@ -84,9 +84,23 @@ namespace UnityFx.Async
 				{
 					TrySetCanceled(_completedSynchronously);
 				}
-				else
+				else if (typeof(T) == typeof(VoidResult))
 				{
 					TrySetCompleted(_completedSynchronously);
+				}
+				else
+				{
+					var results = new List<T>(_ops.Length);
+
+					foreach (var op in _ops)
+					{
+						if (op is IAsyncOperation<T> rop)
+						{
+							results.Add(rop.Result);
+						}
+					}
+
+					TrySetResult(results.ToArray(), false);
 				}
 			}
 		}

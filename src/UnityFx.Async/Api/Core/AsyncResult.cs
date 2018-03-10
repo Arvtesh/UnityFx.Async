@@ -809,7 +809,7 @@ namespace UnityFx.Async
 		/// <param name="ops">The operations to wait on for completion.</param>
 		/// <returns>An operation that represents the completion of all of the supplied operations.</returns>
 		/// <exception cref="ArgumentNullException">Throws if <paramref name="ops"/> is <see langword="null"/>.</exception>
-		/// <seealso cref="WhenAll(IAsyncOperation[])"/>
+		/// <seealso cref="WhenAll{T}(IEnumerable{IAsyncOperation{T}})"/>
 		public static AsyncResult WhenAll(IEnumerable<IAsyncOperation> ops)
 		{
 			if (ops == null)
@@ -817,30 +817,26 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(ops));
 			}
 
-			if (ops is IAsyncOperation[] opArray)
-			{
-				if (opArray.Length == 0)
-				{
-					return CompletedOperation;
-				}
-
-				return new WhenAllResult(opArray);
-			}
-
-			if (ops is ICollection<IAsyncOperation> opCollection)
-			{
-				if (opCollection.Count == 0)
-				{
-					return CompletedOperation;
-				}
-
-				var array = new IAsyncOperation[opCollection.Count];
-				opCollection.CopyTo(array, 0);
-				return new WhenAllResult(array);
-			}
-
 			var opList = new List<IAsyncOperation>(ops);
-			return new WhenAllResult(opList.ToArray());
+			return new WhenAllResult<VoidResult>(opList.ToArray());
+		}
+
+		/// <summary>
+		/// Creates an operation that will complete when all of the specified objects in an enumerable collection have completed.
+		/// </summary>
+		/// <param name="ops">The operations to wait on for completion.</param>
+		/// <returns>An operation that represents the completion of all of the supplied operations.</returns>
+		/// <exception cref="ArgumentNullException">Throws if <paramref name="ops"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="WhenAll(IEnumerable{IAsyncOperation})"/>
+		public static AsyncResult<T[]> WhenAll<T>(IEnumerable<IAsyncOperation<T>> ops)
+		{
+			if (ops == null)
+			{
+				throw new ArgumentNullException(nameof(ops));
+			}
+
+			var opList = new List<IAsyncOperation<T>>(ops);
+			return new WhenAllResult<T>(opList.ToArray());
 		}
 
 		/// <summary>
@@ -849,7 +845,7 @@ namespace UnityFx.Async
 		/// <param name="ops">The operations to wait on for completion.</param>
 		/// <returns>An operation that represents the completion of all of the supplied operations.</returns>
 		/// <exception cref="ArgumentNullException">Throws if <paramref name="ops"/> is <see langword="null"/>.</exception>
-		/// <seealso cref="WhenAll(IEnumerable{IAsyncOperation})"/>
+		/// <seealso cref="WhenAll{T}(IAsyncOperation{T}[])"/>
 		public static AsyncResult WhenAll(params IAsyncOperation[] ops)
 		{
 			if (ops == null)
@@ -862,7 +858,31 @@ namespace UnityFx.Async
 				return CompletedOperation;
 			}
 
-			return new WhenAllResult(ops);
+			var opList = new List<IAsyncOperation>(ops);
+			return new WhenAllResult<VoidResult>(opList.ToArray());
+		}
+
+		/// <summary>
+		/// Creates an operation that will complete when all of the specified objects in an array have completed.
+		/// </summary>
+		/// <param name="ops">The operations to wait on for completion.</param>
+		/// <returns>An operation that represents the completion of all of the supplied operations.</returns>
+		/// <exception cref="ArgumentNullException">Throws if <paramref name="ops"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="WhenAll(IAsyncOperation[])"/>
+		public static AsyncResult<T[]> WhenAll<T>(params IAsyncOperation<T>[] ops)
+		{
+			if (ops == null)
+			{
+				throw new ArgumentNullException(nameof(ops));
+			}
+
+			if (ops.Length == 0)
+			{
+				return FromResult(default(T[]));
+			}
+
+			var opList = new List<IAsyncOperation<T>>(ops);
+			return new WhenAllResult<T>(opList.ToArray());
 		}
 
 		#endregion
