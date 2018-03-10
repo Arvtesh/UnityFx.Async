@@ -51,13 +51,13 @@ namespace UnityFx.Async
 
 		public static void Run(IAsyncOperation op, object continuation)
 		{
-			if (continuation is Action a)
-			{
-				a.Invoke();
-			}
-			else if (continuation is AsyncOperationCallback aoc)
+			if (continuation is AsyncOperationCallback aoc)
 			{
 				aoc.Invoke(op);
+			}
+			else if (continuation is Action a)
+			{
+				a.Invoke();
 			}
 			else if (continuation is AsyncCallback ac)
 			{

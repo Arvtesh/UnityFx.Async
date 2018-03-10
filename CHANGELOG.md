@@ -3,6 +3,41 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
+-----------------------
+## [Unreleased]
+
+-----------------------
+## [0.8.0] - 2018-03-10
+
+### Added
+- Added `IAsyncCompletionSource.Operation` property to match `TaskCompletionSource` interface.
+- Added new constructor to `AsyncResult`.
+- Added `AsyncResult.Start` method to match `Task` interface.
+- Added `AsyncResult.OnStarted` virtual method.
+- Added `WhenAll`/`WhenAny` static helpers for `AsyncResult`.
+- Added `ConfigureAwait` extensions for `IAsyncOperation`.
+- Added `Task` extension methods to that convert it to an `AsyncResult` instance.
+- Added `AsyncResult.Retry` methods.
+- Added `Wait` overloads to match `Task` interface.
+
+### Removed
+- Removed `AsyncResult.TryCreateAsyncWaitHandle` helper.
+
+### Changed
+- Modified `AsyncResultAwaiter` implementation to throw if the operation was canceled or faulted (to match `TaskAwaiter` behaviour).
+- Implemented `AsyncCompletionSource` as a sealed analog of `TaskCompletionSource`.
+- Removed public completion methods from `AsyncResult` (moved them to `AsyncCompletionSource`).
+- Made `SpinUntilCompleted` an extension method (was `AsyncResult` instance method).
+- Changed `IAsyncOperation.Exception` type to `AggregateException` to match `Task`.
+- Changed `IAsyncOperationEvents.Completed` event signature & behaviour to always execute handler (event if it was registered after the comperation has copleted).
+- Removed `AsyncResult` constructors that accepted exceptions.
+- Changed `AsyncResult.Result` property to throw `AggregateException` when faulted or canceled to mathch `Task` behaviour.
+
+### Fixed
+- `AsyncResultQueue` now does not remove uncompleted operations from the queue.
+- `AsyncResult.Exception` now only returns non-null value when the operation is faulted.
+
+-----------------------
 ## [0.7.1] - 2018-02-14
 
 ### Added
@@ -11,8 +46,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `IsEmpty` property to `AsyncResultQueue`.
 
 ### Changed
-- `AsyncResult` implemenatino is changed to prevent returning null operation result when the operation is completed in some cases.
+- `AsyncResult` implemenation is changed to prevent returning null operation result when the operation is completed in some cases.
 
+-----------------------
 ## [0.7.0] - 2018-02-10
 
 ### Added
@@ -26,6 +62,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ### Changed
 - Renamed `AsyncOperationStatus` values to match [TastStatus](https://msdn.microsoft.com/ru-ru/library/system.threading.tasks.taskstatus(v=vs.110).aspx).
 
+-----------------------
 ## [0.3.1] - 2017-08-01
 
 ### Added

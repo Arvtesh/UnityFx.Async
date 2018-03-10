@@ -43,7 +43,7 @@ namespace UnityFx.Async
 				}
 				else if (_op.IsFaulted)
 				{
-					observer.OnError(_op.Exception);
+					observer.OnError(_op.Exception.InnerException);
 				}
 				else
 				{
@@ -57,7 +57,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				return EmptyDisposable.Instance;
+				return Disposable.Empty;
 			}
 		}
 

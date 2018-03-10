@@ -8,6 +8,7 @@ namespace UnityFx.Async
 	/// <summary>
 	/// Enumerates possible status values for <see cref="IAsyncOperation"/>.
 	/// </summary>
+	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskstatus">TaskStatus</seealso>
 	/// <seealso cref="IAsyncOperation"/>
 	public enum AsyncOperationStatus
 	{
@@ -43,14 +44,11 @@ namespace UnityFx.Async
 	}
 
 	/// <summary>
-	/// A disposable <see cref="IAsyncResult"/> with status information.
+	/// A disposable <see cref="IAsyncResult"/> with completion status information.
 	/// </summary>
-	/// <remarks>
-	/// The interface is designed to be as close to the TLP Task as possible. All interface methods are expected to be thread-safe.
-	/// The only exception to this rule is <see cref="IDisposable.Dispose"/>.
-	/// </remarks>
-	/// <seealso cref="IAsyncResult"/>
+	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</seealso>
 	/// <seealso cref="IAsyncOperation{T}"/>
+	/// <seealso cref="IAsyncResult"/>
 	public interface IAsyncOperation : IAsyncOperationEvents, IAsyncResult, IDisposable
 	{
 		/// <summary>
@@ -63,25 +61,25 @@ namespace UnityFx.Async
 		AsyncOperationStatus Status { get; }
 
 		/// <summary>
-		/// Gets an <see cref="System.Exception"/> that caused the operation to end prematurely. If the operation completed successfully
+		/// Gets an <see cref="AggregateException"/> that caused the operation to end prematurely. If the operation completed successfully
 		/// or has not yet thrown any exceptions, this will return <see langword="null"/>.
 		/// </summary>
 		/// <value>An exception that caused the operation to end prematurely.</value>
 		/// <seealso cref="IsFaulted"/>
 		/// <seealso cref="Status"/>
-		Exception Exception { get; }
+		AggregateException Exception { get; }
 
 		/// <summary>
-		/// Gets whether the operation completed with successfully (i.e. with <see cref="AsyncOperationStatus.RanToCompletion"/> status).
+		/// Gets a value indicating whether the operation completed successfully (i.e. with <see cref="AsyncOperationStatus.RanToCompletion"/> status).
 		/// </summary>
-		/// <value>A value indicating whether the operation has finished successfully.</value>
+		/// <value>A value indicating whether the operation completed successfully.</value>
 		/// <seealso cref="IsFaulted"/>
 		/// <seealso cref="IsCanceled"/>
 		/// <seealso cref="Status"/>
 		bool IsCompletedSuccessfully { get; }
 
 		/// <summary>
-		/// Gets whether the operation completed due to an unhandled exception (i.e. with <see cref="AsyncOperationStatus.Faulted"/> status).
+		/// Gets a value indicating whether the operation completed due to an unhandled exception (i.e. with <see cref="AsyncOperationStatus.Faulted"/> status).
 		/// </summary>
 		/// <remarks>
 		/// If <see cref="IsFaulted"/> is <see langword="true"/>, the operation's <see cref="Status"/> will be equal to
@@ -95,7 +93,7 @@ namespace UnityFx.Async
 		bool IsFaulted { get; }
 
 		/// <summary>
-		/// Gets whether the operation completed due to being canceled (i.e. with <see cref="AsyncOperationStatus.Canceled"/> status).
+		/// Gets a value indicating whether the operation completed due to being canceled (i.e. with <see cref="AsyncOperationStatus.Canceled"/> status).
 		/// </summary>
 		/// <value>A value indicating whether the operation was canceled.</value>
 		/// <seealso cref="IsCompletedSuccessfully"/>
