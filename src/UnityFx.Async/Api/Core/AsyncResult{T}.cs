@@ -267,7 +267,7 @@ namespace UnityFx.Async
 			else
 			{
 				completionCallback(this);
-				return EmptyDisposable.Instance;
+				return Disposable.Empty;
 			}
 		}
 

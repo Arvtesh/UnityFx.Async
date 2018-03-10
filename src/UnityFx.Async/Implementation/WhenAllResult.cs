@@ -40,12 +40,22 @@ namespace UnityFx.Async
 			_completedSynchronously = false;
 		}
 
+		public void Cancel()
+		{
+			TrySetCanceled(false);
+		}
+
 		#endregion
 
 		#region implementation
 
 		private void OnOperationCompleted(IAsyncOperation asyncOp)
 		{
+			if (IsCompleted)
+			{
+				return;
+			}
+
 			if (Interlocked.Decrement(ref _count) == 0)
 			{
 				List<Exception> exceptions = null;

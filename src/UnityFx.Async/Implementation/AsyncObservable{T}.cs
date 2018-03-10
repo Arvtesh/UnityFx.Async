@@ -57,7 +57,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				return EmptyDisposable.Instance;
+				return Disposable.Empty;
 			}
 		}
 

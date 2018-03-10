@@ -5,9 +5,16 @@ using System;
 
 namespace UnityFx.Async
 {
-	internal sealed class EmptyDisposable : IDisposable
+	internal sealed class Disposable
 	{
 		#region data
+
+		private class EmptyDisposable : IDisposable
+		{
+			public void Dispose()
+			{
+			}
+		}
 
 		private static IDisposable _instance;
 
@@ -15,7 +22,7 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public static IDisposable Instance
+		public static IDisposable Empty
 		{
 			get
 			{
@@ -26,14 +33,6 @@ namespace UnityFx.Async
 
 				return _instance;
 			}
-		}
-
-		#endregion
-
-		#region Disposable
-
-		public void Dispose()
-		{
 		}
 
 		#endregion
