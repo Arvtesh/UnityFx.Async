@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.Serialization;
@@ -15,6 +16,7 @@ namespace UnityFx.Async
 	/// <summary>
 	/// Represents one or more errors that occur during application execution.
 	/// </summary>
+	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/data-structures-for-parallel-programming#aggregate-exceptions"/>
 	/// <seealso cref="IAsyncOperation"/>
 	[Serializable]
 	[DebuggerDisplay("{DebuggerDisplay,nq}")]
@@ -23,7 +25,7 @@ namespace UnityFx.Async
 		#region data
 
 		private const string _exceptionsName = "_exceptions";
-		private readonly List<Exception> _exceptions = new List<Exception>();
+		private readonly ReadOnlyCollection<Exception> _exceptions;
 
 		#endregion
 
@@ -32,12 +34,47 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Gets an enumerator for the <see cref="Exception"/> instances that caused the current exception.
 		/// </summary>
-		public IEnumerable<Exception> InnerExceptions => _exceptions;
+		public ReadOnlyCollection<Exception> InnerExceptions => _exceptions;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AggregateException"/> class.
 		/// </summary>
 		public AggregateException()
+		{
+			_exceptions = new ReadOnlyCollection<Exception>(new Exception[0]);
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AggregateException"/> class.
+		/// </summary>
+		public AggregateException(string message)
+			: base(message)
+		{
+			_exceptions = new ReadOnlyCollection<Exception>(new Exception[0]);
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AggregateException"/> class.
+		/// </summary>
+		public AggregateException(string message, Exception innerException)
+			: base(message, innerException)
+		{
+			_exceptions = new ReadOnlyCollection<Exception>(new Exception[] { innerException });
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AggregateException"/> class.
+		/// </summary>
+		public AggregateException(params Exception[] exceptions)
+			: this(string.Empty, exceptions)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AggregateException"/> class.
+		/// </summary>
+		public AggregateException(string message, params Exception[] exceptions)
+			: this(message, (IList<Exception>)exceptions)
 		{
 		}
 
@@ -45,8 +82,33 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AggregateException"/> class.
 		/// </summary>
 		public AggregateException(IEnumerable<Exception> exceptions)
+			: this(string.Empty, exceptions)
 		{
-			_exceptions.AddRange(exceptions);
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AggregateException"/> class.
+		/// </summary>
+		public AggregateException(string message, IEnumerable<Exception> exceptions)
+			: this(message, exceptions as IList<Exception> ?? (exceptions == null ? null : new List<Exception>(exceptions)))
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AggregateException"/> class.
+		/// </summary>
+		public AggregateException(IList<Exception> exceptions)
+			: this(string.Empty, exceptions)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AggregateException"/> class.
+		/// </summary>
+		public AggregateException(string message, IList<Exception> exceptions)
+			: base(message, exceptions.Count > 0 ? exceptions[0] : null)
+		{
+			_exceptions = new ReadOnlyCollection<Exception>(exceptions);
 		}
 
 		#endregion
@@ -58,7 +120,7 @@ namespace UnityFx.Async
 			: base(info, context)
 		{
 			var innerExceptions = info.GetValue(_exceptionsName, typeof(Exception[])) as Exception[];
-			_exceptions.AddRange(innerExceptions);
+			_exceptions = new ReadOnlyCollection<Exception>(innerExceptions);
 		}
 
 		/// <inheritdoc/>

@@ -8,8 +8,9 @@ namespace UnityFx.Async
 	/// <summary>
 	/// Extends an <see cref="IAsyncOperation"/> interface with a result value.
 	/// </summary>
-	/// <seealso cref="IAsyncResult"/>
+	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task</seealso>
 	/// <seealso cref="IAsyncOperation"/>
+	/// <seealso cref="IAsyncResult"/>
 	public interface IAsyncOperation<out T> : IAsyncOperation
 	{
 		/// <summary>
@@ -18,10 +19,11 @@ namespace UnityFx.Async
 		/// <remarks>
 		/// Once the result of an operation is available, it is stored and is returned immediately on subsequent calls to the <see cref="Result"/> property.
 		/// Note that, if an exception occurred during the operation, or if the operation has been cancelled, the <see cref="Result"/> property does not return a value.
-		/// Instead, attempting to access the property value throws an <see cref="InvalidOperationException"/> exception.
+		/// Instead, attempting to access the property value throws an exception.
 		/// </remarks>
 		/// <value>Result of the operation.</value>
-		/// <exception cref="InvalidOperationException">Thrown either if the property is accessed before operation is completed or if the operation has faulted.</exception>
+		/// <exception cref="InvalidOperationException">Thrown either if the property is accessed before operation is completed.</exception>
+		/// <exception cref="AggregateException">Thrown if the operation is in <see cref="AsyncOperationStatus.Faulted"/> or <see cref="AsyncOperationStatus.Canceled"/> state.</exception>
 		T Result { get; }
 	}
 }

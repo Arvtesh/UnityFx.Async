@@ -76,20 +76,6 @@ namespace UnityFx.Async
 		}
 
 		[Fact]
-		public void Constructor_SetsException()
-		{
-			// Arrange
-			var e = new Exception();
-
-			// Act
-			var op = new AsyncResult(e);
-
-			// Assert
-			AssertFaulted(op, e);
-			Assert.True(op.CompletedSynchronously);
-		}
-
-		[Fact]
 		public void Constructor_SetsAsyncState()
 		{
 			// Arrange
@@ -182,6 +168,61 @@ namespace UnityFx.Async
 			Assert.True(op.CompletedSynchronously);
 		}
 
+		[Fact]
+		public async Task Retry_CompletesWhenSourceCompletes()
+		{
+			// Arrange
+			var counter = 3;
+
+			IAsyncOperation OpFactory()
+			{
+				if (--counter > 0)
+				{
+					return AsyncResult.FromException(new Exception());
+				}
+				else
+				{
+					return AsyncResult.Delay(1);
+				}
+			}
+
+			// Act
+			var op = AsyncResult.Retry(OpFactory, 1);
+			await op;
+
+			// Assert
+			AssertCompleted(op);
+		}
+
+		[Fact]
+		public async Task Retry_CompletesAfterMaxRetriesExceeded()
+		{
+			// Arrange
+			var counter = 3;
+			var e = new Exception();
+
+			IAsyncOperation OpFactory()
+			{
+				--counter;
+				return AsyncResult.FromException(e);
+			}
+
+			// Act
+			var op = AsyncResult.Retry(OpFactory, 1, 1);
+
+			try
+			{
+				await op;
+			}
+			catch
+			{
+			}
+
+			// Assert
+			AssertFaulted(op, e);
+			Assert.Equal(2, counter);
+		}
+
 		#endregion
 
 		#region interface
@@ -193,7 +234,7 @@ namespace UnityFx.Async
 		public void SetScheduled_SetsStatusToScheduled(AsyncOperationStatus status)
 		{
 			// Arrange
-			var op = new AsyncResult(status);
+			var op = new AsyncCompletionSource(status);
 
 			// Act
 			op.SetScheduled();
@@ -211,7 +252,7 @@ namespace UnityFx.Async
 		public void SetScheduled_ThrowsIfOperationIsNotCreated(AsyncOperationStatus status)
 		{
 			// Arrange
-			var op = new AsyncResult(status);
+			var op = new AsyncCompletionSource(status);
 
 			// Act/Assert
 			Assert.Throws<InvalidOperationException>(() => op.SetScheduled());
@@ -221,7 +262,7 @@ namespace UnityFx.Async
 		public void SetScheduled_ThrowsIfOperationIsDisposed()
 		{
 			// Arrange
-			var op = new AsyncResult(AsyncOperationStatus.RanToCompletion);
+			var op = new AsyncCompletionSource(AsyncOperationStatus.RanToCompletion);
 			op.Dispose();
 
 			// Act/Assert
@@ -238,7 +279,7 @@ namespace UnityFx.Async
 		public void SetRunning_SetsStatusToRunning(AsyncOperationStatus status)
 		{
 			// Arrange
-			var op = new AsyncResult(status);
+			var op = new AsyncCompletionSource(status);
 
 			// Act
 			op.SetRunning();
@@ -255,7 +296,7 @@ namespace UnityFx.Async
 		public void SetRunning_ThrowsIfOperationIsNotCreatedOrScheduled(AsyncOperationStatus status)
 		{
 			// Arrange
-			var op = new AsyncResult(status);
+			var op = new AsyncCompletionSource(status);
 
 			// Act/Assert
 			Assert.Throws<InvalidOperationException>(() => op.SetRunning());
@@ -265,7 +306,7 @@ namespace UnityFx.Async
 		public void SetRunning_ThrowsIfOperationIsDisposed()
 		{
 			// Arrange
-			var op = new AsyncResult(AsyncOperationStatus.RanToCompletion);
+			var op = new AsyncCompletionSource(AsyncOperationStatus.RanToCompletion);
 			op.Dispose();
 
 			// Act/Assert
@@ -282,7 +323,7 @@ namespace UnityFx.Async
 		public async Task Await_CollbackIsTriggered()
 		{
 			// Arrange
-			var op = new AsyncResult();
+			var op = new AsyncCompletionSource();
 			var task = Task.Run(() =>
 			{
 				Thread.Sleep(10);
@@ -294,6 +335,61 @@ namespace UnityFx.Async
 
 			// Assert
 			AssertCompleted(op);
+		}
+
+		[Fact]
+		public async Task Await_ShouldThrowIfFaulted()
+		{
+			// Arrange
+			var op = new AsyncCompletionSource();
+			var expectedException = new Exception();
+			var actualException = default(Exception);
+			var task = Task.Run(() =>
+			{
+				Thread.Sleep(10);
+				op.SetException(expectedException);
+			});
+
+			// Act
+			try
+			{
+				await op;
+			}
+			catch (Exception e)
+			{
+				actualException = e;
+			}
+
+			// Assert
+			Assert.Equal(expectedException, actualException);
+			AssertFaulted(op);
+		}
+
+		[Fact]
+		public async Task Await_ShouldThrowIfCanceled()
+		{
+			// Arrange
+			var op = new AsyncCompletionSource();
+			var actualException = default(Exception);
+			var task = Task.Run(() =>
+			{
+				Thread.Sleep(10);
+				op.SetCanceled();
+			});
+
+			// Act
+			try
+			{
+				await op;
+			}
+			catch (Exception e)
+			{
+				actualException = e;
+			}
+
+			// Assert
+			Assert.IsType<OperationCanceledException>(actualException);
+			AssertCanceled(op);
 		}
 
 		#endregion
@@ -309,10 +405,10 @@ namespace UnityFx.Async
 		public void SetCanceled_ThrowsIfOperationIsCompleted(AsyncOperationStatus status)
 		{
 			// Arrange
-			var op = new AsyncResult(status);
+			var op = new AsyncCompletionSource(status);
 
 			// Act/Assert
-			Assert.Throws<InvalidOperationException>(() => op.SetCanceled(false));
+			Assert.Throws<InvalidOperationException>(() => op.SetCanceled());
 			Assert.True(op.CompletedSynchronously);
 		}
 
@@ -323,10 +419,10 @@ namespace UnityFx.Async
 		public void TrySetCanceled_SetsStatusToCanceled(AsyncOperationStatus status)
 		{
 			// Arrange
-			var op = new AsyncResult(status);
+			var op = new AsyncCompletionSource(status);
 
 			// Act
-			var result = op.TrySetCanceled(true);
+			var result = op.TrySetCanceled();
 
 			// Assert
 			AssertCanceled(op);
@@ -339,11 +435,11 @@ namespace UnityFx.Async
 			// Arrange
 			var asyncCallbackCalled1 = false;
 			var asyncCallbackCalled2 = false;
-			var op = new AsyncResult(asyncResult => asyncCallbackCalled1 = true, null);
+			var op = new AsyncCompletionSource(asyncResult => asyncCallbackCalled1 = true, null);
 			op.AddCompletionCallback(asyncOp => asyncCallbackCalled2 = true, false);
 
 			// Act
-			op.TrySetCanceled(true);
+			op.TrySetCanceled();
 
 			// Assert
 			Assert.True(asyncCallbackCalled1);
@@ -357,7 +453,7 @@ namespace UnityFx.Async
 			var op = new AsyncResultOverrides();
 
 			// Act
-			op.TrySetCanceled(true);
+			op.TrySetCanceled();
 
 			// Assert
 			Assert.True(op.OnCompletedCalled);
@@ -370,7 +466,7 @@ namespace UnityFx.Async
 		public void TrySetCanceled_SetsCompletedSynchronously(bool completedSynchronously)
 		{
 			// Arrange
-			var op = new AsyncResult();
+			var op = new AsyncCompletionSource();
 
 			// Act
 			op.TrySetCanceled(completedSynchronously);
@@ -383,10 +479,10 @@ namespace UnityFx.Async
 		public void TrySetCanceled_FailsIfOperationIsCompleted()
 		{
 			// Arrange
-			var op = new AsyncResult(AsyncOperationStatus.RanToCompletion);
+			var op = new AsyncCompletionSource(AsyncOperationStatus.RanToCompletion);
 
 			// Act
-			var result = op.TrySetCanceled(false);
+			var result = op.TrySetCanceled();
 
 			// Assert
 			Assert.False(result);
@@ -398,11 +494,11 @@ namespace UnityFx.Async
 		public void TrySetCanceled_ThrowsIfOperationIsDisposed()
 		{
 			// Arrange
-			var op = new AsyncResult(AsyncOperationStatus.RanToCompletion);
+			var op = new AsyncCompletionSource(AsyncOperationStatus.RanToCompletion);
 			op.Dispose();
 
 			// Act/Assert
-			Assert.Throws<ObjectDisposedException>(() => op.TrySetCanceled(true));
+			Assert.Throws<ObjectDisposedException>(() => op.TrySetCanceled());
 		}
 
 		#endregion
@@ -417,10 +513,10 @@ namespace UnityFx.Async
 		{
 			// Arrange
 			var e = new Exception();
-			var op = new AsyncResult(status);
+			var op = new AsyncCompletionSource(status);
 
 			// Act/Assert
-			Assert.Throws<InvalidOperationException>(() => op.SetException(e, false));
+			Assert.Throws<InvalidOperationException>(() => op.SetException(e));
 			Assert.True(op.CompletedSynchronously);
 		}
 
@@ -432,10 +528,10 @@ namespace UnityFx.Async
 		{
 			// Arrange
 			var e = new Exception();
-			var op = new AsyncResult(status);
+			var op = new AsyncCompletionSource(status);
 
 			// Act
-			var result = op.TrySetException(e, true);
+			var result = op.TrySetException(e);
 
 			// Assert
 			AssertFaulted(op, e);
@@ -449,11 +545,11 @@ namespace UnityFx.Async
 			var e = new Exception();
 			var asyncCallbackCalled1 = false;
 			var asyncCallbackCalled2 = false;
-			var op = new AsyncResult(asyncResult => asyncCallbackCalled1 = true, null);
+			var op = new AsyncCompletionSource(asyncResult => asyncCallbackCalled1 = true, null);
 			op.AddCompletionCallback(asyncOp => asyncCallbackCalled2 = true, false);
 
 			// Act
-			op.TrySetException(e, true);
+			op.TrySetException(e);
 
 			// Assert
 			Assert.True(asyncCallbackCalled1);
@@ -468,7 +564,7 @@ namespace UnityFx.Async
 			var op = new AsyncResultOverrides();
 
 			// Act
-			op.TrySetException(e, true);
+			op.TrySetException(e);
 
 			// Assert
 			Assert.Equal(e, op.OnCompletedException);
@@ -483,7 +579,7 @@ namespace UnityFx.Async
 		{
 			// Arrange
 			var e = new Exception();
-			var op = new AsyncResult();
+			var op = new AsyncCompletionSource();
 
 			// Act
 			op.TrySetException(e, completedSynchronously);
@@ -496,10 +592,10 @@ namespace UnityFx.Async
 		public void TrySetException_FailsIfOperationIsCompleted()
 		{
 			// Arrange
-			var op = new AsyncResult(AsyncOperationStatus.RanToCompletion);
+			var op = new AsyncCompletionSource(AsyncOperationStatus.RanToCompletion);
 
 			// Act
-			var result = op.TrySetCanceled(true);
+			var result = op.TrySetCanceled();
 
 			// Assert
 			Assert.False(result);
@@ -511,10 +607,10 @@ namespace UnityFx.Async
 		public void TrySetException_ThrowsIfExceptionIsNull()
 		{
 			// Arrange
-			var op = new AsyncResult();
+			var op = new AsyncCompletionSource();
 
 			// Act/Assert
-			Assert.Throws<ArgumentNullException>(() => op.TrySetException(default(Exception), false));
+			Assert.Throws<ArgumentNullException>(() => op.TrySetException(null));
 		}
 
 		[Fact]
@@ -522,11 +618,11 @@ namespace UnityFx.Async
 		{
 			// Arrange
 			var e = new Exception();
-			var op = new AsyncResult(AsyncOperationStatus.RanToCompletion);
+			var op = new AsyncCompletionSource(AsyncOperationStatus.RanToCompletion);
 			op.Dispose();
 
 			// Act/Assert
-			Assert.Throws<ObjectDisposedException>(() => op.TrySetException(e, false));
+			Assert.Throws<ObjectDisposedException>(() => op.TrySetException(e));
 		}
 
 		#endregion
@@ -540,10 +636,10 @@ namespace UnityFx.Async
 		public void SetCompleted_ThrowsIfOperationIsCompleted(AsyncOperationStatus status)
 		{
 			// Arrange
-			var op = new AsyncResult(status);
+			var op = new AsyncCompletionSource(status);
 
 			// Act/Assert
-			Assert.Throws<InvalidOperationException>(() => op.SetCompleted(false));
+			Assert.Throws<InvalidOperationException>(() => op.SetCompleted());
 			Assert.True(op.CompletedSynchronously);
 		}
 
@@ -554,10 +650,10 @@ namespace UnityFx.Async
 		public void TrySetCompleted_SetsStatusToRanToCompletion(AsyncOperationStatus status)
 		{
 			// Arrange
-			var op = new AsyncResult(status);
+			var op = new AsyncCompletionSource(status);
 
 			// Act
-			var result = op.TrySetCompleted(true);
+			var result = op.TrySetCompleted();
 
 			// Assert
 			AssertCompleted(op);
@@ -570,11 +666,11 @@ namespace UnityFx.Async
 			// Arrange
 			var asyncCallbackCalled1 = false;
 			var asyncCallbackCalled2 = false;
-			var op = new AsyncResult(asyncResult => asyncCallbackCalled1 = true, null);
+			var op = new AsyncCompletionSource(asyncResult => asyncCallbackCalled1 = true, null);
 			op.AddCompletionCallback(asyncOp => asyncCallbackCalled2 = true, false);
 
 			// Act
-			op.TrySetCompleted(false);
+			op.TrySetCompleted();
 
 			// Assert
 			Assert.True(asyncCallbackCalled1);
@@ -588,7 +684,7 @@ namespace UnityFx.Async
 			var op = new AsyncResultOverrides();
 
 			// Act
-			op.TrySetCompleted(false);
+			op.TrySetCompleted();
 
 			// Assert
 			Assert.True(op.OnCompletedCalled);
@@ -601,7 +697,7 @@ namespace UnityFx.Async
 		public void TrySetCompleted_SetsCompletedSynchronously(bool completedSynchronously)
 		{
 			// Arrange
-			var op = new AsyncResult();
+			var op = new AsyncCompletionSource();
 
 			// Act
 			op.TrySetCompleted(completedSynchronously);
@@ -614,10 +710,10 @@ namespace UnityFx.Async
 		public void TrySetCompleted_FailsIfOperationIsCompleted()
 		{
 			// Arrange
-			var op = new AsyncResult(AsyncOperationStatus.Canceled);
+			var op = new AsyncCompletionSource(AsyncOperationStatus.Canceled);
 
 			// Act
-			var result = op.TrySetCompleted(false);
+			var result = op.TrySetCompleted();
 
 			// Assert
 			Assert.False(result);
@@ -629,11 +725,11 @@ namespace UnityFx.Async
 		public void TrySetCompleted_ThrowsIfOperationIsDisposed()
 		{
 			// Arrange
-			var op = new AsyncResult(AsyncOperationStatus.Canceled);
+			var op = new AsyncCompletionSource(AsyncOperationStatus.Canceled);
 			op.Dispose();
 
 			// Act/Assert
-			Assert.Throws<ObjectDisposedException>(() => op.TrySetCompleted(true));
+			Assert.Throws<ObjectDisposedException>(() => op.TrySetCompleted());
 		}
 
 		#endregion
@@ -647,10 +743,10 @@ namespace UnityFx.Async
 		public void SetResult_ThrowsIfOperationIsCompleted(AsyncOperationStatus status)
 		{
 			// Arrange
-			var op = new AsyncResult<int>(status);
+			var op = new AsyncCompletionSource<int>(status);
 
 			// Act/Assert
-			Assert.Throws<InvalidOperationException>(() => op.SetResult(10, false));
+			Assert.Throws<InvalidOperationException>(() => op.SetResult(10));
 			Assert.True(op.CompletedSynchronously);
 		}
 
@@ -662,10 +758,10 @@ namespace UnityFx.Async
 		{
 			// Arrange
 			var resultValue = new object();
-			var op = new AsyncResult<object>(status);
+			var op = new AsyncCompletionSource<object>(status);
 
 			// Act
-			var result = op.TrySetResult(resultValue, true);
+			var result = op.TrySetResult(resultValue);
 
 			// Assert
 			AssertCompletedWithResult(op, resultValue);
@@ -678,11 +774,11 @@ namespace UnityFx.Async
 			// Arrange
 			var asyncCallbackCalled1 = false;
 			var asyncCallbackCalled2 = false;
-			var op = new AsyncResult<int>(asyncResult => asyncCallbackCalled1 = true, null);
+			var op = new AsyncCompletionSource<int>(asyncResult => asyncCallbackCalled1 = true, null);
 			op.AddCompletionCallback(asyncOp => asyncCallbackCalled2 = true, false);
 
 			// Act
-			op.TrySetResult(10, false);
+			op.TrySetResult(10);
 
 			// Assert
 			Assert.True(asyncCallbackCalled1);
@@ -696,7 +792,7 @@ namespace UnityFx.Async
 			var op = new AsyncResultOverrides();
 
 			// Act
-			op.TrySetResult(10, true);
+			op.TrySetResult(10);
 
 			// Assert
 			Assert.True(op.OnCompletedCalled);
@@ -710,7 +806,7 @@ namespace UnityFx.Async
 		{
 			// Arrange
 			var result = new object();
-			var op = new AsyncResult<object>();
+			var op = new AsyncCompletionSource<object>();
 
 			// Act
 			op.TrySetResult(result, completedSynchronously);
@@ -723,10 +819,10 @@ namespace UnityFx.Async
 		public void TrySetResult_FailsIfOperationIsCompleted()
 		{
 			// Arrange
-			var op = new AsyncResult<int>(AsyncOperationStatus.Canceled);
+			var op = new AsyncCompletionSource<int>(AsyncOperationStatus.Canceled);
 
 			// Act
-			var result = op.TrySetResult(10, true);
+			var result = op.TrySetResult(10);
 
 			// Assert
 			Assert.False(result);
@@ -738,14 +834,45 @@ namespace UnityFx.Async
 		public void TrySetResult_ThrowsIfOperationIsDisposed()
 		{
 			// Arrange
-			var op = new AsyncResult<int>(AsyncOperationStatus.Canceled);
+			var op = new AsyncCompletionSource<int>(AsyncOperationStatus.Canceled);
 			op.Dispose();
 
 			// Act/Assert
-			Assert.Throws<ObjectDisposedException>(() => op.TrySetResult(15, false));
+			Assert.Throws<ObjectDisposedException>(() => op.TrySetResult(15));
 		}
 
 		#endregion
+
+		#endregion
+
+		#region IAsyncOperationEvents
+
+		[Fact]
+		public void TryAddCompletionCallback_FailsIfOperationIsCompleted()
+		{
+			// Arrange
+			var op = new AsyncCompletionSource();
+			op.SetCanceled();
+
+			// Act
+			var result = op.TryAddCompletionCallback(_ => { }, null);
+
+			// Assert
+			Assert.False(result);
+		}
+
+		[Fact]
+		public void TryAddCompletionCallback_FailsIfOperationIsCompletedSynchronously()
+		{
+			// Arrange
+			var op = AsyncResult.CompletedOperation;
+
+			// Act
+			var result = op.TryAddCompletionCallback(_ => { }, null);
+
+			// Assert
+			Assert.False(result);
+		}
 
 		#endregion
 
@@ -792,7 +919,7 @@ namespace UnityFx.Async
 		{
 			// Arrange
 			var op = new AsyncResultOverrides();
-			op.SetCompleted(false);
+			op.TrySetCompleted();
 
 			// Act
 			op.Dispose();
@@ -850,7 +977,7 @@ namespace UnityFx.Async
 		private void AssertFaulted(IAsyncOperation op, Exception e)
 		{
 			Assert.Equal(AsyncOperationStatus.Faulted, op.Status);
-			Assert.Equal(e, op.Exception);
+			Assert.Equal(e, op.Exception.InnerException);
 			Assert.True(op.IsCompleted);
 			Assert.True(op.IsFaulted);
 			Assert.False(op.IsCompletedSuccessfully);

@@ -69,24 +69,70 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="what-is-this">What is this?</h1>
 
-<p><em>UnityFx.Async</em> is a set of of classes and interfaces that extend <a href="https://unity3d.com">Unity3d</a> asynchronous operations and can be used very much like <a href="https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming">TAP</a> in .NET. At its core library defines a container (<code>AsyncResult</code>) for an asynchronous operation state and result value (aka <code>promise</code> or <code>future</code>). The .NET analog is <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a>.</p>
+<p><em>UnityFx.Async</em> is a set of of classes and interfaces that extend <a href="https://unity3d.com">Unity3d</a> asynchronous operations and can be used very much like <a href="https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming">Task-based Asynchronous Pattern (TAP)</a> in .NET. At its core library defines a container (<code>AsyncResult</code>) for an asynchronous operation state and result value (aka <code>promise</code> or <code>future</code>). In many aspects it mimics <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a>. For example, any <code>AsyncResult</code> instance can have any number of continuations (added either explicitly via <code>TryAddCompletionCallback</code> call or implicitly using <code>async</code>/<code>await</code> keywords). These continuations can be invoked on a captured <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a> (if any). The class inherits <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iasyncresult">IAsyncResult</a> (just like <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a>) and can be used for <a href="https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/asynchronous-programming-model-apm">Asynchronous Programming Model (APM)</a> implementation.</p>
 <p>Quick <a href="https://unity3d.com">Unity3d</a> example:</p>
-<pre><code class="lang-csharp">var op = AsyncResult.Delay(10);
-yield return op;
-
-if (op.IsCompletedSuccessfully)
+<pre><code class="lang-csharp">IEnumerator Foo()
 {
-    // TODO
+    yield return AsyncResult.Delay(10);
+    // do something 10ms later
 }
 </code></pre><p>Or using .NET 4.6 and higher:</p>
-<pre><code class="lang-csharp">var op = AsyncResult.Delay(10);
-await op;
-
-if (op.IsCompletedSuccessfully)
+<pre><code class="lang-csharp">async Task Foo()
 {
-    // TODO
+    await AsyncResult.Delay(10);
+    // do something 10ms later
 }
-</code></pre><p>You can use <code>AsyncResult</code> class as a cheap and portable replacement of <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a>. Most of the functionality provided by the library can be used in .NET 3.5 (obviously async/await related stuff requires .NET 4.6 or higher).</p>
+</code></pre><p>Processing a result of asynchronous operation:</p>
+<pre><code class="lang-csharp">void Foo(IAsyncOperation&lt;int&gt; op)
+{
+    // The callback will be called even if the operation is already completed
+    op.AddCompletionCallback(o =&gt;
+    {
+        if (o.IsCompletedSuccessfully)
+        {
+            var result = (o as IAsyncOperation&lt;int&gt;).Result;
+            // TODO: use the result
+        }
+        else if (o.IsFaulted)
+        {
+            // TODO: process failure
+        }
+        else if (o.IsCanceled)
+        {
+            // TODO: process cancellation
+        }
+    });
+}
+</code></pre><p>Wrapping a <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task&lt;T&gt;</a> with <code>AsyncResult</code> promise:</p>
+<pre><code class="lang-csharp">IAsyncOperation&lt;int&gt; Foo(Task&lt;int&gt; task)
+{
+    var result = new AsyncCompletionSource&lt;int&gt;();
+
+    task.ContinueWith(t =&gt; 
+    {
+        if (t.IsFaulted)
+        {
+            result.SetException(task.Exception);
+        }
+        else if (t.IsCanceled)
+        {
+            result.SetCanceled();
+        }
+        else
+        {
+            result.SetResult(t.Result);
+        }
+    });
+
+    return result;
+}
+</code></pre><p>Please note that while <code>AsyncResult</code> is designed as a lightweight and portable <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a> alternative, it&#39;s NOT a replacement for <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a>. It is recommended to use <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a> when possible and only switch to <code>AsyncResult</code> if one of the following applies:</p>
+<ul>
+<li>.NET 3.5 compatibility is required.</li>
+<li>Operations should be used in <a href="https://unity3d.com">Unity3d</a> coroutines.</li>
+<li>Memory usage is a concern.</li>
+<li>You follow <a href="https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/asynchronous-programming-model-apm">Asynchronous Programming Model (APM)</a> and need <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iasyncresult">IAsyncResult</a> implementation.</li>
+</ul>
 <h1 id="why-do-i-need-this">Why do I need this?</h1>
 <h2 id="unity3d-api-issues">Unity3d API issues</h2>
 <p>While Unity3d is a great engine, there are quite a few places where its API is not ideal. Asynchronous operations and coroutines management are the examples. While the concept of coroutines itself is great for frame-based applications, current Unity implementation is very basic and is not too consistent:</p>
@@ -101,7 +147,7 @@ if (op.IsCompletedSuccessfully)
 <h2 id="unityfxasync-features">UnityFx.Async features</h2>
 <ul>
 <li><strong>Single base interface</strong> for all kinds of library asyncronous operations: <a href="https://docs.microsoft.com/en-us/dotnet/api/system.iasyncresult">IAsyncResult</a>. Note that it is also the base interface for the .NET <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a>.</li>
-<li><strong>No <code>MonoBehaviour</code> needed</strong>: operations defined in the library can be created without specifying a <code>MonoBehaviour</code> instance to run on.</li>
+<li><strong>No <code>MonoBehaviour</code> needed</strong>: operations defined in the library do not need a <code>MonoBehaviour</code> instance to run on.</li>
 <li><strong>Extended control</strong> over the operations: <code>IAsyncOperation</code> interface mimics .NET <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a> as much as possible.</li>
 <li><strong>Operation result</strong> can be returned with the generic <code>IAsyncOperation&lt;T&gt;</code> interface (again very similar to <a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task<t></t></a>.</li>
 <li><strong>Chaning of operations</strong> can be easily achieved with a <code>ContinueWith</code> methods for <code>IAsyncOperation</code> interface.</li>

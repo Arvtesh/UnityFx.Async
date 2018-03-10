@@ -81,6 +81,13 @@
     <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
     <div class="level1"><span class="xref">AsyncResultQueue&lt;T&gt;</span></div>
   </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.Collections.Generic.ICollection</span>&lt;T&gt;</div>
+    <div><span class="xref">System.Collections.Generic.IReadOnlyCollection</span>&lt;T&gt;</div>
+    <div><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;T&gt;</div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a></div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -109,8 +116,7 @@
   <h6><strong>Assembly</strong>: UnityFx.Async.dll</h6>
   <h5 id="UnityFx_Async_AsyncResultQueue_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class AsyncResultQueue&lt;T&gt;
-    where T : AsyncResult</code></pre>
+    <pre><code class="lang-csharp hljs">public class AsyncResultQueue&lt;T&gt; : ICollection&lt;T&gt;, IReadOnlyCollection&lt;T&gt;, IEnumerable&lt;T&gt;, IEnumerable where T : AsyncResult</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -138,7 +144,7 @@ through the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.t
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1__ctor.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Helpers/AsyncResultQueue{T}.cs/#L113">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L109">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncResultQueue_1__ctor_" data-uid="UnityFx.Async.AsyncResultQueue`1.#ctor*"></a>
   <h4 id="UnityFx_Async_AsyncResultQueue_1__ctor" data-uid="UnityFx.Async.AsyncResultQueue`1.#ctor">AsyncResultQueue()</h4>
@@ -154,7 +160,7 @@ through the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.t
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1__ctor_System_Threading_SynchronizationContext_.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.%23ctor(System.Threading.SynchronizationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Helpers/AsyncResultQueue{T}.cs/#L121">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L117">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncResultQueue_1__ctor_" data-uid="UnityFx.Async.AsyncResultQueue`1.#ctor*"></a>
   <h4 id="UnityFx_Async_AsyncResultQueue_1__ctor_System_Threading_SynchronizationContext_" data-uid="UnityFx.Async.AsyncResultQueue`1.#ctor(System.Threading.SynchronizationContext)">AsyncResultQueue(SynchronizationContext)</h4>
@@ -190,12 +196,11 @@ through the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.t
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1_Count.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.Count%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Helpers/AsyncResultQueue{T}.cs/#L42">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L199">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncResultQueue_1_Count_" data-uid="UnityFx.Async.AsyncResultQueue`1.Count*"></a>
   <h4 id="UnityFx_Async_AsyncResultQueue_1_Count" data-uid="UnityFx.Async.AsyncResultQueue`1.Count">Count</h4>
-  <div class="markdown level1 summary"><p>Gets the number of operations contained in the queue.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -212,26 +217,20 @@ through the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.t
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
-        <td><p>Number of elements in the queue.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
-  <h5 id="UnityFx_Async_AsyncResultQueue_1_Count_seealso">See Also</h5>
-  <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_IsEmpty">IsEmpty</a></div>
-      <div><a class="xref" href="UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_MaxCount">MaxCount</a></div>
-  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1_Current.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.Current%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Helpers/AsyncResultQueue{T}.cs/#L99">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L95">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncResultQueue_1_Current_" data-uid="UnityFx.Async.AsyncResultQueue`1.Current*"></a>
   <h4 id="UnityFx_Async_AsyncResultQueue_1_Current" data-uid="UnityFx.Async.AsyncResultQueue`1.Current">Current</h4>
-  <div class="markdown level1 summary"><p>Get an operation that is running currently or <span class="xref">null</span> if the queue is empty.</p>
+  <div class="markdown level1 summary"><p>Gets an operation that is running currently or <span class="xref">null</span> if the queue is empty.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -259,11 +258,11 @@ through the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.t
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1_IsEmpty.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.IsEmpty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Helpers/AsyncResultQueue{T}.cs/#L49">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L45">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncResultQueue_1_IsEmpty_" data-uid="UnityFx.Async.AsyncResultQueue`1.IsEmpty*"></a>
   <h4 id="UnityFx_Async_AsyncResultQueue_1_IsEmpty" data-uid="UnityFx.Async.AsyncResultQueue`1.IsEmpty">IsEmpty</h4>
-  <div class="markdown level1 summary"><p>Gets whether the queue is empty.</p>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether the queue is empty.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -292,10 +291,40 @@ through the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.t
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1_IsReadOnly.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.IsReadOnly%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L202">View Source</a>
+  </span>
+  <a id="UnityFx_Async_AsyncResultQueue_1_IsReadOnly_" data-uid="UnityFx.Async.AsyncResultQueue`1.IsReadOnly*"></a>
+  <h4 id="UnityFx_Async_AsyncResultQueue_1_IsReadOnly" data-uid="UnityFx.Async.AsyncResultQueue`1.IsReadOnly">IsReadOnly</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsReadOnly { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1_MaxCount.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.MaxCount%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Helpers/AsyncResultQueue{T}.cs/#L57">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L53">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncResultQueue_1_MaxCount_" data-uid="UnityFx.Async.AsyncResultQueue`1.MaxCount*"></a>
   <h4 id="UnityFx_Async_AsyncResultQueue_1_MaxCount" data-uid="UnityFx.Async.AsyncResultQueue`1.MaxCount">MaxCount</h4>
@@ -347,11 +376,11 @@ through the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.t
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1_Suspended.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.Suspended%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Helpers/AsyncResultQueue{T}.cs/#L78">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L74">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncResultQueue_1_Suspended_" data-uid="UnityFx.Async.AsyncResultQueue`1.Suspended*"></a>
   <h4 id="UnityFx_Async_AsyncResultQueue_1_Suspended" data-uid="UnityFx.Async.AsyncResultQueue`1.Suspended">Suspended</h4>
-  <div class="markdown level1 summary"><p>Gets or sets whether the queue in on pause. When in suspended state queue does not change state of the operations.</p>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the queue in on pause. When in suspended state queue does not change state of the operations.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -381,12 +410,11 @@ through the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.t
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1_Add__0_.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.Add(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Helpers/AsyncResultQueue{T}.cs/#L172">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L205">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncResultQueue_1_Add_" data-uid="UnityFx.Async.AsyncResultQueue`1.Add*"></a>
   <h4 id="UnityFx_Async_AsyncResultQueue_1_Add__0_" data-uid="UnityFx.Async.AsyncResultQueue`1.Add(`0)">Add(T)</h4>
-  <div class="markdown level1 summary"><p>Adds a new operation to the end of the queue. Operation is expected to have its status set to <a class="xref" href="UnityFx.Async.AsyncOperationStatus.html#UnityFx_Async_AsyncOperationStatus_Created">Created</a>.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -405,63 +433,145 @@ through the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.t
       <tr>
         <td><span class="xref">T</span></td>
         <td><span class="parametername">op</span></td>
-        <td><p>The operation to enqueue.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
-        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">op</code> is <span class="xref">null</span>.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
-        <td><p>Thrown if the operation cannot be added.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="UnityFx_Async_AsyncResultQueue_1_Add__0__seealso">See Also</h5>
-  <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_Remove__0_">Remove(T)</a></div>
-      <div><a class="xref" href="UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_Clear">Clear()</a></div>
-  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1_Clear.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.Clear%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Helpers/AsyncResultQueue{T}.cs/#L206">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L248">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncResultQueue_1_Clear_" data-uid="UnityFx.Async.AsyncResultQueue`1.Clear*"></a>
   <h4 id="UnityFx_Async_AsyncResultQueue_1_Clear" data-uid="UnityFx.Async.AsyncResultQueue`1.Clear">Clear()</h4>
-  <div class="markdown level1 summary"><p>Removes all operations from the queue.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void Clear()</code></pre>
   </div>
-  <h5 id="UnityFx_Async_AsyncResultQueue_1_Clear_seealso">See Also</h5>
-  <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_Remove__0_">Remove(T)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1_Contains__0_.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.Contains(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L230">View Source</a>
+  </span>
+  <a id="UnityFx_Async_AsyncResultQueue_1_Contains_" data-uid="UnityFx.Async.AsyncResultQueue`1.Contains*"></a>
+  <h4 id="UnityFx_Async_AsyncResultQueue_1_Contains__0_" data-uid="UnityFx.Async.AsyncResultQueue`1.Contains(`0)">Contains(T)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Contains(T item)</code></pre>
   </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">item</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1_CopyTo__0___System_Int32_.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.CopyTo(%600%5B%5D%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L239">View Source</a>
+  </span>
+  <a id="UnityFx_Async_AsyncResultQueue_1_CopyTo_" data-uid="UnityFx.Async.AsyncResultQueue`1.CopyTo*"></a>
+  <h4 id="UnityFx_Async_AsyncResultQueue_1_CopyTo__0___System_Int32_" data-uid="UnityFx.Async.AsyncResultQueue`1.CopyTo(`0[],System.Int32)">CopyTo(T[], Int32)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void CopyTo(T[] array, int arrayIndex)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>T[]</td>
+        <td><span class="parametername">array</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">arrayIndex</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1_GetEnumerator.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.GetEnumerator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L298">View Source</a>
+  </span>
+  <a id="UnityFx_Async_AsyncResultQueue_1_GetEnumerator_" data-uid="UnityFx.Async.AsyncResultQueue`1.GetEnumerator*"></a>
+  <h4 id="UnityFx_Async_AsyncResultQueue_1_GetEnumerator" data-uid="UnityFx.Async.AsyncResultQueue`1.GetEnumerator">GetEnumerator()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerator&lt;T&gt; GetEnumerator()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerator</span>&lt;T&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1_Release.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.Release%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Helpers/AsyncResultQueue{T}.cs/#L223">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L164">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncResultQueue_1_Release_" data-uid="UnityFx.Async.AsyncResultQueue`1.Release*"></a>
   <h4 id="UnityFx_Async_AsyncResultQueue_1_Release" data-uid="UnityFx.Async.AsyncResultQueue`1.Release">Release()</h4>
@@ -496,12 +606,11 @@ through the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.t
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1_Remove__0_.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.Remove(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Helpers/AsyncResultQueue{T}.cs/#L187">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L214">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncResultQueue_1_Remove_" data-uid="UnityFx.Async.AsyncResultQueue`1.Remove*"></a>
   <h4 id="UnityFx_Async_AsyncResultQueue_1_Remove__0_" data-uid="UnityFx.Async.AsyncResultQueue`1.Remove(`0)">Remove(T)</h4>
-  <div class="markdown level1 summary"><p>Removes the specified operation from the queue.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -520,8 +629,7 @@ through the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.t
       <tr>
         <td><span class="xref">T</span></td>
         <td><span class="parametername">op</span></td>
-        <td><p>The operation to remove. Can be <span class="xref">null</span>.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -536,22 +644,16 @@ through the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.t
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
-        <td><p>Returns <span class="xref">true</span> if the operation is removed; <span class="xref">false</span> otherwise.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
-  <h5 id="UnityFx_Async_AsyncResultQueue_1_Remove__0__seealso">See Also</h5>
-  <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_TryAdd__0_">TryAdd(T)</a></div>
-      <div><a class="xref" href="UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_Clear">Clear()</a></div>
-  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1_ToArray.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.ToArray%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Helpers/AsyncResultQueue{T}.cs/#L245">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L186">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncResultQueue_1_ToArray_" data-uid="UnityFx.Async.AsyncResultQueue`1.ToArray*"></a>
   <h4 id="UnityFx_Async_AsyncResultQueue_1_ToArray" data-uid="UnityFx.Async.AsyncResultQueue`1.ToArray">ToArray()</h4>
@@ -583,7 +685,7 @@ through the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.t
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1_TryAdd__0_.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.TryAdd(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Helpers/AsyncResultQueue{T}.cs/#L134">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L130">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncResultQueue_1_TryAdd_" data-uid="UnityFx.Async.AsyncResultQueue`1.TryAdd*"></a>
   <h4 id="UnityFx_Async_AsyncResultQueue_1_TryAdd__0_" data-uid="UnityFx.Async.AsyncResultQueue`1.TryAdd(`0)">TryAdd(T)</h4>
@@ -649,6 +751,51 @@ through the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.t
       <div><a class="xref" href="UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_Remove__0_">Remove(T)</a></div>
       <div><a class="xref" href="UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_Clear">Clear()</a></div>
   </div>
+  <h3 id="eii">Explicit Interface Implementations
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1_System_Collections_IEnumerable_GetEnumerator.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601.System%23Collections%23IEnumerable%23GetEnumerator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L304">View Source</a>
+  </span>
+  <a id="UnityFx_Async_AsyncResultQueue_1_System_Collections_IEnumerable_GetEnumerator_" data-uid="UnityFx.Async.AsyncResultQueue`1.System#Collections#IEnumerable#GetEnumerator*"></a>
+  <h4 id="UnityFx_Async_AsyncResultQueue_1_System_Collections_IEnumerable_GetEnumerator" data-uid="UnityFx.Async.AsyncResultQueue`1.System#Collections#IEnumerable#GetEnumerator">IEnumerable.GetEnumerator()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IEnumerator IEnumerable.GetEnumerator()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerator">IEnumerator</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.Collections.Generic.ICollection&lt;T&gt;</span>
+  </div>
+  <div>
+      <span class="xref">System.Collections.Generic.IReadOnlyCollection&lt;T&gt;</span>
+  </div>
+  <div>
+      <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerable">System.Collections.IEnumerable</a>
+  </div>
   <h3 id="seealso">See Also</h3>
   <div class="seealso">
       <div><a class="xref" href="UnityFx.Async.AsyncResult.html">AsyncResult</a></div>
@@ -664,7 +811,7 @@ through the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.t
                     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncResultQueue_1.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncResultQueue%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Helpers/AsyncResultQueue{T}.cs/#L20" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncResultQueue{T}.cs/#L23" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

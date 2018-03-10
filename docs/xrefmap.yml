@@ -13,57 +13,147 @@ references:
   commentId: T:UnityFx.Async.AsyncCompletionSource
   fullName: UnityFx.Async.AsyncCompletionSource
   nameWithType: AsyncCompletionSource
-- uid: UnityFx.Async.AsyncCompletionSource.SetCanceled
-  name: SetCanceled()
-  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_SetCanceled
-  commentId: M:UnityFx.Async.AsyncCompletionSource.SetCanceled
-  fullName: UnityFx.Async.AsyncCompletionSource.SetCanceled()
-  nameWithType: AsyncCompletionSource.SetCanceled()
+- uid: UnityFx.Async.AsyncCompletionSource.#ctor
+  name: AsyncCompletionSource()
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource__ctor
+  commentId: M:UnityFx.Async.AsyncCompletionSource.#ctor
+  fullName: UnityFx.Async.AsyncCompletionSource.AsyncCompletionSource()
+  nameWithType: AsyncCompletionSource.AsyncCompletionSource()
+- uid: UnityFx.Async.AsyncCompletionSource.#ctor(System.AsyncCallback,System.Object)
+  name: AsyncCompletionSource(AsyncCallback, Object)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource__ctor_System_AsyncCallback_System_Object_
+  commentId: M:UnityFx.Async.AsyncCompletionSource.#ctor(System.AsyncCallback,System.Object)
+  fullName: UnityFx.Async.AsyncCompletionSource.AsyncCompletionSource(System.AsyncCallback, System.Object)
+  nameWithType: AsyncCompletionSource.AsyncCompletionSource(AsyncCallback, Object)
+- uid: UnityFx.Async.AsyncCompletionSource.#ctor(System.Object)
+  name: AsyncCompletionSource(Object)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource__ctor_System_Object_
+  commentId: M:UnityFx.Async.AsyncCompletionSource.#ctor(System.Object)
+  fullName: UnityFx.Async.AsyncCompletionSource.AsyncCompletionSource(System.Object)
+  nameWithType: AsyncCompletionSource.AsyncCompletionSource(Object)
+- uid: UnityFx.Async.AsyncCompletionSource.#ctor(UnityFx.Async.AsyncOperationStatus)
+  name: AsyncCompletionSource(AsyncOperationStatus)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource__ctor_UnityFx_Async_AsyncOperationStatus_
+  commentId: M:UnityFx.Async.AsyncCompletionSource.#ctor(UnityFx.Async.AsyncOperationStatus)
+  fullName: UnityFx.Async.AsyncCompletionSource.AsyncCompletionSource(UnityFx.Async.AsyncOperationStatus)
+  nameWithType: AsyncCompletionSource.AsyncCompletionSource(AsyncOperationStatus)
+- uid: UnityFx.Async.AsyncCompletionSource.#ctor(UnityFx.Async.AsyncOperationStatus,System.AsyncCallback,System.Object)
+  name: AsyncCompletionSource(AsyncOperationStatus, AsyncCallback, Object)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource__ctor_UnityFx_Async_AsyncOperationStatus_System_AsyncCallback_System_Object_
+  commentId: M:UnityFx.Async.AsyncCompletionSource.#ctor(UnityFx.Async.AsyncOperationStatus,System.AsyncCallback,System.Object)
+  fullName: UnityFx.Async.AsyncCompletionSource.AsyncCompletionSource(UnityFx.Async.AsyncOperationStatus, System.AsyncCallback, System.Object)
+  nameWithType: AsyncCompletionSource.AsyncCompletionSource(AsyncOperationStatus, AsyncCallback, Object)
+- uid: UnityFx.Async.AsyncCompletionSource.#ctor(UnityFx.Async.AsyncOperationStatus,System.Object)
+  name: AsyncCompletionSource(AsyncOperationStatus, Object)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource__ctor_UnityFx_Async_AsyncOperationStatus_System_Object_
+  commentId: M:UnityFx.Async.AsyncCompletionSource.#ctor(UnityFx.Async.AsyncOperationStatus,System.Object)
+  fullName: UnityFx.Async.AsyncCompletionSource.AsyncCompletionSource(UnityFx.Async.AsyncOperationStatus, System.Object)
+  nameWithType: AsyncCompletionSource.AsyncCompletionSource(AsyncOperationStatus, Object)
+- uid: UnityFx.Async.AsyncCompletionSource.#ctor*
+  name: AsyncCompletionSource
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource__ctor_
+  commentId: Overload:UnityFx.Async.AsyncCompletionSource.#ctor
+  fullName: UnityFx.Async.AsyncCompletionSource.AsyncCompletionSource
+  nameWithType: AsyncCompletionSource.AsyncCompletionSource
+- uid: UnityFx.Async.AsyncCompletionSource.Operation
+  name: Operation
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_Operation
+  commentId: P:UnityFx.Async.AsyncCompletionSource.Operation
+  fullName: UnityFx.Async.AsyncCompletionSource.Operation
+  nameWithType: AsyncCompletionSource.Operation
+- uid: UnityFx.Async.AsyncCompletionSource.Operation*
+  name: Operation
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_Operation_
+  commentId: Overload:UnityFx.Async.AsyncCompletionSource.Operation
+  fullName: UnityFx.Async.AsyncCompletionSource.Operation
+  nameWithType: AsyncCompletionSource.Operation
+- uid: UnityFx.Async.AsyncCompletionSource.SetCanceled(System.Boolean)
+  name: SetCanceled(Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_SetCanceled_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncCompletionSource.SetCanceled(System.Boolean)
+  fullName: UnityFx.Async.AsyncCompletionSource.SetCanceled(System.Boolean)
+  nameWithType: AsyncCompletionSource.SetCanceled(Boolean)
 - uid: UnityFx.Async.AsyncCompletionSource.SetCanceled*
   name: SetCanceled
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_SetCanceled_
   commentId: Overload:UnityFx.Async.AsyncCompletionSource.SetCanceled
   fullName: UnityFx.Async.AsyncCompletionSource.SetCanceled
   nameWithType: AsyncCompletionSource.SetCanceled
-- uid: UnityFx.Async.AsyncCompletionSource.SetCompleted
-  name: SetCompleted()
-  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_SetCompleted
-  commentId: M:UnityFx.Async.AsyncCompletionSource.SetCompleted
-  fullName: UnityFx.Async.AsyncCompletionSource.SetCompleted()
-  nameWithType: AsyncCompletionSource.SetCompleted()
+- uid: UnityFx.Async.AsyncCompletionSource.SetCompleted(System.Boolean)
+  name: SetCompleted(Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_SetCompleted_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncCompletionSource.SetCompleted(System.Boolean)
+  fullName: UnityFx.Async.AsyncCompletionSource.SetCompleted(System.Boolean)
+  nameWithType: AsyncCompletionSource.SetCompleted(Boolean)
 - uid: UnityFx.Async.AsyncCompletionSource.SetCompleted*
   name: SetCompleted
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_SetCompleted_
   commentId: Overload:UnityFx.Async.AsyncCompletionSource.SetCompleted
   fullName: UnityFx.Async.AsyncCompletionSource.SetCompleted
   nameWithType: AsyncCompletionSource.SetCompleted
-- uid: UnityFx.Async.AsyncCompletionSource.SetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name: SetException(IEnumerable<Exception>)
-  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_SetException_System_Collections_Generic_IEnumerable_System_Exception__
-  commentId: M:UnityFx.Async.AsyncCompletionSource.SetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name.vb: SetException(IEnumerable(Of Exception))
-  fullName: UnityFx.Async.AsyncCompletionSource.SetException(System.Collections.Generic.IEnumerable<System.Exception>)
-  fullName.vb: UnityFx.Async.AsyncCompletionSource.SetException(System.Collections.Generic.IEnumerable(Of System.Exception))
-  nameWithType: AsyncCompletionSource.SetException(IEnumerable<Exception>)
-  nameWithType.vb: AsyncCompletionSource.SetException(IEnumerable(Of Exception))
-- uid: UnityFx.Async.AsyncCompletionSource.SetException(System.Exception)
-  name: SetException(Exception)
-  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_SetException_System_Exception_
-  commentId: M:UnityFx.Async.AsyncCompletionSource.SetException(System.Exception)
-  fullName: UnityFx.Async.AsyncCompletionSource.SetException(System.Exception)
-  nameWithType: AsyncCompletionSource.SetException(Exception)
+- uid: UnityFx.Async.AsyncCompletionSource.SetException(System.Exception,System.Boolean)
+  name: SetException(Exception, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_SetException_System_Exception_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncCompletionSource.SetException(System.Exception,System.Boolean)
+  fullName: UnityFx.Async.AsyncCompletionSource.SetException(System.Exception, System.Boolean)
+  nameWithType: AsyncCompletionSource.SetException(Exception, Boolean)
 - uid: UnityFx.Async.AsyncCompletionSource.SetException*
   name: SetException
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_SetException_
   commentId: Overload:UnityFx.Async.AsyncCompletionSource.SetException
   fullName: UnityFx.Async.AsyncCompletionSource.SetException
   nameWithType: AsyncCompletionSource.SetException
+- uid: UnityFx.Async.AsyncCompletionSource.SetExceptions(System.Collections.Generic.IEnumerable{System.Exception},System.Boolean)
+  name: SetExceptions(IEnumerable<Exception>, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_SetExceptions_System_Collections_Generic_IEnumerable_System_Exception__System_Boolean_
+  commentId: M:UnityFx.Async.AsyncCompletionSource.SetExceptions(System.Collections.Generic.IEnumerable{System.Exception},System.Boolean)
+  name.vb: SetExceptions(IEnumerable(Of Exception), Boolean)
+  fullName: UnityFx.Async.AsyncCompletionSource.SetExceptions(System.Collections.Generic.IEnumerable<System.Exception>, System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource.SetExceptions(System.Collections.Generic.IEnumerable(Of System.Exception), System.Boolean)
+  nameWithType: AsyncCompletionSource.SetExceptions(IEnumerable<Exception>, Boolean)
+  nameWithType.vb: AsyncCompletionSource.SetExceptions(IEnumerable(Of Exception), Boolean)
+- uid: UnityFx.Async.AsyncCompletionSource.SetExceptions*
+  name: SetExceptions
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_SetExceptions_
+  commentId: Overload:UnityFx.Async.AsyncCompletionSource.SetExceptions
+  fullName: UnityFx.Async.AsyncCompletionSource.SetExceptions
+  nameWithType: AsyncCompletionSource.SetExceptions
+- uid: UnityFx.Async.AsyncCompletionSource.SetRunning
+  name: SetRunning()
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_SetRunning
+  commentId: M:UnityFx.Async.AsyncCompletionSource.SetRunning
+  fullName: UnityFx.Async.AsyncCompletionSource.SetRunning()
+  nameWithType: AsyncCompletionSource.SetRunning()
+- uid: UnityFx.Async.AsyncCompletionSource.SetRunning*
+  name: SetRunning
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_SetRunning_
+  commentId: Overload:UnityFx.Async.AsyncCompletionSource.SetRunning
+  fullName: UnityFx.Async.AsyncCompletionSource.SetRunning
+  nameWithType: AsyncCompletionSource.SetRunning
+- uid: UnityFx.Async.AsyncCompletionSource.SetScheduled
+  name: SetScheduled()
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_SetScheduled
+  commentId: M:UnityFx.Async.AsyncCompletionSource.SetScheduled
+  fullName: UnityFx.Async.AsyncCompletionSource.SetScheduled()
+  nameWithType: AsyncCompletionSource.SetScheduled()
+- uid: UnityFx.Async.AsyncCompletionSource.SetScheduled*
+  name: SetScheduled
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_SetScheduled_
+  commentId: Overload:UnityFx.Async.AsyncCompletionSource.SetScheduled
+  fullName: UnityFx.Async.AsyncCompletionSource.SetScheduled
+  nameWithType: AsyncCompletionSource.SetScheduled
 - uid: UnityFx.Async.AsyncCompletionSource.TrySetCanceled
   name: TrySetCanceled()
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_TrySetCanceled
   commentId: M:UnityFx.Async.AsyncCompletionSource.TrySetCanceled
   fullName: UnityFx.Async.AsyncCompletionSource.TrySetCanceled()
   nameWithType: AsyncCompletionSource.TrySetCanceled()
+- uid: UnityFx.Async.AsyncCompletionSource.TrySetCanceled(System.Boolean)
+  name: TrySetCanceled(Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_TrySetCanceled_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncCompletionSource.TrySetCanceled(System.Boolean)
+  fullName: UnityFx.Async.AsyncCompletionSource.TrySetCanceled(System.Boolean)
+  nameWithType: AsyncCompletionSource.TrySetCanceled(Boolean)
 - uid: UnityFx.Async.AsyncCompletionSource.TrySetCanceled*
   name: TrySetCanceled
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_TrySetCanceled_
@@ -76,33 +166,84 @@ references:
   commentId: M:UnityFx.Async.AsyncCompletionSource.TrySetCompleted
   fullName: UnityFx.Async.AsyncCompletionSource.TrySetCompleted()
   nameWithType: AsyncCompletionSource.TrySetCompleted()
+- uid: UnityFx.Async.AsyncCompletionSource.TrySetCompleted(System.Boolean)
+  name: TrySetCompleted(Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_TrySetCompleted_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncCompletionSource.TrySetCompleted(System.Boolean)
+  fullName: UnityFx.Async.AsyncCompletionSource.TrySetCompleted(System.Boolean)
+  nameWithType: AsyncCompletionSource.TrySetCompleted(Boolean)
 - uid: UnityFx.Async.AsyncCompletionSource.TrySetCompleted*
   name: TrySetCompleted
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_TrySetCompleted_
   commentId: Overload:UnityFx.Async.AsyncCompletionSource.TrySetCompleted
   fullName: UnityFx.Async.AsyncCompletionSource.TrySetCompleted
   nameWithType: AsyncCompletionSource.TrySetCompleted
-- uid: UnityFx.Async.AsyncCompletionSource.TrySetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name: TrySetException(IEnumerable<Exception>)
-  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_TrySetException_System_Collections_Generic_IEnumerable_System_Exception__
-  commentId: M:UnityFx.Async.AsyncCompletionSource.TrySetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name.vb: TrySetException(IEnumerable(Of Exception))
-  fullName: UnityFx.Async.AsyncCompletionSource.TrySetException(System.Collections.Generic.IEnumerable<System.Exception>)
-  fullName.vb: UnityFx.Async.AsyncCompletionSource.TrySetException(System.Collections.Generic.IEnumerable(Of System.Exception))
-  nameWithType: AsyncCompletionSource.TrySetException(IEnumerable<Exception>)
-  nameWithType.vb: AsyncCompletionSource.TrySetException(IEnumerable(Of Exception))
 - uid: UnityFx.Async.AsyncCompletionSource.TrySetException(System.Exception)
   name: TrySetException(Exception)
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_TrySetException_System_Exception_
   commentId: M:UnityFx.Async.AsyncCompletionSource.TrySetException(System.Exception)
   fullName: UnityFx.Async.AsyncCompletionSource.TrySetException(System.Exception)
   nameWithType: AsyncCompletionSource.TrySetException(Exception)
+- uid: UnityFx.Async.AsyncCompletionSource.TrySetException(System.Exception,System.Boolean)
+  name: TrySetException(Exception, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_TrySetException_System_Exception_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncCompletionSource.TrySetException(System.Exception,System.Boolean)
+  fullName: UnityFx.Async.AsyncCompletionSource.TrySetException(System.Exception, System.Boolean)
+  nameWithType: AsyncCompletionSource.TrySetException(Exception, Boolean)
 - uid: UnityFx.Async.AsyncCompletionSource.TrySetException*
   name: TrySetException
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_TrySetException_
   commentId: Overload:UnityFx.Async.AsyncCompletionSource.TrySetException
   fullName: UnityFx.Async.AsyncCompletionSource.TrySetException
   nameWithType: AsyncCompletionSource.TrySetException
+- uid: UnityFx.Async.AsyncCompletionSource.TrySetExceptions(System.Collections.Generic.IEnumerable{System.Exception})
+  name: TrySetExceptions(IEnumerable<Exception>)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__
+  commentId: M:UnityFx.Async.AsyncCompletionSource.TrySetExceptions(System.Collections.Generic.IEnumerable{System.Exception})
+  name.vb: TrySetExceptions(IEnumerable(Of Exception))
+  fullName: UnityFx.Async.AsyncCompletionSource.TrySetExceptions(System.Collections.Generic.IEnumerable<System.Exception>)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource.TrySetExceptions(System.Collections.Generic.IEnumerable(Of System.Exception))
+  nameWithType: AsyncCompletionSource.TrySetExceptions(IEnumerable<Exception>)
+  nameWithType.vb: AsyncCompletionSource.TrySetExceptions(IEnumerable(Of Exception))
+- uid: UnityFx.Async.AsyncCompletionSource.TrySetExceptions(System.Collections.Generic.IEnumerable{System.Exception},System.Boolean)
+  name: TrySetExceptions(IEnumerable<Exception>, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__System_Boolean_
+  commentId: M:UnityFx.Async.AsyncCompletionSource.TrySetExceptions(System.Collections.Generic.IEnumerable{System.Exception},System.Boolean)
+  name.vb: TrySetExceptions(IEnumerable(Of Exception), Boolean)
+  fullName: UnityFx.Async.AsyncCompletionSource.TrySetExceptions(System.Collections.Generic.IEnumerable<System.Exception>, System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource.TrySetExceptions(System.Collections.Generic.IEnumerable(Of System.Exception), System.Boolean)
+  nameWithType: AsyncCompletionSource.TrySetExceptions(IEnumerable<Exception>, Boolean)
+  nameWithType.vb: AsyncCompletionSource.TrySetExceptions(IEnumerable(Of Exception), Boolean)
+- uid: UnityFx.Async.AsyncCompletionSource.TrySetExceptions*
+  name: TrySetExceptions
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_TrySetExceptions_
+  commentId: Overload:UnityFx.Async.AsyncCompletionSource.TrySetExceptions
+  fullName: UnityFx.Async.AsyncCompletionSource.TrySetExceptions
+  nameWithType: AsyncCompletionSource.TrySetExceptions
+- uid: UnityFx.Async.AsyncCompletionSource.TrySetRunning
+  name: TrySetRunning()
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_TrySetRunning
+  commentId: M:UnityFx.Async.AsyncCompletionSource.TrySetRunning
+  fullName: UnityFx.Async.AsyncCompletionSource.TrySetRunning()
+  nameWithType: AsyncCompletionSource.TrySetRunning()
+- uid: UnityFx.Async.AsyncCompletionSource.TrySetRunning*
+  name: TrySetRunning
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_TrySetRunning_
+  commentId: Overload:UnityFx.Async.AsyncCompletionSource.TrySetRunning
+  fullName: UnityFx.Async.AsyncCompletionSource.TrySetRunning
+  nameWithType: AsyncCompletionSource.TrySetRunning
+- uid: UnityFx.Async.AsyncCompletionSource.TrySetScheduled
+  name: TrySetScheduled()
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_TrySetScheduled
+  commentId: M:UnityFx.Async.AsyncCompletionSource.TrySetScheduled
+  fullName: UnityFx.Async.AsyncCompletionSource.TrySetScheduled()
+  nameWithType: AsyncCompletionSource.TrySetScheduled()
+- uid: UnityFx.Async.AsyncCompletionSource.TrySetScheduled*
+  name: TrySetScheduled
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html#UnityFx_Async_AsyncCompletionSource_TrySetScheduled_
+  commentId: Overload:UnityFx.Async.AsyncCompletionSource.TrySetScheduled
+  fullName: UnityFx.Async.AsyncCompletionSource.TrySetScheduled
+  nameWithType: AsyncCompletionSource.TrySetScheduled
 - uid: UnityFx.Async.AsyncCompletionSource`1
   name: AsyncCompletionSource<T>
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html
@@ -112,14 +253,86 @@ references:
   fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T)
   nameWithType: AsyncCompletionSource<T>
   nameWithType.vb: AsyncCompletionSource(Of T)
-- uid: UnityFx.Async.AsyncCompletionSource`1.SetCanceled
-  name: SetCanceled()
-  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_SetCanceled
-  commentId: M:UnityFx.Async.AsyncCompletionSource`1.SetCanceled
-  fullName: UnityFx.Async.AsyncCompletionSource<T>.SetCanceled()
-  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).SetCanceled()
-  nameWithType: AsyncCompletionSource<T>.SetCanceled()
-  nameWithType.vb: AsyncCompletionSource(Of T).SetCanceled()
+- uid: UnityFx.Async.AsyncCompletionSource`1.#ctor
+  name: AsyncCompletionSource()
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1__ctor
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.#ctor
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.AsyncCompletionSource()
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).AsyncCompletionSource()
+  nameWithType: AsyncCompletionSource<T>.AsyncCompletionSource()
+  nameWithType.vb: AsyncCompletionSource(Of T).AsyncCompletionSource()
+- uid: UnityFx.Async.AsyncCompletionSource`1.#ctor(System.AsyncCallback,System.Object)
+  name: AsyncCompletionSource(AsyncCallback, Object)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1__ctor_System_AsyncCallback_System_Object_
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.#ctor(System.AsyncCallback,System.Object)
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.AsyncCompletionSource(System.AsyncCallback, System.Object)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).AsyncCompletionSource(System.AsyncCallback, System.Object)
+  nameWithType: AsyncCompletionSource<T>.AsyncCompletionSource(AsyncCallback, Object)
+  nameWithType.vb: AsyncCompletionSource(Of T).AsyncCompletionSource(AsyncCallback, Object)
+- uid: UnityFx.Async.AsyncCompletionSource`1.#ctor(System.Object)
+  name: AsyncCompletionSource(Object)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1__ctor_System_Object_
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.#ctor(System.Object)
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.AsyncCompletionSource(System.Object)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).AsyncCompletionSource(System.Object)
+  nameWithType: AsyncCompletionSource<T>.AsyncCompletionSource(Object)
+  nameWithType.vb: AsyncCompletionSource(Of T).AsyncCompletionSource(Object)
+- uid: UnityFx.Async.AsyncCompletionSource`1.#ctor(UnityFx.Async.AsyncOperationStatus)
+  name: AsyncCompletionSource(AsyncOperationStatus)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1__ctor_UnityFx_Async_AsyncOperationStatus_
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.#ctor(UnityFx.Async.AsyncOperationStatus)
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.AsyncCompletionSource(UnityFx.Async.AsyncOperationStatus)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).AsyncCompletionSource(UnityFx.Async.AsyncOperationStatus)
+  nameWithType: AsyncCompletionSource<T>.AsyncCompletionSource(AsyncOperationStatus)
+  nameWithType.vb: AsyncCompletionSource(Of T).AsyncCompletionSource(AsyncOperationStatus)
+- uid: UnityFx.Async.AsyncCompletionSource`1.#ctor(UnityFx.Async.AsyncOperationStatus,System.AsyncCallback,System.Object)
+  name: AsyncCompletionSource(AsyncOperationStatus, AsyncCallback, Object)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1__ctor_UnityFx_Async_AsyncOperationStatus_System_AsyncCallback_System_Object_
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.#ctor(UnityFx.Async.AsyncOperationStatus,System.AsyncCallback,System.Object)
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.AsyncCompletionSource(UnityFx.Async.AsyncOperationStatus, System.AsyncCallback, System.Object)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).AsyncCompletionSource(UnityFx.Async.AsyncOperationStatus, System.AsyncCallback, System.Object)
+  nameWithType: AsyncCompletionSource<T>.AsyncCompletionSource(AsyncOperationStatus, AsyncCallback, Object)
+  nameWithType.vb: AsyncCompletionSource(Of T).AsyncCompletionSource(AsyncOperationStatus, AsyncCallback, Object)
+- uid: UnityFx.Async.AsyncCompletionSource`1.#ctor(UnityFx.Async.AsyncOperationStatus,System.Object)
+  name: AsyncCompletionSource(AsyncOperationStatus, Object)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1__ctor_UnityFx_Async_AsyncOperationStatus_System_Object_
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.#ctor(UnityFx.Async.AsyncOperationStatus,System.Object)
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.AsyncCompletionSource(UnityFx.Async.AsyncOperationStatus, System.Object)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).AsyncCompletionSource(UnityFx.Async.AsyncOperationStatus, System.Object)
+  nameWithType: AsyncCompletionSource<T>.AsyncCompletionSource(AsyncOperationStatus, Object)
+  nameWithType.vb: AsyncCompletionSource(Of T).AsyncCompletionSource(AsyncOperationStatus, Object)
+- uid: UnityFx.Async.AsyncCompletionSource`1.#ctor*
+  name: AsyncCompletionSource
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1__ctor_
+  commentId: Overload:UnityFx.Async.AsyncCompletionSource`1.#ctor
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.AsyncCompletionSource
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).AsyncCompletionSource
+  nameWithType: AsyncCompletionSource<T>.AsyncCompletionSource
+  nameWithType.vb: AsyncCompletionSource(Of T).AsyncCompletionSource
+- uid: UnityFx.Async.AsyncCompletionSource`1.Operation
+  name: Operation
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_Operation
+  commentId: P:UnityFx.Async.AsyncCompletionSource`1.Operation
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.Operation
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).Operation
+  nameWithType: AsyncCompletionSource<T>.Operation
+  nameWithType.vb: AsyncCompletionSource(Of T).Operation
+- uid: UnityFx.Async.AsyncCompletionSource`1.Operation*
+  name: Operation
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_Operation_
+  commentId: Overload:UnityFx.Async.AsyncCompletionSource`1.Operation
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.Operation
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).Operation
+  nameWithType: AsyncCompletionSource<T>.Operation
+  nameWithType.vb: AsyncCompletionSource(Of T).Operation
+- uid: UnityFx.Async.AsyncCompletionSource`1.SetCanceled(System.Boolean)
+  name: SetCanceled(Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_SetCanceled_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.SetCanceled(System.Boolean)
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.SetCanceled(System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).SetCanceled(System.Boolean)
+  nameWithType: AsyncCompletionSource<T>.SetCanceled(Boolean)
+  nameWithType.vb: AsyncCompletionSource(Of T).SetCanceled(Boolean)
 - uid: UnityFx.Async.AsyncCompletionSource`1.SetCanceled*
   name: SetCanceled
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_SetCanceled_
@@ -128,23 +341,14 @@ references:
   fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).SetCanceled
   nameWithType: AsyncCompletionSource<T>.SetCanceled
   nameWithType.vb: AsyncCompletionSource(Of T).SetCanceled
-- uid: UnityFx.Async.AsyncCompletionSource`1.SetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name: SetException(IEnumerable<Exception>)
-  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_SetException_System_Collections_Generic_IEnumerable_System_Exception__
-  commentId: M:UnityFx.Async.AsyncCompletionSource`1.SetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name.vb: SetException(IEnumerable(Of Exception))
-  fullName: UnityFx.Async.AsyncCompletionSource<T>.SetException(System.Collections.Generic.IEnumerable<System.Exception>)
-  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).SetException(System.Collections.Generic.IEnumerable(Of System.Exception))
-  nameWithType: AsyncCompletionSource<T>.SetException(IEnumerable<Exception>)
-  nameWithType.vb: AsyncCompletionSource(Of T).SetException(IEnumerable(Of Exception))
-- uid: UnityFx.Async.AsyncCompletionSource`1.SetException(System.Exception)
-  name: SetException(Exception)
-  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_SetException_System_Exception_
-  commentId: M:UnityFx.Async.AsyncCompletionSource`1.SetException(System.Exception)
-  fullName: UnityFx.Async.AsyncCompletionSource<T>.SetException(System.Exception)
-  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).SetException(System.Exception)
-  nameWithType: AsyncCompletionSource<T>.SetException(Exception)
-  nameWithType.vb: AsyncCompletionSource(Of T).SetException(Exception)
+- uid: UnityFx.Async.AsyncCompletionSource`1.SetException(System.Exception,System.Boolean)
+  name: SetException(Exception, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_SetException_System_Exception_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.SetException(System.Exception,System.Boolean)
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.SetException(System.Exception, System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).SetException(System.Exception, System.Boolean)
+  nameWithType: AsyncCompletionSource<T>.SetException(Exception, Boolean)
+  nameWithType.vb: AsyncCompletionSource(Of T).SetException(Exception, Boolean)
 - uid: UnityFx.Async.AsyncCompletionSource`1.SetException*
   name: SetException
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_SetException_
@@ -153,14 +357,31 @@ references:
   fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).SetException
   nameWithType: AsyncCompletionSource<T>.SetException
   nameWithType.vb: AsyncCompletionSource(Of T).SetException
-- uid: UnityFx.Async.AsyncCompletionSource`1.SetResult(`0)
-  name: SetResult(T)
-  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_SetResult__0_
-  commentId: M:UnityFx.Async.AsyncCompletionSource`1.SetResult(`0)
-  fullName: UnityFx.Async.AsyncCompletionSource<T>.SetResult(T)
-  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).SetResult(T)
-  nameWithType: AsyncCompletionSource<T>.SetResult(T)
-  nameWithType.vb: AsyncCompletionSource(Of T).SetResult(T)
+- uid: UnityFx.Async.AsyncCompletionSource`1.SetExceptions(System.Collections.Generic.IEnumerable{System.Exception},System.Boolean)
+  name: SetExceptions(IEnumerable<Exception>, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_SetExceptions_System_Collections_Generic_IEnumerable_System_Exception__System_Boolean_
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.SetExceptions(System.Collections.Generic.IEnumerable{System.Exception},System.Boolean)
+  name.vb: SetExceptions(IEnumerable(Of Exception), Boolean)
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.SetExceptions(System.Collections.Generic.IEnumerable<System.Exception>, System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).SetExceptions(System.Collections.Generic.IEnumerable(Of System.Exception), System.Boolean)
+  nameWithType: AsyncCompletionSource<T>.SetExceptions(IEnumerable<Exception>, Boolean)
+  nameWithType.vb: AsyncCompletionSource(Of T).SetExceptions(IEnumerable(Of Exception), Boolean)
+- uid: UnityFx.Async.AsyncCompletionSource`1.SetExceptions*
+  name: SetExceptions
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_SetExceptions_
+  commentId: Overload:UnityFx.Async.AsyncCompletionSource`1.SetExceptions
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.SetExceptions
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).SetExceptions
+  nameWithType: AsyncCompletionSource<T>.SetExceptions
+  nameWithType.vb: AsyncCompletionSource(Of T).SetExceptions
+- uid: UnityFx.Async.AsyncCompletionSource`1.SetResult(`0,System.Boolean)
+  name: SetResult(T, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_SetResult__0_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.SetResult(`0,System.Boolean)
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.SetResult(T, System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).SetResult(T, System.Boolean)
+  nameWithType: AsyncCompletionSource<T>.SetResult(T, Boolean)
+  nameWithType.vb: AsyncCompletionSource(Of T).SetResult(T, Boolean)
 - uid: UnityFx.Async.AsyncCompletionSource`1.SetResult*
   name: SetResult
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_SetResult_
@@ -169,6 +390,38 @@ references:
   fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).SetResult
   nameWithType: AsyncCompletionSource<T>.SetResult
   nameWithType.vb: AsyncCompletionSource(Of T).SetResult
+- uid: UnityFx.Async.AsyncCompletionSource`1.SetRunning
+  name: SetRunning()
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_SetRunning
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.SetRunning
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.SetRunning()
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).SetRunning()
+  nameWithType: AsyncCompletionSource<T>.SetRunning()
+  nameWithType.vb: AsyncCompletionSource(Of T).SetRunning()
+- uid: UnityFx.Async.AsyncCompletionSource`1.SetRunning*
+  name: SetRunning
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_SetRunning_
+  commentId: Overload:UnityFx.Async.AsyncCompletionSource`1.SetRunning
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.SetRunning
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).SetRunning
+  nameWithType: AsyncCompletionSource<T>.SetRunning
+  nameWithType.vb: AsyncCompletionSource(Of T).SetRunning
+- uid: UnityFx.Async.AsyncCompletionSource`1.SetScheduled
+  name: SetScheduled()
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_SetScheduled
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.SetScheduled
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.SetScheduled()
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).SetScheduled()
+  nameWithType: AsyncCompletionSource<T>.SetScheduled()
+  nameWithType.vb: AsyncCompletionSource(Of T).SetScheduled()
+- uid: UnityFx.Async.AsyncCompletionSource`1.SetScheduled*
+  name: SetScheduled
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_SetScheduled_
+  commentId: Overload:UnityFx.Async.AsyncCompletionSource`1.SetScheduled
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.SetScheduled
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).SetScheduled
+  nameWithType: AsyncCompletionSource<T>.SetScheduled
+  nameWithType.vb: AsyncCompletionSource(Of T).SetScheduled
 - uid: UnityFx.Async.AsyncCompletionSource`1.TrySetCanceled
   name: TrySetCanceled()
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetCanceled
@@ -177,6 +430,14 @@ references:
   fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetCanceled()
   nameWithType: AsyncCompletionSource<T>.TrySetCanceled()
   nameWithType.vb: AsyncCompletionSource(Of T).TrySetCanceled()
+- uid: UnityFx.Async.AsyncCompletionSource`1.TrySetCanceled(System.Boolean)
+  name: TrySetCanceled(Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetCanceled_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.TrySetCanceled(System.Boolean)
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.TrySetCanceled(System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetCanceled(System.Boolean)
+  nameWithType: AsyncCompletionSource<T>.TrySetCanceled(Boolean)
+  nameWithType.vb: AsyncCompletionSource(Of T).TrySetCanceled(Boolean)
 - uid: UnityFx.Async.AsyncCompletionSource`1.TrySetCanceled*
   name: TrySetCanceled
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetCanceled_
@@ -185,15 +446,6 @@ references:
   fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetCanceled
   nameWithType: AsyncCompletionSource<T>.TrySetCanceled
   nameWithType.vb: AsyncCompletionSource(Of T).TrySetCanceled
-- uid: UnityFx.Async.AsyncCompletionSource`1.TrySetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name: TrySetException(IEnumerable<Exception>)
-  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetException_System_Collections_Generic_IEnumerable_System_Exception__
-  commentId: M:UnityFx.Async.AsyncCompletionSource`1.TrySetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name.vb: TrySetException(IEnumerable(Of Exception))
-  fullName: UnityFx.Async.AsyncCompletionSource<T>.TrySetException(System.Collections.Generic.IEnumerable<System.Exception>)
-  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetException(System.Collections.Generic.IEnumerable(Of System.Exception))
-  nameWithType: AsyncCompletionSource<T>.TrySetException(IEnumerable<Exception>)
-  nameWithType.vb: AsyncCompletionSource(Of T).TrySetException(IEnumerable(Of Exception))
 - uid: UnityFx.Async.AsyncCompletionSource`1.TrySetException(System.Exception)
   name: TrySetException(Exception)
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetException_System_Exception_
@@ -202,6 +454,14 @@ references:
   fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetException(System.Exception)
   nameWithType: AsyncCompletionSource<T>.TrySetException(Exception)
   nameWithType.vb: AsyncCompletionSource(Of T).TrySetException(Exception)
+- uid: UnityFx.Async.AsyncCompletionSource`1.TrySetException(System.Exception,System.Boolean)
+  name: TrySetException(Exception, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetException_System_Exception_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.TrySetException(System.Exception,System.Boolean)
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.TrySetException(System.Exception, System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetException(System.Exception, System.Boolean)
+  nameWithType: AsyncCompletionSource<T>.TrySetException(Exception, Boolean)
+  nameWithType.vb: AsyncCompletionSource(Of T).TrySetException(Exception, Boolean)
 - uid: UnityFx.Async.AsyncCompletionSource`1.TrySetException*
   name: TrySetException
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetException_
@@ -210,6 +470,32 @@ references:
   fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetException
   nameWithType: AsyncCompletionSource<T>.TrySetException
   nameWithType.vb: AsyncCompletionSource(Of T).TrySetException
+- uid: UnityFx.Async.AsyncCompletionSource`1.TrySetExceptions(System.Collections.Generic.IEnumerable{System.Exception})
+  name: TrySetExceptions(IEnumerable<Exception>)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.TrySetExceptions(System.Collections.Generic.IEnumerable{System.Exception})
+  name.vb: TrySetExceptions(IEnumerable(Of Exception))
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.TrySetExceptions(System.Collections.Generic.IEnumerable<System.Exception>)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetExceptions(System.Collections.Generic.IEnumerable(Of System.Exception))
+  nameWithType: AsyncCompletionSource<T>.TrySetExceptions(IEnumerable<Exception>)
+  nameWithType.vb: AsyncCompletionSource(Of T).TrySetExceptions(IEnumerable(Of Exception))
+- uid: UnityFx.Async.AsyncCompletionSource`1.TrySetExceptions(System.Collections.Generic.IEnumerable{System.Exception},System.Boolean)
+  name: TrySetExceptions(IEnumerable<Exception>, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__System_Boolean_
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.TrySetExceptions(System.Collections.Generic.IEnumerable{System.Exception},System.Boolean)
+  name.vb: TrySetExceptions(IEnumerable(Of Exception), Boolean)
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.TrySetExceptions(System.Collections.Generic.IEnumerable<System.Exception>, System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetExceptions(System.Collections.Generic.IEnumerable(Of System.Exception), System.Boolean)
+  nameWithType: AsyncCompletionSource<T>.TrySetExceptions(IEnumerable<Exception>, Boolean)
+  nameWithType.vb: AsyncCompletionSource(Of T).TrySetExceptions(IEnumerable(Of Exception), Boolean)
+- uid: UnityFx.Async.AsyncCompletionSource`1.TrySetExceptions*
+  name: TrySetExceptions
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetExceptions_
+  commentId: Overload:UnityFx.Async.AsyncCompletionSource`1.TrySetExceptions
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.TrySetExceptions
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetExceptions
+  nameWithType: AsyncCompletionSource<T>.TrySetExceptions
+  nameWithType.vb: AsyncCompletionSource(Of T).TrySetExceptions
 - uid: UnityFx.Async.AsyncCompletionSource`1.TrySetResult(`0)
   name: TrySetResult(T)
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetResult__0_
@@ -218,6 +504,14 @@ references:
   fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetResult(T)
   nameWithType: AsyncCompletionSource<T>.TrySetResult(T)
   nameWithType.vb: AsyncCompletionSource(Of T).TrySetResult(T)
+- uid: UnityFx.Async.AsyncCompletionSource`1.TrySetResult(`0,System.Boolean)
+  name: TrySetResult(T, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetResult__0_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.TrySetResult(`0,System.Boolean)
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.TrySetResult(T, System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetResult(T, System.Boolean)
+  nameWithType: AsyncCompletionSource<T>.TrySetResult(T, Boolean)
+  nameWithType.vb: AsyncCompletionSource(Of T).TrySetResult(T, Boolean)
 - uid: UnityFx.Async.AsyncCompletionSource`1.TrySetResult*
   name: TrySetResult
   href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetResult_
@@ -226,24 +520,289 @@ references:
   fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetResult
   nameWithType: AsyncCompletionSource<T>.TrySetResult
   nameWithType.vb: AsyncCompletionSource(Of T).TrySetResult
+- uid: UnityFx.Async.AsyncCompletionSource`1.TrySetRunning
+  name: TrySetRunning()
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetRunning
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.TrySetRunning
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.TrySetRunning()
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetRunning()
+  nameWithType: AsyncCompletionSource<T>.TrySetRunning()
+  nameWithType.vb: AsyncCompletionSource(Of T).TrySetRunning()
+- uid: UnityFx.Async.AsyncCompletionSource`1.TrySetRunning*
+  name: TrySetRunning
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetRunning_
+  commentId: Overload:UnityFx.Async.AsyncCompletionSource`1.TrySetRunning
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.TrySetRunning
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetRunning
+  nameWithType: AsyncCompletionSource<T>.TrySetRunning
+  nameWithType.vb: AsyncCompletionSource(Of T).TrySetRunning
+- uid: UnityFx.Async.AsyncCompletionSource`1.TrySetScheduled
+  name: TrySetScheduled()
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetScheduled
+  commentId: M:UnityFx.Async.AsyncCompletionSource`1.TrySetScheduled
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.TrySetScheduled()
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetScheduled()
+  nameWithType: AsyncCompletionSource<T>.TrySetScheduled()
+  nameWithType.vb: AsyncCompletionSource(Of T).TrySetScheduled()
+- uid: UnityFx.Async.AsyncCompletionSource`1.TrySetScheduled*
+  name: TrySetScheduled
+  href: api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html#UnityFx_Async_AsyncCompletionSource_1_TrySetScheduled_
+  commentId: Overload:UnityFx.Async.AsyncCompletionSource`1.TrySetScheduled
+  fullName: UnityFx.Async.AsyncCompletionSource<T>.TrySetScheduled
+  fullName.vb: UnityFx.Async.AsyncCompletionSource(Of T).TrySetScheduled
+  nameWithType: AsyncCompletionSource<T>.TrySetScheduled
+  nameWithType.vb: AsyncCompletionSource(Of T).TrySetScheduled
 - uid: UnityFx.Async.AsyncExtensions
   name: AsyncExtensions
   href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html
   commentId: T:UnityFx.Async.AsyncExtensions
   fullName: UnityFx.Async.AsyncExtensions
   nameWithType: AsyncExtensions
+- uid: UnityFx.Async.AsyncExtensions.AddCompletionCallback(UnityFx.Async.IAsyncOperation,UnityFx.Async.AsyncOperationCallback)
+  name: AddCompletionCallback(IAsyncOperation, AsyncOperationCallback)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperation_UnityFx_Async_AsyncOperationCallback_
+  commentId: M:UnityFx.Async.AsyncExtensions.AddCompletionCallback(UnityFx.Async.IAsyncOperation,UnityFx.Async.AsyncOperationCallback)
+  fullName: UnityFx.Async.AsyncExtensions.AddCompletionCallback(UnityFx.Async.IAsyncOperation, UnityFx.Async.AsyncOperationCallback)
+  nameWithType: AsyncExtensions.AddCompletionCallback(IAsyncOperation, AsyncOperationCallback)
 - uid: UnityFx.Async.AsyncExtensions.AddCompletionCallback(UnityFx.Async.IAsyncOperation,UnityFx.Async.AsyncOperationCallback,System.Boolean)
   name: AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, Boolean)
   href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperation_UnityFx_Async_AsyncOperationCallback_System_Boolean_
   commentId: M:UnityFx.Async.AsyncExtensions.AddCompletionCallback(UnityFx.Async.IAsyncOperation,UnityFx.Async.AsyncOperationCallback,System.Boolean)
   fullName: UnityFx.Async.AsyncExtensions.AddCompletionCallback(UnityFx.Async.IAsyncOperation, UnityFx.Async.AsyncOperationCallback, System.Boolean)
   nameWithType: AsyncExtensions.AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, Boolean)
+- uid: UnityFx.Async.AsyncExtensions.AddCompletionCallback(UnityFx.Async.IAsyncOperation,UnityFx.Async.AsyncOperationCallback,System.Threading.SynchronizationContext)
+  name: AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, SynchronizationContext)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperation_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext_
+  commentId: M:UnityFx.Async.AsyncExtensions.AddCompletionCallback(UnityFx.Async.IAsyncOperation,UnityFx.Async.AsyncOperationCallback,System.Threading.SynchronizationContext)
+  fullName: UnityFx.Async.AsyncExtensions.AddCompletionCallback(UnityFx.Async.IAsyncOperation, UnityFx.Async.AsyncOperationCallback, System.Threading.SynchronizationContext)
+  nameWithType: AsyncExtensions.AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, SynchronizationContext)
 - uid: UnityFx.Async.AsyncExtensions.AddCompletionCallback*
   name: AddCompletionCallback
   href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_
   commentId: Overload:UnityFx.Async.AsyncExtensions.AddCompletionCallback
   fullName: UnityFx.Async.AsyncExtensions.AddCompletionCallback
   nameWithType: AsyncExtensions.AddCompletionCallback
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter
+  name: AsyncExtensions.AsyncAwaiter
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter.html
+  commentId: T:UnityFx.Async.AsyncExtensions.AsyncAwaiter
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter
+  nameWithType: AsyncExtensions.AsyncAwaiter
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter.#ctor(UnityFx.Async.IAsyncOperation,System.Boolean)
+  name: AsyncAwaiter(IAsyncOperation, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter.html#UnityFx_Async_AsyncExtensions_AsyncAwaiter__ctor_UnityFx_Async_IAsyncOperation_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncExtensions.AsyncAwaiter.#ctor(UnityFx.Async.IAsyncOperation,System.Boolean)
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter.AsyncAwaiter(UnityFx.Async.IAsyncOperation, System.Boolean)
+  nameWithType: AsyncExtensions.AsyncAwaiter.AsyncAwaiter(IAsyncOperation, Boolean)
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter.#ctor*
+  name: AsyncAwaiter
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter.html#UnityFx_Async_AsyncExtensions_AsyncAwaiter__ctor_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.AsyncAwaiter.#ctor
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter.AsyncAwaiter
+  nameWithType: AsyncExtensions.AsyncAwaiter.AsyncAwaiter
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter.GetResult
+  name: GetResult()
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter.html#UnityFx_Async_AsyncExtensions_AsyncAwaiter_GetResult
+  commentId: M:UnityFx.Async.AsyncExtensions.AsyncAwaiter.GetResult
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter.GetResult()
+  nameWithType: AsyncExtensions.AsyncAwaiter.GetResult()
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter.GetResult*
+  name: GetResult
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter.html#UnityFx_Async_AsyncExtensions_AsyncAwaiter_GetResult_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.AsyncAwaiter.GetResult
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter.GetResult
+  nameWithType: AsyncExtensions.AsyncAwaiter.GetResult
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter.IsCompleted
+  name: IsCompleted
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter.html#UnityFx_Async_AsyncExtensions_AsyncAwaiter_IsCompleted
+  commentId: P:UnityFx.Async.AsyncExtensions.AsyncAwaiter.IsCompleted
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter.IsCompleted
+  nameWithType: AsyncExtensions.AsyncAwaiter.IsCompleted
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter.IsCompleted*
+  name: IsCompleted
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter.html#UnityFx_Async_AsyncExtensions_AsyncAwaiter_IsCompleted_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.AsyncAwaiter.IsCompleted
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter.IsCompleted
+  nameWithType: AsyncExtensions.AsyncAwaiter.IsCompleted
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter.OnCompleted(System.Action)
+  name: OnCompleted(Action)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter.html#UnityFx_Async_AsyncExtensions_AsyncAwaiter_OnCompleted_System_Action_
+  commentId: M:UnityFx.Async.AsyncExtensions.AsyncAwaiter.OnCompleted(System.Action)
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter.OnCompleted(System.Action)
+  nameWithType: AsyncExtensions.AsyncAwaiter.OnCompleted(Action)
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter.OnCompleted*
+  name: OnCompleted
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter.html#UnityFx_Async_AsyncExtensions_AsyncAwaiter_OnCompleted_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.AsyncAwaiter.OnCompleted
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter.OnCompleted
+  nameWithType: AsyncExtensions.AsyncAwaiter.OnCompleted
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter`1
+  name: AsyncExtensions.AsyncAwaiter<T>
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter-1.html
+  commentId: T:UnityFx.Async.AsyncExtensions.AsyncAwaiter`1
+  name.vb: AsyncExtensions.AsyncAwaiter(Of T)
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter<T>
+  fullName.vb: UnityFx.Async.AsyncExtensions.AsyncAwaiter(Of T)
+  nameWithType: AsyncExtensions.AsyncAwaiter<T>
+  nameWithType.vb: AsyncExtensions.AsyncAwaiter(Of T)
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter`1.#ctor(UnityFx.Async.IAsyncOperation{`0},System.Boolean)
+  name: AsyncAwaiter(IAsyncOperation<T>, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter-1.html#UnityFx_Async_AsyncExtensions_AsyncAwaiter_1__ctor_UnityFx_Async_IAsyncOperation__0__System_Boolean_
+  commentId: M:UnityFx.Async.AsyncExtensions.AsyncAwaiter`1.#ctor(UnityFx.Async.IAsyncOperation{`0},System.Boolean)
+  name.vb: AsyncAwaiter(IAsyncOperation(Of T), Boolean)
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter<T>.AsyncAwaiter(UnityFx.Async.IAsyncOperation<T>, System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncExtensions.AsyncAwaiter(Of T).AsyncAwaiter(UnityFx.Async.IAsyncOperation(Of T), System.Boolean)
+  nameWithType: AsyncExtensions.AsyncAwaiter<T>.AsyncAwaiter(IAsyncOperation<T>, Boolean)
+  nameWithType.vb: AsyncExtensions.AsyncAwaiter(Of T).AsyncAwaiter(IAsyncOperation(Of T), Boolean)
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter`1.#ctor*
+  name: AsyncAwaiter
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter-1.html#UnityFx_Async_AsyncExtensions_AsyncAwaiter_1__ctor_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.AsyncAwaiter`1.#ctor
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter<T>.AsyncAwaiter
+  fullName.vb: UnityFx.Async.AsyncExtensions.AsyncAwaiter(Of T).AsyncAwaiter
+  nameWithType: AsyncExtensions.AsyncAwaiter<T>.AsyncAwaiter
+  nameWithType.vb: AsyncExtensions.AsyncAwaiter(Of T).AsyncAwaiter
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter`1.GetResult
+  name: GetResult()
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter-1.html#UnityFx_Async_AsyncExtensions_AsyncAwaiter_1_GetResult
+  commentId: M:UnityFx.Async.AsyncExtensions.AsyncAwaiter`1.GetResult
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter<T>.GetResult()
+  fullName.vb: UnityFx.Async.AsyncExtensions.AsyncAwaiter(Of T).GetResult()
+  nameWithType: AsyncExtensions.AsyncAwaiter<T>.GetResult()
+  nameWithType.vb: AsyncExtensions.AsyncAwaiter(Of T).GetResult()
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter`1.GetResult*
+  name: GetResult
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter-1.html#UnityFx_Async_AsyncExtensions_AsyncAwaiter_1_GetResult_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.AsyncAwaiter`1.GetResult
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter<T>.GetResult
+  fullName.vb: UnityFx.Async.AsyncExtensions.AsyncAwaiter(Of T).GetResult
+  nameWithType: AsyncExtensions.AsyncAwaiter<T>.GetResult
+  nameWithType.vb: AsyncExtensions.AsyncAwaiter(Of T).GetResult
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter`1.IsCompleted
+  name: IsCompleted
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter-1.html#UnityFx_Async_AsyncExtensions_AsyncAwaiter_1_IsCompleted
+  commentId: P:UnityFx.Async.AsyncExtensions.AsyncAwaiter`1.IsCompleted
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter<T>.IsCompleted
+  fullName.vb: UnityFx.Async.AsyncExtensions.AsyncAwaiter(Of T).IsCompleted
+  nameWithType: AsyncExtensions.AsyncAwaiter<T>.IsCompleted
+  nameWithType.vb: AsyncExtensions.AsyncAwaiter(Of T).IsCompleted
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter`1.IsCompleted*
+  name: IsCompleted
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter-1.html#UnityFx_Async_AsyncExtensions_AsyncAwaiter_1_IsCompleted_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.AsyncAwaiter`1.IsCompleted
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter<T>.IsCompleted
+  fullName.vb: UnityFx.Async.AsyncExtensions.AsyncAwaiter(Of T).IsCompleted
+  nameWithType: AsyncExtensions.AsyncAwaiter<T>.IsCompleted
+  nameWithType.vb: AsyncExtensions.AsyncAwaiter(Of T).IsCompleted
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter`1.OnCompleted(System.Action)
+  name: OnCompleted(Action)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter-1.html#UnityFx_Async_AsyncExtensions_AsyncAwaiter_1_OnCompleted_System_Action_
+  commentId: M:UnityFx.Async.AsyncExtensions.AsyncAwaiter`1.OnCompleted(System.Action)
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter<T>.OnCompleted(System.Action)
+  fullName.vb: UnityFx.Async.AsyncExtensions.AsyncAwaiter(Of T).OnCompleted(System.Action)
+  nameWithType: AsyncExtensions.AsyncAwaiter<T>.OnCompleted(Action)
+  nameWithType.vb: AsyncExtensions.AsyncAwaiter(Of T).OnCompleted(Action)
+- uid: UnityFx.Async.AsyncExtensions.AsyncAwaiter`1.OnCompleted*
+  name: OnCompleted
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.AsyncAwaiter-1.html#UnityFx_Async_AsyncExtensions_AsyncAwaiter_1_OnCompleted_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.AsyncAwaiter`1.OnCompleted
+  fullName: UnityFx.Async.AsyncExtensions.AsyncAwaiter<T>.OnCompleted
+  fullName.vb: UnityFx.Async.AsyncExtensions.AsyncAwaiter(Of T).OnCompleted
+  nameWithType: AsyncExtensions.AsyncAwaiter<T>.OnCompleted
+  nameWithType.vb: AsyncExtensions.AsyncAwaiter(Of T).OnCompleted
+- uid: UnityFx.Async.AsyncExtensions.ConfigureAwait(UnityFx.Async.IAsyncOperation,System.Boolean)
+  name: ConfigureAwait(IAsyncOperation, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ConfigureAwait_UnityFx_Async_IAsyncOperation_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncExtensions.ConfigureAwait(UnityFx.Async.IAsyncOperation,System.Boolean)
+  fullName: UnityFx.Async.AsyncExtensions.ConfigureAwait(UnityFx.Async.IAsyncOperation, System.Boolean)
+  nameWithType: AsyncExtensions.ConfigureAwait(IAsyncOperation, Boolean)
+- uid: UnityFx.Async.AsyncExtensions.ConfigureAwait*
+  name: ConfigureAwait
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ConfigureAwait_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.ConfigureAwait
+  fullName: UnityFx.Async.AsyncExtensions.ConfigureAwait
+  nameWithType: AsyncExtensions.ConfigureAwait
+- uid: UnityFx.Async.AsyncExtensions.ConfigureAwait``1(UnityFx.Async.IAsyncOperation{``0},System.Boolean)
+  name: ConfigureAwait<T>(IAsyncOperation<T>, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ConfigureAwait__1_UnityFx_Async_IAsyncOperation___0__System_Boolean_
+  commentId: M:UnityFx.Async.AsyncExtensions.ConfigureAwait``1(UnityFx.Async.IAsyncOperation{``0},System.Boolean)
+  name.vb: ConfigureAwait(Of T)(IAsyncOperation(Of T), Boolean)
+  fullName: UnityFx.Async.AsyncExtensions.ConfigureAwait<T>(UnityFx.Async.IAsyncOperation<T>, System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncExtensions.ConfigureAwait(Of T)(UnityFx.Async.IAsyncOperation(Of T), System.Boolean)
+  nameWithType: AsyncExtensions.ConfigureAwait<T>(IAsyncOperation<T>, Boolean)
+  nameWithType.vb: AsyncExtensions.ConfigureAwait(Of T)(IAsyncOperation(Of T), Boolean)
+- uid: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable
+  name: AsyncExtensions.ConfiguredAsyncAwaitable
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.html
+  commentId: T:UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable
+  fullName: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable
+  nameWithType: AsyncExtensions.ConfiguredAsyncAwaitable
+- uid: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.#ctor(UnityFx.Async.IAsyncOperation,System.Boolean)
+  name: ConfiguredAsyncAwaitable(IAsyncOperation, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.html#UnityFx_Async_AsyncExtensions_ConfiguredAsyncAwaitable__ctor_UnityFx_Async_IAsyncOperation_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.#ctor(UnityFx.Async.IAsyncOperation,System.Boolean)
+  fullName: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.ConfiguredAsyncAwaitable(UnityFx.Async.IAsyncOperation, System.Boolean)
+  nameWithType: AsyncExtensions.ConfiguredAsyncAwaitable.ConfiguredAsyncAwaitable(IAsyncOperation, Boolean)
+- uid: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.#ctor*
+  name: ConfiguredAsyncAwaitable
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.html#UnityFx_Async_AsyncExtensions_ConfiguredAsyncAwaitable__ctor_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.#ctor
+  fullName: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.ConfiguredAsyncAwaitable
+  nameWithType: AsyncExtensions.ConfiguredAsyncAwaitable.ConfiguredAsyncAwaitable
+- uid: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.GetAwaiter
+  name: GetAwaiter()
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.html#UnityFx_Async_AsyncExtensions_ConfiguredAsyncAwaitable_GetAwaiter
+  commentId: M:UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.GetAwaiter
+  fullName: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.GetAwaiter()
+  nameWithType: AsyncExtensions.ConfiguredAsyncAwaitable.GetAwaiter()
+- uid: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.GetAwaiter*
+  name: GetAwaiter
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.html#UnityFx_Async_AsyncExtensions_ConfiguredAsyncAwaitable_GetAwaiter_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.GetAwaiter
+  fullName: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.GetAwaiter
+  nameWithType: AsyncExtensions.ConfiguredAsyncAwaitable.GetAwaiter
+- uid: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable`1
+  name: AsyncExtensions.ConfiguredAsyncAwaitable<T>
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable-1.html
+  commentId: T:UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable`1
+  name.vb: AsyncExtensions.ConfiguredAsyncAwaitable(Of T)
+  fullName: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable<T>
+  fullName.vb: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable(Of T)
+  nameWithType: AsyncExtensions.ConfiguredAsyncAwaitable<T>
+  nameWithType.vb: AsyncExtensions.ConfiguredAsyncAwaitable(Of T)
+- uid: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable`1.#ctor(UnityFx.Async.IAsyncOperation{`0},System.Boolean)
+  name: ConfiguredAsyncAwaitable(IAsyncOperation<T>, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable-1.html#UnityFx_Async_AsyncExtensions_ConfiguredAsyncAwaitable_1__ctor_UnityFx_Async_IAsyncOperation__0__System_Boolean_
+  commentId: M:UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable`1.#ctor(UnityFx.Async.IAsyncOperation{`0},System.Boolean)
+  name.vb: ConfiguredAsyncAwaitable(IAsyncOperation(Of T), Boolean)
+  fullName: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable<T>.ConfiguredAsyncAwaitable(UnityFx.Async.IAsyncOperation<T>, System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable(Of T).ConfiguredAsyncAwaitable(UnityFx.Async.IAsyncOperation(Of T), System.Boolean)
+  nameWithType: AsyncExtensions.ConfiguredAsyncAwaitable<T>.ConfiguredAsyncAwaitable(IAsyncOperation<T>, Boolean)
+  nameWithType.vb: AsyncExtensions.ConfiguredAsyncAwaitable(Of T).ConfiguredAsyncAwaitable(IAsyncOperation(Of T), Boolean)
+- uid: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable`1.#ctor*
+  name: ConfiguredAsyncAwaitable
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable-1.html#UnityFx_Async_AsyncExtensions_ConfiguredAsyncAwaitable_1__ctor_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable`1.#ctor
+  fullName: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable<T>.ConfiguredAsyncAwaitable
+  fullName.vb: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable(Of T).ConfiguredAsyncAwaitable
+  nameWithType: AsyncExtensions.ConfiguredAsyncAwaitable<T>.ConfiguredAsyncAwaitable
+  nameWithType.vb: AsyncExtensions.ConfiguredAsyncAwaitable(Of T).ConfiguredAsyncAwaitable
+- uid: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable`1.GetAwaiter
+  name: GetAwaiter()
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable-1.html#UnityFx_Async_AsyncExtensions_ConfiguredAsyncAwaitable_1_GetAwaiter
+  commentId: M:UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable`1.GetAwaiter
+  fullName: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable<T>.GetAwaiter()
+  fullName.vb: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable(Of T).GetAwaiter()
+  nameWithType: AsyncExtensions.ConfiguredAsyncAwaitable<T>.GetAwaiter()
+  nameWithType.vb: AsyncExtensions.ConfiguredAsyncAwaitable(Of T).GetAwaiter()
+- uid: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable`1.GetAwaiter*
+  name: GetAwaiter
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable-1.html#UnityFx_Async_AsyncExtensions_ConfiguredAsyncAwaitable_1_GetAwaiter_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable`1.GetAwaiter
+  fullName: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable<T>.GetAwaiter
+  fullName.vb: UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable(Of T).GetAwaiter
+  nameWithType: AsyncExtensions.ConfiguredAsyncAwaitable<T>.GetAwaiter
+  nameWithType.vb: AsyncExtensions.ConfiguredAsyncAwaitable(Of T).GetAwaiter
 - uid: UnityFx.Async.AsyncExtensions.ContinueWith*
   name: ContinueWith
   href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith_
@@ -268,6 +827,24 @@ references:
   fullName.vb: UnityFx.Async.AsyncExtensions.ContinueWith(Of T)(T, System.Action(Of T, UnityFx.Async.IAsyncCompletionSource))
   nameWithType: AsyncExtensions.ContinueWith<T>(T, Action<T, IAsyncCompletionSource>)
   nameWithType.vb: AsyncExtensions.ContinueWith(Of T)(T, Action(Of T, IAsyncCompletionSource))
+- uid: UnityFx.Async.AsyncExtensions.ContinueWith``1(``0,System.Func{``0,System.Object,UnityFx.Async.IAsyncOperation},System.Object)
+  name: ContinueWith<T>(T, Func<T, Object, IAsyncOperation>, Object)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith__1___0_System_Func___0_System_Object_UnityFx_Async_IAsyncOperation__System_Object_
+  commentId: M:UnityFx.Async.AsyncExtensions.ContinueWith``1(``0,System.Func{``0,System.Object,UnityFx.Async.IAsyncOperation},System.Object)
+  name.vb: ContinueWith(Of T)(T, Func(Of T, Object, IAsyncOperation), Object)
+  fullName: UnityFx.Async.AsyncExtensions.ContinueWith<T>(T, System.Func<T, System.Object, UnityFx.Async.IAsyncOperation>, System.Object)
+  fullName.vb: UnityFx.Async.AsyncExtensions.ContinueWith(Of T)(T, System.Func(Of T, System.Object, UnityFx.Async.IAsyncOperation), System.Object)
+  nameWithType: AsyncExtensions.ContinueWith<T>(T, Func<T, Object, IAsyncOperation>, Object)
+  nameWithType.vb: AsyncExtensions.ContinueWith(Of T)(T, Func(Of T, Object, IAsyncOperation), Object)
+- uid: UnityFx.Async.AsyncExtensions.ContinueWith``1(``0,System.Func{``0,UnityFx.Async.IAsyncOperation})
+  name: ContinueWith<T>(T, Func<T, IAsyncOperation>)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith__1___0_System_Func___0_UnityFx_Async_IAsyncOperation__
+  commentId: M:UnityFx.Async.AsyncExtensions.ContinueWith``1(``0,System.Func{``0,UnityFx.Async.IAsyncOperation})
+  name.vb: ContinueWith(Of T)(T, Func(Of T, IAsyncOperation))
+  fullName: UnityFx.Async.AsyncExtensions.ContinueWith<T>(T, System.Func<T, UnityFx.Async.IAsyncOperation>)
+  fullName.vb: UnityFx.Async.AsyncExtensions.ContinueWith(Of T)(T, System.Func(Of T, UnityFx.Async.IAsyncOperation))
+  nameWithType: AsyncExtensions.ContinueWith<T>(T, Func<T, IAsyncOperation>)
+  nameWithType.vb: AsyncExtensions.ContinueWith(Of T)(T, Func(Of T, IAsyncOperation))
 - uid: UnityFx.Async.AsyncExtensions.ContinueWith``2(``0,System.Action{``0,UnityFx.Async.IAsyncCompletionSource{``1},System.Object},System.Object)
   name: ContinueWith<T, U>(T, Action<T, IAsyncCompletionSource<U>, Object>, Object)
   href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith__2___0_System_Action___0_UnityFx_Async_IAsyncCompletionSource___1__System_Object__System_Object_
@@ -286,6 +863,24 @@ references:
   fullName.vb: UnityFx.Async.AsyncExtensions.ContinueWith(Of T, U)(T, System.Action(Of T, UnityFx.Async.IAsyncCompletionSource(Of U)))
   nameWithType: AsyncExtensions.ContinueWith<T, U>(T, Action<T, IAsyncCompletionSource<U>>)
   nameWithType.vb: AsyncExtensions.ContinueWith(Of T, U)(T, Action(Of T, IAsyncCompletionSource(Of U)))
+- uid: UnityFx.Async.AsyncExtensions.ContinueWith``2(``0,System.Func{``0,System.Object,UnityFx.Async.IAsyncOperation{``1}},System.Object)
+  name: ContinueWith<T, U>(T, Func<T, Object, IAsyncOperation<U>>, Object)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith__2___0_System_Func___0_System_Object_UnityFx_Async_IAsyncOperation___1___System_Object_
+  commentId: M:UnityFx.Async.AsyncExtensions.ContinueWith``2(``0,System.Func{``0,System.Object,UnityFx.Async.IAsyncOperation{``1}},System.Object)
+  name.vb: ContinueWith(Of T, U)(T, Func(Of T, Object, IAsyncOperation(Of U)), Object)
+  fullName: UnityFx.Async.AsyncExtensions.ContinueWith<T, U>(T, System.Func<T, System.Object, UnityFx.Async.IAsyncOperation<U>>, System.Object)
+  fullName.vb: UnityFx.Async.AsyncExtensions.ContinueWith(Of T, U)(T, System.Func(Of T, System.Object, UnityFx.Async.IAsyncOperation(Of U)), System.Object)
+  nameWithType: AsyncExtensions.ContinueWith<T, U>(T, Func<T, Object, IAsyncOperation<U>>, Object)
+  nameWithType.vb: AsyncExtensions.ContinueWith(Of T, U)(T, Func(Of T, Object, IAsyncOperation(Of U)), Object)
+- uid: UnityFx.Async.AsyncExtensions.ContinueWith``2(``0,System.Func{``0,UnityFx.Async.IAsyncOperation{``1}})
+  name: ContinueWith<T, U>(T, Func<T, IAsyncOperation<U>>)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith__2___0_System_Func___0_UnityFx_Async_IAsyncOperation___1___
+  commentId: M:UnityFx.Async.AsyncExtensions.ContinueWith``2(``0,System.Func{``0,UnityFx.Async.IAsyncOperation{``1}})
+  name.vb: ContinueWith(Of T, U)(T, Func(Of T, IAsyncOperation(Of U)))
+  fullName: UnityFx.Async.AsyncExtensions.ContinueWith<T, U>(T, System.Func<T, UnityFx.Async.IAsyncOperation<U>>)
+  fullName.vb: UnityFx.Async.AsyncExtensions.ContinueWith(Of T, U)(T, System.Func(Of T, UnityFx.Async.IAsyncOperation(Of U)))
+  nameWithType: AsyncExtensions.ContinueWith<T, U>(T, Func<T, IAsyncOperation<U>>)
+  nameWithType.vb: AsyncExtensions.ContinueWith(Of T, U)(T, Func(Of T, IAsyncOperation(Of U)))
 - uid: UnityFx.Async.AsyncExtensions.GetAwaiter(UnityFx.Async.IAsyncOperation)
   name: GetAwaiter(IAsyncOperation)
   href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_GetAwaiter_UnityFx_Async_IAsyncOperation_
@@ -313,6 +908,18 @@ references:
   commentId: M:UnityFx.Async.AsyncExtensions.Join(UnityFx.Async.IAsyncOperation)
   fullName: UnityFx.Async.AsyncExtensions.Join(UnityFx.Async.IAsyncOperation)
   nameWithType: AsyncExtensions.Join(IAsyncOperation)
+- uid: UnityFx.Async.AsyncExtensions.Join(UnityFx.Async.IAsyncOperation,System.Int32)
+  name: Join(IAsyncOperation, Int32)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Join_UnityFx_Async_IAsyncOperation_System_Int32_
+  commentId: M:UnityFx.Async.AsyncExtensions.Join(UnityFx.Async.IAsyncOperation,System.Int32)
+  fullName: UnityFx.Async.AsyncExtensions.Join(UnityFx.Async.IAsyncOperation, System.Int32)
+  nameWithType: AsyncExtensions.Join(IAsyncOperation, Int32)
+- uid: UnityFx.Async.AsyncExtensions.Join(UnityFx.Async.IAsyncOperation,System.TimeSpan)
+  name: Join(IAsyncOperation, TimeSpan)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Join_UnityFx_Async_IAsyncOperation_System_TimeSpan_
+  commentId: M:UnityFx.Async.AsyncExtensions.Join(UnityFx.Async.IAsyncOperation,System.TimeSpan)
+  fullName: UnityFx.Async.AsyncExtensions.Join(UnityFx.Async.IAsyncOperation, System.TimeSpan)
+  nameWithType: AsyncExtensions.Join(IAsyncOperation, TimeSpan)
 - uid: UnityFx.Async.AsyncExtensions.Join*
   name: Join
   href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Join_
@@ -328,18 +935,150 @@ references:
   fullName.vb: UnityFx.Async.AsyncExtensions.Join(Of T)(UnityFx.Async.IAsyncOperation(Of T))
   nameWithType: AsyncExtensions.Join<T>(IAsyncOperation<T>)
   nameWithType.vb: AsyncExtensions.Join(Of T)(IAsyncOperation(Of T))
-- uid: UnityFx.Async.AsyncExtensions.ThrowIfFaulted(UnityFx.Async.IAsyncOperation)
-  name: ThrowIfFaulted(IAsyncOperation)
-  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ThrowIfFaulted_UnityFx_Async_IAsyncOperation_
-  commentId: M:UnityFx.Async.AsyncExtensions.ThrowIfFaulted(UnityFx.Async.IAsyncOperation)
-  fullName: UnityFx.Async.AsyncExtensions.ThrowIfFaulted(UnityFx.Async.IAsyncOperation)
-  nameWithType: AsyncExtensions.ThrowIfFaulted(IAsyncOperation)
-- uid: UnityFx.Async.AsyncExtensions.ThrowIfFaulted*
-  name: ThrowIfFaulted
-  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ThrowIfFaulted_
-  commentId: Overload:UnityFx.Async.AsyncExtensions.ThrowIfFaulted
-  fullName: UnityFx.Async.AsyncExtensions.ThrowIfFaulted
-  nameWithType: AsyncExtensions.ThrowIfFaulted
+- uid: UnityFx.Async.AsyncExtensions.Join``1(UnityFx.Async.IAsyncOperation{``0},System.Int32)
+  name: Join<T>(IAsyncOperation<T>, Int32)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Join__1_UnityFx_Async_IAsyncOperation___0__System_Int32_
+  commentId: M:UnityFx.Async.AsyncExtensions.Join``1(UnityFx.Async.IAsyncOperation{``0},System.Int32)
+  name.vb: Join(Of T)(IAsyncOperation(Of T), Int32)
+  fullName: UnityFx.Async.AsyncExtensions.Join<T>(UnityFx.Async.IAsyncOperation<T>, System.Int32)
+  fullName.vb: UnityFx.Async.AsyncExtensions.Join(Of T)(UnityFx.Async.IAsyncOperation(Of T), System.Int32)
+  nameWithType: AsyncExtensions.Join<T>(IAsyncOperation<T>, Int32)
+  nameWithType.vb: AsyncExtensions.Join(Of T)(IAsyncOperation(Of T), Int32)
+- uid: UnityFx.Async.AsyncExtensions.Join``1(UnityFx.Async.IAsyncOperation{``0},System.TimeSpan)
+  name: Join<T>(IAsyncOperation<T>, TimeSpan)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Join__1_UnityFx_Async_IAsyncOperation___0__System_TimeSpan_
+  commentId: M:UnityFx.Async.AsyncExtensions.Join``1(UnityFx.Async.IAsyncOperation{``0},System.TimeSpan)
+  name.vb: Join(Of T)(IAsyncOperation(Of T), TimeSpan)
+  fullName: UnityFx.Async.AsyncExtensions.Join<T>(UnityFx.Async.IAsyncOperation<T>, System.TimeSpan)
+  fullName.vb: UnityFx.Async.AsyncExtensions.Join(Of T)(UnityFx.Async.IAsyncOperation(Of T), System.TimeSpan)
+  nameWithType: AsyncExtensions.Join<T>(IAsyncOperation<T>, TimeSpan)
+  nameWithType.vb: AsyncExtensions.Join(Of T)(IAsyncOperation(Of T), TimeSpan)
+- uid: UnityFx.Async.AsyncExtensions.SetCanceled(UnityFx.Async.IAsyncCompletionSource)
+  name: SetCanceled(IAsyncCompletionSource)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetCanceled_UnityFx_Async_IAsyncCompletionSource_
+  commentId: M:UnityFx.Async.AsyncExtensions.SetCanceled(UnityFx.Async.IAsyncCompletionSource)
+  fullName: UnityFx.Async.AsyncExtensions.SetCanceled(UnityFx.Async.IAsyncCompletionSource)
+  nameWithType: AsyncExtensions.SetCanceled(IAsyncCompletionSource)
+- uid: UnityFx.Async.AsyncExtensions.SetCanceled*
+  name: SetCanceled
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetCanceled_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.SetCanceled
+  fullName: UnityFx.Async.AsyncExtensions.SetCanceled
+  nameWithType: AsyncExtensions.SetCanceled
+- uid: UnityFx.Async.AsyncExtensions.SetCanceled``1(UnityFx.Async.IAsyncCompletionSource{``0})
+  name: SetCanceled<T>(IAsyncCompletionSource<T>)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetCanceled__1_UnityFx_Async_IAsyncCompletionSource___0__
+  commentId: M:UnityFx.Async.AsyncExtensions.SetCanceled``1(UnityFx.Async.IAsyncCompletionSource{``0})
+  name.vb: SetCanceled(Of T)(IAsyncCompletionSource(Of T))
+  fullName: UnityFx.Async.AsyncExtensions.SetCanceled<T>(UnityFx.Async.IAsyncCompletionSource<T>)
+  fullName.vb: UnityFx.Async.AsyncExtensions.SetCanceled(Of T)(UnityFx.Async.IAsyncCompletionSource(Of T))
+  nameWithType: AsyncExtensions.SetCanceled<T>(IAsyncCompletionSource<T>)
+  nameWithType.vb: AsyncExtensions.SetCanceled(Of T)(IAsyncCompletionSource(Of T))
+- uid: UnityFx.Async.AsyncExtensions.SetCompleted(UnityFx.Async.IAsyncCompletionSource)
+  name: SetCompleted(IAsyncCompletionSource)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetCompleted_UnityFx_Async_IAsyncCompletionSource_
+  commentId: M:UnityFx.Async.AsyncExtensions.SetCompleted(UnityFx.Async.IAsyncCompletionSource)
+  fullName: UnityFx.Async.AsyncExtensions.SetCompleted(UnityFx.Async.IAsyncCompletionSource)
+  nameWithType: AsyncExtensions.SetCompleted(IAsyncCompletionSource)
+- uid: UnityFx.Async.AsyncExtensions.SetCompleted*
+  name: SetCompleted
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetCompleted_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.SetCompleted
+  fullName: UnityFx.Async.AsyncExtensions.SetCompleted
+  nameWithType: AsyncExtensions.SetCompleted
+- uid: UnityFx.Async.AsyncExtensions.SetException(UnityFx.Async.IAsyncCompletionSource,System.Exception)
+  name: SetException(IAsyncCompletionSource, Exception)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetException_UnityFx_Async_IAsyncCompletionSource_System_Exception_
+  commentId: M:UnityFx.Async.AsyncExtensions.SetException(UnityFx.Async.IAsyncCompletionSource,System.Exception)
+  fullName: UnityFx.Async.AsyncExtensions.SetException(UnityFx.Async.IAsyncCompletionSource, System.Exception)
+  nameWithType: AsyncExtensions.SetException(IAsyncCompletionSource, Exception)
+- uid: UnityFx.Async.AsyncExtensions.SetException*
+  name: SetException
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetException_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.SetException
+  fullName: UnityFx.Async.AsyncExtensions.SetException
+  nameWithType: AsyncExtensions.SetException
+- uid: UnityFx.Async.AsyncExtensions.SetException``1(UnityFx.Async.IAsyncCompletionSource{``0},System.Exception)
+  name: SetException<T>(IAsyncCompletionSource<T>, Exception)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetException__1_UnityFx_Async_IAsyncCompletionSource___0__System_Exception_
+  commentId: M:UnityFx.Async.AsyncExtensions.SetException``1(UnityFx.Async.IAsyncCompletionSource{``0},System.Exception)
+  name.vb: SetException(Of T)(IAsyncCompletionSource(Of T), Exception)
+  fullName: UnityFx.Async.AsyncExtensions.SetException<T>(UnityFx.Async.IAsyncCompletionSource<T>, System.Exception)
+  fullName.vb: UnityFx.Async.AsyncExtensions.SetException(Of T)(UnityFx.Async.IAsyncCompletionSource(Of T), System.Exception)
+  nameWithType: AsyncExtensions.SetException<T>(IAsyncCompletionSource<T>, Exception)
+  nameWithType.vb: AsyncExtensions.SetException(Of T)(IAsyncCompletionSource(Of T), Exception)
+- uid: UnityFx.Async.AsyncExtensions.SetExceptions(UnityFx.Async.IAsyncCompletionSource,System.Collections.Generic.IEnumerable{System.Exception})
+  name: SetExceptions(IAsyncCompletionSource, IEnumerable<Exception>)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetExceptions_UnityFx_Async_IAsyncCompletionSource_System_Collections_Generic_IEnumerable_System_Exception__
+  commentId: M:UnityFx.Async.AsyncExtensions.SetExceptions(UnityFx.Async.IAsyncCompletionSource,System.Collections.Generic.IEnumerable{System.Exception})
+  name.vb: SetExceptions(IAsyncCompletionSource, IEnumerable(Of Exception))
+  fullName: UnityFx.Async.AsyncExtensions.SetExceptions(UnityFx.Async.IAsyncCompletionSource, System.Collections.Generic.IEnumerable<System.Exception>)
+  fullName.vb: UnityFx.Async.AsyncExtensions.SetExceptions(UnityFx.Async.IAsyncCompletionSource, System.Collections.Generic.IEnumerable(Of System.Exception))
+  nameWithType: AsyncExtensions.SetExceptions(IAsyncCompletionSource, IEnumerable<Exception>)
+  nameWithType.vb: AsyncExtensions.SetExceptions(IAsyncCompletionSource, IEnumerable(Of Exception))
+- uid: UnityFx.Async.AsyncExtensions.SetExceptions*
+  name: SetExceptions
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetExceptions_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.SetExceptions
+  fullName: UnityFx.Async.AsyncExtensions.SetExceptions
+  nameWithType: AsyncExtensions.SetExceptions
+- uid: UnityFx.Async.AsyncExtensions.SetExceptions``1(UnityFx.Async.IAsyncCompletionSource{``0},System.Collections.Generic.IEnumerable{System.Exception})
+  name: SetExceptions<T>(IAsyncCompletionSource<T>, IEnumerable<Exception>)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetExceptions__1_UnityFx_Async_IAsyncCompletionSource___0__System_Collections_Generic_IEnumerable_System_Exception__
+  commentId: M:UnityFx.Async.AsyncExtensions.SetExceptions``1(UnityFx.Async.IAsyncCompletionSource{``0},System.Collections.Generic.IEnumerable{System.Exception})
+  name.vb: SetExceptions(Of T)(IAsyncCompletionSource(Of T), IEnumerable(Of Exception))
+  fullName: UnityFx.Async.AsyncExtensions.SetExceptions<T>(UnityFx.Async.IAsyncCompletionSource<T>, System.Collections.Generic.IEnumerable<System.Exception>)
+  fullName.vb: UnityFx.Async.AsyncExtensions.SetExceptions(Of T)(UnityFx.Async.IAsyncCompletionSource(Of T), System.Collections.Generic.IEnumerable(Of System.Exception))
+  nameWithType: AsyncExtensions.SetExceptions<T>(IAsyncCompletionSource<T>, IEnumerable<Exception>)
+  nameWithType.vb: AsyncExtensions.SetExceptions(Of T)(IAsyncCompletionSource(Of T), IEnumerable(Of Exception))
+- uid: UnityFx.Async.AsyncExtensions.SetResult*
+  name: SetResult
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetResult_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.SetResult
+  fullName: UnityFx.Async.AsyncExtensions.SetResult
+  nameWithType: AsyncExtensions.SetResult
+- uid: UnityFx.Async.AsyncExtensions.SetResult``1(UnityFx.Async.IAsyncCompletionSource{``0},``0)
+  name: SetResult<T>(IAsyncCompletionSource<T>, T)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetResult__1_UnityFx_Async_IAsyncCompletionSource___0____0_
+  commentId: M:UnityFx.Async.AsyncExtensions.SetResult``1(UnityFx.Async.IAsyncCompletionSource{``0},``0)
+  name.vb: SetResult(Of T)(IAsyncCompletionSource(Of T), T)
+  fullName: UnityFx.Async.AsyncExtensions.SetResult<T>(UnityFx.Async.IAsyncCompletionSource<T>, T)
+  fullName.vb: UnityFx.Async.AsyncExtensions.SetResult(Of T)(UnityFx.Async.IAsyncCompletionSource(Of T), T)
+  nameWithType: AsyncExtensions.SetResult<T>(IAsyncCompletionSource<T>, T)
+  nameWithType.vb: AsyncExtensions.SetResult(Of T)(IAsyncCompletionSource(Of T), T)
+- uid: UnityFx.Async.AsyncExtensions.SpinUntilCompleted(UnityFx.Async.IAsyncOperation)
+  name: SpinUntilCompleted(IAsyncOperation)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SpinUntilCompleted_UnityFx_Async_IAsyncOperation_
+  commentId: M:UnityFx.Async.AsyncExtensions.SpinUntilCompleted(UnityFx.Async.IAsyncOperation)
+  fullName: UnityFx.Async.AsyncExtensions.SpinUntilCompleted(UnityFx.Async.IAsyncOperation)
+  nameWithType: AsyncExtensions.SpinUntilCompleted(IAsyncOperation)
+- uid: UnityFx.Async.AsyncExtensions.SpinUntilCompleted*
+  name: SpinUntilCompleted
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SpinUntilCompleted_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.SpinUntilCompleted
+  fullName: UnityFx.Async.AsyncExtensions.SpinUntilCompleted
+  nameWithType: AsyncExtensions.SpinUntilCompleted
+- uid: UnityFx.Async.AsyncExtensions.ToAsync(System.Threading.Tasks.Task)
+  name: ToAsync(Task)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ToAsync_System_Threading_Tasks_Task_
+  commentId: M:UnityFx.Async.AsyncExtensions.ToAsync(System.Threading.Tasks.Task)
+  fullName: UnityFx.Async.AsyncExtensions.ToAsync(System.Threading.Tasks.Task)
+  nameWithType: AsyncExtensions.ToAsync(Task)
+- uid: UnityFx.Async.AsyncExtensions.ToAsync*
+  name: ToAsync
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ToAsync_
+  commentId: Overload:UnityFx.Async.AsyncExtensions.ToAsync
+  fullName: UnityFx.Async.AsyncExtensions.ToAsync
+  nameWithType: AsyncExtensions.ToAsync
+- uid: UnityFx.Async.AsyncExtensions.ToAsync``1(System.Threading.Tasks.Task{``0})
+  name: ToAsync<T>(Task<T>)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ToAsync__1_System_Threading_Tasks_Task___0__
+  commentId: M:UnityFx.Async.AsyncExtensions.ToAsync``1(System.Threading.Tasks.Task{``0})
+  name.vb: ToAsync(Of T)(Task(Of T))
+  fullName: UnityFx.Async.AsyncExtensions.ToAsync<T>(System.Threading.Tasks.Task<T>)
+  fullName.vb: UnityFx.Async.AsyncExtensions.ToAsync(Of T)(System.Threading.Tasks.Task(Of T))
+  nameWithType: AsyncExtensions.ToAsync<T>(Task<T>)
+  nameWithType.vb: AsyncExtensions.ToAsync(Of T)(Task(Of T))
 - uid: UnityFx.Async.AsyncExtensions.ToObservable*
   name: ToObservable
   href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ToObservable_
@@ -397,6 +1136,18 @@ references:
   commentId: M:UnityFx.Async.AsyncExtensions.Wait(UnityFx.Async.IAsyncOperation)
   fullName: UnityFx.Async.AsyncExtensions.Wait(UnityFx.Async.IAsyncOperation)
   nameWithType: AsyncExtensions.Wait(IAsyncOperation)
+- uid: UnityFx.Async.AsyncExtensions.Wait(UnityFx.Async.IAsyncOperation,System.Int32)
+  name: Wait(IAsyncOperation, Int32)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Wait_UnityFx_Async_IAsyncOperation_System_Int32_
+  commentId: M:UnityFx.Async.AsyncExtensions.Wait(UnityFx.Async.IAsyncOperation,System.Int32)
+  fullName: UnityFx.Async.AsyncExtensions.Wait(UnityFx.Async.IAsyncOperation, System.Int32)
+  nameWithType: AsyncExtensions.Wait(IAsyncOperation, Int32)
+- uid: UnityFx.Async.AsyncExtensions.Wait(UnityFx.Async.IAsyncOperation,System.TimeSpan)
+  name: Wait(IAsyncOperation, TimeSpan)
+  href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Wait_UnityFx_Async_IAsyncOperation_System_TimeSpan_
+  commentId: M:UnityFx.Async.AsyncExtensions.Wait(UnityFx.Async.IAsyncOperation,System.TimeSpan)
+  fullName: UnityFx.Async.AsyncExtensions.Wait(UnityFx.Async.IAsyncOperation, System.TimeSpan)
+  nameWithType: AsyncExtensions.Wait(IAsyncOperation, TimeSpan)
 - uid: UnityFx.Async.AsyncExtensions.Wait*
   name: Wait
   href: api/netstandard2.0/UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Wait_
@@ -469,24 +1220,78 @@ references:
   commentId: M:UnityFx.Async.AsyncResult.#ctor(System.AsyncCallback,System.Object)
   fullName: UnityFx.Async.AsyncResult.AsyncResult(System.AsyncCallback, System.Object)
   nameWithType: AsyncResult.AsyncResult(AsyncCallback, Object)
-- uid: UnityFx.Async.AsyncResult.#ctor(System.Exception)
-  name: AsyncResult(Exception)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult__ctor_System_Exception_
-  commentId: M:UnityFx.Async.AsyncResult.#ctor(System.Exception)
-  fullName: UnityFx.Async.AsyncResult.AsyncResult(System.Exception)
-  nameWithType: AsyncResult.AsyncResult(Exception)
 - uid: UnityFx.Async.AsyncResult.#ctor(UnityFx.Async.AsyncOperationStatus)
   name: AsyncResult(AsyncOperationStatus)
   href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult__ctor_UnityFx_Async_AsyncOperationStatus_
   commentId: M:UnityFx.Async.AsyncResult.#ctor(UnityFx.Async.AsyncOperationStatus)
   fullName: UnityFx.Async.AsyncResult.AsyncResult(UnityFx.Async.AsyncOperationStatus)
   nameWithType: AsyncResult.AsyncResult(AsyncOperationStatus)
+- uid: UnityFx.Async.AsyncResult.#ctor(UnityFx.Async.AsyncOperationStatus,System.AsyncCallback,System.Object)
+  name: AsyncResult(AsyncOperationStatus, AsyncCallback, Object)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult__ctor_UnityFx_Async_AsyncOperationStatus_System_AsyncCallback_System_Object_
+  commentId: M:UnityFx.Async.AsyncResult.#ctor(UnityFx.Async.AsyncOperationStatus,System.AsyncCallback,System.Object)
+  fullName: UnityFx.Async.AsyncResult.AsyncResult(UnityFx.Async.AsyncOperationStatus, System.AsyncCallback, System.Object)
+  nameWithType: AsyncResult.AsyncResult(AsyncOperationStatus, AsyncCallback, Object)
 - uid: UnityFx.Async.AsyncResult.#ctor*
   name: AsyncResult
   href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult__ctor_
   commentId: Overload:UnityFx.Async.AsyncResult.#ctor
   fullName: UnityFx.Async.AsyncResult.AsyncResult
   nameWithType: AsyncResult.AsyncResult
+- uid: UnityFx.Async.AsyncResult.AsyncAwaiter
+  name: AsyncResult.AsyncAwaiter
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.AsyncAwaiter.html
+  commentId: T:UnityFx.Async.AsyncResult.AsyncAwaiter
+  fullName: UnityFx.Async.AsyncResult.AsyncAwaiter
+  nameWithType: AsyncResult.AsyncAwaiter
+- uid: UnityFx.Async.AsyncResult.AsyncAwaiter.#ctor(UnityFx.Async.AsyncResult,System.Boolean)
+  name: AsyncAwaiter(AsyncResult, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.AsyncAwaiter.html#UnityFx_Async_AsyncResult_AsyncAwaiter__ctor_UnityFx_Async_AsyncResult_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncResult.AsyncAwaiter.#ctor(UnityFx.Async.AsyncResult,System.Boolean)
+  fullName: UnityFx.Async.AsyncResult.AsyncAwaiter.AsyncAwaiter(UnityFx.Async.AsyncResult, System.Boolean)
+  nameWithType: AsyncResult.AsyncAwaiter.AsyncAwaiter(AsyncResult, Boolean)
+- uid: UnityFx.Async.AsyncResult.AsyncAwaiter.#ctor*
+  name: AsyncAwaiter
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.AsyncAwaiter.html#UnityFx_Async_AsyncResult_AsyncAwaiter__ctor_
+  commentId: Overload:UnityFx.Async.AsyncResult.AsyncAwaiter.#ctor
+  fullName: UnityFx.Async.AsyncResult.AsyncAwaiter.AsyncAwaiter
+  nameWithType: AsyncResult.AsyncAwaiter.AsyncAwaiter
+- uid: UnityFx.Async.AsyncResult.AsyncAwaiter.GetResult
+  name: GetResult()
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.AsyncAwaiter.html#UnityFx_Async_AsyncResult_AsyncAwaiter_GetResult
+  commentId: M:UnityFx.Async.AsyncResult.AsyncAwaiter.GetResult
+  fullName: UnityFx.Async.AsyncResult.AsyncAwaiter.GetResult()
+  nameWithType: AsyncResult.AsyncAwaiter.GetResult()
+- uid: UnityFx.Async.AsyncResult.AsyncAwaiter.GetResult*
+  name: GetResult
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.AsyncAwaiter.html#UnityFx_Async_AsyncResult_AsyncAwaiter_GetResult_
+  commentId: Overload:UnityFx.Async.AsyncResult.AsyncAwaiter.GetResult
+  fullName: UnityFx.Async.AsyncResult.AsyncAwaiter.GetResult
+  nameWithType: AsyncResult.AsyncAwaiter.GetResult
+- uid: UnityFx.Async.AsyncResult.AsyncAwaiter.IsCompleted
+  name: IsCompleted
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.AsyncAwaiter.html#UnityFx_Async_AsyncResult_AsyncAwaiter_IsCompleted
+  commentId: P:UnityFx.Async.AsyncResult.AsyncAwaiter.IsCompleted
+  fullName: UnityFx.Async.AsyncResult.AsyncAwaiter.IsCompleted
+  nameWithType: AsyncResult.AsyncAwaiter.IsCompleted
+- uid: UnityFx.Async.AsyncResult.AsyncAwaiter.IsCompleted*
+  name: IsCompleted
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.AsyncAwaiter.html#UnityFx_Async_AsyncResult_AsyncAwaiter_IsCompleted_
+  commentId: Overload:UnityFx.Async.AsyncResult.AsyncAwaiter.IsCompleted
+  fullName: UnityFx.Async.AsyncResult.AsyncAwaiter.IsCompleted
+  nameWithType: AsyncResult.AsyncAwaiter.IsCompleted
+- uid: UnityFx.Async.AsyncResult.AsyncAwaiter.OnCompleted(System.Action)
+  name: OnCompleted(Action)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.AsyncAwaiter.html#UnityFx_Async_AsyncResult_AsyncAwaiter_OnCompleted_System_Action_
+  commentId: M:UnityFx.Async.AsyncResult.AsyncAwaiter.OnCompleted(System.Action)
+  fullName: UnityFx.Async.AsyncResult.AsyncAwaiter.OnCompleted(System.Action)
+  nameWithType: AsyncResult.AsyncAwaiter.OnCompleted(Action)
+- uid: UnityFx.Async.AsyncResult.AsyncAwaiter.OnCompleted*
+  name: OnCompleted
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.AsyncAwaiter.html#UnityFx_Async_AsyncResult_AsyncAwaiter_OnCompleted_
+  commentId: Overload:UnityFx.Async.AsyncResult.AsyncAwaiter.OnCompleted
+  fullName: UnityFx.Async.AsyncResult.AsyncAwaiter.OnCompleted
+  nameWithType: AsyncResult.AsyncAwaiter.OnCompleted
 - uid: UnityFx.Async.AsyncResult.AsyncState
   name: AsyncState
   href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_AsyncState
@@ -541,6 +1346,48 @@ references:
   commentId: Overload:UnityFx.Async.AsyncResult.CompletedSynchronously
   fullName: UnityFx.Async.AsyncResult.CompletedSynchronously
   nameWithType: AsyncResult.CompletedSynchronously
+- uid: UnityFx.Async.AsyncResult.ConfigureAwait(System.Boolean)
+  name: ConfigureAwait(Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_ConfigureAwait_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncResult.ConfigureAwait(System.Boolean)
+  fullName: UnityFx.Async.AsyncResult.ConfigureAwait(System.Boolean)
+  nameWithType: AsyncResult.ConfigureAwait(Boolean)
+- uid: UnityFx.Async.AsyncResult.ConfigureAwait*
+  name: ConfigureAwait
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_ConfigureAwait_
+  commentId: Overload:UnityFx.Async.AsyncResult.ConfigureAwait
+  fullName: UnityFx.Async.AsyncResult.ConfigureAwait
+  nameWithType: AsyncResult.ConfigureAwait
+- uid: UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable
+  name: AsyncResult.ConfiguredAsyncAwaitable
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.html
+  commentId: T:UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable
+  fullName: UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable
+  nameWithType: AsyncResult.ConfiguredAsyncAwaitable
+- uid: UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.#ctor(UnityFx.Async.AsyncResult,System.Boolean)
+  name: ConfiguredAsyncAwaitable(AsyncResult, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.html#UnityFx_Async_AsyncResult_ConfiguredAsyncAwaitable__ctor_UnityFx_Async_AsyncResult_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.#ctor(UnityFx.Async.AsyncResult,System.Boolean)
+  fullName: UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.ConfiguredAsyncAwaitable(UnityFx.Async.AsyncResult, System.Boolean)
+  nameWithType: AsyncResult.ConfiguredAsyncAwaitable.ConfiguredAsyncAwaitable(AsyncResult, Boolean)
+- uid: UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.#ctor*
+  name: ConfiguredAsyncAwaitable
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.html#UnityFx_Async_AsyncResult_ConfiguredAsyncAwaitable__ctor_
+  commentId: Overload:UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.#ctor
+  fullName: UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.ConfiguredAsyncAwaitable
+  nameWithType: AsyncResult.ConfiguredAsyncAwaitable.ConfiguredAsyncAwaitable
+- uid: UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.GetAwaiter
+  name: GetAwaiter()
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.html#UnityFx_Async_AsyncResult_ConfiguredAsyncAwaitable_GetAwaiter
+  commentId: M:UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.GetAwaiter
+  fullName: UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.GetAwaiter()
+  nameWithType: AsyncResult.ConfiguredAsyncAwaitable.GetAwaiter()
+- uid: UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.GetAwaiter*
+  name: GetAwaiter
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.html#UnityFx_Async_AsyncResult_ConfiguredAsyncAwaitable_GetAwaiter_
+  commentId: Overload:UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.GetAwaiter
+  fullName: UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.GetAwaiter
+  nameWithType: AsyncResult.ConfiguredAsyncAwaitable.GetAwaiter
 - uid: UnityFx.Async.AsyncResult.Delay(System.Int32)
   name: Delay(Int32)
   href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Delay_System_Int32_
@@ -631,6 +1478,30 @@ references:
   fullName.vb: UnityFx.Async.AsyncResult.FromException(Of T)(System.Exception)
   nameWithType: AsyncResult.FromException<T>(Exception)
   nameWithType.vb: AsyncResult.FromException(Of T)(Exception)
+- uid: UnityFx.Async.AsyncResult.FromExceptions(System.Collections.Generic.IEnumerable{System.Exception})
+  name: FromExceptions(IEnumerable<Exception>)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_FromExceptions_System_Collections_Generic_IEnumerable_System_Exception__
+  commentId: M:UnityFx.Async.AsyncResult.FromExceptions(System.Collections.Generic.IEnumerable{System.Exception})
+  name.vb: FromExceptions(IEnumerable(Of Exception))
+  fullName: UnityFx.Async.AsyncResult.FromExceptions(System.Collections.Generic.IEnumerable<System.Exception>)
+  fullName.vb: UnityFx.Async.AsyncResult.FromExceptions(System.Collections.Generic.IEnumerable(Of System.Exception))
+  nameWithType: AsyncResult.FromExceptions(IEnumerable<Exception>)
+  nameWithType.vb: AsyncResult.FromExceptions(IEnumerable(Of Exception))
+- uid: UnityFx.Async.AsyncResult.FromExceptions*
+  name: FromExceptions
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_FromExceptions_
+  commentId: Overload:UnityFx.Async.AsyncResult.FromExceptions
+  fullName: UnityFx.Async.AsyncResult.FromExceptions
+  nameWithType: AsyncResult.FromExceptions
+- uid: UnityFx.Async.AsyncResult.FromExceptions``1(System.Collections.Generic.IEnumerable{System.Exception})
+  name: FromExceptions<T>(IEnumerable<Exception>)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_FromExceptions__1_System_Collections_Generic_IEnumerable_System_Exception__
+  commentId: M:UnityFx.Async.AsyncResult.FromExceptions``1(System.Collections.Generic.IEnumerable{System.Exception})
+  name.vb: FromExceptions(Of T)(IEnumerable(Of Exception))
+  fullName: UnityFx.Async.AsyncResult.FromExceptions<T>(System.Collections.Generic.IEnumerable<System.Exception>)
+  fullName.vb: UnityFx.Async.AsyncResult.FromExceptions(Of T)(System.Collections.Generic.IEnumerable(Of System.Exception))
+  nameWithType: AsyncResult.FromExceptions<T>(IEnumerable<Exception>)
+  nameWithType.vb: AsyncResult.FromExceptions(Of T)(IEnumerable(Of Exception))
 - uid: UnityFx.Async.AsyncResult.FromResult*
   name: FromResult
   href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_FromResult_
@@ -646,6 +1517,18 @@ references:
   fullName.vb: UnityFx.Async.AsyncResult.FromResult(Of T)(T)
   nameWithType: AsyncResult.FromResult<T>(T)
   nameWithType.vb: AsyncResult.FromResult(Of T)(T)
+- uid: UnityFx.Async.AsyncResult.GetAwaiter
+  name: GetAwaiter()
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_GetAwaiter
+  commentId: M:UnityFx.Async.AsyncResult.GetAwaiter
+  fullName: UnityFx.Async.AsyncResult.GetAwaiter()
+  nameWithType: AsyncResult.GetAwaiter()
+- uid: UnityFx.Async.AsyncResult.GetAwaiter*
+  name: GetAwaiter
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_GetAwaiter_
+  commentId: Overload:UnityFx.Async.AsyncResult.GetAwaiter
+  fullName: UnityFx.Async.AsyncResult.GetAwaiter
+  nameWithType: AsyncResult.GetAwaiter
 - uid: UnityFx.Async.AsyncResult.IsCanceled
   name: IsCanceled
   href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_IsCanceled
@@ -718,6 +1601,18 @@ references:
   commentId: Overload:UnityFx.Async.AsyncResult.OnCompleted
   fullName: UnityFx.Async.AsyncResult.OnCompleted
   nameWithType: AsyncResult.OnCompleted
+- uid: UnityFx.Async.AsyncResult.OnStarted
+  name: OnStarted()
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_OnStarted
+  commentId: M:UnityFx.Async.AsyncResult.OnStarted
+  fullName: UnityFx.Async.AsyncResult.OnStarted()
+  nameWithType: AsyncResult.OnStarted()
+- uid: UnityFx.Async.AsyncResult.OnStarted*
+  name: OnStarted
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_OnStarted_
+  commentId: Overload:UnityFx.Async.AsyncResult.OnStarted
+  fullName: UnityFx.Async.AsyncResult.OnStarted
+  nameWithType: AsyncResult.OnStarted
 - uid: UnityFx.Async.AsyncResult.OnStatusChanged(UnityFx.Async.AsyncOperationStatus)
   name: OnStatusChanged(AsyncOperationStatus)
   href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_OnStatusChanged_UnityFx_Async_AsyncOperationStatus_
@@ -742,114 +1637,60 @@ references:
   commentId: Overload:UnityFx.Async.AsyncResult.RemoveCompletionCallback
   fullName: UnityFx.Async.AsyncResult.RemoveCompletionCallback
   nameWithType: AsyncResult.RemoveCompletionCallback
-- uid: UnityFx.Async.AsyncResult.SetCanceled
-  name: SetCanceled()
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SetCanceled
-  commentId: M:UnityFx.Async.AsyncResult.SetCanceled
-  fullName: UnityFx.Async.AsyncResult.SetCanceled()
-  nameWithType: AsyncResult.SetCanceled()
-- uid: UnityFx.Async.AsyncResult.SetCanceled(System.Boolean)
-  name: SetCanceled(Boolean)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SetCanceled_System_Boolean_
-  commentId: M:UnityFx.Async.AsyncResult.SetCanceled(System.Boolean)
-  fullName: UnityFx.Async.AsyncResult.SetCanceled(System.Boolean)
-  nameWithType: AsyncResult.SetCanceled(Boolean)
-- uid: UnityFx.Async.AsyncResult.SetCanceled*
-  name: SetCanceled
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SetCanceled_
-  commentId: Overload:UnityFx.Async.AsyncResult.SetCanceled
-  fullName: UnityFx.Async.AsyncResult.SetCanceled
-  nameWithType: AsyncResult.SetCanceled
-- uid: UnityFx.Async.AsyncResult.SetCompleted
-  name: SetCompleted()
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SetCompleted
-  commentId: M:UnityFx.Async.AsyncResult.SetCompleted
-  fullName: UnityFx.Async.AsyncResult.SetCompleted()
-  nameWithType: AsyncResult.SetCompleted()
-- uid: UnityFx.Async.AsyncResult.SetCompleted(System.Boolean)
-  name: SetCompleted(Boolean)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SetCompleted_System_Boolean_
-  commentId: M:UnityFx.Async.AsyncResult.SetCompleted(System.Boolean)
-  fullName: UnityFx.Async.AsyncResult.SetCompleted(System.Boolean)
-  nameWithType: AsyncResult.SetCompleted(Boolean)
-- uid: UnityFx.Async.AsyncResult.SetCompleted*
-  name: SetCompleted
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SetCompleted_
-  commentId: Overload:UnityFx.Async.AsyncResult.SetCompleted
-  fullName: UnityFx.Async.AsyncResult.SetCompleted
-  nameWithType: AsyncResult.SetCompleted
-- uid: UnityFx.Async.AsyncResult.SetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name: SetException(IEnumerable<Exception>)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SetException_System_Collections_Generic_IEnumerable_System_Exception__
-  commentId: M:UnityFx.Async.AsyncResult.SetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name.vb: SetException(IEnumerable(Of Exception))
-  fullName: UnityFx.Async.AsyncResult.SetException(System.Collections.Generic.IEnumerable<System.Exception>)
-  fullName.vb: UnityFx.Async.AsyncResult.SetException(System.Collections.Generic.IEnumerable(Of System.Exception))
-  nameWithType: AsyncResult.SetException(IEnumerable<Exception>)
-  nameWithType.vb: AsyncResult.SetException(IEnumerable(Of Exception))
-- uid: UnityFx.Async.AsyncResult.SetException(System.Collections.Generic.IEnumerable{System.Exception},System.Boolean)
-  name: SetException(IEnumerable<Exception>, Boolean)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SetException_System_Collections_Generic_IEnumerable_System_Exception__System_Boolean_
-  commentId: M:UnityFx.Async.AsyncResult.SetException(System.Collections.Generic.IEnumerable{System.Exception},System.Boolean)
-  name.vb: SetException(IEnumerable(Of Exception), Boolean)
-  fullName: UnityFx.Async.AsyncResult.SetException(System.Collections.Generic.IEnumerable<System.Exception>, System.Boolean)
-  fullName.vb: UnityFx.Async.AsyncResult.SetException(System.Collections.Generic.IEnumerable(Of System.Exception), System.Boolean)
-  nameWithType: AsyncResult.SetException(IEnumerable<Exception>, Boolean)
-  nameWithType.vb: AsyncResult.SetException(IEnumerable(Of Exception), Boolean)
-- uid: UnityFx.Async.AsyncResult.SetException(System.Exception)
-  name: SetException(Exception)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SetException_System_Exception_
-  commentId: M:UnityFx.Async.AsyncResult.SetException(System.Exception)
-  fullName: UnityFx.Async.AsyncResult.SetException(System.Exception)
-  nameWithType: AsyncResult.SetException(Exception)
-- uid: UnityFx.Async.AsyncResult.SetException(System.Exception,System.Boolean)
-  name: SetException(Exception, Boolean)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SetException_System_Exception_System_Boolean_
-  commentId: M:UnityFx.Async.AsyncResult.SetException(System.Exception,System.Boolean)
-  fullName: UnityFx.Async.AsyncResult.SetException(System.Exception, System.Boolean)
-  nameWithType: AsyncResult.SetException(Exception, Boolean)
-- uid: UnityFx.Async.AsyncResult.SetException*
-  name: SetException
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SetException_
-  commentId: Overload:UnityFx.Async.AsyncResult.SetException
-  fullName: UnityFx.Async.AsyncResult.SetException
-  nameWithType: AsyncResult.SetException
-- uid: UnityFx.Async.AsyncResult.SetRunning
-  name: SetRunning()
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SetRunning
-  commentId: M:UnityFx.Async.AsyncResult.SetRunning
-  fullName: UnityFx.Async.AsyncResult.SetRunning()
-  nameWithType: AsyncResult.SetRunning()
-- uid: UnityFx.Async.AsyncResult.SetRunning*
-  name: SetRunning
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SetRunning_
-  commentId: Overload:UnityFx.Async.AsyncResult.SetRunning
-  fullName: UnityFx.Async.AsyncResult.SetRunning
-  nameWithType: AsyncResult.SetRunning
-- uid: UnityFx.Async.AsyncResult.SetScheduled
-  name: SetScheduled()
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SetScheduled
-  commentId: M:UnityFx.Async.AsyncResult.SetScheduled
-  fullName: UnityFx.Async.AsyncResult.SetScheduled()
-  nameWithType: AsyncResult.SetScheduled()
-- uid: UnityFx.Async.AsyncResult.SetScheduled*
-  name: SetScheduled
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SetScheduled_
-  commentId: Overload:UnityFx.Async.AsyncResult.SetScheduled
-  fullName: UnityFx.Async.AsyncResult.SetScheduled
-  nameWithType: AsyncResult.SetScheduled
-- uid: UnityFx.Async.AsyncResult.SpinUntilCompleted
-  name: SpinUntilCompleted()
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SpinUntilCompleted
-  commentId: M:UnityFx.Async.AsyncResult.SpinUntilCompleted
-  fullName: UnityFx.Async.AsyncResult.SpinUntilCompleted()
-  nameWithType: AsyncResult.SpinUntilCompleted()
-- uid: UnityFx.Async.AsyncResult.SpinUntilCompleted*
-  name: SpinUntilCompleted
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_SpinUntilCompleted_
-  commentId: Overload:UnityFx.Async.AsyncResult.SpinUntilCompleted
-  fullName: UnityFx.Async.AsyncResult.SpinUntilCompleted
-  nameWithType: AsyncResult.SpinUntilCompleted
+- uid: UnityFx.Async.AsyncResult.Retry(System.Func{UnityFx.Async.IAsyncOperation},System.Int32,System.Int32)
+  name: Retry(Func<IAsyncOperation>, Int32, Int32)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Retry_System_Func_UnityFx_Async_IAsyncOperation__System_Int32_System_Int32_
+  commentId: M:UnityFx.Async.AsyncResult.Retry(System.Func{UnityFx.Async.IAsyncOperation},System.Int32,System.Int32)
+  name.vb: Retry(Func(Of IAsyncOperation), Int32, Int32)
+  fullName: UnityFx.Async.AsyncResult.Retry(System.Func<UnityFx.Async.IAsyncOperation>, System.Int32, System.Int32)
+  fullName.vb: UnityFx.Async.AsyncResult.Retry(System.Func(Of UnityFx.Async.IAsyncOperation), System.Int32, System.Int32)
+  nameWithType: AsyncResult.Retry(Func<IAsyncOperation>, Int32, Int32)
+  nameWithType.vb: AsyncResult.Retry(Func(Of IAsyncOperation), Int32, Int32)
+- uid: UnityFx.Async.AsyncResult.Retry(System.Func{UnityFx.Async.IAsyncOperation},System.TimeSpan,System.Int32)
+  name: Retry(Func<IAsyncOperation>, TimeSpan, Int32)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Retry_System_Func_UnityFx_Async_IAsyncOperation__System_TimeSpan_System_Int32_
+  commentId: M:UnityFx.Async.AsyncResult.Retry(System.Func{UnityFx.Async.IAsyncOperation},System.TimeSpan,System.Int32)
+  name.vb: Retry(Func(Of IAsyncOperation), TimeSpan, Int32)
+  fullName: UnityFx.Async.AsyncResult.Retry(System.Func<UnityFx.Async.IAsyncOperation>, System.TimeSpan, System.Int32)
+  fullName.vb: UnityFx.Async.AsyncResult.Retry(System.Func(Of UnityFx.Async.IAsyncOperation), System.TimeSpan, System.Int32)
+  nameWithType: AsyncResult.Retry(Func<IAsyncOperation>, TimeSpan, Int32)
+  nameWithType.vb: AsyncResult.Retry(Func(Of IAsyncOperation), TimeSpan, Int32)
+- uid: UnityFx.Async.AsyncResult.Retry*
+  name: Retry
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Retry_
+  commentId: Overload:UnityFx.Async.AsyncResult.Retry
+  fullName: UnityFx.Async.AsyncResult.Retry
+  nameWithType: AsyncResult.Retry
+- uid: UnityFx.Async.AsyncResult.Retry``1(System.Func{UnityFx.Async.IAsyncOperation{``0}},System.Int32,System.Int32)
+  name: Retry<T>(Func<IAsyncOperation<T>>, Int32, Int32)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Retry__1_System_Func_UnityFx_Async_IAsyncOperation___0___System_Int32_System_Int32_
+  commentId: M:UnityFx.Async.AsyncResult.Retry``1(System.Func{UnityFx.Async.IAsyncOperation{``0}},System.Int32,System.Int32)
+  name.vb: Retry(Of T)(Func(Of IAsyncOperation(Of T)), Int32, Int32)
+  fullName: UnityFx.Async.AsyncResult.Retry<T>(System.Func<UnityFx.Async.IAsyncOperation<T>>, System.Int32, System.Int32)
+  fullName.vb: UnityFx.Async.AsyncResult.Retry(Of T)(System.Func(Of UnityFx.Async.IAsyncOperation(Of T)), System.Int32, System.Int32)
+  nameWithType: AsyncResult.Retry<T>(Func<IAsyncOperation<T>>, Int32, Int32)
+  nameWithType.vb: AsyncResult.Retry(Of T)(Func(Of IAsyncOperation(Of T)), Int32, Int32)
+- uid: UnityFx.Async.AsyncResult.Retry``1(System.Func{UnityFx.Async.IAsyncOperation{``0}},System.TimeSpan,System.Int32)
+  name: Retry<T>(Func<IAsyncOperation<T>>, TimeSpan, Int32)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Retry__1_System_Func_UnityFx_Async_IAsyncOperation___0___System_TimeSpan_System_Int32_
+  commentId: M:UnityFx.Async.AsyncResult.Retry``1(System.Func{UnityFx.Async.IAsyncOperation{``0}},System.TimeSpan,System.Int32)
+  name.vb: Retry(Of T)(Func(Of IAsyncOperation(Of T)), TimeSpan, Int32)
+  fullName: UnityFx.Async.AsyncResult.Retry<T>(System.Func<UnityFx.Async.IAsyncOperation<T>>, System.TimeSpan, System.Int32)
+  fullName.vb: UnityFx.Async.AsyncResult.Retry(Of T)(System.Func(Of UnityFx.Async.IAsyncOperation(Of T)), System.TimeSpan, System.Int32)
+  nameWithType: AsyncResult.Retry<T>(Func<IAsyncOperation<T>>, TimeSpan, Int32)
+  nameWithType.vb: AsyncResult.Retry(Of T)(Func(Of IAsyncOperation(Of T)), TimeSpan, Int32)
+- uid: UnityFx.Async.AsyncResult.Start
+  name: Start()
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Start
+  commentId: M:UnityFx.Async.AsyncResult.Start
+  fullName: UnityFx.Async.AsyncResult.Start()
+  nameWithType: AsyncResult.Start()
+- uid: UnityFx.Async.AsyncResult.Start*
+  name: Start
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Start_
+  commentId: Overload:UnityFx.Async.AsyncResult.Start
+  fullName: UnityFx.Async.AsyncResult.Start
+  nameWithType: AsyncResult.Start
 - uid: UnityFx.Async.AsyncResult.Status
   name: Status
   href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Status
@@ -922,6 +1763,18 @@ references:
   commentId: Overload:UnityFx.Async.AsyncResult.ThrowIfDisposed
   fullName: UnityFx.Async.AsyncResult.ThrowIfDisposed
   nameWithType: AsyncResult.ThrowIfDisposed
+- uid: UnityFx.Async.AsyncResult.ThrowIfNonSuccess(System.Boolean)
+  name: ThrowIfNonSuccess(Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_ThrowIfNonSuccess_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncResult.ThrowIfNonSuccess(System.Boolean)
+  fullName: UnityFx.Async.AsyncResult.ThrowIfNonSuccess(System.Boolean)
+  nameWithType: AsyncResult.ThrowIfNonSuccess(Boolean)
+- uid: UnityFx.Async.AsyncResult.ThrowIfNonSuccess*
+  name: ThrowIfNonSuccess
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_ThrowIfNonSuccess_
+  commentId: Overload:UnityFx.Async.AsyncResult.ThrowIfNonSuccess
+  fullName: UnityFx.Async.AsyncResult.ThrowIfNonSuccess
+  nameWithType: AsyncResult.ThrowIfNonSuccess
 - uid: UnityFx.Async.AsyncResult.ToString
   name: ToString()
   href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_ToString
@@ -946,27 +1799,6 @@ references:
   commentId: Overload:UnityFx.Async.AsyncResult.TryAddCompletionCallback
   fullName: UnityFx.Async.AsyncResult.TryAddCompletionCallback
   nameWithType: AsyncResult.TryAddCompletionCallback
-- uid: UnityFx.Async.AsyncResult.TryCreateAsyncWaitHandle(System.Threading.EventWaitHandle@,System.IAsyncResult)
-  name: TryCreateAsyncWaitHandle(ref EventWaitHandle, IAsyncResult)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryCreateAsyncWaitHandle_System_Threading_EventWaitHandle__System_IAsyncResult_
-  commentId: M:UnityFx.Async.AsyncResult.TryCreateAsyncWaitHandle(System.Threading.EventWaitHandle@,System.IAsyncResult)
-  name.vb: TryCreateAsyncWaitHandle(ByRef EventWaitHandle, IAsyncResult)
-  fullName: UnityFx.Async.AsyncResult.TryCreateAsyncWaitHandle(ref System.Threading.EventWaitHandle, System.IAsyncResult)
-  fullName.vb: UnityFx.Async.AsyncResult.TryCreateAsyncWaitHandle(ByRef System.Threading.EventWaitHandle, System.IAsyncResult)
-  nameWithType: AsyncResult.TryCreateAsyncWaitHandle(ref EventWaitHandle, IAsyncResult)
-  nameWithType.vb: AsyncResult.TryCreateAsyncWaitHandle(ByRef EventWaitHandle, IAsyncResult)
-- uid: UnityFx.Async.AsyncResult.TryCreateAsyncWaitHandle*
-  name: TryCreateAsyncWaitHandle
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryCreateAsyncWaitHandle_
-  commentId: Overload:UnityFx.Async.AsyncResult.TryCreateAsyncWaitHandle
-  fullName: UnityFx.Async.AsyncResult.TryCreateAsyncWaitHandle
-  nameWithType: AsyncResult.TryCreateAsyncWaitHandle
-- uid: UnityFx.Async.AsyncResult.TrySetCanceled
-  name: TrySetCanceled()
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TrySetCanceled
-  commentId: M:UnityFx.Async.AsyncResult.TrySetCanceled
-  fullName: UnityFx.Async.AsyncResult.TrySetCanceled()
-  nameWithType: AsyncResult.TrySetCanceled()
 - uid: UnityFx.Async.AsyncResult.TrySetCanceled(System.Boolean)
   name: TrySetCanceled(Boolean)
   href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TrySetCanceled_System_Boolean_
@@ -979,12 +1811,6 @@ references:
   commentId: Overload:UnityFx.Async.AsyncResult.TrySetCanceled
   fullName: UnityFx.Async.AsyncResult.TrySetCanceled
   nameWithType: AsyncResult.TrySetCanceled
-- uid: UnityFx.Async.AsyncResult.TrySetCompleted
-  name: TrySetCompleted()
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TrySetCompleted
-  commentId: M:UnityFx.Async.AsyncResult.TrySetCompleted
-  fullName: UnityFx.Async.AsyncResult.TrySetCompleted()
-  nameWithType: AsyncResult.TrySetCompleted()
 - uid: UnityFx.Async.AsyncResult.TrySetCompleted(System.Boolean)
   name: TrySetCompleted(Boolean)
   href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TrySetCompleted_System_Boolean_
@@ -997,30 +1823,6 @@ references:
   commentId: Overload:UnityFx.Async.AsyncResult.TrySetCompleted
   fullName: UnityFx.Async.AsyncResult.TrySetCompleted
   nameWithType: AsyncResult.TrySetCompleted
-- uid: UnityFx.Async.AsyncResult.TrySetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name: TrySetException(IEnumerable<Exception>)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TrySetException_System_Collections_Generic_IEnumerable_System_Exception__
-  commentId: M:UnityFx.Async.AsyncResult.TrySetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name.vb: TrySetException(IEnumerable(Of Exception))
-  fullName: UnityFx.Async.AsyncResult.TrySetException(System.Collections.Generic.IEnumerable<System.Exception>)
-  fullName.vb: UnityFx.Async.AsyncResult.TrySetException(System.Collections.Generic.IEnumerable(Of System.Exception))
-  nameWithType: AsyncResult.TrySetException(IEnumerable<Exception>)
-  nameWithType.vb: AsyncResult.TrySetException(IEnumerable(Of Exception))
-- uid: UnityFx.Async.AsyncResult.TrySetException(System.Collections.Generic.IEnumerable{System.Exception},System.Boolean)
-  name: TrySetException(IEnumerable<Exception>, Boolean)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TrySetException_System_Collections_Generic_IEnumerable_System_Exception__System_Boolean_
-  commentId: M:UnityFx.Async.AsyncResult.TrySetException(System.Collections.Generic.IEnumerable{System.Exception},System.Boolean)
-  name.vb: TrySetException(IEnumerable(Of Exception), Boolean)
-  fullName: UnityFx.Async.AsyncResult.TrySetException(System.Collections.Generic.IEnumerable<System.Exception>, System.Boolean)
-  fullName.vb: UnityFx.Async.AsyncResult.TrySetException(System.Collections.Generic.IEnumerable(Of System.Exception), System.Boolean)
-  nameWithType: AsyncResult.TrySetException(IEnumerable<Exception>, Boolean)
-  nameWithType.vb: AsyncResult.TrySetException(IEnumerable(Of Exception), Boolean)
-- uid: UnityFx.Async.AsyncResult.TrySetException(System.Exception)
-  name: TrySetException(Exception)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TrySetException_System_Exception_
-  commentId: M:UnityFx.Async.AsyncResult.TrySetException(System.Exception)
-  fullName: UnityFx.Async.AsyncResult.TrySetException(System.Exception)
-  nameWithType: AsyncResult.TrySetException(Exception)
 - uid: UnityFx.Async.AsyncResult.TrySetException(System.Exception,System.Boolean)
   name: TrySetException(Exception, Boolean)
   href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TrySetException_System_Exception_System_Boolean_
@@ -1033,6 +1835,21 @@ references:
   commentId: Overload:UnityFx.Async.AsyncResult.TrySetException
   fullName: UnityFx.Async.AsyncResult.TrySetException
   nameWithType: AsyncResult.TrySetException
+- uid: UnityFx.Async.AsyncResult.TrySetExceptions(System.Collections.Generic.IEnumerable{System.Exception},System.Boolean)
+  name: TrySetExceptions(IEnumerable<Exception>, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__System_Boolean_
+  commentId: M:UnityFx.Async.AsyncResult.TrySetExceptions(System.Collections.Generic.IEnumerable{System.Exception},System.Boolean)
+  name.vb: TrySetExceptions(IEnumerable(Of Exception), Boolean)
+  fullName: UnityFx.Async.AsyncResult.TrySetExceptions(System.Collections.Generic.IEnumerable<System.Exception>, System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncResult.TrySetExceptions(System.Collections.Generic.IEnumerable(Of System.Exception), System.Boolean)
+  nameWithType: AsyncResult.TrySetExceptions(IEnumerable<Exception>, Boolean)
+  nameWithType.vb: AsyncResult.TrySetExceptions(IEnumerable(Of Exception), Boolean)
+- uid: UnityFx.Async.AsyncResult.TrySetExceptions*
+  name: TrySetExceptions
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TrySetExceptions_
+  commentId: Overload:UnityFx.Async.AsyncResult.TrySetExceptions
+  fullName: UnityFx.Async.AsyncResult.TrySetExceptions
+  nameWithType: AsyncResult.TrySetExceptions
 - uid: UnityFx.Async.AsyncResult.TrySetRunning
   name: TrySetRunning()
   href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TrySetRunning
@@ -1057,6 +1874,84 @@ references:
   commentId: Overload:UnityFx.Async.AsyncResult.TrySetScheduled
   fullName: UnityFx.Async.AsyncResult.TrySetScheduled
   nameWithType: AsyncResult.TrySetScheduled
+- uid: UnityFx.Async.AsyncResult.TryStart
+  name: TryStart()
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryStart
+  commentId: M:UnityFx.Async.AsyncResult.TryStart
+  fullName: UnityFx.Async.AsyncResult.TryStart()
+  nameWithType: AsyncResult.TryStart()
+- uid: UnityFx.Async.AsyncResult.TryStart*
+  name: TryStart
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryStart_
+  commentId: Overload:UnityFx.Async.AsyncResult.TryStart
+  fullName: UnityFx.Async.AsyncResult.TryStart
+  nameWithType: AsyncResult.TryStart
+- uid: UnityFx.Async.AsyncResult.WhenAll(System.Collections.Generic.IEnumerable{UnityFx.Async.IAsyncOperation})
+  name: WhenAll(IEnumerable<IAsyncOperation>)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_WhenAll_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation__
+  commentId: M:UnityFx.Async.AsyncResult.WhenAll(System.Collections.Generic.IEnumerable{UnityFx.Async.IAsyncOperation})
+  name.vb: WhenAll(IEnumerable(Of IAsyncOperation))
+  fullName: UnityFx.Async.AsyncResult.WhenAll(System.Collections.Generic.IEnumerable<UnityFx.Async.IAsyncOperation>)
+  fullName.vb: UnityFx.Async.AsyncResult.WhenAll(System.Collections.Generic.IEnumerable(Of UnityFx.Async.IAsyncOperation))
+  nameWithType: AsyncResult.WhenAll(IEnumerable<IAsyncOperation>)
+  nameWithType.vb: AsyncResult.WhenAll(IEnumerable(Of IAsyncOperation))
+- uid: UnityFx.Async.AsyncResult.WhenAll(UnityFx.Async.IAsyncOperation[])
+  name: WhenAll(IAsyncOperation[])
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_WhenAll_UnityFx_Async_IAsyncOperation___
+  commentId: M:UnityFx.Async.AsyncResult.WhenAll(UnityFx.Async.IAsyncOperation[])
+  name.vb: WhenAll(IAsyncOperation())
+  fullName: UnityFx.Async.AsyncResult.WhenAll(UnityFx.Async.IAsyncOperation[])
+  fullName.vb: UnityFx.Async.AsyncResult.WhenAll(UnityFx.Async.IAsyncOperation())
+  nameWithType: AsyncResult.WhenAll(IAsyncOperation[])
+  nameWithType.vb: AsyncResult.WhenAll(IAsyncOperation())
+- uid: UnityFx.Async.AsyncResult.WhenAll*
+  name: WhenAll
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_WhenAll_
+  commentId: Overload:UnityFx.Async.AsyncResult.WhenAll
+  fullName: UnityFx.Async.AsyncResult.WhenAll
+  nameWithType: AsyncResult.WhenAll
+- uid: UnityFx.Async.AsyncResult.WhenAll``1(System.Collections.Generic.IEnumerable{UnityFx.Async.IAsyncOperation{``0}})
+  name: WhenAll<T>(IEnumerable<IAsyncOperation<T>>)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_WhenAll__1_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation___0___
+  commentId: M:UnityFx.Async.AsyncResult.WhenAll``1(System.Collections.Generic.IEnumerable{UnityFx.Async.IAsyncOperation{``0}})
+  name.vb: WhenAll(Of T)(IEnumerable(Of IAsyncOperation(Of T)))
+  fullName: UnityFx.Async.AsyncResult.WhenAll<T>(System.Collections.Generic.IEnumerable<UnityFx.Async.IAsyncOperation<T>>)
+  fullName.vb: UnityFx.Async.AsyncResult.WhenAll(Of T)(System.Collections.Generic.IEnumerable(Of UnityFx.Async.IAsyncOperation(Of T)))
+  nameWithType: AsyncResult.WhenAll<T>(IEnumerable<IAsyncOperation<T>>)
+  nameWithType.vb: AsyncResult.WhenAll(Of T)(IEnumerable(Of IAsyncOperation(Of T)))
+- uid: UnityFx.Async.AsyncResult.WhenAll``1(UnityFx.Async.IAsyncOperation{``0}[])
+  name: WhenAll<T>(IAsyncOperation<T>[])
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_WhenAll__1_UnityFx_Async_IAsyncOperation___0____
+  commentId: M:UnityFx.Async.AsyncResult.WhenAll``1(UnityFx.Async.IAsyncOperation{``0}[])
+  name.vb: WhenAll(Of T)(IAsyncOperation(Of T)())
+  fullName: UnityFx.Async.AsyncResult.WhenAll<T>(UnityFx.Async.IAsyncOperation<T>[])
+  fullName.vb: UnityFx.Async.AsyncResult.WhenAll(Of T)(UnityFx.Async.IAsyncOperation(Of T)())
+  nameWithType: AsyncResult.WhenAll<T>(IAsyncOperation<T>[])
+  nameWithType.vb: AsyncResult.WhenAll(Of T)(IAsyncOperation(Of T)())
+- uid: UnityFx.Async.AsyncResult.WhenAny*
+  name: WhenAny
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_WhenAny_
+  commentId: Overload:UnityFx.Async.AsyncResult.WhenAny
+  fullName: UnityFx.Async.AsyncResult.WhenAny
+  nameWithType: AsyncResult.WhenAny
+- uid: UnityFx.Async.AsyncResult.WhenAny``1(``0[])
+  name: WhenAny<T>(T[])
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_WhenAny__1___0___
+  commentId: M:UnityFx.Async.AsyncResult.WhenAny``1(``0[])
+  name.vb: WhenAny(Of T)(T())
+  fullName: UnityFx.Async.AsyncResult.WhenAny<T>(T[])
+  fullName.vb: UnityFx.Async.AsyncResult.WhenAny(Of T)(T())
+  nameWithType: AsyncResult.WhenAny<T>(T[])
+  nameWithType.vb: AsyncResult.WhenAny(Of T)(T())
+- uid: UnityFx.Async.AsyncResult.WhenAny``1(System.Collections.Generic.IEnumerable{``0})
+  name: WhenAny<T>(IEnumerable<T>)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_WhenAny__1_System_Collections_Generic_IEnumerable___0__
+  commentId: M:UnityFx.Async.AsyncResult.WhenAny``1(System.Collections.Generic.IEnumerable{``0})
+  name.vb: WhenAny(Of T)(IEnumerable(Of T))
+  fullName: UnityFx.Async.AsyncResult.WhenAny<T>(System.Collections.Generic.IEnumerable<T>)
+  fullName.vb: UnityFx.Async.AsyncResult.WhenAny(Of T)(System.Collections.Generic.IEnumerable(Of T))
+  nameWithType: AsyncResult.WhenAny<T>(IEnumerable<T>)
+  nameWithType.vb: AsyncResult.WhenAny(Of T)(IEnumerable(Of T))
 - uid: UnityFx.Async.AsyncResult`1
   name: AsyncResult<T>
   href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.html
@@ -1098,6 +1993,14 @@ references:
   fullName.vb: UnityFx.Async.AsyncResult(Of T).AsyncResult(UnityFx.Async.AsyncOperationStatus)
   nameWithType: AsyncResult<T>.AsyncResult(AsyncOperationStatus)
   nameWithType.vb: AsyncResult(Of T).AsyncResult(AsyncOperationStatus)
+- uid: UnityFx.Async.AsyncResult`1.#ctor(UnityFx.Async.AsyncOperationStatus,System.AsyncCallback,System.Object)
+  name: AsyncResult(AsyncOperationStatus, AsyncCallback, Object)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.html#UnityFx_Async_AsyncResult_1__ctor_UnityFx_Async_AsyncOperationStatus_System_AsyncCallback_System_Object_
+  commentId: M:UnityFx.Async.AsyncResult`1.#ctor(UnityFx.Async.AsyncOperationStatus,System.AsyncCallback,System.Object)
+  fullName: UnityFx.Async.AsyncResult<T>.AsyncResult(UnityFx.Async.AsyncOperationStatus, System.AsyncCallback, System.Object)
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).AsyncResult(UnityFx.Async.AsyncOperationStatus, System.AsyncCallback, System.Object)
+  nameWithType: AsyncResult<T>.AsyncResult(AsyncOperationStatus, AsyncCallback, Object)
+  nameWithType.vb: AsyncResult(Of T).AsyncResult(AsyncOperationStatus, AsyncCallback, Object)
 - uid: UnityFx.Async.AsyncResult`1.#ctor*
   name: AsyncResult
   href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.html#UnityFx_Async_AsyncResult_1__ctor_
@@ -1106,6 +2009,154 @@ references:
   fullName.vb: UnityFx.Async.AsyncResult(Of T).AsyncResult
   nameWithType: AsyncResult<T>.AsyncResult
   nameWithType.vb: AsyncResult(Of T).AsyncResult
+- uid: UnityFx.Async.AsyncResult`1.AsyncAwaiter
+  name: AsyncResult<T>.AsyncAwaiter
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.AsyncAwaiter.html
+  commentId: T:UnityFx.Async.AsyncResult`1.AsyncAwaiter
+  name.vb: AsyncResult(Of T).AsyncAwaiter
+  fullName: UnityFx.Async.AsyncResult<T>.AsyncAwaiter
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).AsyncAwaiter
+  nameWithType: AsyncResult<T>.AsyncAwaiter
+  nameWithType.vb: AsyncResult(Of T).AsyncAwaiter
+- uid: UnityFx.Async.AsyncResult`1.AsyncAwaiter.#ctor(UnityFx.Async.AsyncResult{`0},System.Boolean)
+  name: AsyncAwaiter(AsyncResult<T>, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.AsyncAwaiter.html#UnityFx_Async_AsyncResult_1_AsyncAwaiter__ctor_UnityFx_Async_AsyncResult__0__System_Boolean_
+  commentId: M:UnityFx.Async.AsyncResult`1.AsyncAwaiter.#ctor(UnityFx.Async.AsyncResult{`0},System.Boolean)
+  name.vb: AsyncAwaiter(AsyncResult(Of T), Boolean)
+  fullName: UnityFx.Async.AsyncResult<T>.AsyncAwaiter.AsyncAwaiter(UnityFx.Async.AsyncResult<T>, System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).AsyncAwaiter.AsyncAwaiter(UnityFx.Async.AsyncResult(Of T), System.Boolean)
+  nameWithType: AsyncResult<T>.AsyncAwaiter.AsyncAwaiter(AsyncResult<T>, Boolean)
+  nameWithType.vb: AsyncResult(Of T).AsyncAwaiter.AsyncAwaiter(AsyncResult(Of T), Boolean)
+- uid: UnityFx.Async.AsyncResult`1.AsyncAwaiter.#ctor*
+  name: AsyncAwaiter
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.AsyncAwaiter.html#UnityFx_Async_AsyncResult_1_AsyncAwaiter__ctor_
+  commentId: Overload:UnityFx.Async.AsyncResult`1.AsyncAwaiter.#ctor
+  fullName: UnityFx.Async.AsyncResult<T>.AsyncAwaiter.AsyncAwaiter
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).AsyncAwaiter.AsyncAwaiter
+  nameWithType: AsyncResult<T>.AsyncAwaiter.AsyncAwaiter
+  nameWithType.vb: AsyncResult(Of T).AsyncAwaiter.AsyncAwaiter
+- uid: UnityFx.Async.AsyncResult`1.AsyncAwaiter.GetResult
+  name: GetResult()
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.AsyncAwaiter.html#UnityFx_Async_AsyncResult_1_AsyncAwaiter_GetResult
+  commentId: M:UnityFx.Async.AsyncResult`1.AsyncAwaiter.GetResult
+  fullName: UnityFx.Async.AsyncResult<T>.AsyncAwaiter.GetResult()
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).AsyncAwaiter.GetResult()
+  nameWithType: AsyncResult<T>.AsyncAwaiter.GetResult()
+  nameWithType.vb: AsyncResult(Of T).AsyncAwaiter.GetResult()
+- uid: UnityFx.Async.AsyncResult`1.AsyncAwaiter.GetResult*
+  name: GetResult
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.AsyncAwaiter.html#UnityFx_Async_AsyncResult_1_AsyncAwaiter_GetResult_
+  commentId: Overload:UnityFx.Async.AsyncResult`1.AsyncAwaiter.GetResult
+  fullName: UnityFx.Async.AsyncResult<T>.AsyncAwaiter.GetResult
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).AsyncAwaiter.GetResult
+  nameWithType: AsyncResult<T>.AsyncAwaiter.GetResult
+  nameWithType.vb: AsyncResult(Of T).AsyncAwaiter.GetResult
+- uid: UnityFx.Async.AsyncResult`1.AsyncAwaiter.IsCompleted
+  name: IsCompleted
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.AsyncAwaiter.html#UnityFx_Async_AsyncResult_1_AsyncAwaiter_IsCompleted
+  commentId: P:UnityFx.Async.AsyncResult`1.AsyncAwaiter.IsCompleted
+  fullName: UnityFx.Async.AsyncResult<T>.AsyncAwaiter.IsCompleted
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).AsyncAwaiter.IsCompleted
+  nameWithType: AsyncResult<T>.AsyncAwaiter.IsCompleted
+  nameWithType.vb: AsyncResult(Of T).AsyncAwaiter.IsCompleted
+- uid: UnityFx.Async.AsyncResult`1.AsyncAwaiter.IsCompleted*
+  name: IsCompleted
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.AsyncAwaiter.html#UnityFx_Async_AsyncResult_1_AsyncAwaiter_IsCompleted_
+  commentId: Overload:UnityFx.Async.AsyncResult`1.AsyncAwaiter.IsCompleted
+  fullName: UnityFx.Async.AsyncResult<T>.AsyncAwaiter.IsCompleted
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).AsyncAwaiter.IsCompleted
+  nameWithType: AsyncResult<T>.AsyncAwaiter.IsCompleted
+  nameWithType.vb: AsyncResult(Of T).AsyncAwaiter.IsCompleted
+- uid: UnityFx.Async.AsyncResult`1.AsyncAwaiter.OnCompleted(System.Action)
+  name: OnCompleted(Action)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.AsyncAwaiter.html#UnityFx_Async_AsyncResult_1_AsyncAwaiter_OnCompleted_System_Action_
+  commentId: M:UnityFx.Async.AsyncResult`1.AsyncAwaiter.OnCompleted(System.Action)
+  fullName: UnityFx.Async.AsyncResult<T>.AsyncAwaiter.OnCompleted(System.Action)
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).AsyncAwaiter.OnCompleted(System.Action)
+  nameWithType: AsyncResult<T>.AsyncAwaiter.OnCompleted(Action)
+  nameWithType.vb: AsyncResult(Of T).AsyncAwaiter.OnCompleted(Action)
+- uid: UnityFx.Async.AsyncResult`1.AsyncAwaiter.OnCompleted*
+  name: OnCompleted
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.AsyncAwaiter.html#UnityFx_Async_AsyncResult_1_AsyncAwaiter_OnCompleted_
+  commentId: Overload:UnityFx.Async.AsyncResult`1.AsyncAwaiter.OnCompleted
+  fullName: UnityFx.Async.AsyncResult<T>.AsyncAwaiter.OnCompleted
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).AsyncAwaiter.OnCompleted
+  nameWithType: AsyncResult<T>.AsyncAwaiter.OnCompleted
+  nameWithType.vb: AsyncResult(Of T).AsyncAwaiter.OnCompleted
+- uid: UnityFx.Async.AsyncResult`1.ConfigureAwait(System.Boolean)
+  name: ConfigureAwait(Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.html#UnityFx_Async_AsyncResult_1_ConfigureAwait_System_Boolean_
+  commentId: M:UnityFx.Async.AsyncResult`1.ConfigureAwait(System.Boolean)
+  fullName: UnityFx.Async.AsyncResult<T>.ConfigureAwait(System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).ConfigureAwait(System.Boolean)
+  nameWithType: AsyncResult<T>.ConfigureAwait(Boolean)
+  nameWithType.vb: AsyncResult(Of T).ConfigureAwait(Boolean)
+- uid: UnityFx.Async.AsyncResult`1.ConfigureAwait*
+  name: ConfigureAwait
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.html#UnityFx_Async_AsyncResult_1_ConfigureAwait_
+  commentId: Overload:UnityFx.Async.AsyncResult`1.ConfigureAwait
+  fullName: UnityFx.Async.AsyncResult<T>.ConfigureAwait
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).ConfigureAwait
+  nameWithType: AsyncResult<T>.ConfigureAwait
+  nameWithType.vb: AsyncResult(Of T).ConfigureAwait
+- uid: UnityFx.Async.AsyncResult`1.ConfiguredAsyncAwaitable
+  name: AsyncResult<T>.ConfiguredAsyncAwaitable
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.ConfiguredAsyncAwaitable.html
+  commentId: T:UnityFx.Async.AsyncResult`1.ConfiguredAsyncAwaitable
+  name.vb: AsyncResult(Of T).ConfiguredAsyncAwaitable
+  fullName: UnityFx.Async.AsyncResult<T>.ConfiguredAsyncAwaitable
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).ConfiguredAsyncAwaitable
+  nameWithType: AsyncResult<T>.ConfiguredAsyncAwaitable
+  nameWithType.vb: AsyncResult(Of T).ConfiguredAsyncAwaitable
+- uid: UnityFx.Async.AsyncResult`1.ConfiguredAsyncAwaitable.#ctor(UnityFx.Async.AsyncResult{`0},System.Boolean)
+  name: ConfiguredAsyncAwaitable(AsyncResult<T>, Boolean)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.ConfiguredAsyncAwaitable.html#UnityFx_Async_AsyncResult_1_ConfiguredAsyncAwaitable__ctor_UnityFx_Async_AsyncResult__0__System_Boolean_
+  commentId: M:UnityFx.Async.AsyncResult`1.ConfiguredAsyncAwaitable.#ctor(UnityFx.Async.AsyncResult{`0},System.Boolean)
+  name.vb: ConfiguredAsyncAwaitable(AsyncResult(Of T), Boolean)
+  fullName: UnityFx.Async.AsyncResult<T>.ConfiguredAsyncAwaitable.ConfiguredAsyncAwaitable(UnityFx.Async.AsyncResult<T>, System.Boolean)
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).ConfiguredAsyncAwaitable.ConfiguredAsyncAwaitable(UnityFx.Async.AsyncResult(Of T), System.Boolean)
+  nameWithType: AsyncResult<T>.ConfiguredAsyncAwaitable.ConfiguredAsyncAwaitable(AsyncResult<T>, Boolean)
+  nameWithType.vb: AsyncResult(Of T).ConfiguredAsyncAwaitable.ConfiguredAsyncAwaitable(AsyncResult(Of T), Boolean)
+- uid: UnityFx.Async.AsyncResult`1.ConfiguredAsyncAwaitable.#ctor*
+  name: ConfiguredAsyncAwaitable
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.ConfiguredAsyncAwaitable.html#UnityFx_Async_AsyncResult_1_ConfiguredAsyncAwaitable__ctor_
+  commentId: Overload:UnityFx.Async.AsyncResult`1.ConfiguredAsyncAwaitable.#ctor
+  fullName: UnityFx.Async.AsyncResult<T>.ConfiguredAsyncAwaitable.ConfiguredAsyncAwaitable
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).ConfiguredAsyncAwaitable.ConfiguredAsyncAwaitable
+  nameWithType: AsyncResult<T>.ConfiguredAsyncAwaitable.ConfiguredAsyncAwaitable
+  nameWithType.vb: AsyncResult(Of T).ConfiguredAsyncAwaitable.ConfiguredAsyncAwaitable
+- uid: UnityFx.Async.AsyncResult`1.ConfiguredAsyncAwaitable.GetAwaiter
+  name: GetAwaiter()
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.ConfiguredAsyncAwaitable.html#UnityFx_Async_AsyncResult_1_ConfiguredAsyncAwaitable_GetAwaiter
+  commentId: M:UnityFx.Async.AsyncResult`1.ConfiguredAsyncAwaitable.GetAwaiter
+  fullName: UnityFx.Async.AsyncResult<T>.ConfiguredAsyncAwaitable.GetAwaiter()
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).ConfiguredAsyncAwaitable.GetAwaiter()
+  nameWithType: AsyncResult<T>.ConfiguredAsyncAwaitable.GetAwaiter()
+  nameWithType.vb: AsyncResult(Of T).ConfiguredAsyncAwaitable.GetAwaiter()
+- uid: UnityFx.Async.AsyncResult`1.ConfiguredAsyncAwaitable.GetAwaiter*
+  name: GetAwaiter
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.ConfiguredAsyncAwaitable.html#UnityFx_Async_AsyncResult_1_ConfiguredAsyncAwaitable_GetAwaiter_
+  commentId: Overload:UnityFx.Async.AsyncResult`1.ConfiguredAsyncAwaitable.GetAwaiter
+  fullName: UnityFx.Async.AsyncResult<T>.ConfiguredAsyncAwaitable.GetAwaiter
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).ConfiguredAsyncAwaitable.GetAwaiter
+  nameWithType: AsyncResult<T>.ConfiguredAsyncAwaitable.GetAwaiter
+  nameWithType.vb: AsyncResult(Of T).ConfiguredAsyncAwaitable.GetAwaiter
+- uid: UnityFx.Async.AsyncResult`1.GetAwaiter
+  name: GetAwaiter()
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.html#UnityFx_Async_AsyncResult_1_GetAwaiter
+  commentId: M:UnityFx.Async.AsyncResult`1.GetAwaiter
+  fullName: UnityFx.Async.AsyncResult<T>.GetAwaiter()
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).GetAwaiter()
+  nameWithType: AsyncResult<T>.GetAwaiter()
+  nameWithType.vb: AsyncResult(Of T).GetAwaiter()
+- uid: UnityFx.Async.AsyncResult`1.GetAwaiter*
+  name: GetAwaiter
+  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.html#UnityFx_Async_AsyncResult_1_GetAwaiter_
+  commentId: Overload:UnityFx.Async.AsyncResult`1.GetAwaiter
+  fullName: UnityFx.Async.AsyncResult<T>.GetAwaiter
+  fullName.vb: UnityFx.Async.AsyncResult(Of T).GetAwaiter
+  nameWithType: AsyncResult<T>.GetAwaiter
+  nameWithType.vb: AsyncResult(Of T).GetAwaiter
 - uid: UnityFx.Async.AsyncResult`1.Result
   name: Result
   href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.html#UnityFx_Async_AsyncResult_1_Result
@@ -1122,30 +2173,6 @@ references:
   fullName.vb: UnityFx.Async.AsyncResult(Of T).Result
   nameWithType: AsyncResult<T>.Result
   nameWithType.vb: AsyncResult(Of T).Result
-- uid: UnityFx.Async.AsyncResult`1.SetResult(`0)
-  name: SetResult(T)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.html#UnityFx_Async_AsyncResult_1_SetResult__0_
-  commentId: M:UnityFx.Async.AsyncResult`1.SetResult(`0)
-  fullName: UnityFx.Async.AsyncResult<T>.SetResult(T)
-  fullName.vb: UnityFx.Async.AsyncResult(Of T).SetResult(T)
-  nameWithType: AsyncResult<T>.SetResult(T)
-  nameWithType.vb: AsyncResult(Of T).SetResult(T)
-- uid: UnityFx.Async.AsyncResult`1.SetResult(`0,System.Boolean)
-  name: SetResult(T, Boolean)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.html#UnityFx_Async_AsyncResult_1_SetResult__0_System_Boolean_
-  commentId: M:UnityFx.Async.AsyncResult`1.SetResult(`0,System.Boolean)
-  fullName: UnityFx.Async.AsyncResult<T>.SetResult(T, System.Boolean)
-  fullName.vb: UnityFx.Async.AsyncResult(Of T).SetResult(T, System.Boolean)
-  nameWithType: AsyncResult<T>.SetResult(T, Boolean)
-  nameWithType.vb: AsyncResult(Of T).SetResult(T, Boolean)
-- uid: UnityFx.Async.AsyncResult`1.SetResult*
-  name: SetResult
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.html#UnityFx_Async_AsyncResult_1_SetResult_
-  commentId: Overload:UnityFx.Async.AsyncResult`1.SetResult
-  fullName: UnityFx.Async.AsyncResult<T>.SetResult
-  fullName.vb: UnityFx.Async.AsyncResult(Of T).SetResult
-  nameWithType: AsyncResult<T>.SetResult
-  nameWithType.vb: AsyncResult(Of T).SetResult
 - uid: UnityFx.Async.AsyncResult`1.Subscribe(System.IObserver{`0})
   name: Subscribe(IObserver<T>)
   href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.html#UnityFx_Async_AsyncResult_1_Subscribe_System_IObserver__0__
@@ -1163,14 +2190,6 @@ references:
   fullName.vb: UnityFx.Async.AsyncResult(Of T).Subscribe
   nameWithType: AsyncResult<T>.Subscribe
   nameWithType.vb: AsyncResult(Of T).Subscribe
-- uid: UnityFx.Async.AsyncResult`1.TrySetResult(`0)
-  name: TrySetResult(T)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.html#UnityFx_Async_AsyncResult_1_TrySetResult__0_
-  commentId: M:UnityFx.Async.AsyncResult`1.TrySetResult(`0)
-  fullName: UnityFx.Async.AsyncResult<T>.TrySetResult(T)
-  fullName.vb: UnityFx.Async.AsyncResult(Of T).TrySetResult(T)
-  nameWithType: AsyncResult<T>.TrySetResult(T)
-  nameWithType.vb: AsyncResult(Of T).TrySetResult(T)
 - uid: UnityFx.Async.AsyncResult`1.TrySetResult(`0,System.Boolean)
   name: TrySetResult(T, Boolean)
   href: api/netstandard2.0/UnityFx.Async.AsyncResult-1.html#UnityFx_Async_AsyncResult_1_TrySetResult__0_System_Boolean_
@@ -1187,134 +2206,6 @@ references:
   fullName.vb: UnityFx.Async.AsyncResult(Of T).TrySetResult
   nameWithType: AsyncResult<T>.TrySetResult
   nameWithType.vb: AsyncResult(Of T).TrySetResult
-- uid: UnityFx.Async.AsyncResultAwaiter
-  name: AsyncResultAwaiter
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter.html
-  commentId: T:UnityFx.Async.AsyncResultAwaiter
-  fullName: UnityFx.Async.AsyncResultAwaiter
-  nameWithType: AsyncResultAwaiter
-- uid: UnityFx.Async.AsyncResultAwaiter.#ctor(UnityFx.Async.IAsyncOperation)
-  name: AsyncResultAwaiter(IAsyncOperation)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter.html#UnityFx_Async_AsyncResultAwaiter__ctor_UnityFx_Async_IAsyncOperation_
-  commentId: M:UnityFx.Async.AsyncResultAwaiter.#ctor(UnityFx.Async.IAsyncOperation)
-  fullName: UnityFx.Async.AsyncResultAwaiter.AsyncResultAwaiter(UnityFx.Async.IAsyncOperation)
-  nameWithType: AsyncResultAwaiter.AsyncResultAwaiter(IAsyncOperation)
-- uid: UnityFx.Async.AsyncResultAwaiter.#ctor*
-  name: AsyncResultAwaiter
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter.html#UnityFx_Async_AsyncResultAwaiter__ctor_
-  commentId: Overload:UnityFx.Async.AsyncResultAwaiter.#ctor
-  fullName: UnityFx.Async.AsyncResultAwaiter.AsyncResultAwaiter
-  nameWithType: AsyncResultAwaiter.AsyncResultAwaiter
-- uid: UnityFx.Async.AsyncResultAwaiter.GetResult
-  name: GetResult()
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter.html#UnityFx_Async_AsyncResultAwaiter_GetResult
-  commentId: M:UnityFx.Async.AsyncResultAwaiter.GetResult
-  fullName: UnityFx.Async.AsyncResultAwaiter.GetResult()
-  nameWithType: AsyncResultAwaiter.GetResult()
-- uid: UnityFx.Async.AsyncResultAwaiter.GetResult*
-  name: GetResult
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter.html#UnityFx_Async_AsyncResultAwaiter_GetResult_
-  commentId: Overload:UnityFx.Async.AsyncResultAwaiter.GetResult
-  fullName: UnityFx.Async.AsyncResultAwaiter.GetResult
-  nameWithType: AsyncResultAwaiter.GetResult
-- uid: UnityFx.Async.AsyncResultAwaiter.IsCompleted
-  name: IsCompleted
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter.html#UnityFx_Async_AsyncResultAwaiter_IsCompleted
-  commentId: P:UnityFx.Async.AsyncResultAwaiter.IsCompleted
-  fullName: UnityFx.Async.AsyncResultAwaiter.IsCompleted
-  nameWithType: AsyncResultAwaiter.IsCompleted
-- uid: UnityFx.Async.AsyncResultAwaiter.IsCompleted*
-  name: IsCompleted
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter.html#UnityFx_Async_AsyncResultAwaiter_IsCompleted_
-  commentId: Overload:UnityFx.Async.AsyncResultAwaiter.IsCompleted
-  fullName: UnityFx.Async.AsyncResultAwaiter.IsCompleted
-  nameWithType: AsyncResultAwaiter.IsCompleted
-- uid: UnityFx.Async.AsyncResultAwaiter.OnCompleted(System.Action)
-  name: OnCompleted(Action)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter.html#UnityFx_Async_AsyncResultAwaiter_OnCompleted_System_Action_
-  commentId: M:UnityFx.Async.AsyncResultAwaiter.OnCompleted(System.Action)
-  fullName: UnityFx.Async.AsyncResultAwaiter.OnCompleted(System.Action)
-  nameWithType: AsyncResultAwaiter.OnCompleted(Action)
-- uid: UnityFx.Async.AsyncResultAwaiter.OnCompleted*
-  name: OnCompleted
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter.html#UnityFx_Async_AsyncResultAwaiter_OnCompleted_
-  commentId: Overload:UnityFx.Async.AsyncResultAwaiter.OnCompleted
-  fullName: UnityFx.Async.AsyncResultAwaiter.OnCompleted
-  nameWithType: AsyncResultAwaiter.OnCompleted
-- uid: UnityFx.Async.AsyncResultAwaiter`1
-  name: AsyncResultAwaiter<T>
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter-1.html
-  commentId: T:UnityFx.Async.AsyncResultAwaiter`1
-  name.vb: AsyncResultAwaiter(Of T)
-  fullName: UnityFx.Async.AsyncResultAwaiter<T>
-  fullName.vb: UnityFx.Async.AsyncResultAwaiter(Of T)
-  nameWithType: AsyncResultAwaiter<T>
-  nameWithType.vb: AsyncResultAwaiter(Of T)
-- uid: UnityFx.Async.AsyncResultAwaiter`1.#ctor(UnityFx.Async.IAsyncOperation{`0})
-  name: AsyncResultAwaiter(IAsyncOperation<T>)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter-1.html#UnityFx_Async_AsyncResultAwaiter_1__ctor_UnityFx_Async_IAsyncOperation__0__
-  commentId: M:UnityFx.Async.AsyncResultAwaiter`1.#ctor(UnityFx.Async.IAsyncOperation{`0})
-  name.vb: AsyncResultAwaiter(IAsyncOperation(Of T))
-  fullName: UnityFx.Async.AsyncResultAwaiter<T>.AsyncResultAwaiter(UnityFx.Async.IAsyncOperation<T>)
-  fullName.vb: UnityFx.Async.AsyncResultAwaiter(Of T).AsyncResultAwaiter(UnityFx.Async.IAsyncOperation(Of T))
-  nameWithType: AsyncResultAwaiter<T>.AsyncResultAwaiter(IAsyncOperation<T>)
-  nameWithType.vb: AsyncResultAwaiter(Of T).AsyncResultAwaiter(IAsyncOperation(Of T))
-- uid: UnityFx.Async.AsyncResultAwaiter`1.#ctor*
-  name: AsyncResultAwaiter
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter-1.html#UnityFx_Async_AsyncResultAwaiter_1__ctor_
-  commentId: Overload:UnityFx.Async.AsyncResultAwaiter`1.#ctor
-  fullName: UnityFx.Async.AsyncResultAwaiter<T>.AsyncResultAwaiter
-  fullName.vb: UnityFx.Async.AsyncResultAwaiter(Of T).AsyncResultAwaiter
-  nameWithType: AsyncResultAwaiter<T>.AsyncResultAwaiter
-  nameWithType.vb: AsyncResultAwaiter(Of T).AsyncResultAwaiter
-- uid: UnityFx.Async.AsyncResultAwaiter`1.GetResult
-  name: GetResult()
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter-1.html#UnityFx_Async_AsyncResultAwaiter_1_GetResult
-  commentId: M:UnityFx.Async.AsyncResultAwaiter`1.GetResult
-  fullName: UnityFx.Async.AsyncResultAwaiter<T>.GetResult()
-  fullName.vb: UnityFx.Async.AsyncResultAwaiter(Of T).GetResult()
-  nameWithType: AsyncResultAwaiter<T>.GetResult()
-  nameWithType.vb: AsyncResultAwaiter(Of T).GetResult()
-- uid: UnityFx.Async.AsyncResultAwaiter`1.GetResult*
-  name: GetResult
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter-1.html#UnityFx_Async_AsyncResultAwaiter_1_GetResult_
-  commentId: Overload:UnityFx.Async.AsyncResultAwaiter`1.GetResult
-  fullName: UnityFx.Async.AsyncResultAwaiter<T>.GetResult
-  fullName.vb: UnityFx.Async.AsyncResultAwaiter(Of T).GetResult
-  nameWithType: AsyncResultAwaiter<T>.GetResult
-  nameWithType.vb: AsyncResultAwaiter(Of T).GetResult
-- uid: UnityFx.Async.AsyncResultAwaiter`1.IsCompleted
-  name: IsCompleted
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter-1.html#UnityFx_Async_AsyncResultAwaiter_1_IsCompleted
-  commentId: P:UnityFx.Async.AsyncResultAwaiter`1.IsCompleted
-  fullName: UnityFx.Async.AsyncResultAwaiter<T>.IsCompleted
-  fullName.vb: UnityFx.Async.AsyncResultAwaiter(Of T).IsCompleted
-  nameWithType: AsyncResultAwaiter<T>.IsCompleted
-  nameWithType.vb: AsyncResultAwaiter(Of T).IsCompleted
-- uid: UnityFx.Async.AsyncResultAwaiter`1.IsCompleted*
-  name: IsCompleted
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter-1.html#UnityFx_Async_AsyncResultAwaiter_1_IsCompleted_
-  commentId: Overload:UnityFx.Async.AsyncResultAwaiter`1.IsCompleted
-  fullName: UnityFx.Async.AsyncResultAwaiter<T>.IsCompleted
-  fullName.vb: UnityFx.Async.AsyncResultAwaiter(Of T).IsCompleted
-  nameWithType: AsyncResultAwaiter<T>.IsCompleted
-  nameWithType.vb: AsyncResultAwaiter(Of T).IsCompleted
-- uid: UnityFx.Async.AsyncResultAwaiter`1.OnCompleted(System.Action)
-  name: OnCompleted(Action)
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter-1.html#UnityFx_Async_AsyncResultAwaiter_1_OnCompleted_System_Action_
-  commentId: M:UnityFx.Async.AsyncResultAwaiter`1.OnCompleted(System.Action)
-  fullName: UnityFx.Async.AsyncResultAwaiter<T>.OnCompleted(System.Action)
-  fullName.vb: UnityFx.Async.AsyncResultAwaiter(Of T).OnCompleted(System.Action)
-  nameWithType: AsyncResultAwaiter<T>.OnCompleted(Action)
-  nameWithType.vb: AsyncResultAwaiter(Of T).OnCompleted(Action)
-- uid: UnityFx.Async.AsyncResultAwaiter`1.OnCompleted*
-  name: OnCompleted
-  href: api/netstandard2.0/UnityFx.Async.AsyncResultAwaiter-1.html#UnityFx_Async_AsyncResultAwaiter_1_OnCompleted_
-  commentId: Overload:UnityFx.Async.AsyncResultAwaiter`1.OnCompleted
-  fullName: UnityFx.Async.AsyncResultAwaiter<T>.OnCompleted
-  fullName.vb: UnityFx.Async.AsyncResultAwaiter(Of T).OnCompleted
-  nameWithType: AsyncResultAwaiter<T>.OnCompleted
-  nameWithType.vb: AsyncResultAwaiter(Of T).OnCompleted
 - uid: UnityFx.Async.AsyncResultQueue`1
   name: AsyncResultQueue<T>
   href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html
@@ -1380,6 +2271,39 @@ references:
   fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).Clear
   nameWithType: AsyncResultQueue<T>.Clear
   nameWithType.vb: AsyncResultQueue(Of T).Clear
+- uid: UnityFx.Async.AsyncResultQueue`1.Contains(`0)
+  name: Contains(T)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_Contains__0_
+  commentId: M:UnityFx.Async.AsyncResultQueue`1.Contains(`0)
+  fullName: UnityFx.Async.AsyncResultQueue<T>.Contains(T)
+  fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).Contains(T)
+  nameWithType: AsyncResultQueue<T>.Contains(T)
+  nameWithType.vb: AsyncResultQueue(Of T).Contains(T)
+- uid: UnityFx.Async.AsyncResultQueue`1.Contains*
+  name: Contains
+  href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_Contains_
+  commentId: Overload:UnityFx.Async.AsyncResultQueue`1.Contains
+  fullName: UnityFx.Async.AsyncResultQueue<T>.Contains
+  fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).Contains
+  nameWithType: AsyncResultQueue<T>.Contains
+  nameWithType.vb: AsyncResultQueue(Of T).Contains
+- uid: UnityFx.Async.AsyncResultQueue`1.CopyTo(`0[],System.Int32)
+  name: CopyTo(T[], Int32)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_CopyTo__0___System_Int32_
+  commentId: M:UnityFx.Async.AsyncResultQueue`1.CopyTo(`0[],System.Int32)
+  name.vb: CopyTo(T(), Int32)
+  fullName: UnityFx.Async.AsyncResultQueue<T>.CopyTo(T[], System.Int32)
+  fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).CopyTo(T(), System.Int32)
+  nameWithType: AsyncResultQueue<T>.CopyTo(T[], Int32)
+  nameWithType.vb: AsyncResultQueue(Of T).CopyTo(T(), Int32)
+- uid: UnityFx.Async.AsyncResultQueue`1.CopyTo*
+  name: CopyTo
+  href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_CopyTo_
+  commentId: Overload:UnityFx.Async.AsyncResultQueue`1.CopyTo
+  fullName: UnityFx.Async.AsyncResultQueue<T>.CopyTo
+  fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).CopyTo
+  nameWithType: AsyncResultQueue<T>.CopyTo
+  nameWithType.vb: AsyncResultQueue(Of T).CopyTo
 - uid: UnityFx.Async.AsyncResultQueue`1.Count
   name: Count
   href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_Count
@@ -1412,6 +2336,22 @@ references:
   fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).Current
   nameWithType: AsyncResultQueue<T>.Current
   nameWithType.vb: AsyncResultQueue(Of T).Current
+- uid: UnityFx.Async.AsyncResultQueue`1.GetEnumerator
+  name: GetEnumerator()
+  href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_GetEnumerator
+  commentId: M:UnityFx.Async.AsyncResultQueue`1.GetEnumerator
+  fullName: UnityFx.Async.AsyncResultQueue<T>.GetEnumerator()
+  fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).GetEnumerator()
+  nameWithType: AsyncResultQueue<T>.GetEnumerator()
+  nameWithType.vb: AsyncResultQueue(Of T).GetEnumerator()
+- uid: UnityFx.Async.AsyncResultQueue`1.GetEnumerator*
+  name: GetEnumerator
+  href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_GetEnumerator_
+  commentId: Overload:UnityFx.Async.AsyncResultQueue`1.GetEnumerator
+  fullName: UnityFx.Async.AsyncResultQueue<T>.GetEnumerator
+  fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).GetEnumerator
+  nameWithType: AsyncResultQueue<T>.GetEnumerator
+  nameWithType.vb: AsyncResultQueue(Of T).GetEnumerator
 - uid: UnityFx.Async.AsyncResultQueue`1.IsEmpty
   name: IsEmpty
   href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_IsEmpty
@@ -1428,6 +2368,22 @@ references:
   fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).IsEmpty
   nameWithType: AsyncResultQueue<T>.IsEmpty
   nameWithType.vb: AsyncResultQueue(Of T).IsEmpty
+- uid: UnityFx.Async.AsyncResultQueue`1.IsReadOnly
+  name: IsReadOnly
+  href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_IsReadOnly
+  commentId: P:UnityFx.Async.AsyncResultQueue`1.IsReadOnly
+  fullName: UnityFx.Async.AsyncResultQueue<T>.IsReadOnly
+  fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).IsReadOnly
+  nameWithType: AsyncResultQueue<T>.IsReadOnly
+  nameWithType.vb: AsyncResultQueue(Of T).IsReadOnly
+- uid: UnityFx.Async.AsyncResultQueue`1.IsReadOnly*
+  name: IsReadOnly
+  href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_IsReadOnly_
+  commentId: Overload:UnityFx.Async.AsyncResultQueue`1.IsReadOnly
+  fullName: UnityFx.Async.AsyncResultQueue<T>.IsReadOnly
+  fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).IsReadOnly
+  nameWithType: AsyncResultQueue<T>.IsReadOnly
+  nameWithType.vb: AsyncResultQueue(Of T).IsReadOnly
 - uid: UnityFx.Async.AsyncResultQueue`1.MaxCount
   name: MaxCount
   href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_MaxCount
@@ -1492,6 +2448,24 @@ references:
   fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).Suspended
   nameWithType: AsyncResultQueue<T>.Suspended
   nameWithType.vb: AsyncResultQueue(Of T).Suspended
+- uid: UnityFx.Async.AsyncResultQueue`1.System#Collections#IEnumerable#GetEnumerator
+  name: IEnumerable.GetEnumerator()
+  href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_System_Collections_IEnumerable_GetEnumerator
+  commentId: M:UnityFx.Async.AsyncResultQueue`1.System#Collections#IEnumerable#GetEnumerator
+  name.vb: System.Collections.IEnumerable.GetEnumerator()
+  fullName: UnityFx.Async.AsyncResultQueue<T>.System.Collections.IEnumerable.GetEnumerator()
+  fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).System.Collections.IEnumerable.GetEnumerator()
+  nameWithType: AsyncResultQueue<T>.IEnumerable.GetEnumerator()
+  nameWithType.vb: AsyncResultQueue(Of T).System.Collections.IEnumerable.GetEnumerator()
+- uid: UnityFx.Async.AsyncResultQueue`1.System#Collections#IEnumerable#GetEnumerator*
+  name: IEnumerable.GetEnumerator
+  href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_System_Collections_IEnumerable_GetEnumerator_
+  commentId: Overload:UnityFx.Async.AsyncResultQueue`1.System#Collections#IEnumerable#GetEnumerator
+  name.vb: System.Collections.IEnumerable.GetEnumerator
+  fullName: UnityFx.Async.AsyncResultQueue<T>.System.Collections.IEnumerable.GetEnumerator
+  fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).System.Collections.IEnumerable.GetEnumerator
+  nameWithType: AsyncResultQueue<T>.IEnumerable.GetEnumerator
+  nameWithType.vb: AsyncResultQueue(Of T).System.Collections.IEnumerable.GetEnumerator
 - uid: UnityFx.Async.AsyncResultQueue`1.ToArray
   name: ToArray()
   href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_ToArray
@@ -1530,51 +2504,18 @@ references:
   commentId: T:UnityFx.Async.IAsyncCompletionSource
   fullName: UnityFx.Async.IAsyncCompletionSource
   nameWithType: IAsyncCompletionSource
-- uid: UnityFx.Async.IAsyncCompletionSource.SetCanceled
-  name: SetCanceled()
-  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_SetCanceled
-  commentId: M:UnityFx.Async.IAsyncCompletionSource.SetCanceled
-  fullName: UnityFx.Async.IAsyncCompletionSource.SetCanceled()
-  nameWithType: IAsyncCompletionSource.SetCanceled()
-- uid: UnityFx.Async.IAsyncCompletionSource.SetCanceled*
-  name: SetCanceled
-  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_SetCanceled_
-  commentId: Overload:UnityFx.Async.IAsyncCompletionSource.SetCanceled
-  fullName: UnityFx.Async.IAsyncCompletionSource.SetCanceled
-  nameWithType: IAsyncCompletionSource.SetCanceled
-- uid: UnityFx.Async.IAsyncCompletionSource.SetCompleted
-  name: SetCompleted()
-  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_SetCompleted
-  commentId: M:UnityFx.Async.IAsyncCompletionSource.SetCompleted
-  fullName: UnityFx.Async.IAsyncCompletionSource.SetCompleted()
-  nameWithType: IAsyncCompletionSource.SetCompleted()
-- uid: UnityFx.Async.IAsyncCompletionSource.SetCompleted*
-  name: SetCompleted
-  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_SetCompleted_
-  commentId: Overload:UnityFx.Async.IAsyncCompletionSource.SetCompleted
-  fullName: UnityFx.Async.IAsyncCompletionSource.SetCompleted
-  nameWithType: IAsyncCompletionSource.SetCompleted
-- uid: UnityFx.Async.IAsyncCompletionSource.SetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name: SetException(IEnumerable<Exception>)
-  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_SetException_System_Collections_Generic_IEnumerable_System_Exception__
-  commentId: M:UnityFx.Async.IAsyncCompletionSource.SetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name.vb: SetException(IEnumerable(Of Exception))
-  fullName: UnityFx.Async.IAsyncCompletionSource.SetException(System.Collections.Generic.IEnumerable<System.Exception>)
-  fullName.vb: UnityFx.Async.IAsyncCompletionSource.SetException(System.Collections.Generic.IEnumerable(Of System.Exception))
-  nameWithType: IAsyncCompletionSource.SetException(IEnumerable<Exception>)
-  nameWithType.vb: IAsyncCompletionSource.SetException(IEnumerable(Of Exception))
-- uid: UnityFx.Async.IAsyncCompletionSource.SetException(System.Exception)
-  name: SetException(Exception)
-  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_SetException_System_Exception_
-  commentId: M:UnityFx.Async.IAsyncCompletionSource.SetException(System.Exception)
-  fullName: UnityFx.Async.IAsyncCompletionSource.SetException(System.Exception)
-  nameWithType: IAsyncCompletionSource.SetException(Exception)
-- uid: UnityFx.Async.IAsyncCompletionSource.SetException*
-  name: SetException
-  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_SetException_
-  commentId: Overload:UnityFx.Async.IAsyncCompletionSource.SetException
-  fullName: UnityFx.Async.IAsyncCompletionSource.SetException
-  nameWithType: IAsyncCompletionSource.SetException
+- uid: UnityFx.Async.IAsyncCompletionSource.Operation
+  name: Operation
+  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_Operation
+  commentId: P:UnityFx.Async.IAsyncCompletionSource.Operation
+  fullName: UnityFx.Async.IAsyncCompletionSource.Operation
+  nameWithType: IAsyncCompletionSource.Operation
+- uid: UnityFx.Async.IAsyncCompletionSource.Operation*
+  name: Operation
+  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_Operation_
+  commentId: Overload:UnityFx.Async.IAsyncCompletionSource.Operation
+  fullName: UnityFx.Async.IAsyncCompletionSource.Operation
+  nameWithType: IAsyncCompletionSource.Operation
 - uid: UnityFx.Async.IAsyncCompletionSource.TrySetCanceled
   name: TrySetCanceled()
   href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetCanceled
@@ -1599,15 +2540,6 @@ references:
   commentId: Overload:UnityFx.Async.IAsyncCompletionSource.TrySetCompleted
   fullName: UnityFx.Async.IAsyncCompletionSource.TrySetCompleted
   nameWithType: IAsyncCompletionSource.TrySetCompleted
-- uid: UnityFx.Async.IAsyncCompletionSource.TrySetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name: TrySetException(IEnumerable<Exception>)
-  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetException_System_Collections_Generic_IEnumerable_System_Exception__
-  commentId: M:UnityFx.Async.IAsyncCompletionSource.TrySetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name.vb: TrySetException(IEnumerable(Of Exception))
-  fullName: UnityFx.Async.IAsyncCompletionSource.TrySetException(System.Collections.Generic.IEnumerable<System.Exception>)
-  fullName.vb: UnityFx.Async.IAsyncCompletionSource.TrySetException(System.Collections.Generic.IEnumerable(Of System.Exception))
-  nameWithType: IAsyncCompletionSource.TrySetException(IEnumerable<Exception>)
-  nameWithType.vb: IAsyncCompletionSource.TrySetException(IEnumerable(Of Exception))
 - uid: UnityFx.Async.IAsyncCompletionSource.TrySetException(System.Exception)
   name: TrySetException(Exception)
   href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetException_System_Exception_
@@ -1620,6 +2552,21 @@ references:
   commentId: Overload:UnityFx.Async.IAsyncCompletionSource.TrySetException
   fullName: UnityFx.Async.IAsyncCompletionSource.TrySetException
   nameWithType: IAsyncCompletionSource.TrySetException
+- uid: UnityFx.Async.IAsyncCompletionSource.TrySetExceptions(System.Collections.Generic.IEnumerable{System.Exception})
+  name: TrySetExceptions(IEnumerable<Exception>)
+  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__
+  commentId: M:UnityFx.Async.IAsyncCompletionSource.TrySetExceptions(System.Collections.Generic.IEnumerable{System.Exception})
+  name.vb: TrySetExceptions(IEnumerable(Of Exception))
+  fullName: UnityFx.Async.IAsyncCompletionSource.TrySetExceptions(System.Collections.Generic.IEnumerable<System.Exception>)
+  fullName.vb: UnityFx.Async.IAsyncCompletionSource.TrySetExceptions(System.Collections.Generic.IEnumerable(Of System.Exception))
+  nameWithType: IAsyncCompletionSource.TrySetExceptions(IEnumerable<Exception>)
+  nameWithType.vb: IAsyncCompletionSource.TrySetExceptions(IEnumerable(Of Exception))
+- uid: UnityFx.Async.IAsyncCompletionSource.TrySetExceptions*
+  name: TrySetExceptions
+  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetExceptions_
+  commentId: Overload:UnityFx.Async.IAsyncCompletionSource.TrySetExceptions
+  fullName: UnityFx.Async.IAsyncCompletionSource.TrySetExceptions
+  nameWithType: IAsyncCompletionSource.TrySetExceptions
 - uid: UnityFx.Async.IAsyncCompletionSource`1
   name: IAsyncCompletionSource<T>
   href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html
@@ -1629,63 +2576,22 @@ references:
   fullName.vb: UnityFx.Async.IAsyncCompletionSource(Of T)
   nameWithType: IAsyncCompletionSource<T>
   nameWithType.vb: IAsyncCompletionSource(Of T)
-- uid: UnityFx.Async.IAsyncCompletionSource`1.SetCanceled
-  name: SetCanceled()
-  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_SetCanceled
-  commentId: M:UnityFx.Async.IAsyncCompletionSource`1.SetCanceled
-  fullName: UnityFx.Async.IAsyncCompletionSource<T>.SetCanceled()
-  fullName.vb: UnityFx.Async.IAsyncCompletionSource(Of T).SetCanceled()
-  nameWithType: IAsyncCompletionSource<T>.SetCanceled()
-  nameWithType.vb: IAsyncCompletionSource(Of T).SetCanceled()
-- uid: UnityFx.Async.IAsyncCompletionSource`1.SetCanceled*
-  name: SetCanceled
-  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_SetCanceled_
-  commentId: Overload:UnityFx.Async.IAsyncCompletionSource`1.SetCanceled
-  fullName: UnityFx.Async.IAsyncCompletionSource<T>.SetCanceled
-  fullName.vb: UnityFx.Async.IAsyncCompletionSource(Of T).SetCanceled
-  nameWithType: IAsyncCompletionSource<T>.SetCanceled
-  nameWithType.vb: IAsyncCompletionSource(Of T).SetCanceled
-- uid: UnityFx.Async.IAsyncCompletionSource`1.SetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name: SetException(IEnumerable<Exception>)
-  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_SetException_System_Collections_Generic_IEnumerable_System_Exception__
-  commentId: M:UnityFx.Async.IAsyncCompletionSource`1.SetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name.vb: SetException(IEnumerable(Of Exception))
-  fullName: UnityFx.Async.IAsyncCompletionSource<T>.SetException(System.Collections.Generic.IEnumerable<System.Exception>)
-  fullName.vb: UnityFx.Async.IAsyncCompletionSource(Of T).SetException(System.Collections.Generic.IEnumerable(Of System.Exception))
-  nameWithType: IAsyncCompletionSource<T>.SetException(IEnumerable<Exception>)
-  nameWithType.vb: IAsyncCompletionSource(Of T).SetException(IEnumerable(Of Exception))
-- uid: UnityFx.Async.IAsyncCompletionSource`1.SetException(System.Exception)
-  name: SetException(Exception)
-  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_SetException_System_Exception_
-  commentId: M:UnityFx.Async.IAsyncCompletionSource`1.SetException(System.Exception)
-  fullName: UnityFx.Async.IAsyncCompletionSource<T>.SetException(System.Exception)
-  fullName.vb: UnityFx.Async.IAsyncCompletionSource(Of T).SetException(System.Exception)
-  nameWithType: IAsyncCompletionSource<T>.SetException(Exception)
-  nameWithType.vb: IAsyncCompletionSource(Of T).SetException(Exception)
-- uid: UnityFx.Async.IAsyncCompletionSource`1.SetException*
-  name: SetException
-  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_SetException_
-  commentId: Overload:UnityFx.Async.IAsyncCompletionSource`1.SetException
-  fullName: UnityFx.Async.IAsyncCompletionSource<T>.SetException
-  fullName.vb: UnityFx.Async.IAsyncCompletionSource(Of T).SetException
-  nameWithType: IAsyncCompletionSource<T>.SetException
-  nameWithType.vb: IAsyncCompletionSource(Of T).SetException
-- uid: UnityFx.Async.IAsyncCompletionSource`1.SetResult(`0)
-  name: SetResult(T)
-  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_SetResult__0_
-  commentId: M:UnityFx.Async.IAsyncCompletionSource`1.SetResult(`0)
-  fullName: UnityFx.Async.IAsyncCompletionSource<T>.SetResult(T)
-  fullName.vb: UnityFx.Async.IAsyncCompletionSource(Of T).SetResult(T)
-  nameWithType: IAsyncCompletionSource<T>.SetResult(T)
-  nameWithType.vb: IAsyncCompletionSource(Of T).SetResult(T)
-- uid: UnityFx.Async.IAsyncCompletionSource`1.SetResult*
-  name: SetResult
-  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_SetResult_
-  commentId: Overload:UnityFx.Async.IAsyncCompletionSource`1.SetResult
-  fullName: UnityFx.Async.IAsyncCompletionSource<T>.SetResult
-  fullName.vb: UnityFx.Async.IAsyncCompletionSource(Of T).SetResult
-  nameWithType: IAsyncCompletionSource<T>.SetResult
-  nameWithType.vb: IAsyncCompletionSource(Of T).SetResult
+- uid: UnityFx.Async.IAsyncCompletionSource`1.Operation
+  name: Operation
+  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_Operation
+  commentId: P:UnityFx.Async.IAsyncCompletionSource`1.Operation
+  fullName: UnityFx.Async.IAsyncCompletionSource<T>.Operation
+  fullName.vb: UnityFx.Async.IAsyncCompletionSource(Of T).Operation
+  nameWithType: IAsyncCompletionSource<T>.Operation
+  nameWithType.vb: IAsyncCompletionSource(Of T).Operation
+- uid: UnityFx.Async.IAsyncCompletionSource`1.Operation*
+  name: Operation
+  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_Operation_
+  commentId: Overload:UnityFx.Async.IAsyncCompletionSource`1.Operation
+  fullName: UnityFx.Async.IAsyncCompletionSource<T>.Operation
+  fullName.vb: UnityFx.Async.IAsyncCompletionSource(Of T).Operation
+  nameWithType: IAsyncCompletionSource<T>.Operation
+  nameWithType.vb: IAsyncCompletionSource(Of T).Operation
 - uid: UnityFx.Async.IAsyncCompletionSource`1.TrySetCanceled
   name: TrySetCanceled()
   href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_TrySetCanceled
@@ -1702,15 +2608,6 @@ references:
   fullName.vb: UnityFx.Async.IAsyncCompletionSource(Of T).TrySetCanceled
   nameWithType: IAsyncCompletionSource<T>.TrySetCanceled
   nameWithType.vb: IAsyncCompletionSource(Of T).TrySetCanceled
-- uid: UnityFx.Async.IAsyncCompletionSource`1.TrySetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name: TrySetException(IEnumerable<Exception>)
-  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_TrySetException_System_Collections_Generic_IEnumerable_System_Exception__
-  commentId: M:UnityFx.Async.IAsyncCompletionSource`1.TrySetException(System.Collections.Generic.IEnumerable{System.Exception})
-  name.vb: TrySetException(IEnumerable(Of Exception))
-  fullName: UnityFx.Async.IAsyncCompletionSource<T>.TrySetException(System.Collections.Generic.IEnumerable<System.Exception>)
-  fullName.vb: UnityFx.Async.IAsyncCompletionSource(Of T).TrySetException(System.Collections.Generic.IEnumerable(Of System.Exception))
-  nameWithType: IAsyncCompletionSource<T>.TrySetException(IEnumerable<Exception>)
-  nameWithType.vb: IAsyncCompletionSource(Of T).TrySetException(IEnumerable(Of Exception))
 - uid: UnityFx.Async.IAsyncCompletionSource`1.TrySetException(System.Exception)
   name: TrySetException(Exception)
   href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_TrySetException_System_Exception_
@@ -1727,6 +2624,23 @@ references:
   fullName.vb: UnityFx.Async.IAsyncCompletionSource(Of T).TrySetException
   nameWithType: IAsyncCompletionSource<T>.TrySetException
   nameWithType.vb: IAsyncCompletionSource(Of T).TrySetException
+- uid: UnityFx.Async.IAsyncCompletionSource`1.TrySetExceptions(System.Collections.Generic.IEnumerable{System.Exception})
+  name: TrySetExceptions(IEnumerable<Exception>)
+  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__
+  commentId: M:UnityFx.Async.IAsyncCompletionSource`1.TrySetExceptions(System.Collections.Generic.IEnumerable{System.Exception})
+  name.vb: TrySetExceptions(IEnumerable(Of Exception))
+  fullName: UnityFx.Async.IAsyncCompletionSource<T>.TrySetExceptions(System.Collections.Generic.IEnumerable<System.Exception>)
+  fullName.vb: UnityFx.Async.IAsyncCompletionSource(Of T).TrySetExceptions(System.Collections.Generic.IEnumerable(Of System.Exception))
+  nameWithType: IAsyncCompletionSource<T>.TrySetExceptions(IEnumerable<Exception>)
+  nameWithType.vb: IAsyncCompletionSource(Of T).TrySetExceptions(IEnumerable(Of Exception))
+- uid: UnityFx.Async.IAsyncCompletionSource`1.TrySetExceptions*
+  name: TrySetExceptions
+  href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_TrySetExceptions_
+  commentId: Overload:UnityFx.Async.IAsyncCompletionSource`1.TrySetExceptions
+  fullName: UnityFx.Async.IAsyncCompletionSource<T>.TrySetExceptions
+  fullName.vb: UnityFx.Async.IAsyncCompletionSource(Of T).TrySetExceptions
+  nameWithType: IAsyncCompletionSource<T>.TrySetExceptions
+  nameWithType.vb: IAsyncCompletionSource(Of T).TrySetExceptions
 - uid: UnityFx.Async.IAsyncCompletionSource`1.TrySetResult(`0)
   name: TrySetResult(T)
   href: api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_TrySetResult__0_
