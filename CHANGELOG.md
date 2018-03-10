@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `ConfigureAwait` extensions for `IAsyncOperation`.
 - Added `Task` extension methods to that convert it to an `AsyncResult` instance.
 - Added `AsyncResult.Retry` methods.
+- Added `Wait` overloads to match `Task` interface.
 
 ### Changed
 - Modified `AsyncResultAwaiter` implementation to throw if the operation was canceled or faulted (to match `TaskAwaiter` behaviour).
@@ -22,8 +23,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Removed public completion methods from `AsyncResult` (moved them to `AsyncCompletionSource`).
 - Made `SpinUntilCompleted` an extension method (was `AsyncResult` instance method).
 - Changed `IAsyncOperation.Exception` type to `AggregateException` to match `Task`.
-- Changed `IAsyncOperationEvents.Completed` event behaviour to always execute handler (event if it was registered after the comperation has copleted).
-- Removed `Completed` event from `IAsyncOperationEvents`.
+- Changed `IAsyncOperationEvents.Completed` event signature & behaviour to always execute handler (event if it was registered after the comperation has copleted).
 - Removed `AsyncResult` constructors that accepted exceptions.
 - Changed `AsyncResult.Result` property to throw `AggregateException` when faulted or canceled to mathch `Task` behaviour.
 
