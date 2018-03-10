@@ -24,6 +24,15 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncCompletionSource{T}"/> class.
 		/// </summary>
+		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
+		public AsyncCompletionSource(object asyncState)
+			: base(null, asyncState)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncCompletionSource{T}"/> class.
+		/// </summary>
 		/// <param name="asyncCallback">User-defined completion callback.</param>
 		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
 		public AsyncCompletionSource(AsyncCallback asyncCallback, object asyncState)
@@ -44,20 +53,20 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncCompletionSource{T}"/> class.
 		/// </summary>
 		/// <param name="status">Initial value of the <see cref="AsyncResult.Status"/> property.</param>
-		/// <param name="asyncCallback">User-defined completion callback.</param>
 		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
-		public AsyncCompletionSource(AsyncOperationStatus status, AsyncCallback asyncCallback, object asyncState)
-			: base(status, asyncCallback, asyncState)
+		public AsyncCompletionSource(AsyncOperationStatus status, object asyncState)
+			: base(status, null, asyncState)
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncCompletionSource{T}"/> class that is faulted.
+		/// Initializes a new instance of the <see cref="AsyncCompletionSource{T}"/> class.
 		/// </summary>
-		/// <param name="e">The exception to complete the operation with.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
-		public AsyncCompletionSource(Exception e)
-			: base(e)
+		/// <param name="status">Initial value of the <see cref="AsyncResult.Status"/> property.</param>
+		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
+		public AsyncCompletionSource(AsyncOperationStatus status, AsyncCallback asyncCallback, object asyncState)
+			: base(status, asyncCallback, asyncState)
 		{
 		}
 
@@ -117,7 +126,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="TrySetCanceled(bool)"/>
 		/// <seealso cref="TrySetCanceled()"/>
-		public void SetCanceled(bool completedSynchronously)
+		public void SetCanceled(bool completedSynchronously = false)
 		{
 			if (!base.TrySetCanceled(completedSynchronously))
 			{
@@ -144,7 +153,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="TrySetException(Exception, bool)"/>
 		/// <seealso cref="TrySetException(Exception)"/>
-		public void SetException(Exception exception, bool completedSynchronously)
+		public void SetException(Exception exception, bool completedSynchronously = false)
 		{
 			if (!base.TrySetException(exception, completedSynchronously))
 			{
@@ -172,7 +181,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="TrySetExceptions(IEnumerable{Exception}, bool)"/>
 		/// <seealso cref="TrySetExceptions(IEnumerable{Exception})"/>
-		public void SetExceptions(IEnumerable<Exception> exceptions, bool completedSynchronously)
+		public void SetExceptions(IEnumerable<Exception> exceptions, bool completedSynchronously = false)
 		{
 			if (!base.TrySetExceptions(exceptions, completedSynchronously))
 			{
@@ -200,7 +209,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="TrySetResult(T, bool)"/>
 		/// <seealso cref="TrySetResult(T)"/>
-		public void SetResult(T result, bool completedSynchronously)
+		public void SetResult(T result, bool completedSynchronously = false)
 		{
 			if (!base.TrySetResult(result, completedSynchronously))
 			{
@@ -218,6 +227,38 @@ namespace UnityFx.Async
 		/// <seealso cref="SetResult(T, bool)"/>
 		/// <seealso cref="TrySetResult(T)"/>
 		public new bool TrySetResult(T result, bool completedSynchronously) => base.TrySetResult(result, completedSynchronously);
+
+		/// <summary>
+		/// Copies state of the specified operation.
+		/// </summary>
+		internal void CopyCompletionState(IAsyncOperation<T> patternOp, bool completedSynchronously)
+		{
+			if (!TryCopyCompletionState(patternOp, completedSynchronously))
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Attemts to copy state of the specified operation.
+		/// </summary>
+		internal bool TryCopyCompletionState(IAsyncOperation<T> patternOp, bool completedSynchronously)
+		{
+			if (patternOp.IsCompletedSuccessfully)
+			{
+				return base.TrySetResult(patternOp.Result, completedSynchronously);
+			}
+			else if (patternOp.IsFaulted)
+			{
+				return base.TrySetException(patternOp.Exception, completedSynchronously);
+			}
+			else if (patternOp.IsCanceled)
+			{
+				return base.TrySetCanceled(completedSynchronously);
+			}
+
+			return false;
+		}
 
 		#endregion
 

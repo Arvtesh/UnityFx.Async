@@ -12,3 +12,5 @@ mailto:arvtesh@gmail.com
 
 USEFUL LINKS
 Github project: https://github.com/Arvtesh/UnityFx.Async
+NuGet package: https://www.nuget.org/packages/UnityFx.Async
+Unity Asset Store: https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696

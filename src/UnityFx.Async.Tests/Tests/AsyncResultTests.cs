@@ -76,20 +76,6 @@ namespace UnityFx.Async
 		}
 
 		[Fact]
-		public void Constructor_SetsException()
-		{
-			// Arrange
-			var e = new Exception();
-
-			// Act
-			var op = new AsyncResult(e);
-
-			// Assert
-			AssertFaulted(op, e);
-			Assert.True(op.CompletedSynchronously);
-		}
-
-		[Fact]
 		public void Constructor_SetsAsyncState()
 		{
 			// Arrange
@@ -180,6 +166,61 @@ namespace UnityFx.Async
 			// Assert
 			AssertCompletedWithResult(op, result);
 			Assert.True(op.CompletedSynchronously);
+		}
+
+		[Fact]
+		public async Task Retry_CompletesWhenSourceCompletes()
+		{
+			// Arrange
+			var counter = 3;
+
+			IAsyncOperation OpFactory()
+			{
+				if (--counter > 0)
+				{
+					return AsyncResult.FromException(new Exception());
+				}
+				else
+				{
+					return AsyncResult.Delay(1);
+				}
+			}
+
+			// Act
+			var op = AsyncResult.Retry(OpFactory, 1);
+			await op;
+
+			// Assert
+			AssertCompleted(op);
+		}
+
+		[Fact]
+		public async Task Retry_CompletesAfterMaxRetriesExceeded()
+		{
+			// Arrange
+			var counter = 3;
+			var e = new Exception();
+
+			IAsyncOperation OpFactory()
+			{
+				--counter;
+				return AsyncResult.FromException(e);
+			}
+
+			// Act
+			var op = AsyncResult.Retry(OpFactory, 1, 1);
+
+			try
+			{
+				await op;
+			}
+			catch
+			{
+			}
+
+			// Assert
+			AssertFaulted(op, e);
+			Assert.Equal(2, counter);
 		}
 
 		#endregion
@@ -801,6 +842,37 @@ namespace UnityFx.Async
 		}
 
 		#endregion
+
+		#endregion
+
+		#region IAsyncOperationEvents
+
+		[Fact]
+		public void TryAddCompletionCallback_FailsIfOperationIsCompleted()
+		{
+			// Arrange
+			var op = new AsyncCompletionSource();
+			op.SetCanceled();
+
+			// Act
+			var result = op.TryAddCompletionCallback(_ => { }, null);
+
+			// Assert
+			Assert.False(result);
+		}
+
+		[Fact]
+		public void TryAddCompletionCallback_FailsIfOperationIsCompletedSynchronously()
+		{
+			// Arrange
+			var op = AsyncResult.CompletedOperation;
+
+			// Act
+			var result = op.TryAddCompletionCallback(_ => { }, null);
+
+			// Assert
+			Assert.False(result);
+		}
 
 		#endregion
 

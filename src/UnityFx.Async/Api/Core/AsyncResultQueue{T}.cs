@@ -38,7 +38,7 @@ namespace UnityFx.Async
 		#region interface
 
 		/// <summary>
-		/// Gets whether the queue is empty.
+		/// Gets a value indicating whether the queue is empty.
 		/// </summary>
 		/// <value>The empty flag.</value>
 		/// <seealso cref="Count"/>
@@ -60,7 +60,7 @@ namespace UnityFx.Async
 			{
 				if (value < 0)
 				{
-					throw new ArgumentOutOfRangeException(nameof(MaxCount), value, "MaxCount value should be >= 0");
+					throw new ArgumentOutOfRangeException(nameof(MaxCount), value, Constants.ErrorValueIsLessThanZero);
 				}
 
 				_maxOpsSize = value;
@@ -68,7 +68,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Gets or sets whether the queue in on pause. When in suspended state queue does not change state of the operations.
+		/// Gets or sets a value indicating whether the queue in on pause. When in suspended state queue does not change state of the operations.
 		/// </summary>
 		/// <value>The paused flag.</value>
 		public bool Suspended
@@ -89,7 +89,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Get an operation that is running currently or <see langword="null"/> if the queue is empty.
+		/// Gets an operation that is running currently or <see langword="null"/> if the queue is empty.
 		/// </summary>
 		/// <value>An operation that is running currently.</value>
 		public T Current
@@ -347,6 +347,7 @@ namespace UnityFx.Async
 					else
 					{
 						firstOp.TrySetRunning();
+						break;
 					}
 				}
 			}
