@@ -38,9 +38,18 @@ namespace UnityFx.Async
 		#region interface
 
 		/// <summary>
+		/// Raised when the queue becomes emtpy.
+		/// </summary>
+		/// <seealso cref="OnEmpty"/>
+		/// <seealso cref="IsEmpty"/>
+		public event EventHandler Empty;
+
+		/// <summary>
 		/// Gets a value indicating whether the queue is empty.
 		/// </summary>
 		/// <value>The empty flag.</value>
+		/// <seealso cref="OnEmpty"/>
+		/// <seealso cref="Empty"/>
 		/// <seealso cref="Count"/>
 		public bool IsEmpty => _ops.Count == 0;
 
@@ -165,17 +174,23 @@ namespace UnityFx.Async
 		{
 			lock (_ops)
 			{
-				var result = new T[_ops.Count];
-
-				for (var i = 0; i < result.Length; ++i)
+				if (_ops.Count > 0)
 				{
-					var op = _ops[i];
-					op.RemoveCompletionCallback(_completionCallback);
-					result[i] = op;
+					var result = new T[_ops.Count];
+
+					for (var i = 0; i < result.Length; ++i)
+					{
+						var op = _ops[i];
+						op.RemoveCompletionCallback(_completionCallback);
+						result[i] = op;
+					}
+
+					_ops.Clear();
+					OnEmpty();
+					return result;
 				}
 
-				_ops.Clear();
-				return result;
+				return new T[0];
 			}
 		}
 
@@ -189,6 +204,25 @@ namespace UnityFx.Async
 			{
 				return _ops.ToArray();
 			}
+		}
+
+		/// <summary>
+		/// Called when the operation should be started.
+		/// </summary>
+		/// <param name="op">The operation to start.</param>
+		protected virtual void OnStart(T op)
+		{
+			op.TrySetRunning();
+		}
+
+		/// <summary>
+		/// Called when the queue becomes empty.
+		/// </summary>
+		/// <seealso cref="Empty"/>
+		/// <seealso cref="IsEmpty"/>
+		protected virtual void OnEmpty()
+		{
+			Empty?.Invoke(this, EventArgs.Empty);
 		}
 
 		#endregion
@@ -346,9 +380,14 @@ namespace UnityFx.Async
 					}
 					else
 					{
-						firstOp.TrySetRunning();
+						OnStart(firstOp);
 						break;
 					}
+				}
+
+				if (_ops.Count == 0)
+				{
+					OnEmpty();
 				}
 			}
 		}
