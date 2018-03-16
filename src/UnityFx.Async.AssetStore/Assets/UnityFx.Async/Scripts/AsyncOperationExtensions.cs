@@ -24,7 +24,6 @@ namespace UnityFx.Async
 		/// Creates an <see cref="IAsyncOperation"/> wrapper for the Unity <see cref="AsyncOperation"/>.
 		/// </summary>
 		/// <param name="op">The source operation.</param>
-		/// <returns>Returns a <see cref="IAsyncOperation"/> instance that will complete when the source operation have completed.</returns>
 		public static IAsyncOperation ToAsync(this AsyncOperation op)
 		{
 			if (op.isDone)
@@ -34,10 +33,16 @@ namespace UnityFx.Async
 			else
 			{
 				var result = new AsyncCompletionSource(AsyncOperationStatus.Running, op);
+
 #if UNITY_2017_2_OR_NEWER
+
+				// Starting with Unity 2017.2 there is AsyncOperation.completed event
 				op.completed += o => result.TrySetCompleted();
+
 #else
-				AddAsyncToUpdateList(op, () => result.TrySetCompleted());
+
+				RegisterCompletionCallback(op, () => result.TrySetCompleted());
+
 #endif
 				return result;
 			}
@@ -47,7 +52,6 @@ namespace UnityFx.Async
 		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the Unity <see cref="AsyncOperation"/>.
 		/// </summary>
 		/// <param name="op">The source operation.</param>
-		/// <returns>Returns a <see cref="IAsyncOperation{T}"/> instance that will complete when the source operation have completed.</returns>
 		public static IAsyncOperation<T> ToAsync<T>(this ResourceRequest op) where T : UnityEngine.Object
 		{
 			if (op.isDone)
@@ -57,10 +61,16 @@ namespace UnityFx.Async
 			else
 			{
 				var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running, op);
+
 #if UNITY_2017_2_OR_NEWER
+
+				// Starting with Unity 2017.2 there is AsyncOperation.completed event
 				op.completed += o => result.TrySetResult(op.asset as T);
+
 #else
-				AddAsyncToUpdateList(op, () => result.TrySetResult(op.asset as T));
+
+				RegisterCompletionCallback(op, () => result.TrySetResult(op.asset as T));
+
 #endif
 				return result;
 			}
@@ -70,7 +80,6 @@ namespace UnityFx.Async
 		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the Unity <see cref="AsyncOperation"/>.
 		/// </summary>
 		/// <param name="op">The source operation.</param>
-		/// <returns>Returns a <see cref="IAsyncOperation{T}"/> instance that will complete when the source operation have completed.</returns>
 		public static IAsyncOperation<T> ToAsync<T>(this AssetBundleRequest op) where T : UnityEngine.Object
 		{
 			if (op.isDone)
@@ -80,13 +89,44 @@ namespace UnityFx.Async
 			else
 			{
 				var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running, op);
+
 #if UNITY_2017_2_OR_NEWER
+
+				// Starting with Unity 2017.2 there is AsyncOperation.completed event
 				op.completed += o => result.TrySetResult(op.asset as T);
+
 #else
-				AddAsyncToUpdateList(op, () => result.TrySetResult(op.asset as T));
+
+				RegisterCompletionCallback(op, () => result.TrySetResult(op.asset as T));
+
 #endif
 				return result;
 			}
+		}
+
+		/// <summary>
+		/// Register a completion callback for the specified <see cref="AsyncOperation"/> instance.
+		/// </summary>
+		/// <param name="op">The request to register completion callback for.</param>
+		/// <param name="completionCallback">A delegate to be called when the <paramref name="op"/> has completed.</param>
+		public static void RegisterCompletionCallback(this AsyncOperation op, Action completionCallback)
+		{
+			if (op == null)
+			{
+				throw new ArgumentNullException("op");
+			}
+
+			if (completionCallback == null)
+			{
+				throw new ArgumentNullException("completionCallback");
+			}
+
+			if (_asyncUpdater == null)
+			{
+				_asyncUpdater = AsyncUtility.GetRootGo().AddComponent<AsyncOperationStatusUpdater>();
+			}
+
+			_asyncUpdater.AddAsync(op, completionCallback);
 		}
 
 		#endregion
@@ -124,16 +164,6 @@ namespace UnityFx.Async
 					}
 				}
 			}
-		}
-
-		private static void AddAsyncToUpdateList(AsyncOperation op, Action cb)
-		{
-			if (_asyncUpdater == null)
-			{
-				_asyncUpdater = AsyncUtility.GetRootGo().AddComponent<AsyncOperationStatusUpdater>();
-			}
-
-			_asyncUpdater.AddAsync(op, cb);
 		}
 
 		#endregion

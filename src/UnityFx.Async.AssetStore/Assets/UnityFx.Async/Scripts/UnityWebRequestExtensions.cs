@@ -22,57 +22,66 @@ namespace UnityFx.Async
 		#region interface
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// Creates an <see cref="IAsyncOperation"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
-		public static AsyncResult<T> ToAsync<T>(this UnityWebRequest request) where T : class
+		public static AsyncResult ToAsync(this UnityWebRequest request)
 		{
-			return CreateAsyncInternal<T>(request);
+			return WebRequestResult<object>.FromUnityWebRequest(request);
 		}
 
 		/// <summary>
 		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
-		public static AsyncResult<AssetBundle> ToAsyncAssetBundle(this UnityWebRequest request)
+		public static WebRequestResult<T> ToAsync<T>(this UnityWebRequest request) where T : class
 		{
-			return CreateAsyncInternal<AssetBundle>(request);
+			return WebRequestResult<T>.FromUnityWebRequest(request);
 		}
 
 		/// <summary>
 		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
-		public static AsyncResult<Texture2D> ToAsyncTexture(this UnityWebRequest request)
+		public static WebRequestResult<AssetBundle> ToAsyncAssetBundle(this UnityWebRequest request)
 		{
-			return CreateAsyncInternal<Texture2D>(request);
+			return WebRequestResult<AssetBundle>.FromUnityWebRequest(request);
 		}
 
 		/// <summary>
 		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
-		public static AsyncResult<AudioClip> ToAsyncAudioClip(this UnityWebRequest request)
+		public static WebRequestResult<Texture2D> ToAsyncTexture(this UnityWebRequest request)
 		{
-			return CreateAsyncInternal<AudioClip>(request);
+			return WebRequestResult<Texture2D>.FromUnityWebRequest(request);
 		}
 
 		/// <summary>
 		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
-		public static AsyncResult<MovieTexture> ToAsyncMovieTexture(this UnityWebRequest request)
+		public static WebRequestResult<AudioClip> ToAsyncAudioClip(this UnityWebRequest request)
 		{
-			return CreateAsyncInternal<MovieTexture>(request);
+			return WebRequestResult<AudioClip>.FromUnityWebRequest(request);
 		}
 
 		/// <summary>
 		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
-		public static AsyncResult<byte[]> ToAsyncByteArray(this UnityWebRequest request)
+		public static WebRequestResult<MovieTexture> ToAsyncMovieTexture(this UnityWebRequest request)
 		{
-			return CreateAsyncInternal<byte[]>(request);
+			return WebRequestResult<MovieTexture>.FromUnityWebRequest(request);
+		}
+
+		/// <summary>
+		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <param name="request">The source web request.</param>
+		public static WebRequestResult<byte[]> ToAsyncByteArray(this UnityWebRequest request)
+		{
+			return WebRequestResult<byte[]>.FromUnityWebRequest(request);
 		}
 
 		/// <summary>
@@ -80,103 +89,39 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		/// <returns>Returns a <see cref="IAsyncOperation{T}"/> instance that will complete when the source operation have completed.</returns>
-		public static AsyncResult<string> ToAsyncString(this UnityWebRequest request)
+		public static WebRequestResult<string> ToAsyncString(this UnityWebRequest request)
 		{
-			return CreateAsyncInternal<string>(request);
+			return WebRequestResult<string>.FromUnityWebRequest(request);
+		}
+
+		/// <summary>
+		/// Register a completion callback for the specified <see cref="UnityWebRequest"/> instance.
+		/// </summary>
+		/// <param name="request">The request to register completion callback for.</param>
+		/// <param name="completionCallback">A delegate to be called when the <paramref name="request"/> has completed.</param>
+		public static void RegisterCompletionCallback(this UnityWebRequest request, Action completionCallback)
+		{
+			if (request == null)
+			{
+				throw new ArgumentNullException("request");
+			}
+
+			if (completionCallback == null)
+			{
+				throw new ArgumentNullException("completionCallback");
+			}
+
+			if (_asyncUpdater == null)
+			{
+				_asyncUpdater = AsyncUtility.GetRootGo().AddComponent<RequestStatusUpdater>();
+			}
+
+			_asyncUpdater.AddAsync(request, completionCallback);
 		}
 
 		#endregion
 
 		#region implementation
-
-		private class WebRequestResult<T> : AsyncResult<T> where T : class
-		{
-			private readonly UnityWebRequest _request;
-
-			public WebRequestResult(UnityWebRequest request)
-				: base(request.isModifiable ? AsyncOperationStatus.Created : AsyncOperationStatus.Running, null, request)
-			{
-				_request = request;
-			}
-
-			public void SetCompleted(bool completedSynchronously)
-			{
-				if (_request.isHttpError || _request.isNetworkError)
-				{
-					TrySetException(new UnityWebRequestException(_request.error, _request.responseCode), completedSynchronously);
-				}
-				else if (_request.downloadHandler != null)
-				{
-					TrySetResult(GetResult(), completedSynchronously);
-				}
-				else
-				{
-					TrySetCompleted(completedSynchronously);
-				}
-			}
-
-			protected override void OnStarted()
-			{
-				base.OnStarted();
-
-#if UNITY_2017_2_OR_NEWER
-				_request.SendWebRequest().completed += op => SetCompleted(false);
-#else
-				_request.Send();
-				AddAsyncToUpdateList(_request, () => SetCompleted(false));
-#endif
-			}
-
-			protected override void Dispose(bool disposing)
-			{
-				if (disposing)
-				{
-					_request.Dispose();
-				}
-
-				base.Dispose(disposing);
-			}
-
-			public override string ToString()
-			{
-				var result = "UnityWebRequest (" + _request.responseCode.ToString();
-				var errorStr = _request.error;
-
-				if (IsFaulted && !string.IsNullOrEmpty(errorStr))
-				{
-					result += ", " + errorStr;
-				}
-
-				result += ')';
-				return result;
-			}
-
-			private T GetResult()
-			{
-				if (_request.downloadHandler is DownloadHandlerBuffer)
-				{
-					return ((DownloadHandlerBuffer)_request.downloadHandler).data as T;
-				}
-				else if (_request.downloadHandler is DownloadHandlerAssetBundle)
-				{
-					return ((DownloadHandlerAssetBundle)_request.downloadHandler).assetBundle as T;
-				}
-				else if (_request.downloadHandler is DownloadHandlerTexture)
-				{
-					return ((DownloadHandlerTexture)_request.downloadHandler).texture as T;
-				}
-				else if (_request.downloadHandler is DownloadHandlerAudioClip)
-				{
-					return ((DownloadHandlerAudioClip)_request.downloadHandler).audioClip as T;
-				}
-				else if (_request.downloadHandler is DownloadHandlerMovieTexture)
-				{
-					return ((DownloadHandlerMovieTexture)_request.downloadHandler).movieTexture as T;
-				}
-
-				return _request.downloadHandler.text as T;
-			}
-		}
 
 		private class RequestStatusUpdater : MonoBehaviour
 		{
@@ -209,32 +154,6 @@ namespace UnityFx.Async
 					}
 				}
 			}
-		}
-
-		private static void AddAsyncToUpdateList(UnityWebRequest op, Action cb)
-		{
-			if (_asyncUpdater == null)
-			{
-				_asyncUpdater = AsyncUtility.GetRootGo().AddComponent<RequestStatusUpdater>();
-			}
-
-			_asyncUpdater.AddAsync(op, cb);
-		}
-
-		private static AsyncResult<T> CreateAsyncInternal<T>(UnityWebRequest request) where T : class
-		{
-			var result = new WebRequestResult<T>(request);
-
-			if (request.isDone)
-			{
-				result.SetCompleted(true);
-			}
-			else if (!request.isModifiable)
-			{
-				AddAsyncToUpdateList(request, () => result.SetCompleted(false));
-			}
-
-			return result;
 		}
 
 		#endregion
