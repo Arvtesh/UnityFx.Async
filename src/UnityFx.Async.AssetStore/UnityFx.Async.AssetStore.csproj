@@ -19,6 +19,10 @@
 		<CodeAnalysisRuleSet>../CodingConventions/Cs/CsharpRules.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<DefineConstants>UNITY_2017_1_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_2_OR_NEWER</DefineConstants>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<Reference Include="UnityEngine">
 			<HintPath>..\Dependencies\UnityEngine.dll</HintPath>

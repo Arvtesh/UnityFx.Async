@@ -2,13 +2,18 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+#if UNITY_5_4_OR_NEWER
 using UnityEngine.Networking;
+#elif UNITY_5_2_OR_NEWER
+using UnityEngine.Experimental.Networking;
+#endif
 
 namespace UnityFx.Async
 {
+#if UNITY_5_2_OR_NEWER
+
 	/// <summary>
 	/// A wrapper for <see cref="UnityWebRequest"/> with result value.
 	/// </summary>
@@ -155,7 +160,8 @@ namespace UnityFx.Async
 			var result = new StringBuilder();
 			var errorStr = _request.error;
 
-			result.Append("UnityWebRequest (");
+			result.Append(_request.GetType().Name);
+			result.Append(" (");
 			result.Append(_request.url);
 
 			if (IsFaulted)
@@ -206,4 +212,6 @@ namespace UnityFx.Async
 
 		#endregion
 	}
+
+#endif
 }

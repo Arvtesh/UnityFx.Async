@@ -3,12 +3,11 @@
 
 using System;
 using System.Runtime.Serialization;
-using UnityEngine.Networking;
 
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Represents a <see cref="UnityWebRequest"/> error.
+	/// Represents a web request error.
 	/// </summary>
 	public class UnityWebRequestException : Exception
 	{
@@ -23,7 +22,7 @@ namespace UnityFx.Async
 		#region interface
 
 		/// <summary>
-		/// Gets a response code for the source <see cref="UnityWebRequest"/>.
+		/// Gets a response code for the source web request.
 		/// </summary>
 		public long ResponseCode
 		{

@@ -4,10 +4,16 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_5_4_OR_NEWER
 using UnityEngine.Networking;
+#elif UNITY_5_2_OR_NEWER
+using UnityEngine.Experimental.Networking;
+#endif
 
 namespace UnityFx.Async
 {
+#if UNITY_5_2_OR_NEWER
+
 	/// <summary>
 	/// Extensions for <see cref="UnityWebRequest"/> class.
 	/// </summary>
@@ -158,4 +164,6 @@ namespace UnityFx.Async
 
 		#endregion
 	}
+
+#endif
 }
