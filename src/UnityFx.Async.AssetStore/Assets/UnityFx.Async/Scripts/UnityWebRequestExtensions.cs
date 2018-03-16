@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-#if UNITY_5_4_OR_NEWER
+#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
 using UnityEngine.Networking;
 #elif UNITY_5_2_OR_NEWER
 using UnityEngine.Experimental.Networking;
@@ -12,7 +12,7 @@ using UnityEngine.Experimental.Networking;
 
 namespace UnityFx.Async
 {
-#if UNITY_5_2_OR_NEWER
+#if UNITY_5_2_OR_NEWER || UNITY_5_3_OR_NEWER || UNITY_2017 || UNITY_2018
 
 	/// <summary>
 	/// Extensions for <see cref="UnityWebRequest"/> class.
