@@ -34,7 +34,11 @@ namespace UnityFx.Async
 			else
 			{
 				var result = new AsyncCompletionSource(AsyncOperationStatus.Running, op);
+#if UNITY_2017_2_OR_NEWER
+				op.completed += o => result.TrySetCompleted();
+#else
 				AddAsyncToUpdateList(op, () => result.TrySetCompleted());
+#endif
 				return result;
 			}
 		}
@@ -53,7 +57,11 @@ namespace UnityFx.Async
 			else
 			{
 				var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running, op);
+#if UNITY_2017_2_OR_NEWER
+				op.completed += o => result.TrySetResult(op.asset as T);
+#else
 				AddAsyncToUpdateList(op, () => result.TrySetResult(op.asset as T));
+#endif
 				return result;
 			}
 		}
@@ -72,7 +80,11 @@ namespace UnityFx.Async
 			else
 			{
 				var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running, op);
+#if UNITY_2017_2_OR_NEWER
+				op.completed += o => result.TrySetResult(op.asset as T);
+#else
 				AddAsyncToUpdateList(op, () => result.TrySetResult(op.asset as T));
+#endif
 				return result;
 			}
 		}
@@ -83,12 +95,12 @@ namespace UnityFx.Async
 
 		private class AsyncOperationStatusUpdater : MonoBehaviour
 		{
-			private readonly List<KeyValuePair<AsyncOperation, Action>> _ops = new List<KeyValuePair<AsyncOperation, Action>>();
-			private readonly List<KeyValuePair<AsyncOperation, Action>> _opsToRemove = new List<KeyValuePair<AsyncOperation, Action>>();
+			private readonly Dictionary<AsyncOperation, Action> _ops = new Dictionary<AsyncOperation, Action>();
+			private readonly List<AsyncOperation> _opsToRemove = new List<AsyncOperation>();
 
 			public void AddAsync(AsyncOperation op, Action cb)
 			{
-				_ops.Add(new KeyValuePair<AsyncOperation, Action>(op, cb));
+				_ops.Add(op, cb);
 			}
 
 			private void Update()
@@ -102,7 +114,7 @@ namespace UnityFx.Async
 						if (item.Key.isDone)
 						{
 							item.Value();
-							_opsToRemove.Add(item);
+							_opsToRemove.Add(item.Key);
 						}
 					}
 
@@ -118,10 +130,7 @@ namespace UnityFx.Async
 		{
 			if (_asyncUpdater == null)
 			{
-				var go = new GameObject("UnityFx.Async");
-				GameObject.DontDestroyOnLoad(go);
-
-				_asyncUpdater = go.AddComponent<AsyncOperationStatusUpdater>();
+				_asyncUpdater = AsyncUtility.GetRootGo().AddComponent<AsyncOperationStatusUpdater>();
 			}
 
 			_asyncUpdater.AddAsync(op, cb);

@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// tt
+	/// Represents a <see cref="UnityWebRequest"/> error.
 	/// </summary>
 	public class UnityWebRequestException : Exception
 	{
