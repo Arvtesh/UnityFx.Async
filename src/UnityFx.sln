@@ -7,9 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnityFx.Async", "UnityFx.As
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnityFx.Async.Tests", "UnityFx.Async.Tests\UnityFx.Async.Tests.csproj", "{3482943A-2DFA-44FB-A8E6-A180DB04EF83}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnityFx.Async.Samples", "UnityFx.Async.Samples\UnityFx.Async.Samples.csproj", "{1BA1A7B7-3586-4691-BF50-69203DCC6190}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityFx.Async.AssetStore", "UnityFx.Async.AssetStore\UnityFx.Async.AssetStore.csproj", "{6ACDE97B-C722-4135-894A-340F2213514D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnityFx.Async.AssetStore", "UnityFx.Async.AssetStore\UnityFx.Async.AssetStore.csproj", "{6ACDE97B-C722-4135-894A-340F2213514D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +23,6 @@ Global
 		{3482943A-2DFA-44FB-A8E6-A180DB04EF83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3482943A-2DFA-44FB-A8E6-A180DB04EF83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3482943A-2DFA-44FB-A8E6-A180DB04EF83}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1BA1A7B7-3586-4691-BF50-69203DCC6190}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1BA1A7B7-3586-4691-BF50-69203DCC6190}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1BA1A7B7-3586-4691-BF50-69203DCC6190}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1BA1A7B7-3586-4691-BF50-69203DCC6190}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6ACDE97B-C722-4135-894A-340F2213514D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6ACDE97B-C722-4135-894A-340F2213514D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6ACDE97B-C722-4135-894A-340F2213514D}.Release|Any CPU.ActiveCfg = Release|Any CPU
