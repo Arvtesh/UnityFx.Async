@@ -25,6 +25,8 @@ artifacts:
     name: UnityFx.Async-net46
   - path: .\bin\netstandard2.0
     name: UnityFx.Async-netstandard2.0
+  - path: .\bin\AssetStore
+    name: UnityFx.Async.AssetStore
   - path: .\bin\*.nupkg
 
 dotnet_csproj:

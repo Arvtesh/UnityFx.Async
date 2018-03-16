@@ -3,6 +3,7 @@ $solutionPath = Join-Path $scriptPath "UnityFx.sln"
 $configuration = $args[0]
 $packagesPath = Join-Path $scriptPath "..\temp\BuildTools"
 $binPath = Join-Path $scriptPath "..\bin"
+$assetStorePath = Join-Path $binPath "AssetStore"
 $msbuildPath = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MsBuild.exe"
 $nugetPath = Join-Path $packagesPath "nuget.exe"
 $gitversionPath = Join-Path $packagesPath "gitversion.commandline\tools\gitversion.exe"
@@ -17,9 +18,14 @@ if (!(Test-Path $packagesPath))
 	New-Item $packagesPath -ItemType Directory
 }
 
-if (!(Test-Path $binPath))
+if (Test-Path $assetStorePath)
 {
-	New-Item $binPath -ItemType Directory
+	Remove-Item $assetStorePath -Force -Recurse
+	New-Item $assetStorePath -ItemType Directory
+}
+else
+{
+	New-Item $assetStorePath -ItemType Directory
 }
 
 # download nuget.exe if not present
@@ -56,3 +62,23 @@ if ($LastExitCode -ne 0)
 # publish build results to .\bin
 $filesToPublish = (Join-Path $scriptPath (Join-Path "UnityFx.Async\bin" (Join-Path $configuration "\*")))
 Copy-Item -Path $filesToPublish -Destination $binPath -Force -Recurse
+
+# publish AssetStore packages
+function _PublishAssetStorePackage
+{
+	param([string]$targetFramework)
+
+	$filesToPublish = (Join-Path $scriptPath "UnityFx.Async.AssetStore\Assets\*")
+	$binToPublish =(Join-Path $binPath (Join-Path $targetFramework "\*")) 
+	$publishPath = (Join-Path $assetStorePath (Join-Path $targetFramework "Assets"))
+	$publishBinPath = (Join-Path $publishPath "UnityFx.Async\Bin")
+	
+	New-Item $publishBinPath -ItemType Directory
+	Copy-Item -Path $filesToPublish -Destination $publishPath -Force -Recurse
+	Copy-Item -Path $binToPublish -Destination $publishBinPath -Force -Recurse
+}
+
+
+_PublishAssetStorePackage "net35"
+_PublishAssetStorePackage "net46"
+_PublishAssetStorePackage "netstandard2.0"
