@@ -2336,6 +2336,14 @@ references:
   fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).Current
   nameWithType: AsyncResultQueue<T>.Current
   nameWithType.vb: AsyncResultQueue(Of T).Current
+- uid: UnityFx.Async.AsyncResultQueue`1.Empty
+  name: Empty
+  href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_Empty
+  commentId: E:UnityFx.Async.AsyncResultQueue`1.Empty
+  fullName: UnityFx.Async.AsyncResultQueue<T>.Empty
+  fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).Empty
+  nameWithType: AsyncResultQueue<T>.Empty
+  nameWithType.vb: AsyncResultQueue(Of T).Empty
 - uid: UnityFx.Async.AsyncResultQueue`1.GetEnumerator
   name: GetEnumerator()
   href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_GetEnumerator
@@ -2400,6 +2408,38 @@ references:
   fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).MaxCount
   nameWithType: AsyncResultQueue<T>.MaxCount
   nameWithType.vb: AsyncResultQueue(Of T).MaxCount
+- uid: UnityFx.Async.AsyncResultQueue`1.OnEmpty
+  name: OnEmpty()
+  href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_OnEmpty
+  commentId: M:UnityFx.Async.AsyncResultQueue`1.OnEmpty
+  fullName: UnityFx.Async.AsyncResultQueue<T>.OnEmpty()
+  fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).OnEmpty()
+  nameWithType: AsyncResultQueue<T>.OnEmpty()
+  nameWithType.vb: AsyncResultQueue(Of T).OnEmpty()
+- uid: UnityFx.Async.AsyncResultQueue`1.OnEmpty*
+  name: OnEmpty
+  href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_OnEmpty_
+  commentId: Overload:UnityFx.Async.AsyncResultQueue`1.OnEmpty
+  fullName: UnityFx.Async.AsyncResultQueue<T>.OnEmpty
+  fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).OnEmpty
+  nameWithType: AsyncResultQueue<T>.OnEmpty
+  nameWithType.vb: AsyncResultQueue(Of T).OnEmpty
+- uid: UnityFx.Async.AsyncResultQueue`1.OnStart(`0)
+  name: OnStart(T)
+  href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_OnStart__0_
+  commentId: M:UnityFx.Async.AsyncResultQueue`1.OnStart(`0)
+  fullName: UnityFx.Async.AsyncResultQueue<T>.OnStart(T)
+  fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).OnStart(T)
+  nameWithType: AsyncResultQueue<T>.OnStart(T)
+  nameWithType.vb: AsyncResultQueue(Of T).OnStart(T)
+- uid: UnityFx.Async.AsyncResultQueue`1.OnStart*
+  name: OnStart
+  href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_OnStart_
+  commentId: Overload:UnityFx.Async.AsyncResultQueue`1.OnStart
+  fullName: UnityFx.Async.AsyncResultQueue<T>.OnStart
+  fullName.vb: UnityFx.Async.AsyncResultQueue(Of T).OnStart
+  nameWithType: AsyncResultQueue<T>.OnStart
+  nameWithType.vb: AsyncResultQueue(Of T).OnStart
 - uid: UnityFx.Async.AsyncResultQueue`1.Release
   name: Release()
   href: api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html#UnityFx_Async_AsyncResultQueue_1_Release

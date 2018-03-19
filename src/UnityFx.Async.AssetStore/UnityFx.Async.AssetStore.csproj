@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net35;net46</TargetFrameworks>
-		<Description>Sample code for UnityFx.Async.</Description>
+		<Description>Asset Store code for UnityFx.Async.</Description>
 		<Company />
 		<Authors>Alexander Bogarsukov</Authors>
 		<Copyright>Alexander Bogarsukov</Copyright>
@@ -13,10 +13,18 @@
 		<FileVersion>0.7.0.0</FileVersion>
 		<InformationalVersion>0.7.0.0</InformationalVersion>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<RootNamespace>UnityFx.Async.Samples</RootNamespace>
+		<RootNamespace>UnityFx.Async</RootNamespace>
 		<IsPackable>false</IsPackable>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<CodeAnalysisRuleSet>../CodingConventions/Cs/CsharpRules.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net46'">
+		<DefineConstants>UNITY_2017_1_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_2_OR_NEWER;NET_4_6</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
+		<DefineConstants>UNITY_2017_1_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_2_OR_NEWER</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -25,10 +33,6 @@
 		</Reference>
 		<ProjectReference Include="..\UnityFx.Async\UnityFx.Async.csproj" />
 	</ItemGroup>
-
-	<PropertyGroup Condition="'$(TargetFramework)' != 'net35'">
-		<DefineConstants>UNITYFX_SUPPORT_TAP</DefineConstants>
-	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta006" PrivateAssets="All" />

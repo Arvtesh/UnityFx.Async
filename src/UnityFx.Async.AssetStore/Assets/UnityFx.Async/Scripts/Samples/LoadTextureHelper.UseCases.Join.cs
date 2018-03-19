@@ -28,6 +28,7 @@ namespace UnityFx.Async.Samples
 							var texture = op.Join();
 
 							// The texture is loaded
+							Debug.Log(texture);
 						}
 						catch (OperationCanceledException)
 						{
