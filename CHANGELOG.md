@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ## [Unreleased]
 
 -----------------------
+## [0.8.1] - 2018-03-19
+
+### Added
+- Added `AsyncResultQueue.Empty` event.
+- Added `Unity`-specific tools for Asset Store.
+
+-----------------------
 ## [0.8.0] - 2018-03-10
 
 ### Added
