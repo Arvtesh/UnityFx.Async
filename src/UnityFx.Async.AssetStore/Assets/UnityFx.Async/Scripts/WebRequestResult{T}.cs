@@ -92,10 +92,12 @@ namespace UnityFx.Async
 			{
 				return ((DownloadHandlerAudioClip)request.downloadHandler).audioClip as T;
 			}
+#if !UNITY_5
 			else if (request.downloadHandler is DownloadHandlerMovieTexture)
 			{
 				return ((DownloadHandlerMovieTexture)request.downloadHandler).movieTexture as T;
 			}
+#endif
 			else if (typeof(T) != typeof(object))
 			{
 				return request.downloadHandler.text as T;
@@ -207,7 +209,11 @@ namespace UnityFx.Async
 
 		private void SetCompleted(bool completedSynchronously)
 		{
+#if UNITY_5
+			if (_request.isError)
+#else
 			if (_request.isHttpError || _request.isNetworkError)
+#endif
 			{
 				TrySetException(new WebRequestException(_request.error, _request.responseCode), completedSynchronously);
 			}
