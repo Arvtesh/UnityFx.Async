@@ -9,7 +9,7 @@ namespace UnityFx.Async
 	/// <summary>
 	/// Represents a web request error.
 	/// </summary>
-	public class UnityWebRequestException : Exception
+	public class WebRequestException : Exception
 	{
 		#region data
 
@@ -33,42 +33,42 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="UnityWebRequestException"/> class.
+		/// Initializes a new instance of the <see cref="WebRequestException"/> class.
 		/// </summary>
-		public UnityWebRequestException()
+		public WebRequestException()
 			: base("UnityWebRequest error.")
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="UnityWebRequestException"/> class.
+		/// Initializes a new instance of the <see cref="WebRequestException"/> class.
 		/// </summary>
-		public UnityWebRequestException(string message)
+		public WebRequestException(string message)
 			: base(message)
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="UnityWebRequestException"/> class.
+		/// Initializes a new instance of the <see cref="WebRequestException"/> class.
 		/// </summary>
-		public UnityWebRequestException(string message, Exception innerException)
+		public WebRequestException(string message, Exception innerException)
 			: base(message, innerException)
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="UnityWebRequestException"/> class.
+		/// Initializes a new instance of the <see cref="WebRequestException"/> class.
 		/// </summary>
-		public UnityWebRequestException(string message, long responseCode)
+		public WebRequestException(string message, long responseCode)
 			: base(message)
 		{
 			_responseCode = responseCode;
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="UnityWebRequestException"/> class.
+		/// Initializes a new instance of the <see cref="WebRequestException"/> class.
 		/// </summary>
-		public UnityWebRequestException(string message, long responseCode, Exception innerException)
+		public WebRequestException(string message, long responseCode, Exception innerException)
 			: base(message, innerException)
 		{
 			_responseCode = responseCode;
@@ -78,7 +78,7 @@ namespace UnityFx.Async
 
 		#region ISerializable
 
-		private UnityWebRequestException(SerializationInfo info, StreamingContext context)
+		private WebRequestException(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
 			_responseCode = info.GetInt64(_responseCodeSerializationName);

@@ -177,7 +177,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				TrySetException(new UnityWebRequestException(_www.error), completedSynchronously);
+				TrySetException(new WebRequestException(_www.error), completedSynchronously);
 			}
 		}
 

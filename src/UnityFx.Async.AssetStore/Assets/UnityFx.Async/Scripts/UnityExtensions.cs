@@ -111,7 +111,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="op">The request to register completion callback for.</param>
 		/// <param name="completionCallback">A delegate to be called when the <paramref name="op"/> has completed.</param>
-		public static void RegisterCompletionCallback(AsyncOperation op, Action completionCallback)
+		internal static void RegisterCompletionCallback(AsyncOperation op, Action completionCallback)
 		{
 			RegisterCompletionCallbackInternal(op, completionCallback);
 		}
@@ -200,7 +200,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="request">The request to register completion callback for.</param>
 		/// <param name="completionCallback">A delegate to be called when the <paramref name="request"/> has completed.</param>
-		public static void RegisterCompletionCallback(UnityWebRequest request, Action completionCallback)
+		internal static void RegisterCompletionCallback(UnityWebRequest request, Action completionCallback)
 		{
 			RegisterCompletionCallbackInternal(request, completionCallback);
 		}
@@ -278,7 +278,6 @@ namespace UnityFx.Async
 		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
-		/// <returns>Returns a <see cref="IAsyncOperation{T}"/> instance that will complete when the source operation have completed.</returns>
 		public static WwwResult<string> ToAsyncString(this WWW request)
 		{
 			return WwwResult<string>.FromWWW(request);
@@ -289,7 +288,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="request">The request to register completion callback for.</param>
 		/// <param name="completionCallback">A delegate to be called when the <paramref name="request"/> has completed.</param>
-		public static void RegisterCompletionCallback(WWW request, Action completionCallback)
+		internal static void RegisterCompletionCallback(WWW request, Action completionCallback)
 		{
 			RegisterCompletionCallbackInternal(request, completionCallback);
 		}

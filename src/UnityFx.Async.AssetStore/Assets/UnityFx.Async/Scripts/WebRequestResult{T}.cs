@@ -61,6 +61,17 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Attempts to calcel the web request.
+		/// </summary>
+		public void Cancel()
+		{
+			if (TrySetCanceled(false))
+			{
+				_request.Abort();
+			}
+		}
+
+		/// <summary>
 		/// Initializes the operation result value. Called when the underlying <see cref="UnityWebRequest"/> has completed withou errors.
 		/// </summary>
 		protected virtual T GetResult(UnityWebRequest request)
@@ -198,7 +209,7 @@ namespace UnityFx.Async
 		{
 			if (_request.isHttpError || _request.isNetworkError)
 			{
-				TrySetException(new UnityWebRequestException(_request.error, _request.responseCode), completedSynchronously);
+				TrySetException(new WebRequestException(_request.error, _request.responseCode), completedSynchronously);
 			}
 			else if (_request.downloadHandler != null)
 			{

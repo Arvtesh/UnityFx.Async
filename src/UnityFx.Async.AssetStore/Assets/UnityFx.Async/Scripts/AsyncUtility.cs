@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 namespace UnityFx.Async
@@ -39,9 +39,75 @@ namespace UnityFx.Async
 			return _go;
 		}
 
+		/// <summary>
+		/// Starts a coroutine.
+		/// </summary>
+		/// <param name="enumerator">The coroutine to run.</param>
+		public static Coroutine StartCoroutine(IEnumerator enumerator)
+		{
+			var go = GetRootGo();
+			var runner = go.GetComponent<CoroutineRunner>();
+
+			if (!runner)
+			{
+				runner = go.AddComponent<CoroutineRunner>();
+			}
+
+			return runner.StartCoroutine(enumerator);
+		}
+
+		/// <summary>
+		/// Stops the specified coroutine.
+		/// </summary>
+		/// <param name="coroutine">The coroutine to run.</param>
+		public static void StopCoroutine(Coroutine coroutine)
+		{
+			var go = GetRootGo();
+			var runner = go.GetComponent<CoroutineRunner>();
+
+			if (runner)
+			{
+				runner.StopCoroutine(coroutine);
+			}
+		}
+
+		/// <summary>
+		/// Stops the specified coroutine.
+		/// </summary>
+		/// <param name="enumerator">The coroutine to run.</param>
+		public static void StopCoroutine(IEnumerator enumerator)
+		{
+			var go = GetRootGo();
+			var runner = go.GetComponent<CoroutineRunner>();
+
+			if (runner)
+			{
+				runner.StopCoroutine(enumerator);
+			}
+		}
+
+		/// <summary>
+		/// Stops all coroutines.
+		/// </summary>
+		public static void StopAllCoroutines()
+		{
+			var go = GetRootGo();
+			var runner = go.GetComponent<CoroutineRunner>();
+
+			if (runner)
+			{
+				runner.StopAllCoroutines();
+			}
+		}
+
 		#endregion
 
 		#region implementation
+
+		private class CoroutineRunner : MonoBehaviour
+		{
+		}
+
 		#endregion
 	}
 }
