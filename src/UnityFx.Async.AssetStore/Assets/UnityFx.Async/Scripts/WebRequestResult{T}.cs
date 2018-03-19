@@ -111,7 +111,7 @@ namespace UnityFx.Async
 			}
 			else if (!request.isModifiable)
 			{
-				UnityWebRequestExtensions.RegisterCompletionCallback(request, () => result.SetCompleted(false));
+				UnityExtensions.RegisterCompletionCallback(request, () => result.SetCompleted(false));
 			}
 
 			return result;
@@ -134,7 +134,7 @@ namespace UnityFx.Async
 #else
 
 			_request.Send();
-			UnityWebRequestExtensions.RegisterCompletionCallback(_request, () => SetCompleted(false));
+			UnityExtensions.RegisterCompletionCallback(_request, () => SetCompleted(false));
 
 #endif
 		}
