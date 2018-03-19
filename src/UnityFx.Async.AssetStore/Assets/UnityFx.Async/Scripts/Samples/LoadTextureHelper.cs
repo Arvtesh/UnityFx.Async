@@ -4,7 +4,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace UnityFx.Async.Samples
 {
@@ -25,16 +24,16 @@ namespace UnityFx.Async.Samples
 
 		private IEnumerator LoadTextureInternal(IAsyncCompletionSource<Texture2D> op, string textureUrl)
 		{
-			var www = UnityWebRequestTexture.GetTexture(textureUrl);
-			yield return www.Send();
+			var www = new WWW(textureUrl);
+			yield return www;
 
-			if (www.isNetworkError || www.isHttpError)
+			if (!string.IsNullOrEmpty(www.error))
 			{
 				op.SetException(new Exception(www.error));
 			}
 			else
 			{
-				op.SetResult(((DownloadHandlerTexture)www.downloadHandler).texture);
+				op.SetResult(www.texture);
 			}
 		}
 	}
