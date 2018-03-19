@@ -40,7 +40,7 @@ namespace UnityFx.Async
 
 #else
 
-				RegisterCompletionCallback(op, () => result.TrySetCompleted());
+				AsyncUtility.AddCompletionCallback(op, () => result.TrySetCompleted());
 
 #endif
 
@@ -69,7 +69,7 @@ namespace UnityFx.Async
 
 #else
 
-				RegisterCompletionCallback(op, () => result.TrySetResult(op.asset as T));
+				AsyncUtility.AddCompletionCallback(op, () => result.TrySetResult(op.asset as T));
 
 #endif
 
@@ -98,22 +98,12 @@ namespace UnityFx.Async
 
 #else
 
-				RegisterCompletionCallback(op, () => result.TrySetResult(op.asset as T));
+				AsyncUtility.AddCompletionCallback(op, () => result.TrySetResult(op.asset as T));
 
 #endif
 
 				return result;
 			}
-		}
-
-		/// <summary>
-		/// Register a completion callback for the specified <see cref="AsyncOperation"/> instance.
-		/// </summary>
-		/// <param name="op">The request to register completion callback for.</param>
-		/// <param name="completionCallback">A delegate to be called when the <paramref name="op"/> has completed.</param>
-		internal static void RegisterCompletionCallback(AsyncOperation op, Action completionCallback)
-		{
-			RegisterCompletionCallbackInternal(op, completionCallback);
 		}
 
 		#endregion
@@ -195,16 +185,6 @@ namespace UnityFx.Async
 			return WebRequestResult<string>.FromUnityWebRequest(request);
 		}
 
-		/// <summary>
-		/// Register a completion callback for the specified <see cref="UnityWebRequest"/> instance.
-		/// </summary>
-		/// <param name="request">The request to register completion callback for.</param>
-		/// <param name="completionCallback">A delegate to be called when the <paramref name="request"/> has completed.</param>
-		internal static void RegisterCompletionCallback(UnityWebRequest request, Action completionCallback)
-		{
-			RegisterCompletionCallbackInternal(request, completionCallback);
-		}
-
 #endif
 
 		#endregion
@@ -283,103 +263,9 @@ namespace UnityFx.Async
 			return WwwResult<string>.FromWWW(request);
 		}
 
-		/// <summary>
-		/// Register a completion callback for the specified <see cref="WWW"/> instance.
-		/// </summary>
-		/// <param name="request">The request to register completion callback for.</param>
-		/// <param name="completionCallback">A delegate to be called when the <paramref name="request"/> has completed.</param>
-		internal static void RegisterCompletionCallback(WWW request, Action completionCallback)
-		{
-			RegisterCompletionCallbackInternal(request, completionCallback);
-		}
-
 		#endregion
 
 		#region implementation
-
-		private class AsyncStatusUpdater : MonoBehaviour
-		{
-			private readonly Dictionary<object, Action> _ops = new Dictionary<object, Action>();
-			private readonly List<object> _opsToRemove = new List<object>();
-
-			public void AddOperation(object op, Action cb)
-			{
-				_ops.Add(op, cb);
-			}
-
-			private void Update()
-			{
-				if (_ops != null && _ops.Count > 0)
-				{
-					_opsToRemove.Clear();
-
-					foreach (var item in _ops)
-					{
-						if (item.Key is AsyncOperation)
-						{
-							var asyncOp = item.Key as AsyncOperation;
-
-							if (asyncOp.isDone)
-							{
-								item.Value();
-								_opsToRemove.Add(asyncOp);
-							}
-						}
-#if UNITY_5_2_OR_NEWER || UNITY_5_3_OR_NEWER || UNITY_2017 || UNITY_2018
-						else if (item.Key is UnityWebRequest)
-						{
-							var asyncOp = item.Key as UnityWebRequest;
-
-							if (asyncOp.isDone)
-							{
-								item.Value();
-								_opsToRemove.Add(asyncOp);
-							}
-						}
-#endif
-						else if (item.Key is WWW)
-						{
-							var asyncOp = item.Key as WWW;
-
-							if (asyncOp.isDone)
-							{
-								item.Value();
-								_opsToRemove.Add(asyncOp);
-							}
-						}
-					}
-
-					foreach (var item in _opsToRemove)
-					{
-						_ops.Remove(item);
-					}
-				}
-			}
-		}
-
-		private static void RegisterCompletionCallbackInternal(object op, Action callback)
-		{
-			if (op == null)
-			{
-				throw new ArgumentNullException("op");
-			}
-
-			if (callback == null)
-			{
-				throw new ArgumentNullException("completionCallback");
-			}
-
-			var go = AsyncUtility.GetRootGo();
-			var b = go.GetComponent<AsyncStatusUpdater>();
-
-			if (!b)
-			{
-				b = go.AddComponent<AsyncStatusUpdater>();
-			}
-
-			b.AddOperation(op, callback);
-		}
-
 		#endregion
 	}
 }

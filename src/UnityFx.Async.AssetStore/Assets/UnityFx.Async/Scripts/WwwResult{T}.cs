@@ -112,7 +112,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				UnityExtensions.RegisterCompletionCallback(request, () => result.SetCompleted(false));
+				AsyncUtility.AddCompletionCallback(request, () => result.SetCompleted(false));
 			}
 
 			return result;
@@ -127,7 +127,7 @@ namespace UnityFx.Async
 		{
 			base.OnStarted();
 
-			UnityExtensions.RegisterCompletionCallback(_www, () => SetCompleted(false));
+			AsyncUtility.AddCompletionCallback(_www, () => SetCompleted(false));
 		}
 
 		/// <inheritdoc/>
