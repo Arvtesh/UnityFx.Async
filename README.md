@@ -157,6 +157,7 @@ The project was initially created to help author with his [Unity3d](https://unit
 
 ## Documentation
 Please see the links below for extended information on the product:
+- [Unity forums](https://forum.unity.com/threads/asynchronous-operations-for-unity-free.522989/).
 - [Documentation](https://arvtesh.github.io/UnityFx.Async/articles/intro.html).
 - [API Reference](https://arvtesh.github.io/UnityFx.Async/api/index.html).
 - [CHANGELOG](CHANGELOG.md).
