@@ -70,7 +70,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class. For internal use only.
 		/// </summary>
 		/// <param name="exception">The exception to complete the operation with.</param>
 		internal AsyncResult(Exception exception)
@@ -79,7 +79,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class. For internal use only.
 		/// </summary>
 		/// <param name="exceptions">Exceptions to complete the operation with.</param>
 		internal AsyncResult(IEnumerable<Exception> exceptions)

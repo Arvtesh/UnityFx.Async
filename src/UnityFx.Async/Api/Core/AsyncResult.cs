@@ -120,7 +120,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult"/> class that is faulted.
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class that is faulted. For internal use only.
 		/// </summary>
 		/// <param name="exception">The exception to complete the operation with.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
@@ -140,7 +140,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult"/> class that is faulted.
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class that is faulted. For internal use only.
 		/// </summary>
 		/// <param name="exceptions">Exceptions to complete the operation with.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
@@ -469,8 +469,32 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetExceptions(IEnumerable{System.Exception}, bool)"/>
 		protected virtual void OnCompleted()
 		{
-			_waitHandle?.Set();
-			InvokeContinuations();
+			try
+			{
+				var continuation = Interlocked.Exchange(ref _continuation, _continuationCompletionSentinel);
+
+				if (continuation != null)
+				{
+					if (continuation is IEnumerable continuationList)
+					{
+						lock (continuationList)
+						{
+							foreach (var item in continuationList)
+							{
+								AsyncContinuation.Invoke(this, item);
+							}
+						}
+					}
+					else
+					{
+						AsyncContinuation.Invoke(this, continuation);
+					}
+				}
+			}
+			finally
+			{
+				_waitHandle?.Set();
+			}
 		}
 
 		/// <summary>
@@ -1448,6 +1472,9 @@ namespace UnityFx.Async
 
 		#region implementation
 
+		/// <summary>
+		/// Gets a string representing the operation state. For debugger only.
+		/// </summary>
 		private string DebuggerDisplay
 		{
 			get
@@ -1479,6 +1506,9 @@ namespace UnityFx.Async
 			}
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class. For internal use only.
+		/// </summary>
 		private AsyncResult(int flags)
 		{
 			if (flags == StatusFaulted)
@@ -1497,6 +1527,12 @@ namespace UnityFx.Async
 			}
 		}
 
+		/// <summary>
+		/// Attempts to register a continuation object. For internal use only.
+		/// </summary>
+		/// <param name="continuation">The continuation object to add.</param>
+		/// <param name="syncContext">A <see cref="SynchronizationContext"/> instance to execute continuation on.</param>
+		/// <returns>Returns <see langword="true"/> if the continuation was added; <see langword="false"/> otherwise.</returns>
 		private bool TryAddContinuation(object continuation, SynchronizationContext syncContext)
 		{
 			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
@@ -1507,6 +1543,11 @@ namespace UnityFx.Async
 			return TryAddContinuation(continuation);
 		}
 
+		/// <summary>
+		/// Attempts to register a continuation object. For internal use only.
+		/// </summary>
+		/// <param name="valueToAdd">The continuation object to add.</param>
+		/// <returns>Returns <see langword="true"/> if the continuation was added; <see langword="false"/> otherwise.</returns>
 		private bool TryAddContinuation(object valueToAdd)
 		{
 			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
@@ -1559,6 +1600,11 @@ namespace UnityFx.Async
 			return false;
 		}
 
+		/// <summary>
+		/// Attempts to remove the specified continuation. For internal use only.
+		/// </summary>
+		/// <param name="valueToRemove">The continuation object to remove.</param>
+		/// <returns>Returns <see langword="true"/> if the continuation was removed; <see langword="false"/> otherwise.</returns>
 		private bool TryRemoveContinuation(object valueToRemove)
 		{
 			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
@@ -1607,41 +1653,6 @@ namespace UnityFx.Async
 			}
 
 			return false;
-		}
-
-		private void InvokeContinuations()
-		{
-			var continuation = Interlocked.Exchange(ref _continuation, _continuationCompletionSentinel);
-
-			if (continuation != null)
-			{
-				if (continuation is IEnumerable list)
-				{
-					lock (list)
-					{
-						foreach (var item in list)
-						{
-							InvokeContinuation(item);
-						}
-					}
-				}
-				else
-				{
-					InvokeContinuation(continuation);
-				}
-			}
-		}
-
-		private void InvokeContinuation(object continuation)
-		{
-			if (continuation is AsyncContinuation c)
-			{
-				c.Invoke();
-			}
-			else
-			{
-				AsyncContinuation.Run(this, continuation);
-			}
 		}
 
 		#endregion
