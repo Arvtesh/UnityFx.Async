@@ -1043,7 +1043,7 @@ namespace UnityFx.Async
 			{
 				var result = new TaskCompletionSource<T>();
 
-				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(op, result), null))
+				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp as IAsyncOperation<T>, result), null))
 				{
 					AsyncContinuation.InvokeTaskContinuation(op, result);
 				}
