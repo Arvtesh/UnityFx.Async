@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 -----------------------
 ## [Unreleased]
 
+### Added
+- New `AsyncResult` constructors added.
+- New overloads for `AsyncResult.FromResult`, `AsyncResult.FromCanceled` and `AsyncResult.FromException` methods added.
+
 ### Changed
 - Made optimizations to `ToTask` extensions implementation for cases when target operation is completed.
 
