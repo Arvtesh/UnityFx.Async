@@ -146,11 +146,6 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
 		internal AsyncResult(IEnumerable<Exception> exceptions)
 		{
-			if (exceptions == null)
-			{
-				throw new ArgumentNullException(nameof(exceptions));
-			}
-
 			_exception = new AggregateException(exceptions);
 			_continuation = _continuationCompletionSentinel;
 			_flags = StatusFaulted | _flagCompletedSynchronously;
