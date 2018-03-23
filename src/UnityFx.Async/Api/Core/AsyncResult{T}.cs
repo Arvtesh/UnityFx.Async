@@ -88,10 +88,10 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class. For internal use only.
 		/// </summary>
 		/// <param name="result">Result value.</param>
-		public AsyncResult(T result)
+		internal AsyncResult(T result)
 			: base(AsyncOperationStatus.RanToCompletion)
 		{
 			_result = result;
