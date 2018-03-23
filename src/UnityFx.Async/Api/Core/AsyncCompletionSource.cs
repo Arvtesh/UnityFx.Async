@@ -26,7 +26,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
 		public AsyncCompletionSource(object asyncState)
-			: base(null, asyncState)
+			: base(default(AsyncCallback), asyncState)
 		{
 		}
 
@@ -55,7 +55,7 @@ namespace UnityFx.Async
 		/// <param name="status">Initial value of the <see cref="AsyncResult.Status"/> property.</param>
 		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
 		public AsyncCompletionSource(AsyncOperationStatus status, object asyncState)
-			: base(status, null, asyncState)
+			: base(status, asyncState)
 		{
 		}
 

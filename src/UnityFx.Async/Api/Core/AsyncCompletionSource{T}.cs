@@ -26,7 +26,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
 		public AsyncCompletionSource(object asyncState)
-			: base(null, asyncState)
+			: base(default(AsyncCallback), asyncState)
 		{
 		}
 

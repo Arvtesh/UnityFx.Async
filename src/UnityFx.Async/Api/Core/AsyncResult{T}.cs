@@ -62,6 +62,16 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
 		/// <param name="status">Status value of the operation.</param>
+		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
+		public AsyncResult(AsyncOperationStatus status, object asyncState)
+			: base(status, asyncState)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// </summary>
+		/// <param name="status">Status value of the operation.</param>
 		/// <param name="asyncCallback">User-defined completion callback.</param>
 		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
 		public AsyncResult(AsyncOperationStatus status, AsyncCallback asyncCallback, object asyncState)
@@ -73,8 +83,9 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class. For internal use only.
 		/// </summary>
 		/// <param name="exception">The exception to complete the operation with.</param>
-		internal AsyncResult(Exception exception)
-			: base(exception)
+		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
+		internal AsyncResult(Exception exception, object asyncState)
+			: base(exception, asyncState)
 		{
 		}
 
@@ -82,8 +93,9 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class. For internal use only.
 		/// </summary>
 		/// <param name="exceptions">Exceptions to complete the operation with.</param>
-		internal AsyncResult(IEnumerable<Exception> exceptions)
-			: base(exceptions)
+		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
+		internal AsyncResult(IEnumerable<Exception> exceptions, object asyncState)
+			: base(exceptions, asyncState)
 		{
 		}
 
@@ -91,8 +103,9 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class. For internal use only.
 		/// </summary>
 		/// <param name="result">Result value.</param>
-		internal AsyncResult(T result)
-			: base(AsyncOperationStatus.RanToCompletion)
+		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
+		internal AsyncResult(T result, object asyncState)
+			: base(AsyncOperationStatus.RanToCompletion, asyncState)
 		{
 			_result = result;
 		}
