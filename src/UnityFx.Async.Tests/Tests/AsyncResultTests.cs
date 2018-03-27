@@ -223,6 +223,35 @@ namespace UnityFx.Async
 			Assert.Equal(2, counter);
 		}
 
+		[Fact]
+		public async Task WhenAll_CompletesWhenAllOperationsCompleted()
+		{
+			// Arrange
+			var op1 = AsyncResult.Delay(1);
+			var op2 = AsyncResult.Delay(2);
+
+			// Act
+			await AsyncResult.WhenAll(op1, op2);
+
+			// Assert
+			AssertCompleted(op1);
+			AssertCompleted(op2);
+		}
+
+		[Fact]
+		public async Task WhenAny_CompletesWhenAnyOperationCompletes()
+		{
+			// Arrange
+			var op1 = AsyncResult.Delay(1);
+			var op2 = AsyncResult.Delay(Timeout.Infinite);
+
+			// Act
+			await AsyncResult.WhenAny(op1, op2);
+
+			// Assert
+			AssertCompleted(op1);
+		}
+
 		#endregion
 
 		#region interface

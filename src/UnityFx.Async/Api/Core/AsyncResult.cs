@@ -782,7 +782,7 @@ namespace UnityFx.Async
 		/// <seealso cref="Delay(TimeSpan)"/>
 		public static AsyncResult Delay(int millisecondsDelay)
 		{
-			if (millisecondsDelay < 0)
+			if (millisecondsDelay < Timeout.Infinite)
 			{
 				throw new ArgumentOutOfRangeException(nameof(millisecondsDelay), millisecondsDelay, Constants.ErrorValueIsLessThanZero);
 			}
