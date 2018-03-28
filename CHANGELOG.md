@@ -7,6 +7,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ## [Unreleased]
 
 -----------------------
+## [0.8.2] - 2018-03-28
+
+### Added
+- New `AsyncResult` constructors added.
+- New overloads for `AsyncResult.FromResult`, `AsyncResult.FromCanceled` and `AsyncResult.FromException` methods added.
+
+### Changed
+- Made optimizations to `ToTask` extensions implementation for cases when target operation is completed.
+- Marked all assembly classes CLS-compilant.
+
+### Fixed
+- `ToTask` extensions now throw inner exception instead of the `AggregateException` in case of an error.
+- Fixed `AsyncResult.Delay` throwing exception when infinite delay (-1) specified.
+
+-----------------------
 ## [0.8.1] - 2018-03-19
 
 ### Added
