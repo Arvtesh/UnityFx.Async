@@ -3,6 +3,9 @@
 
 using System;
 using System.Threading;
+#if UNITYFX_SUPPORT_TAP
+using System.Threading.Tasks;
+#endif
 
 namespace UnityFx.Async
 {
@@ -20,54 +23,85 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public AsyncContinuation(AsyncResult op, SynchronizationContext syncContext, object continuation)
+		internal AsyncContinuation(AsyncResult op, SynchronizationContext syncContext, object continuation)
 		{
 			_op = op;
 			_syncContext = syncContext;
 			_continuation = continuation;
 		}
 
-		public void Invoke()
+		internal void Invoke()
 		{
-			if (_syncContext == SynchronizationContext.Current)
+			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
 			{
-				Run(_op, _continuation);
+				InvokeInternal(_op, _continuation);
 			}
 			else
 			{
 				if (_postCallback == null)
 				{
-					_postCallback = args => (args as AsyncContinuation).Run();
+					_postCallback = args =>
+					{
+						var c = args as AsyncContinuation;
+						InvokeInternal(c._op, c._continuation);
+					};
 				}
 
 				_syncContext.Post(_postCallback, this);
 			}
 		}
 
-		public void Run()
+		internal static void Invoke(IAsyncOperation op, object continuation)
 		{
-			Run(_op, _continuation);
+			if (continuation is AsyncContinuation c)
+			{
+				c.Invoke();
+			}
+			else
+			{
+				InvokeInternal(op, continuation);
+			}
 		}
 
-		public static void Run(IAsyncOperation op, object continuation)
+#if UNITYFX_SUPPORT_TAP
+
+		internal static void InvokeTaskContinuation(IAsyncOperation op, TaskCompletionSource<object> tcs)
 		{
-			if (continuation is AsyncOperationCallback aoc)
+			var status = op.Status;
+
+			if (status == AsyncOperationStatus.RanToCompletion)
 			{
-				aoc.Invoke(op);
+				tcs.TrySetResult(null);
 			}
-			else if (continuation is Action a)
+			else if (status == AsyncOperationStatus.Faulted)
 			{
-				a.Invoke();
+				tcs.TrySetException(op.Exception.InnerExceptions);
 			}
-			else if (continuation is AsyncCallback ac)
+			else if (status == AsyncOperationStatus.Canceled)
 			{
-				ac.Invoke(op);
-			}
-			else if (continuation is EventHandler eh)
-			{
-				eh.Invoke(op, EventArgs.Empty);
+				tcs.TrySetCanceled();
 			}
 		}
+
+		internal static void InvokeTaskContinuation<T>(IAsyncOperation<T> op, TaskCompletionSource<T> tcs)
+		{
+			var status = op.Status;
+
+			if (status == AsyncOperationStatus.RanToCompletion)
+			{
+				tcs.TrySetResult(op.Result);
+			}
+			else if (status == AsyncOperationStatus.Faulted)
+			{
+				tcs.TrySetException(op.Exception.InnerExceptions);
+			}
+			else if (status == AsyncOperationStatus.Canceled)
+			{
+				tcs.TrySetCanceled();
+			}
+		}
+
+#endif
 
 		#endregion
 
@@ -91,6 +125,29 @@ namespace UnityFx.Async
 		#endregion
 
 		#region implementation
+
+		private static void InvokeInternal(IAsyncOperation op, object continuation)
+		{
+			switch (continuation)
+			{
+				case AsyncOperationCallback aoc:
+					aoc.Invoke(op);
+					break;
+
+				case Action a:
+					a.Invoke();
+					break;
+
+				case AsyncCallback ac:
+					ac.Invoke(op);
+					break;
+
+				case EventHandler eh:
+					eh.Invoke(op, EventArgs.Empty);
+					break;
+			}
+		}
+
 		#endregion
 	}
 }

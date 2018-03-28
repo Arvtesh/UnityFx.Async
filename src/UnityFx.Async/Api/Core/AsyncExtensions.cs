@@ -991,27 +991,31 @@ namespace UnityFx.Async
 		/// <seealso cref="ToTask{T}(IAsyncOperation{T})"/>
 		public static Task ToTask(this IAsyncOperation op)
 		{
-			var result = new TaskCompletionSource<object>();
+			var status = op.Status;
 
-			op.AddCompletionCallback(
-				asyncOp =>
+			if (status == AsyncOperationStatus.RanToCompletion)
+			{
+				return Task.CompletedTask;
+			}
+			else if (status == AsyncOperationStatus.Faulted)
+			{
+				return Task.FromException(op.Exception.InnerException);
+			}
+			else if (status == AsyncOperationStatus.Canceled)
+			{
+				return Task.FromCanceled(CancellationToken.None);
+			}
+			else
+			{
+				var result = new TaskCompletionSource<object>();
+
+				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp, result), null))
 				{
-					if (asyncOp.IsCompletedSuccessfully)
-					{
-						result.TrySetResult(null);
-					}
-					else if (asyncOp.IsCanceled)
-					{
-						result.TrySetCanceled();
-					}
-					else
-					{
-						result.TrySetException(asyncOp.Exception);
-					}
-				},
-				false);
+					AsyncContinuation.InvokeTaskContinuation(op, result);
+				}
 
-			return result.Task;
+				return result.Task;
+			}
 		}
 
 		/// <summary>
@@ -1021,27 +1025,31 @@ namespace UnityFx.Async
 		/// <seealso cref="ToTask(IAsyncOperation)"/>
 		public static Task<T> ToTask<T>(this IAsyncOperation<T> op)
 		{
-			var result = new TaskCompletionSource<T>();
+			var status = op.Status;
 
-			op.AddCompletionCallback(
-				asyncOp =>
+			if (status == AsyncOperationStatus.RanToCompletion)
+			{
+				return Task.FromResult(op.Result);
+			}
+			else if (status == AsyncOperationStatus.Faulted)
+			{
+				return Task.FromException<T>(op.Exception.InnerException);
+			}
+			else if (status == AsyncOperationStatus.Canceled)
+			{
+				return Task.FromCanceled<T>(CancellationToken.None);
+			}
+			else
+			{
+				var result = new TaskCompletionSource<T>();
+
+				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp as IAsyncOperation<T>, result), null))
 				{
-					if (op.IsCompletedSuccessfully)
-					{
-						result.TrySetResult(op.Result);
-					}
-					else if (op.IsCanceled)
-					{
-						result.TrySetCanceled();
-					}
-					else
-					{
-						result.TrySetException(op.Exception);
-					}
-				},
-				false);
+					AsyncContinuation.InvokeTaskContinuation(op, result);
+				}
 
-			return result.Task;
+				return result.Task;
+			}
 		}
 
 		private static void SetAwaitedCompletionCallback(IAsyncOperation op, Action continuation, bool continueOnCapturedContext)

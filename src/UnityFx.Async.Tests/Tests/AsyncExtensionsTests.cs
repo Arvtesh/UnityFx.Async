@@ -117,5 +117,45 @@ namespace UnityFx.Async
 		}
 
 		#endregion
+
+		#region ToTask
+
+		[Fact]
+		public async Task ToTask_CompletesWhenSourceCompletes()
+		{
+			// Arrange
+			var op = AsyncResult.Delay(1);
+			var task = op.ToTask();
+
+			// Act
+			await task;
+
+			// Assert
+			Assert.True(op.IsCompleted);
+		}
+
+		[Fact]
+		public async Task ToTask_FailsWhenSourceFails()
+		{
+			// Arrange
+			var op = AsyncResult.Delay(1).ContinueWith(result => AsyncResult.FromException(new Exception()));
+			var task = op.ToTask();
+
+			// Act/Assert
+			await Assert.ThrowsAsync<Exception>(() => task);
+		}
+
+		[Fact]
+		public async Task ToTask_FailsWhenSourceIsCanceled()
+		{
+			// Arrange
+			var op = AsyncResult.Delay(1).ContinueWith(result => AsyncResult.FromCanceled());
+			var task = op.ToTask();
+
+			// Act/Assert
+			await Assert.ThrowsAsync<TaskCanceledException>(() => task);
+		}
+
+		#endregion
 	}
 }

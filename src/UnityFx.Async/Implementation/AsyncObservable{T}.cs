@@ -36,14 +36,14 @@ namespace UnityFx.Async
 
 			AsyncOperationCallback d = op =>
 			{
-				if (_op.IsCompletedSuccessfully)
+				if (op.IsCompletedSuccessfully)
 				{
-					observer.OnNext(_op.Result);
+					observer.OnNext((op as IAsyncOperation<T>).Result);
 					observer.OnCompleted();
 				}
-				else if (_op.IsFaulted)
+				else if (op.IsFaulted)
 				{
-					observer.OnError(_op.Exception.InnerException);
+					observer.OnError(op.Exception.InnerException);
 				}
 				else
 				{
