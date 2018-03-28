@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 -----------------------
 ## [Unreleased]
 
+### Added
+- Added `AsyncContinuationOptions` support.
+
 -----------------------
 ## [0.8.2] - 2018-03-28
 

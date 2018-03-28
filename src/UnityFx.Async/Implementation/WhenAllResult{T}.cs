@@ -31,7 +31,7 @@ namespace UnityFx.Async
 
 			foreach (var op in ops)
 			{
-				if (!op.TryAddCompletionCallback(_completionAction, null))
+				if (!op.TryAddCompletionCallback(_completionAction, AsyncContinuationOptions.None, null))
 				{
 					OnOperationCompleted(op);
 				}

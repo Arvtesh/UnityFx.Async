@@ -343,10 +343,10 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="IAsyncOperationEvents"/>
-		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, bool)"/>
+		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, AsyncContinuationOptions, SynchronizationContext)"/>
 		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action)
 		{
-			if (!op.TryAddCompletionCallback(action, SynchronizationContext.Current))
+			if (!op.TryAddCompletionCallback(action, AsyncContinuationOptions.CaptureSynchronizationContext, null))
 			{
 				action(op);
 			}
@@ -357,20 +357,21 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="op">The target operation.</param>
 		/// <param name="action">The callback to be executed when the operation has completed.</param>
-		/// <param name="continueOnCapturedContext">If <see langword="true"/> method attempts to marshal the continuation back to the current synchronization context.
-		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
-		/// </param>
+		/// <param name="options">Options for when the callback is executed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="IAsyncOperationEvents"/>
-		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, SynchronizationContext)"/>
-		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action, bool continueOnCapturedContext)
+		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, AsyncContinuationOptions, SynchronizationContext)"/>
+		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action, AsyncContinuationOptions options)
 		{
-			var context = continueOnCapturedContext ? SynchronizationContext.Current : null;
+			var syncContext = ((options & AsyncContinuationOptions.CaptureSynchronizationContext) != 0) ? SynchronizationContext.Current : null;
 
-			if (!op.TryAddCompletionCallback(action, context))
+			if (!op.TryAddCompletionCallback(action, options, syncContext))
 			{
-				action(op);
+				if (AsyncContinuation.CanInvoke(op, options))
+				{
+					action(op);
+				}
 			}
 		}
 
@@ -380,24 +381,28 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="op">The target operation.</param>
 		/// <param name="action">The callback to be executed when the operation has completed.</param>
+		/// <param name="options">Options for when the callback is executed.</param>
 		/// <param name="synchronizationContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
 		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
 		/// </param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="IAsyncOperationEvents"/>
-		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, bool)"/>
-		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action, SynchronizationContext synchronizationContext)
+		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, AsyncContinuationOptions)"/>
+		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action, AsyncContinuationOptions options, SynchronizationContext synchronizationContext)
 		{
-			if (!op.TryAddCompletionCallback(action, synchronizationContext))
+			if (!op.TryAddCompletionCallback(action, options, synchronizationContext))
 			{
-				if (synchronizationContext == null || synchronizationContext.GetType() == typeof(SynchronizationContext) || synchronizationContext == SynchronizationContext.Current)
+				if (AsyncContinuation.CanInvoke(op, options))
 				{
-					action(op);
-				}
-				else
-				{
-					synchronizationContext.Post(args => action(op), op);
+					if (synchronizationContext == null || synchronizationContext.GetType() == typeof(SynchronizationContext) || synchronizationContext == SynchronizationContext.Current)
+					{
+						action(op);
+					}
+					else
+					{
+						synchronizationContext.Post(args => action(op), op);
+					}
 				}
 			}
 		}
@@ -486,7 +491,7 @@ namespace UnityFx.Async
 						{
 							result.CopyCompletionState(asyncOp2, false);
 						},
-						false);
+						AsyncContinuationOptions.None);
 				}
 				catch (Exception e)
 				{
@@ -575,7 +580,7 @@ namespace UnityFx.Async
 						{
 							result.CopyCompletionState(asyncOp2, false);
 						},
-						false);
+						AsyncContinuationOptions.None);
 				}
 				catch (Exception e)
 				{
@@ -664,7 +669,7 @@ namespace UnityFx.Async
 						{
 							result.CopyCompletionState(asyncOp2 as IAsyncOperation<U>, false);
 						},
-						false);
+						AsyncContinuationOptions.None);
 				}
 				catch (Exception e)
 				{
@@ -756,7 +761,7 @@ namespace UnityFx.Async
 						{
 							result.CopyCompletionState(asyncOp2 as IAsyncOperation<U>, false);
 						},
-						false);
+						AsyncContinuationOptions.None);
 				}
 				catch (Exception e)
 				{
@@ -803,7 +808,7 @@ namespace UnityFx.Async
 						result.TrySetException(e, false);
 					}
 				},
-				false);
+				AsyncContinuationOptions.None);
 
 			return result;
 		}
@@ -1009,7 +1014,7 @@ namespace UnityFx.Async
 			{
 				var result = new TaskCompletionSource<object>();
 
-				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp, result), null))
+				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp, result), AsyncContinuationOptions.None, null))
 				{
 					AsyncContinuation.InvokeTaskContinuation(op, result);
 				}
@@ -1043,7 +1048,7 @@ namespace UnityFx.Async
 			{
 				var result = new TaskCompletionSource<T>();
 
-				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp as IAsyncOperation<T>, result), null))
+				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp as IAsyncOperation<T>, result), AsyncContinuationOptions.None, null))
 				{
 					AsyncContinuation.InvokeTaskContinuation(op, result);
 				}
@@ -1056,11 +1061,7 @@ namespace UnityFx.Async
 		{
 			var syncContext = continueOnCapturedContext ? SynchronizationContext.Current : null;
 
-			if (op is AsyncResult ar)
-			{
-				ar.SetContinuationForAwait(continuation, syncContext);
-			}
-			else if (!op.TryAddCompletionCallback(o => continuation(), syncContext))
+			if (!op.TryAddCompletionCallback(continuation, AsyncContinuationOptions.None, syncContext))
 			{
 				continuation();
 			}

@@ -465,7 +465,7 @@ namespace UnityFx.Async
 			var asyncCallbackCalled1 = false;
 			var asyncCallbackCalled2 = false;
 			var op = new AsyncCompletionSource(asyncResult => asyncCallbackCalled1 = true, null);
-			op.AddCompletionCallback(asyncOp => asyncCallbackCalled2 = true, false);
+			op.AddCompletionCallback(asyncOp => asyncCallbackCalled2 = true, AsyncContinuationOptions.None);
 
 			// Act
 			op.TrySetCanceled();
@@ -575,7 +575,7 @@ namespace UnityFx.Async
 			var asyncCallbackCalled1 = false;
 			var asyncCallbackCalled2 = false;
 			var op = new AsyncCompletionSource(asyncResult => asyncCallbackCalled1 = true, null);
-			op.AddCompletionCallback(asyncOp => asyncCallbackCalled2 = true, false);
+			op.AddCompletionCallback(asyncOp => asyncCallbackCalled2 = true, AsyncContinuationOptions.None);
 
 			// Act
 			op.TrySetException(e);
@@ -696,7 +696,7 @@ namespace UnityFx.Async
 			var asyncCallbackCalled1 = false;
 			var asyncCallbackCalled2 = false;
 			var op = new AsyncCompletionSource(asyncResult => asyncCallbackCalled1 = true, null);
-			op.AddCompletionCallback(asyncOp => asyncCallbackCalled2 = true, false);
+			op.AddCompletionCallback(asyncOp => asyncCallbackCalled2 = true, AsyncContinuationOptions.None);
 
 			// Act
 			op.TrySetCompleted();
@@ -804,7 +804,7 @@ namespace UnityFx.Async
 			var asyncCallbackCalled1 = false;
 			var asyncCallbackCalled2 = false;
 			var op = new AsyncCompletionSource<int>(asyncResult => asyncCallbackCalled1 = true, null);
-			op.AddCompletionCallback(asyncOp => asyncCallbackCalled2 = true, false);
+			op.AddCompletionCallback(asyncOp => asyncCallbackCalled2 = true, AsyncContinuationOptions.None);
 
 			// Act
 			op.TrySetResult(10);
@@ -884,7 +884,7 @@ namespace UnityFx.Async
 			op.SetCanceled();
 
 			// Act
-			var result = op.TryAddCompletionCallback(_ => { }, null);
+			var result = op.TryAddCompletionCallback(_ => { }, AsyncContinuationOptions.None, null);
 
 			// Assert
 			Assert.False(result);
@@ -897,7 +897,7 @@ namespace UnityFx.Async
 			var op = AsyncResult.CompletedOperation;
 
 			// Act
-			var result = op.TryAddCompletionCallback(_ => { }, null);
+			var result = op.TryAddCompletionCallback(_ => { }, AsyncContinuationOptions.None, null);
 
 			// Assert
 			Assert.False(result);

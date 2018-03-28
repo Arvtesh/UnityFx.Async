@@ -16,6 +16,7 @@ namespace UnityFx.Async
 		private static SendOrPostCallback _postCallback;
 
 		private readonly AsyncResult _op;
+		private readonly AsyncContinuationOptions _options;
 		private readonly SynchronizationContext _syncContext;
 		private readonly object _continuation;
 
@@ -23,32 +24,51 @@ namespace UnityFx.Async
 
 		#region interface
 
-		internal AsyncContinuation(AsyncResult op, SynchronizationContext syncContext, object continuation)
+		internal AsyncContinuation(AsyncResult op, AsyncContinuationOptions options, SynchronizationContext syncContext, object continuation)
 		{
 			_op = op;
+			_options = options;
 			_syncContext = syncContext;
 			_continuation = continuation;
 		}
 
 		internal void Invoke()
 		{
-			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
+			if (CanInvoke(_op, _options))
 			{
-				InvokeInternal(_op, _continuation);
-			}
-			else
-			{
-				if (_postCallback == null)
+				if (_syncContext == null || _syncContext == SynchronizationContext.Current)
 				{
-					_postCallback = args =>
-					{
-						var c = args as AsyncContinuation;
-						InvokeInternal(c._op, c._continuation);
-					};
+					InvokeInternal(_op, _continuation);
 				}
+				else
+				{
+					if (_postCallback == null)
+					{
+						_postCallback = args =>
+						{
+							var c = args as AsyncContinuation;
+							InvokeInternal(c._op, c._continuation);
+						};
+					}
 
-				_syncContext.Post(_postCallback, this);
+					_syncContext.Post(_postCallback, this);
+				}
 			}
+		}
+
+		internal static bool CanInvoke(IAsyncOperation op, AsyncContinuationOptions options)
+		{
+			if (op.IsCompletedSuccessfully)
+			{
+				return (options & AsyncContinuationOptions.NotOnRanToCompletion) == 0;
+			}
+
+			if (op.IsFaulted)
+			{
+				return (options & AsyncContinuationOptions.NotOnFaulted) == 0;
+			}
+
+			return (options & AsyncContinuationOptions.NotOnCanceled) == 0;
 		}
 
 		internal static void Invoke(IAsyncOperation op, object continuation)

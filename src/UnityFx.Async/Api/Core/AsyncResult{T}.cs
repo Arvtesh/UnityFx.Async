@@ -173,7 +173,11 @@ namespace UnityFx.Async
 			public void OnCompleted(Action continuation)
 			{
 				var syncContext = _continueOnCapturedContext ? SynchronizationContext.Current : null;
-				_op.SetContinuationForAwait(continuation, syncContext);
+
+				if (!_op.TryAddCompletionCallback(continuation, AsyncContinuationOptions.None, syncContext))
+				{
+					continuation();
+				}
 			}
 		}
 
@@ -273,7 +277,7 @@ namespace UnityFx.Async
 				}
 			};
 
-			if (TryAddCompletionCallback(completionCallback, null))
+			if (TryAddCompletionCallback(completionCallback, AsyncContinuationOptions.None, null))
 			{
 				return new AsyncObservableSubscription(this, completionCallback);
 			}
