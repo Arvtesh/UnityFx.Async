@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 -----------------------
 ## [Unreleased]
 
+-----------------------
+## [0.8.2] - 2018-03-28
+
 ### Added
 - New `AsyncResult` constructors added.
 - New overloads for `AsyncResult.FromResult`, `AsyncResult.FromCanceled` and `AsyncResult.FromException` methods added.
