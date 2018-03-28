@@ -5,7 +5,7 @@ Channel  | UnityFx.Async |
 AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/master?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/master) [![AppVeyor tests](https://img.shields.io/appveyor/tests/Arvtesh/unityFx-async.svg)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/build/tests)
 NuGet | [![NuGet](https://img.shields.io/nuget/v/UnityFx.Async.svg)](https://www.nuget.org/packages/UnityFx.Async) [![NuGet](https://img.shields.io/nuget/vpre/UnityFx.Async.svg)](https://www.nuget.org/packages/UnityFx.Async)
 Github | [![GitHub release](https://img.shields.io/github/release/Arvtesh/UnityFx.Async.svg?logo=github)](https://github.com/Arvtesh/UnityFx.Async/releases)
-Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v0.8.1-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
+Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v0.8.2-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
 
 ## Synopsis
 
@@ -157,6 +157,7 @@ The project was initially created to help author with his [Unity3d](https://unit
 
 ## Documentation
 Please see the links below for extended information on the product:
+- [Unity forums](https://forum.unity.com/threads/asynchronous-operations-for-unity-free.522989/).
 - [Documentation](https://arvtesh.github.io/UnityFx.Async/articles/intro.html).
 - [API Reference](https://arvtesh.github.io/UnityFx.Async/api/index.html).
 - [CHANGELOG](CHANGELOG.md).
