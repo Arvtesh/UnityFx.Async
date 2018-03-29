@@ -49,7 +49,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Throws exception if the operation has failed or canceled.
 		/// </summary>
-		internal static void ThrowIfFaultedOrCanceled(IAsyncOperation op, bool throwAggregate)
+		internal static void ThrowIfNonSuccess(IAsyncOperation op, bool throwAggregate)
 		{
 			if (op is AsyncResult ar)
 			{
@@ -104,7 +104,7 @@ namespace UnityFx.Async
 				op.AsyncWaitHandle.WaitOne();
 			}
 
-			ThrowIfFaultedOrCanceled(op, true);
+			ThrowIfNonSuccess(op, true);
 		}
 
 		/// <summary>
@@ -129,7 +129,7 @@ namespace UnityFx.Async
 
 			if (result)
 			{
-				ThrowIfFaultedOrCanceled(op, true);
+				ThrowIfNonSuccess(op, true);
 			}
 
 			return result;
@@ -157,7 +157,7 @@ namespace UnityFx.Async
 
 			if (result)
 			{
-				ThrowIfFaultedOrCanceled(op, true);
+				ThrowIfNonSuccess(op, true);
 			}
 
 			return result;
@@ -182,7 +182,7 @@ namespace UnityFx.Async
 				op.AsyncWaitHandle.WaitOne();
 			}
 
-			ThrowIfFaultedOrCanceled(op, false);
+			ThrowIfNonSuccess(op, false);
 		}
 
 		/// <summary>
@@ -207,7 +207,7 @@ namespace UnityFx.Async
 
 			if (result)
 			{
-				ThrowIfFaultedOrCanceled(op, false);
+				ThrowIfNonSuccess(op, false);
 			}
 			else
 			{
@@ -237,7 +237,7 @@ namespace UnityFx.Async
 
 			if (result)
 			{
-				ThrowIfFaultedOrCanceled(op, false);
+				ThrowIfNonSuccess(op, false);
 			}
 			else
 			{
@@ -261,7 +261,7 @@ namespace UnityFx.Async
 				op.AsyncWaitHandle.WaitOne();
 			}
 
-			ThrowIfFaultedOrCanceled(op, false);
+			ThrowIfNonSuccess(op, false);
 			return op.Result;
 		}
 
@@ -288,7 +288,7 @@ namespace UnityFx.Async
 
 			if (result)
 			{
-				ThrowIfFaultedOrCanceled(op, false);
+				ThrowIfNonSuccess(op, false);
 			}
 			else
 			{
@@ -321,7 +321,7 @@ namespace UnityFx.Async
 
 			if (result)
 			{
-				ThrowIfFaultedOrCanceled(op, false);
+				ThrowIfNonSuccess(op, false);
 			}
 			else
 			{
@@ -826,15 +826,15 @@ namespace UnityFx.Async
 		public struct AsyncAwaiter : INotifyCompletion
 		{
 			private readonly IAsyncOperation _op;
-			private readonly bool _continueOnCapturedContext;
+			private readonly AsyncContinuationOptions _options;
 
 			/// <summary>
 			/// Initializes a new instance of the <see cref="AsyncAwaiter"/> struct.
 			/// </summary>
-			public AsyncAwaiter(IAsyncOperation op, bool continueOnCapturedContext)
+			public AsyncAwaiter(IAsyncOperation op, AsyncContinuationOptions options)
 			{
 				_op = op;
-				_continueOnCapturedContext = continueOnCapturedContext;
+				_options = options;
 			}
 
 			/// <summary>
@@ -848,13 +848,19 @@ namespace UnityFx.Async
 			/// </summary>
 			public void GetResult()
 			{
-				GetAwaiterResult(_op);
+				if (!_op.IsCompletedSuccessfully)
+				{
+					ThrowIfNonSuccess(_op, false);
+				}
 			}
 
 			/// <inheritdoc/>
 			public void OnCompleted(Action continuation)
 			{
-				SetAwaitedCompletionCallback(_op, continuation, _continueOnCapturedContext);
+				if (!_op.TryAddCompletionCallback(continuation, _options, null))
+				{
+					continuation();
+				}
 			}
 		}
 
@@ -865,15 +871,15 @@ namespace UnityFx.Async
 		public struct AsyncAwaiter<T> : INotifyCompletion
 		{
 			private readonly IAsyncOperation<T> _op;
-			private readonly bool _continueOnCapturedContext;
+			private readonly AsyncContinuationOptions _options;
 
 			/// <summary>
 			/// Initializes a new instance of the <see cref="AsyncAwaiter{T}"/> struct.
 			/// </summary>
-			public AsyncAwaiter(IAsyncOperation<T> op, bool continueOnCapturedContext)
+			public AsyncAwaiter(IAsyncOperation<T> op, AsyncContinuationOptions options)
 			{
 				_op = op;
-				_continueOnCapturedContext = continueOnCapturedContext;
+				_options = options;
 			}
 
 			/// <summary>
@@ -888,14 +894,21 @@ namespace UnityFx.Async
 			/// <returns>Returns the underlying operation result.</returns>
 			public T GetResult()
 			{
-				GetAwaiterResult(_op);
+				if (!_op.IsCompletedSuccessfully)
+				{
+					ThrowIfNonSuccess(_op, false);
+				}
+
 				return _op.Result;
 			}
 
 			/// <inheritdoc/>
 			public void OnCompleted(Action continuation)
 			{
-				SetAwaitedCompletionCallback(_op, continuation, _continueOnCapturedContext);
+				if (!_op.TryAddCompletionCallback(continuation, _options, null))
+				{
+					continuation();
+				}
 			}
 		}
 
@@ -912,7 +925,7 @@ namespace UnityFx.Async
 			/// </summary>
 			public ConfiguredAsyncAwaitable(IAsyncOperation op, bool continueOnCapturedContext)
 			{
-				_awaiter = new AsyncAwaiter(op, continueOnCapturedContext);
+				_awaiter = new AsyncAwaiter(op, continueOnCapturedContext ? AsyncContinuationOptions.CaptureSynchronizationContext : AsyncContinuationOptions.None);
 			}
 
 			/// <summary>
@@ -934,7 +947,7 @@ namespace UnityFx.Async
 			/// </summary>
 			public ConfiguredAsyncAwaitable(IAsyncOperation<T> op, bool continueOnCapturedContext)
 			{
-				_awaiter = new AsyncAwaiter<T>(op, continueOnCapturedContext);
+				_awaiter = new AsyncAwaiter<T>(op, continueOnCapturedContext ? AsyncContinuationOptions.CaptureSynchronizationContext : AsyncContinuationOptions.None);
 			}
 
 			/// <summary>
@@ -950,7 +963,7 @@ namespace UnityFx.Async
 		/// <seealso cref="GetAwaiter{T}(IAsyncOperation{T})"/>
 		public static AsyncAwaiter GetAwaiter(this IAsyncOperation op)
 		{
-			return new AsyncAwaiter(op, true);
+			return new AsyncAwaiter(op, AsyncContinuationOptions.CaptureSynchronizationContext);
 		}
 
 		/// <summary>
@@ -960,7 +973,7 @@ namespace UnityFx.Async
 		/// <seealso cref="GetAwaiter(IAsyncOperation)"/>
 		public static AsyncAwaiter<T> GetAwaiter<T>(this IAsyncOperation<T> op)
 		{
-			return new AsyncAwaiter<T>(op, true);
+			return new AsyncAwaiter<T>(op, AsyncContinuationOptions.CaptureSynchronizationContext);
 		}
 
 		/// <summary>
@@ -1054,24 +1067,6 @@ namespace UnityFx.Async
 				}
 
 				return result.Task;
-			}
-		}
-
-		private static void SetAwaitedCompletionCallback(IAsyncOperation op, Action continuation, bool continueOnCapturedContext)
-		{
-			var syncContext = continueOnCapturedContext ? SynchronizationContext.Current : null;
-
-			if (!op.TryAddCompletionCallback(continuation, AsyncContinuationOptions.None, syncContext))
-			{
-				continuation();
-			}
-		}
-
-		private static void GetAwaiterResult(IAsyncOperation op)
-		{
-			if (!op.IsCompletedSuccessfully)
-			{
-				ThrowIfFaultedOrCanceled(op, false);
 			}
 		}
 
