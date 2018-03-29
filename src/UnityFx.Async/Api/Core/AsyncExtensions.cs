@@ -339,12 +339,13 @@ namespace UnityFx.Async
 		/// Adds a completion callback to be executed after the operation has succeeded.
 		/// </summary>
 		/// <param name="op">The target operation.</param>
-		/// <param name="action">The callback to be executed when the operation has completed.</param>
-		public static IAsyncOperation Then(this IAsyncOperation op, Action action)
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <seealso href="https://promisesaplus.com/"/>
+		public static IAsyncOperation Then(this IAsyncOperation op, Action successCallback)
 		{
-			if (action == null)
+			if (successCallback == null)
 			{
-				throw new ArgumentNullException(nameof(action));
+				throw new ArgumentNullException(nameof(successCallback));
 			}
 
 			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
@@ -356,7 +357,7 @@ namespace UnityFx.Async
 					{
 						if (asyncOp.IsCompletedSuccessfully)
 						{
-							action();
+							successCallback();
 							result.TrySetCompleted();
 						}
 						else if (asyncOp.IsFaulted)
@@ -382,12 +383,13 @@ namespace UnityFx.Async
 		/// Adds a completion callback to be executed after the operation has succeeded.
 		/// </summary>
 		/// <param name="op">The target operation.</param>
-		/// <param name="action">The callback to be executed when the operation has completed.</param>
-		public static IAsyncOperation Then(this IAsyncOperation op, Func<IAsyncOperation> action)
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <seealso href="https://promisesaplus.com/"/>
+		public static IAsyncOperation Then(this IAsyncOperation op, Func<IAsyncOperation> successCallback)
 		{
-			if (action == null)
+			if (successCallback == null)
 			{
-				throw new ArgumentNullException(nameof(action));
+				throw new ArgumentNullException(nameof(successCallback));
 			}
 
 			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
@@ -399,7 +401,7 @@ namespace UnityFx.Async
 					{
 						if (asyncOp.IsCompletedSuccessfully)
 						{
-							action().AddCompletionCallback(asyncOp2 => result.CopyCompletionState(asyncOp2, false), AsyncContinuationOptions.None);
+							successCallback().AddCompletionCallback(asyncOp2 => result.CopyCompletionState(asyncOp2, false), AsyncContinuationOptions.None);
 						}
 						else if (asyncOp.IsFaulted)
 						{
@@ -420,12 +422,121 @@ namespace UnityFx.Async
 			return result;
 		}
 
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">The target operation.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has succeeded.</param>
+		/// <param name="errorCallback">The callback to be executed when the operation has faulted/was canceled.</param>
+		/// <seealso href="https://promisesaplus.com/"/>
+		public static IAsyncOperation Then(this IAsyncOperation op, Action successCallback, Action<Exception> errorCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			if (errorCallback == null)
+			{
+				throw new ArgumentNullException(nameof(errorCallback));
+			}
+
+			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
+
+			op.AddCompletionCallback(
+				asyncOp =>
+				{
+					try
+					{
+						if (asyncOp.IsCompletedSuccessfully)
+						{
+							successCallback();
+							result.TrySetCompleted();
+						}
+						else if (asyncOp.IsFaulted)
+						{
+							errorCallback(asyncOp.Exception.InnerException);
+							result.TrySetException(asyncOp.Exception);
+						}
+						else
+						{
+							errorCallback(new OperationCanceledException());
+							result.TrySetCanceled();
+						}
+					}
+					catch (Exception e)
+					{
+						errorCallback(e);
+						result.TrySetException(e);
+					}
+				},
+				AsyncContinuationOptions.CaptureSynchronizationContext);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">The target operation.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has succeeded.</param>
+		/// <param name="errorCallback">The callback to be executed when the operation has faulted/was canceled.</param>
+		/// <seealso href="https://promisesaplus.com/"/>
+		public static IAsyncOperation Then(this IAsyncOperation op, Func<IAsyncOperation> successCallback, Action<Exception> errorCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			if (errorCallback == null)
+			{
+				throw new ArgumentNullException(nameof(errorCallback));
+			}
+
+			throw new NotImplementedException();
+		}
+
 		#endregion
 
 		#region Catch
+
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has faulted or was canceled.
+		/// </summary>
+		/// <param name="op">The target operation.</param>
+		/// <param name="errorCallback">The callback to be executed when the operation has faulted/was canceled.</param>
+		/// <seealso href="https://promisesaplus.com/"/>
+		public static IAsyncOperation Catch(this IAsyncOperation op, Action<Exception> errorCallback)
+		{
+			if (errorCallback == null)
+			{
+				throw new ArgumentNullException(nameof(errorCallback));
+			}
+
+			throw new NotImplementedException();
+		}
+
 		#endregion
 
 		#region Finally
+
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has completed.
+		/// </summary>
+		/// <param name="op">The target operation.</param>
+		/// <param name="action">The callback to be executed when the operation has completed.</param>
+		/// <seealso href="https://promisesaplus.com/"/>
+		public static IAsyncOperation Finally(this IAsyncOperation op, Action action)
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			throw new NotImplementedException();
+		}
+
 		#endregion
 
 		#region AddCompletionCallback
