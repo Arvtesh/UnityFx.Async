@@ -75,9 +75,9 @@ namespace UnityFx.Async
 				{
 					if (throwAggregate)
 					{
-						throw new AggregateException(new OperationCanceledException());
+						throw op.Exception;
 					}
-					else
+					else if (!AsyncResult.TryThrowException(op.Exception))
 					{
 						throw new OperationCanceledException();
 					}
@@ -361,13 +361,9 @@ namespace UnityFx.Async
 							successCallback();
 							result.TrySetCompleted();
 						}
-						else if (asyncOp.IsFaulted)
-						{
-							result.TrySetException(asyncOp.Exception);
-						}
 						else
 						{
-							result.TrySetCanceled();
+							result.TrySetException(asyncOp.Exception);
 						}
 					}
 					catch (Exception e)
@@ -406,13 +402,9 @@ namespace UnityFx.Async
 							successCallback((asyncOp as IAsyncOperation<T>).Result);
 							result.TrySetCompleted();
 						}
-						else if (asyncOp.IsFaulted)
-						{
-							result.TrySetException(asyncOp.Exception);
-						}
 						else
 						{
-							result.TrySetCanceled();
+							result.TrySetException(asyncOp.Exception);
 						}
 					}
 					catch (Exception e)
@@ -451,13 +443,9 @@ namespace UnityFx.Async
 								asyncOp2 => result.CopyCompletionState(asyncOp2, false),
 								AsyncContinuationOptions.None);
 						}
-						else if (asyncOp.IsFaulted)
-						{
-							result.TrySetException(asyncOp.Exception);
-						}
 						else
 						{
-							result.TrySetCanceled();
+							result.TrySetException(asyncOp.Exception);
 						}
 					}
 					catch (Exception e)
@@ -496,13 +484,9 @@ namespace UnityFx.Async
 								asyncOp2 => result.CopyCompletionState(asyncOp2, false),
 								AsyncContinuationOptions.None);
 						}
-						else if (asyncOp.IsFaulted)
-						{
-							result.TrySetException(asyncOp.Exception);
-						}
 						else
 						{
-							result.TrySetCanceled();
+							result.TrySetException(asyncOp.Exception);
 						}
 					}
 					catch (Exception e)
@@ -546,15 +530,10 @@ namespace UnityFx.Async
 							successCallback();
 							result.TrySetCompleted();
 						}
-						else if (asyncOp.IsFaulted)
+						else
 						{
 							errorCallback(asyncOp.Exception.InnerException);
 							result.TrySetException(asyncOp.Exception);
-						}
-						else
-						{
-							errorCallback(new OperationCanceledException());
-							result.TrySetCanceled();
 						}
 					}
 					catch (Exception e)
@@ -598,15 +577,10 @@ namespace UnityFx.Async
 							successCallback((asyncOp as IAsyncOperation<T>).Result);
 							result.TrySetCompleted();
 						}
-						else if (asyncOp.IsFaulted)
+						else
 						{
 							errorCallback(asyncOp.Exception.InnerException);
 							result.TrySetException(asyncOp.Exception);
-						}
-						else
-						{
-							errorCallback(new OperationCanceledException());
-							result.TrySetCanceled();
 						}
 					}
 					catch (Exception e)
@@ -651,15 +625,10 @@ namespace UnityFx.Async
 								asyncOp2 => result.CopyCompletionState(asyncOp2, false),
 								AsyncContinuationOptions.None);
 						}
-						else if (asyncOp.IsFaulted)
+						else
 						{
 							errorCallback(asyncOp.Exception.InnerException);
 							result.TrySetException(asyncOp.Exception);
-						}
-						else
-						{
-							errorCallback(new OperationCanceledException());
-							result.TrySetCanceled();
 						}
 					}
 					catch (Exception e)
@@ -704,15 +673,10 @@ namespace UnityFx.Async
 								asyncOp2 => result.CopyCompletionState(asyncOp2, false),
 								AsyncContinuationOptions.None);
 						}
-						else if (asyncOp.IsFaulted)
+						else
 						{
 							errorCallback(asyncOp.Exception.InnerException);
 							result.TrySetException(asyncOp.Exception);
-						}
-						else
-						{
-							errorCallback(new OperationCanceledException());
-							result.TrySetCanceled();
 						}
 					}
 					catch (Exception e)
@@ -753,14 +717,9 @@ namespace UnityFx.Async
 						{
 							result.TrySetCompleted();
 						}
-						else if (asyncOp.IsFaulted)
-						{
-							errorCallback(asyncOp.Exception.InnerException);
-							result.TrySetCompleted();
-						}
 						else
 						{
-							errorCallback(new OperationCanceledException());
+							errorCallback(asyncOp.Exception.InnerException);
 							result.TrySetCompleted();
 						}
 					}
@@ -799,19 +758,7 @@ namespace UnityFx.Async
 					try
 					{
 						action();
-
-						if (asyncOp.IsCompletedSuccessfully)
-						{
-							result.TrySetCompleted();
-						}
-						else if (asyncOp.IsFaulted)
-						{
-							result.TrySetCompleted();
-						}
-						else
-						{
-							result.TrySetCompleted();
-						}
+						result.TrySetCompleted();
 					}
 					catch (Exception e)
 					{
