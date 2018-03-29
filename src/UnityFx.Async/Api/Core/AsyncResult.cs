@@ -1339,7 +1339,7 @@ namespace UnityFx.Async
 		public AsyncOperationStatus Status => (AsyncOperationStatus)(_flags & _statusMask);
 
 		/// <inheritdoc/>
-		public AggregateException Exception => (_flags & _statusMask) == StatusFaulted ? _exception : null;
+		public AggregateException Exception => (_flags & _flagCompleted) != 0 ? _exception : null;
 
 		/// <inheritdoc/>
 		public bool IsCompletedSuccessfully => (_flags & _statusMask) == StatusRanToCompletion;
