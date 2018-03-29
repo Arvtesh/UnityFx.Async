@@ -141,16 +141,16 @@ namespace UnityFx.Async
 		}
 
 		[Fact]
-		public void FromException_ReturnsFailedOperation_Generic()
+		public void FromException_ReturnsCanceledOperation()
 		{
 			// Arrange
-			var e = new InvalidCastException();
+			var e = new OperationCanceledException();
 
 			// Act
-			var op = AsyncResult.FromException<int>(e);
+			var op = AsyncResult.FromException(e);
 
 			// Assert
-			AssertFaulted(op, e);
+			AssertCanceled(op);
 			Assert.True(op.CompletedSynchronously);
 		}
 
@@ -564,6 +564,24 @@ namespace UnityFx.Async
 
 			// Assert
 			AssertFaulted(op, e);
+			Assert.True(result);
+		}
+
+		[Theory]
+		[InlineData(AsyncOperationStatus.Created)]
+		[InlineData(AsyncOperationStatus.Scheduled)]
+		[InlineData(AsyncOperationStatus.Running)]
+		public void TrySetException_SetsStatusToCanceled(AsyncOperationStatus status)
+		{
+			// Arrange
+			var e = new OperationCanceledException();
+			var op = new AsyncCompletionSource(status);
+
+			// Act
+			var result = op.TrySetException(e);
+
+			// Assert
+			AssertCanceled(op);
 			Assert.True(result);
 		}
 

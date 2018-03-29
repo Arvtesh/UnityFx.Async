@@ -68,7 +68,7 @@ namespace UnityFx.Async
 					else if (!AsyncResult.TryThrowException(op.Exception))
 					{
 						// Should never get here. If faulted state excpetion should not be null.
-						throw new Exception(op.ToString());
+						throw new Exception();
 					}
 				}
 				else if (status == AsyncOperationStatus.Canceled)
@@ -838,7 +838,7 @@ namespace UnityFx.Async
 		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, AsyncContinuationOptions, SynchronizationContext)"/>
 		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action)
 		{
-			if (!op.TryAddCompletionCallback(action, AsyncContinuationOptions.CaptureSynchronizationContext, null))
+			if (!op.TryAddCompletionCallback(action, AsyncContinuationOptions.None, SynchronizationContext.Current))
 			{
 				action(op);
 			}

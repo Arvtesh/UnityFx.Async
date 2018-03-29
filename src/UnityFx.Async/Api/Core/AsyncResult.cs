@@ -152,8 +152,16 @@ namespace UnityFx.Async
 				_exception = new AggregateException(exception);
 			}
 
+			if (_exception.InnerException is OperationCanceledException)
+			{
+				_flags = StatusCanceled | _flagCompletedSynchronously;
+			}
+			else
+			{
+				_flags = StatusFaulted | _flagCompletedSynchronously;
+			}
+
 			_continuation = _continuationCompletionSentinel;
-			_flags = StatusFaulted | _flagCompletedSynchronously;
 			_asyncState = asyncState;
 		}
 
@@ -171,8 +179,17 @@ namespace UnityFx.Async
 			}
 
 			_exception = new AggregateException(exceptions);
+
+			if (_exception.InnerException is OperationCanceledException)
+			{
+				_flags = StatusCanceled | _flagCompletedSynchronously;
+			}
+			else
+			{
+				_flags = StatusFaulted | _flagCompletedSynchronously;
+			}
+
 			_continuation = _continuationCompletionSentinel;
-			_flags = StatusFaulted | _flagCompletedSynchronously;
 			_asyncState = asyncState;
 		}
 
@@ -299,7 +316,14 @@ namespace UnityFx.Async
 						_exception = new AggregateException(exception);
 					}
 
-					SetCompleted(StatusFaulted, completedSynchronously);
+					if (_exception.InnerException is OperationCanceledException)
+					{
+						SetCompleted(StatusCanceled, completedSynchronously);
+					}
+					else
+					{
+						SetCompleted(StatusFaulted, completedSynchronously);
+					}
 				}
 
 				return true;
@@ -350,7 +374,16 @@ namespace UnityFx.Async
 			if (TryReserveCompletion())
 			{
 				_exception = new AggregateException(list);
-				SetCompleted(StatusFaulted, completedSynchronously);
+
+				if (_exception.InnerException is OperationCanceledException)
+				{
+					SetCompleted(StatusCanceled, completedSynchronously);
+				}
+				else
+				{
+					SetCompleted(StatusFaulted, completedSynchronously);
+				}
+
 				return true;
 			}
 			else if (!IsCompleted)
