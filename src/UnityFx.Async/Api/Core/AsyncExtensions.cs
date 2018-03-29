@@ -336,10 +336,11 @@ namespace UnityFx.Async
 		#region Then
 
 		/// <summary>
-		/// Adds a completion callback to be executed after the operation has succeeded.
+		/// Schedules a callback to be executed after the operation has succeeded.
 		/// </summary>
 		/// <param name="op">The target operation.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>TODO</returns>
 		/// <seealso href="https://promisesaplus.com/"/>
 		public static IAsyncOperation Then(this IAsyncOperation op, Action successCallback)
 		{
@@ -380,12 +381,13 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Adds a completion callback to be executed after the operation has succeeded.
+		/// Schedules a callback to be executed after the operation has succeeded.
 		/// </summary>
 		/// <param name="op">The target operation.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>TODO</returns>
 		/// <seealso href="https://promisesaplus.com/"/>
-		public static IAsyncOperation Then(this IAsyncOperation op, Func<IAsyncOperation> successCallback)
+		public static IAsyncOperation Then<T>(this IAsyncOperation<T> op, Action<T> successCallback)
 		{
 			if (successCallback == null)
 			{
@@ -401,7 +403,8 @@ namespace UnityFx.Async
 					{
 						if (asyncOp.IsCompletedSuccessfully)
 						{
-							successCallback().AddCompletionCallback(asyncOp2 => result.CopyCompletionState(asyncOp2, false), AsyncContinuationOptions.None);
+							successCallback((asyncOp as IAsyncOperation<T>).Result);
+							result.TrySetCompleted();
 						}
 						else if (asyncOp.IsFaulted)
 						{
@@ -423,7 +426,97 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Adds a completion callback to be executed after the operation has succeeded.
+		/// Schedules a callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">The target operation.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <seealso href="https://promisesaplus.com/"/>
+		public static IAsyncOperation Then(this IAsyncOperation op, Func<IAsyncOperation> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
+
+			op.AddCompletionCallback(
+				asyncOp =>
+				{
+					try
+					{
+						if (asyncOp.IsCompletedSuccessfully)
+						{
+							successCallback().AddCompletionCallback(
+								asyncOp2 => result.CopyCompletionState(asyncOp2, false),
+								AsyncContinuationOptions.None);
+						}
+						else if (asyncOp.IsFaulted)
+						{
+							result.TrySetException(asyncOp.Exception);
+						}
+						else
+						{
+							result.TrySetCanceled();
+						}
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e);
+					}
+				},
+				AsyncContinuationOptions.CaptureSynchronizationContext);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Schedules a callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">The target operation.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <seealso href="https://promisesaplus.com/"/>
+		public static IAsyncOperation Then<T>(this IAsyncOperation<T> op, Func<T, IAsyncOperation> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
+
+			op.AddCompletionCallback(
+				asyncOp =>
+				{
+					try
+					{
+						if (asyncOp.IsCompletedSuccessfully)
+						{
+							successCallback((asyncOp as IAsyncOperation<T>).Result).AddCompletionCallback(
+								asyncOp2 => result.CopyCompletionState(asyncOp2, false),
+								AsyncContinuationOptions.None);
+						}
+						else if (asyncOp.IsFaulted)
+						{
+							result.TrySetException(asyncOp.Exception);
+						}
+						else
+						{
+							result.TrySetCanceled();
+						}
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e);
+					}
+				},
+				AsyncContinuationOptions.CaptureSynchronizationContext);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Schedules a callbacks to be executed after the operation has completed.
 		/// </summary>
 		/// <param name="op">The target operation.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has succeeded.</param>
@@ -466,7 +559,58 @@ namespace UnityFx.Async
 					}
 					catch (Exception e)
 					{
-						errorCallback(e);
+						result.TrySetException(e);
+					}
+				},
+				AsyncContinuationOptions.CaptureSynchronizationContext);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Schedules a callbacks to be executed after the operation has completed.
+		/// </summary>
+		/// <param name="op">The target operation.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has succeeded.</param>
+		/// <param name="errorCallback">The callback to be executed when the operation has faulted/was canceled.</param>
+		/// <seealso href="https://promisesaplus.com/"/>
+		public static IAsyncOperation Then<T>(this IAsyncOperation<T> op, Action<T> successCallback, Action<Exception> errorCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			if (errorCallback == null)
+			{
+				throw new ArgumentNullException(nameof(errorCallback));
+			}
+
+			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
+
+			op.AddCompletionCallback(
+				asyncOp =>
+				{
+					try
+					{
+						if (asyncOp.IsCompletedSuccessfully)
+						{
+							successCallback((asyncOp as IAsyncOperation<T>).Result);
+							result.TrySetCompleted();
+						}
+						else if (asyncOp.IsFaulted)
+						{
+							errorCallback(asyncOp.Exception.InnerException);
+							result.TrySetException(asyncOp.Exception);
+						}
+						else
+						{
+							errorCallback(new OperationCanceledException());
+							result.TrySetCanceled();
+						}
+					}
+					catch (Exception e)
+					{
 						result.TrySetException(e);
 					}
 				},
@@ -514,7 +658,36 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			throw new NotImplementedException();
+			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
+
+			op.AddCompletionCallback(
+				asyncOp =>
+				{
+					try
+					{
+						if (asyncOp.IsCompletedSuccessfully)
+						{
+							result.TrySetCompleted();
+						}
+						else if (asyncOp.IsFaulted)
+						{
+							errorCallback(asyncOp.Exception.InnerException);
+							result.TrySetCompleted();
+						}
+						else
+						{
+							errorCallback(new OperationCanceledException());
+							result.TrySetCompleted();
+						}
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e);
+					}
+				},
+				AsyncContinuationOptions.CaptureSynchronizationContext);
+
+			return result;
 		}
 
 		#endregion
@@ -534,7 +707,36 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			throw new NotImplementedException();
+			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
+
+			op.AddCompletionCallback(
+				asyncOp =>
+				{
+					try
+					{
+						action();
+
+						if (asyncOp.IsCompletedSuccessfully)
+						{
+							result.TrySetCompleted();
+						}
+						else if (asyncOp.IsFaulted)
+						{
+							result.TrySetCompleted();
+						}
+						else
+						{
+							result.TrySetCompleted();
+						}
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e);
+					}
+				},
+				AsyncContinuationOptions.CaptureSynchronizationContext);
+
+			return result;
 		}
 
 		#endregion
