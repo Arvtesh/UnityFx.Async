@@ -1061,7 +1061,7 @@ namespace UnityFx.Async
 			/// <inheritdoc/>
 			public void OnCompleted(Action continuation)
 			{
-				if (!_op.TryAddCompletionCallback(continuation, _options, null))
+				if (!_op.TryAddCompletionCallback(continuation, _options))
 				{
 					continuation();
 				}
@@ -1109,7 +1109,7 @@ namespace UnityFx.Async
 			/// <inheritdoc/>
 			public void OnCompleted(Action continuation)
 			{
-				if (!_op.TryAddCompletionCallback(continuation, _options, null))
+				if (!_op.TryAddCompletionCallback(continuation, _options))
 				{
 					continuation();
 				}
