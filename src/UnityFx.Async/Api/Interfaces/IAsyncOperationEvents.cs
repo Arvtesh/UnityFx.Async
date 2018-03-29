@@ -88,7 +88,8 @@ namespace UnityFx.Async
 		/// <param name="action">The callback to be executed when the operation has completed.</param>
 		/// <param name="options">Options for when the callback is executed.</param>
 		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
-		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
+		/// Otherwise the callback is invoked on a thread that initiated the operation completion. The argument value is ignored if <paramref name="options"/>
+		/// is set to <see cref="AsyncContinuationOptions.CaptureSynchronizationContext"/>.
 		/// </param>
 		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
@@ -112,7 +113,8 @@ namespace UnityFx.Async
 		/// <param name="action">The callback to be executed when the operation has completed.</param>
 		/// <param name="options">Options for when the callback is executed.</param>
 		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
-		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
+		/// Otherwise the callback is invoked on a thread that initiated the operation completion. The argument value is ignored if <paramref name="options"/>
+		/// is set to <see cref="AsyncContinuationOptions.CaptureSynchronizationContext"/>.
 		/// </param>
 		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>

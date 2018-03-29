@@ -333,6 +333,101 @@ namespace UnityFx.Async
 
 		#endregion
 
+		#region Then
+
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">The target operation.</param>
+		/// <param name="action">The callback to be executed when the operation has completed.</param>
+		public static IAsyncOperation Then(this IAsyncOperation op, Action action)
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
+
+			op.AddCompletionCallback(
+				asyncOp =>
+				{
+					try
+					{
+						if (asyncOp.IsCompletedSuccessfully)
+						{
+							action();
+							result.TrySetCompleted();
+						}
+						else if (asyncOp.IsFaulted)
+						{
+							result.TrySetException(asyncOp.Exception);
+						}
+						else
+						{
+							result.TrySetCanceled();
+						}
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e);
+					}
+				},
+				AsyncContinuationOptions.CaptureSynchronizationContext);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">The target operation.</param>
+		/// <param name="action">The callback to be executed when the operation has completed.</param>
+		public static IAsyncOperation Then(this IAsyncOperation op, Func<IAsyncOperation> action)
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
+
+			op.AddCompletionCallback(
+				asyncOp =>
+				{
+					try
+					{
+						if (asyncOp.IsCompletedSuccessfully)
+						{
+							action().AddCompletionCallback(asyncOp2 => result.CopyCompletionState(asyncOp2, false), AsyncContinuationOptions.None);
+						}
+						else if (asyncOp.IsFaulted)
+						{
+							result.TrySetException(asyncOp.Exception);
+						}
+						else
+						{
+							result.TrySetCanceled();
+						}
+					}
+					catch (Exception e)
+					{
+						result.TrySetException(e);
+					}
+				},
+				AsyncContinuationOptions.CaptureSynchronizationContext);
+
+			return result;
+		}
+
+		#endregion
+
+		#region Catch
+		#endregion
+
+		#region Finally
+		#endregion
+
 		#region AddCompletionCallback
 
 		/// <summary>
@@ -364,9 +459,7 @@ namespace UnityFx.Async
 		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, AsyncContinuationOptions, SynchronizationContext)"/>
 		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action, AsyncContinuationOptions options)
 		{
-			var syncContext = ((options & AsyncContinuationOptions.CaptureSynchronizationContext) != 0) ? SynchronizationContext.Current : null;
-
-			if (!op.TryAddCompletionCallback(action, options, syncContext))
+			if (!op.TryAddCompletionCallback(action, options, null))
 			{
 				if (AsyncContinuation.CanInvoke(op, options))
 				{
@@ -377,31 +470,31 @@ namespace UnityFx.Async
 
 		/// <summary>
 		/// Adds a completion callback to be executed after the operation has finished. If the operation is completed the <paramref name="action"/> is invoked
-		/// on the <paramref name="synchronizationContext"/> specified.
+		/// on the <paramref name="syncContext"/> specified.
 		/// </summary>
 		/// <param name="op">The target operation.</param>
 		/// <param name="action">The callback to be executed when the operation has completed.</param>
 		/// <param name="options">Options for when the callback is executed.</param>
-		/// <param name="synchronizationContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
+		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
 		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
 		/// </param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="IAsyncOperationEvents"/>
 		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, AsyncContinuationOptions)"/>
-		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action, AsyncContinuationOptions options, SynchronizationContext synchronizationContext)
+		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action, AsyncContinuationOptions options, SynchronizationContext syncContext)
 		{
-			if (!op.TryAddCompletionCallback(action, options, synchronizationContext))
+			if (!op.TryAddCompletionCallback(action, options, syncContext))
 			{
 				if (AsyncContinuation.CanInvoke(op, options))
 				{
-					if (synchronizationContext == null || synchronizationContext.GetType() == typeof(SynchronizationContext) || synchronizationContext == SynchronizationContext.Current)
+					if (syncContext == null || syncContext.GetType() == typeof(SynchronizationContext) || syncContext == SynchronizationContext.Current)
 					{
 						action(op);
 					}
 					else
 					{
-						synchronizationContext.Post(args => action(op), op);
+						syncContext.Post(args => action(op), op);
 					}
 				}
 			}
