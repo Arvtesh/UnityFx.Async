@@ -684,27 +684,25 @@ namespace UnityFx.Async
 
 			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
 
-			op.AddCompletionCallback(
-				asyncOp =>
+			op.AddCompletionCallback(asyncOp =>
+			{
+				try
 				{
-					try
+					if (asyncOp.IsCompletedSuccessfully)
 					{
-						if (asyncOp.IsCompletedSuccessfully)
-						{
-							result.TrySetCompleted();
-						}
-						else
-						{
-							errorCallback(asyncOp.Exception.InnerException);
-							result.TrySetCompleted();
-						}
+						result.TrySetCompleted();
 					}
-					catch (Exception e)
+					else
 					{
-						result.TrySetException(e);
+						errorCallback(asyncOp.Exception.InnerException);
+						result.TrySetCompleted();
 					}
-				},
-				AsyncContinuationOptions.CaptureSynchronizationContext);
+				}
+				catch (Exception e)
+				{
+					result.TrySetException(e);
+				}
+			});
 
 			return result;
 		}
@@ -728,20 +726,18 @@ namespace UnityFx.Async
 
 			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
 
-			op.AddCompletionCallback(
-				asyncOp =>
+			op.AddCompletionCallback(asyncOp =>
+			{
+				try
 				{
-					try
-					{
-						action();
-						result.TrySetCompleted();
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e);
-					}
-				},
-				AsyncContinuationOptions.CaptureSynchronizationContext);
+					action();
+					result.TrySetCompleted();
+				}
+				catch (Exception e)
+				{
+					result.TrySetException(e);
+				}
+			});
 
 			return result;
 		}
