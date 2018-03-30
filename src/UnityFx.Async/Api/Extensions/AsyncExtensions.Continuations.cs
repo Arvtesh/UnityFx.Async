@@ -33,23 +33,6 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="op">The target operation.</param>
 		/// <param name="action">The callback to be executed when the operation has completed.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="IAsyncOperationEvents"/>
-		/// <seealso cref="AddCompletionCallback(IAsyncOperation, Action, AsyncContinuationOptions)"/>
-		public static void AddCompletionCallback(this IAsyncOperation op, Action action)
-		{
-			if (!op.TryAddCompletionCallback(action, AsyncContinuationOptions.CaptureSynchronizationContext))
-			{
-				action();
-			}
-		}
-
-		/// <summary>
-		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed the <paramref name="action"/> is invoked synchronously.
-		/// </summary>
-		/// <param name="op">The target operation.</param>
-		/// <param name="action">The callback to be executed when the operation has completed.</param>
 		/// <param name="options">Options for when the callback is executed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
@@ -63,27 +46,6 @@ namespace UnityFx.Async
 				if (AsyncContinuation.CanInvoke(op, options))
 				{
 					action(op);
-				}
-			}
-		}
-
-		/// <summary>
-		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed the <paramref name="action"/> is invoked synchronously.
-		/// </summary>
-		/// <param name="op">The target operation.</param>
-		/// <param name="action">The callback to be executed when the operation has completed.</param>
-		/// <param name="options">Options for when the callback is executed.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="IAsyncOperationEvents"/>
-		/// <seealso cref="AddCompletionCallback(IAsyncOperation, Action)"/>
-		public static void AddCompletionCallback(this IAsyncOperation op, Action action, AsyncContinuationOptions options)
-		{
-			if (!op.TryAddCompletionCallback(action, options))
-			{
-				if (AsyncContinuation.CanInvoke(op, options))
-				{
-					action();
 				}
 			}
 		}

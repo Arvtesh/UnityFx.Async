@@ -1314,6 +1314,19 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Adds a completion callback for <c>await</c> implementation.
+		/// </summary>
+		internal void SetContinuationForAwait(Action continuation, SynchronizationContext syncContext)
+		{
+			ThrowIfDisposed();
+
+			if (!TryAddContinuation(continuation, AsyncContinuationOptions.None, syncContext))
+			{
+				continuation();
+			}
+		}
+
+		/// <summary>
 		/// Rethrows the specified <see cref="AggregateException"/>.
 		/// </summary>
 		internal static bool TryThrowException(AggregateException e)
@@ -1410,32 +1423,6 @@ namespace UnityFx.Async
 
 		/// <inheritdoc/>
 		public bool RemoveCompletionCallback(AsyncOperationCallback action)
-		{
-			ThrowIfDisposed();
-
-			if (action != null)
-			{
-				return TryRemoveContinuation(action);
-			}
-
-			return false;
-		}
-
-		/// <inheritdoc/>
-		public bool TryAddCompletionCallback(Action action, AsyncContinuationOptions options)
-		{
-			ThrowIfDisposed();
-
-			if (action == null)
-			{
-				throw new ArgumentNullException(nameof(action));
-			}
-
-			return TryAddContinuation(action, options, null);
-		}
-
-		/// <inheritdoc/>
-		public bool RemoveCompletionCallback(Action action)
 		{
 			ThrowIfDisposed();
 

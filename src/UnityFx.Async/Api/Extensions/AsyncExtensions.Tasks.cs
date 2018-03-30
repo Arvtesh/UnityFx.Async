@@ -23,15 +23,15 @@ namespace UnityFx.Async
 		public struct AsyncAwaiter : INotifyCompletion
 		{
 			private readonly IAsyncOperation _op;
-			private readonly AsyncContinuationOptions _options;
+			private readonly bool _continueOnCapturedContext;
 
 			/// <summary>
 			/// Initializes a new instance of the <see cref="AsyncAwaiter"/> struct.
 			/// </summary>
-			public AsyncAwaiter(IAsyncOperation op, AsyncContinuationOptions options)
+			public AsyncAwaiter(IAsyncOperation op, bool continueOnCapturedContext)
 			{
 				_op = op;
-				_options = options;
+				_continueOnCapturedContext = continueOnCapturedContext;
 			}
 
 			/// <summary>
@@ -54,10 +54,7 @@ namespace UnityFx.Async
 			/// <inheritdoc/>
 			public void OnCompleted(Action continuation)
 			{
-				if (!_op.TryAddCompletionCallback(continuation, _options))
-				{
-					continuation();
-				}
+				SetAwaitContiniation(_op, continuation, _continueOnCapturedContext);
 			}
 		}
 
@@ -68,15 +65,15 @@ namespace UnityFx.Async
 		public struct AsyncAwaiter<T> : INotifyCompletion
 		{
 			private readonly IAsyncOperation<T> _op;
-			private readonly AsyncContinuationOptions _options;
+			private readonly bool _continueOnCapturedContext;
 
 			/// <summary>
 			/// Initializes a new instance of the <see cref="AsyncAwaiter{T}"/> struct.
 			/// </summary>
-			public AsyncAwaiter(IAsyncOperation<T> op, AsyncContinuationOptions options)
+			public AsyncAwaiter(IAsyncOperation<T> op, bool continueOnCapturedContext)
 			{
 				_op = op;
-				_options = options;
+				_continueOnCapturedContext = continueOnCapturedContext;
 			}
 
 			/// <summary>
@@ -102,10 +99,7 @@ namespace UnityFx.Async
 			/// <inheritdoc/>
 			public void OnCompleted(Action continuation)
 			{
-				if (!_op.TryAddCompletionCallback(continuation, _options))
-				{
-					continuation();
-				}
+				SetAwaitContiniation(_op, continuation, _continueOnCapturedContext);
 			}
 		}
 
@@ -122,7 +116,7 @@ namespace UnityFx.Async
 			/// </summary>
 			public ConfiguredAsyncAwaitable(IAsyncOperation op, bool continueOnCapturedContext)
 			{
-				_awaiter = new AsyncAwaiter(op, continueOnCapturedContext ? AsyncContinuationOptions.CaptureSynchronizationContext : AsyncContinuationOptions.None);
+				_awaiter = new AsyncAwaiter(op, continueOnCapturedContext);
 			}
 
 			/// <summary>
@@ -144,7 +138,7 @@ namespace UnityFx.Async
 			/// </summary>
 			public ConfiguredAsyncAwaitable(IAsyncOperation<T> op, bool continueOnCapturedContext)
 			{
-				_awaiter = new AsyncAwaiter<T>(op, continueOnCapturedContext ? AsyncContinuationOptions.CaptureSynchronizationContext : AsyncContinuationOptions.None);
+				_awaiter = new AsyncAwaiter<T>(op, continueOnCapturedContext);
 			}
 
 			/// <summary>
@@ -160,7 +154,7 @@ namespace UnityFx.Async
 		/// <seealso cref="GetAwaiter{T}(IAsyncOperation{T})"/>
 		public static AsyncAwaiter GetAwaiter(this IAsyncOperation op)
 		{
-			return new AsyncAwaiter(op, AsyncContinuationOptions.CaptureSynchronizationContext);
+			return new AsyncAwaiter(op, false);
 		}
 
 		/// <summary>
@@ -170,7 +164,7 @@ namespace UnityFx.Async
 		/// <seealso cref="GetAwaiter(IAsyncOperation)"/>
 		public static AsyncAwaiter<T> GetAwaiter<T>(this IAsyncOperation<T> op)
 		{
-			return new AsyncAwaiter<T>(op, AsyncContinuationOptions.CaptureSynchronizationContext);
+			return new AsyncAwaiter<T>(op, false);
 		}
 
 		/// <summary>
@@ -329,6 +323,24 @@ namespace UnityFx.Async
 				TaskContinuationOptions.ExecuteSynchronously);
 
 			return result;
+		}
+
+		#endregion
+
+		#region Implementation
+
+		private static void SetAwaitContiniation(IAsyncOperation op, Action continuation, bool captureSynchronizationContext)
+		{
+			var syncContext = captureSynchronizationContext ? SynchronizationContext.Current : null;
+
+			if (op is AsyncResult ar)
+			{
+				ar.SetContinuationForAwait(continuation, syncContext);
+			}
+			else if (!op.TryAddCompletionCallback(asyncOp => continuation(), syncContext))
+			{
+				continuation();
+			}
 		}
 
 		#endregion
