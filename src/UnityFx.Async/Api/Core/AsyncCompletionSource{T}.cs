@@ -311,13 +311,9 @@ namespace UnityFx.Async
 			{
 				return base.TrySetResult(patternOp.Result, completedSynchronously);
 			}
-			else if (patternOp.IsFaulted)
+			else if (patternOp.IsFaulted || patternOp.IsCanceled)
 			{
 				return base.TrySetException(patternOp.Exception, completedSynchronously);
-			}
-			else if (patternOp.IsCanceled)
-			{
-				return base.TrySetCanceled(completedSynchronously);
 			}
 
 			return false;

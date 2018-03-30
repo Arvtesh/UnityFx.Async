@@ -902,7 +902,7 @@ namespace UnityFx.Async
 			op.SetCanceled();
 
 			// Act
-			var result = op.TryAddCompletionCallback(_ => { }, AsyncContinuationOptions.None, null);
+			var result = op.TryAddCompletionCallback(_ => { }, null);
 
 			// Assert
 			Assert.False(result);
@@ -915,7 +915,7 @@ namespace UnityFx.Async
 			var op = AsyncResult.CompletedOperation;
 
 			// Act
-			var result = op.TryAddCompletionCallback(_ => { }, AsyncContinuationOptions.None, null);
+			var result = op.TryAddCompletionCallback(_ => { }, null);
 
 			// Assert
 			Assert.False(result);

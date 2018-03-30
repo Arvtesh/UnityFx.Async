@@ -73,7 +73,7 @@ namespace UnityFx.Async
 					throw new InvalidOperationException("Invalid delegate type.");
 				}
 
-				if (!_op.TryAddCompletionCallback(_opCompletionCallback, AsyncContinuationOptions.None, null))
+				if (!_op.TryAddCompletionCallback(_opCompletionCallback, null))
 				{
 					if (_op.IsCompletedSuccessfully)
 					{

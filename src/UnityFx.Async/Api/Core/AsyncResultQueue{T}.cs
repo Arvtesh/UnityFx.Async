@@ -153,7 +153,7 @@ namespace UnityFx.Async
 				_completionCallback = OnCompletedCallback;
 			}
 
-			if (op.TryAddCompletionCallback(_completionCallback, AsyncContinuationOptions.None, _syncContext))
+			if (op.TryAddCompletionCallback(_completionCallback, _syncContext))
 			{
 				lock (_ops)
 				{

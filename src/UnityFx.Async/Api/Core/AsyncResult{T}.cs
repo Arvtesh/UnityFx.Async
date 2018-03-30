@@ -183,7 +183,7 @@ namespace UnityFx.Async
 				}
 			};
 
-			if (TryAddCompletionCallback(completionCallback, AsyncContinuationOptions.None, null))
+			if (TryAddCompletionCallback(completionCallback, null))
 			{
 				return new AsyncObservableSubscription(this, completionCallback);
 			}

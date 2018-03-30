@@ -775,7 +775,7 @@ namespace UnityFx.Async
 		#region AddCompletionCallback
 
 		/// <summary>
-		/// Adds a completion callback to be executed after the operation has finished. If the operation is completed the <paramref name="action"/> is invoked synchronously.
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed the <paramref name="action"/> is invoked synchronously.
 		/// </summary>
 		/// <param name="op">The target operation.</param>
 		/// <param name="action">The callback to be executed when the operation has completed.</param>
@@ -783,17 +783,17 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="IAsyncOperationEvents"/>
 		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, AsyncContinuationOptions)"/>
-		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, AsyncContinuationOptions, SynchronizationContext)"/>
+		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, SynchronizationContext)"/>
 		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action)
 		{
-			if (!op.TryAddCompletionCallback(action, AsyncContinuationOptions.None, SynchronizationContext.Current))
+			if (!op.TryAddCompletionCallback(action, SynchronizationContext.Current))
 			{
 				action(op);
 			}
 		}
 
 		/// <summary>
-		/// Adds a completion callback to be executed after the operation has finished. If the operation is completed the <paramref name="action"/> is invoked synchronously.
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed the <paramref name="action"/> is invoked synchronously.
 		/// </summary>
 		/// <param name="op">The target operation.</param>
 		/// <param name="action">The callback to be executed when the operation has completed.</param>
@@ -810,7 +810,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Adds a completion callback to be executed after the operation has finished. If the operation is completed the <paramref name="action"/> is invoked synchronously.
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed the <paramref name="action"/> is invoked synchronously.
 		/// </summary>
 		/// <param name="op">The target operation.</param>
 		/// <param name="action">The callback to be executed when the operation has completed.</param>
@@ -819,10 +819,10 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="IAsyncOperationEvents"/>
 		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback)"/>
-		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, AsyncContinuationOptions, SynchronizationContext)"/>
+		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, SynchronizationContext)"/>
 		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action, AsyncContinuationOptions options)
 		{
-			if (!op.TryAddCompletionCallback(action, options, null))
+			if (!op.TryAddCompletionCallback(action, options))
 			{
 				if (AsyncContinuation.CanInvoke(op, options))
 				{
@@ -832,7 +832,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Adds a completion callback to be executed after the operation has finished. If the operation is completed the <paramref name="action"/> is invoked synchronously.
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed the <paramref name="action"/> is invoked synchronously.
 		/// </summary>
 		/// <param name="op">The target operation.</param>
 		/// <param name="action">The callback to be executed when the operation has completed.</param>
@@ -853,12 +853,11 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Adds a completion callback to be executed after the operation has finished. If the operation is completed the <paramref name="action"/> is invoked
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed the <paramref name="action"/> is invoked
 		/// on the <paramref name="syncContext"/> specified.
 		/// </summary>
 		/// <param name="op">The target operation.</param>
 		/// <param name="action">The callback to be executed when the operation has completed.</param>
-		/// <param name="options">Options for when the callback is executed.</param>
 		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
 		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
 		/// </param>
@@ -867,20 +866,17 @@ namespace UnityFx.Async
 		/// <seealso cref="IAsyncOperationEvents"/>
 		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback)"/>
 		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, AsyncContinuationOptions)"/>
-		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action, AsyncContinuationOptions options, SynchronizationContext syncContext)
+		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action, SynchronizationContext syncContext)
 		{
-			if (!op.TryAddCompletionCallback(action, options, syncContext))
+			if (!op.TryAddCompletionCallback(action, syncContext))
 			{
-				if (AsyncContinuation.CanInvoke(op, options))
+				if (syncContext == null || syncContext.GetType() == typeof(SynchronizationContext) || syncContext == SynchronizationContext.Current)
 				{
-					if (syncContext == null || syncContext.GetType() == typeof(SynchronizationContext) || syncContext == SynchronizationContext.Current)
-					{
-						action(op);
-					}
-					else
-					{
-						syncContext.Post(args => action(op), op);
-					}
+					action(op);
+				}
+				else
+				{
+					syncContext.Post(args => action(args as IAsyncOperation), op);
 				}
 			}
 		}
@@ -1505,7 +1501,7 @@ namespace UnityFx.Async
 			{
 				var result = new TaskCompletionSource<object>();
 
-				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp, result), AsyncContinuationOptions.None, null))
+				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp, result), null))
 				{
 					AsyncContinuation.InvokeTaskContinuation(op, result);
 				}
@@ -1539,7 +1535,7 @@ namespace UnityFx.Async
 			{
 				var result = new TaskCompletionSource<T>();
 
-				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp as IAsyncOperation<T>, result), AsyncContinuationOptions.None, null))
+				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp as IAsyncOperation<T>, result), null))
 				{
 					AsyncContinuation.InvokeTaskContinuation(op, result);
 				}

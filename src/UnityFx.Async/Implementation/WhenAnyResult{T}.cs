@@ -24,7 +24,7 @@ namespace UnityFx.Async
 
 			foreach (var op in ops)
 			{
-				if (!op.TryAddCompletionCallback(_completionAction, AsyncContinuationOptions.None, null))
+				if (!op.TryAddCompletionCallback(_completionAction, null))
 				{
 					TrySetResult(op, true);
 					break;

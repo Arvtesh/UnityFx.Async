@@ -1383,7 +1383,7 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public bool TryAddCompletionCallback(AsyncOperationCallback action, AsyncContinuationOptions options, SynchronizationContext syncContext)
+		public bool TryAddCompletionCallback(AsyncOperationCallback action, AsyncContinuationOptions options)
 		{
 			ThrowIfDisposed();
 
@@ -1392,7 +1392,20 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return TryAddContinuation(action, options, syncContext);
+			return TryAddContinuation(action, options, null);
+		}
+
+		/// <inheritdoc/>
+		public bool TryAddCompletionCallback(AsyncOperationCallback action, SynchronizationContext syncContext)
+		{
+			ThrowIfDisposed();
+
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			return TryAddContinuation(action, AsyncContinuationOptions.None, syncContext);
 		}
 
 		/// <inheritdoc/>
