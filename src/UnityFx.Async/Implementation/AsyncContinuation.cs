@@ -16,7 +16,6 @@ namespace UnityFx.Async
 		private static SendOrPostCallback _postCallback;
 
 		private readonly AsyncResult _op;
-		private readonly AsyncContinuationOptions _options;
 		private readonly SynchronizationContext _syncContext;
 		private readonly object _continuation;
 
@@ -24,35 +23,31 @@ namespace UnityFx.Async
 
 		#region interface
 
-		internal AsyncContinuation(AsyncResult op, AsyncContinuationOptions options, SynchronizationContext syncContext, object continuation)
+		internal AsyncContinuation(AsyncResult op, SynchronizationContext syncContext, object continuation)
 		{
 			_op = op;
-			_options = options;
 			_syncContext = syncContext;
 			_continuation = continuation;
 		}
 
 		internal void Invoke()
 		{
-			if (CanInvoke(_op, _options))
+			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
 			{
-				if (_syncContext == null || _syncContext == SynchronizationContext.Current)
+				InvokeInternal(_op, _continuation);
+			}
+			else
+			{
+				if (_postCallback == null)
 				{
-					InvokeInternal(_op, _continuation);
-				}
-				else
-				{
-					if (_postCallback == null)
+					_postCallback = args =>
 					{
-						_postCallback = args =>
-						{
-							var c = args as AsyncContinuation;
-							InvokeInternal(c._op, c._continuation);
-						};
-					}
-
-					_syncContext.Post(_postCallback, this);
+						var c = args as AsyncContinuation;
+						InvokeInternal(c._op, c._continuation);
+					};
 				}
+
+				_syncContext.Post(_postCallback, this);
 			}
 		}
 

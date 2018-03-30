@@ -1320,7 +1320,7 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 
-			if (!TryAddContinuation(continuation, AsyncContinuationOptions.None, syncContext))
+			if (!TryAddContinuation(continuation, syncContext))
 			{
 				continuation();
 			}
@@ -1379,7 +1379,7 @@ namespace UnityFx.Async
 					throw new ArgumentNullException(nameof(value));
 				}
 
-				if (!TryAddContinuation(value, AsyncContinuationOptions.None, SynchronizationContext.Current))
+				if (!TryAddContinuation(value, SynchronizationContext.Current))
 				{
 					value(this);
 				}
@@ -1396,19 +1396,6 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public bool TryAddCompletionCallback(AsyncOperationCallback action, AsyncContinuationOptions options)
-		{
-			ThrowIfDisposed();
-
-			if (action == null)
-			{
-				throw new ArgumentNullException(nameof(action));
-			}
-
-			return TryAddContinuation(action, options, null);
-		}
-
-		/// <inheritdoc/>
 		public bool TryAddCompletionCallback(AsyncOperationCallback action, SynchronizationContext syncContext)
 		{
 			ThrowIfDisposed();
@@ -1418,7 +1405,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return TryAddContinuation(action, AsyncContinuationOptions.None, syncContext);
+			return TryAddContinuation(action, syncContext);
 		}
 
 		/// <inheritdoc/>
@@ -1596,20 +1583,13 @@ namespace UnityFx.Async
 		/// Attempts to register a continuation object. For internal use only.
 		/// </summary>
 		/// <param name="continuation">The continuation object to add.</param>
-		/// <param name="options">Continuation options.</param>
 		/// <param name="syncContext">A <see cref="SynchronizationContext"/> instance to execute continuation on.</param>
 		/// <returns>Returns <see langword="true"/> if the continuation was added; <see langword="false"/> otherwise.</returns>
-		private bool TryAddContinuation(object continuation, AsyncContinuationOptions options, SynchronizationContext syncContext)
+		private bool TryAddContinuation(object continuation, SynchronizationContext syncContext)
 		{
-			if ((options & AsyncContinuationOptions.CaptureSynchronizationContext) != 0)
+			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
 			{
-				syncContext = SynchronizationContext.Current;
-				options &= ~AsyncContinuationOptions.CaptureSynchronizationContext;
-			}
-
-			if (options != AsyncContinuationOptions.None || (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext)))
-			{
-				continuation = new AsyncContinuation(this, options, syncContext, continuation);
+				continuation = new AsyncContinuation(this, syncContext, continuation);
 			}
 
 			return TryAddContinuation(continuation);
