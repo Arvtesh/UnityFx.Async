@@ -961,11 +961,8 @@ namespace UnityFx.Async
 					result.SetRunning();
 
 					action(op).AddCompletionCallback(
-						asyncOp2 =>
-						{
-							result.CopyCompletionState(asyncOp2, false);
-						},
-						AsyncContinuationOptions.None);
+						asyncOp2 => result.CopyCompletionState(asyncOp2, false),
+						null);
 				}
 				catch (Exception e)
 				{

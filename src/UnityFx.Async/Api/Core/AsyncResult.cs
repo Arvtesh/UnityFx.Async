@@ -1589,6 +1589,10 @@ namespace UnityFx.Async
 			{
 				_exception = new AggregateException();
 			}
+			else if (flags == StatusCanceled)
+			{
+				_exception = new AggregateException(new OperationCanceledException());
+			}
 
 			if (flags > StatusRunning)
 			{
