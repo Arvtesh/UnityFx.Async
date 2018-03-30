@@ -94,27 +94,7 @@ namespace UnityFx.Async
 
 		#region ContinueWith
 
-		[Fact]
-		public async Task ContinueWith_CompletesWhenBothOperationsComplete()
-		{
-			// Arrange
-			var op = AsyncResult.Delay(10);
-			var op2 = op.ContinueWith((asyncResult, cs) =>
-			{
-				Task.Run(() =>
-				{
-					Thread.Sleep(10);
-					cs.SetCompleted();
-				});
-			});
-
-			// Act
-			await op2;
-
-			// Assert
-			Assert.True(op.IsCompleted);
-			Assert.True(op2.IsCompleted);
-		}
+		// TODO
 
 		#endregion
 
@@ -138,7 +118,7 @@ namespace UnityFx.Async
 		public async Task ToTask_FailsWhenSourceFails()
 		{
 			// Arrange
-			var op = AsyncResult.Delay(1).ContinueWith(result => AsyncResult.FromException(new Exception()));
+			var op = AsyncResult.Delay(1).Then(() => AsyncResult.FromException(new Exception()));
 			var task = op.ToTask();
 
 			// Act/Assert
@@ -149,7 +129,7 @@ namespace UnityFx.Async
 		public async Task ToTask_FailsWhenSourceIsCanceled()
 		{
 			// Arrange
-			var op = AsyncResult.Delay(1).ContinueWith(result => AsyncResult.FromCanceled());
+			var op = AsyncResult.Delay(1).Then(() => AsyncResult.FromCanceled());
 			var task = op.ToTask();
 
 			// Act/Assert
