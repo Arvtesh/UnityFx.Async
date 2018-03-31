@@ -103,7 +103,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new DelegateContinuationResult<object>(options, action, null);
+			var result = new AsyncContinuationResult<object>(options, action, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -137,7 +137,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new DelegateContinuationResult<object>(options, action, userState);
+			var result = new AsyncContinuationResult<object>(options, action, userState);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -169,7 +169,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new DelegateContinuationResult<T>(options, action, null);
+			var result = new AsyncContinuationResult<T>(options, action, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -203,7 +203,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new DelegateContinuationResult<T>(options, action, userState);
+			var result = new AsyncContinuationResult<T>(options, action, userState);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -235,7 +235,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new DelegateContinuationResult<T, object>(options, action, null);
+			var result = new AsyncContinuationResult<T, object>(options, action, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -269,7 +269,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new DelegateContinuationResult<T, object>(options, action, userState);
+			var result = new AsyncContinuationResult<T, object>(options, action, userState);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -301,7 +301,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new DelegateContinuationResult<T, U>(options, action, null);
+			var result = new AsyncContinuationResult<T, U>(options, action, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -335,7 +335,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new DelegateContinuationResult<T, U>(options, action, userState);
+			var result = new AsyncContinuationResult<T, U>(options, action, userState);
 			op.AddContinuation(result);
 			return result;
 		}

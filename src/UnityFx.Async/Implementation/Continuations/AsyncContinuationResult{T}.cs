@@ -5,7 +5,7 @@ using System;
 
 namespace UnityFx.Async
 {
-	internal class DelegateContinuationResult<T> : ContinuationResult<T>
+	internal class AsyncContinuationResult<T> : ContinuationResult<T>
 	{
 		#region data
 
@@ -16,7 +16,7 @@ namespace UnityFx.Async
 
 		#region interface
 
-		internal DelegateContinuationResult(AsyncContinuationOptions options, object continuation, object userState)
+		internal AsyncContinuationResult(AsyncContinuationOptions options, object continuation, object userState)
 			: base(options)
 		{
 			_continuation = continuation;
