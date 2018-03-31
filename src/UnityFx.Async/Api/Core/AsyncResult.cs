@@ -534,13 +534,13 @@ namespace UnityFx.Async
 						{
 							foreach (var item in continuationList)
 							{
-								AsyncContinuation.Invoke(this, item);
+								InvokeContinuation(this, item);
 							}
 						}
 					}
 					else
 					{
-						AsyncContinuation.Invoke(this, continuation);
+						InvokeContinuation(this, continuation);
 					}
 				}
 			}
@@ -1759,6 +1759,21 @@ namespace UnityFx.Async
 			}
 
 			return false;
+		}
+
+		/// <summary>
+		/// Invokes the specified continuation instance.
+		/// </summary>
+		private static void InvokeContinuation(IAsyncOperation op, object continuation)
+		{
+			if (continuation is IAsyncContinuation c)
+			{
+				c.Invoke(op);
+			}
+			else
+			{
+				AsyncContinuation.InvokeDelegate(op, continuation);
+			}
 		}
 
 		#endregion

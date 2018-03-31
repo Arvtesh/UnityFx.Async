@@ -44,15 +44,25 @@ namespace UnityFx.Async
 			return (options & AsyncContinuationOptions.NotOnCanceled) == 0;
 		}
 
-		internal static void Invoke(IAsyncOperation op, object continuation)
+		internal static void InvokeDelegate(IAsyncOperation op, object continuation)
 		{
-			if (continuation is IAsyncContinuation c)
+			switch (continuation)
 			{
-				c.Invoke(op);
-			}
-			else
-			{
-				InvokeDelegate(op, continuation);
+				case AsyncOperationCallback aoc:
+					aoc.Invoke(op);
+					break;
+
+				case Action a:
+					a.Invoke();
+					break;
+
+				case AsyncCallback ac:
+					ac.Invoke(op);
+					break;
+
+				case EventHandler eh:
+					eh.Invoke(op, EventArgs.Empty);
+					break;
 			}
 		}
 
@@ -145,29 +155,6 @@ namespace UnityFx.Async
 		#endregion
 
 		#region implementation
-
-		private static void InvokeDelegate(IAsyncOperation op, object continuation)
-		{
-			switch (continuation)
-			{
-				case AsyncOperationCallback aoc:
-					aoc.Invoke(op);
-					break;
-
-				case Action a:
-					a.Invoke();
-					break;
-
-				case AsyncCallback ac:
-					ac.Invoke(op);
-					break;
-
-				case EventHandler eh:
-					eh.Invoke(op, EventArgs.Empty);
-					break;
-			}
-		}
-
 		#endregion
 	}
 }
