@@ -7,10 +7,11 @@ using System.Collections.Generic;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Represents an asynchronous operation with external completion control.
+	/// Represents an asynchronous operation with external completion control. <see cref="IAsyncCompletionSource{TResult}"/>
 	/// </summary>
+	/// <typeparam name="TResult">Type of the operation result value.</typeparam>
 	/// <seealso cref="AsyncCompletionSource"/>
-	public sealed class AsyncCompletionSource<T> : AsyncResult<T>, IAsyncCompletionSource<T>
+	public sealed class AsyncCompletionSource<TResult> : AsyncResult<TResult>, IAsyncCompletionSource<TResult>
 	{
 		#region interface
 
@@ -253,9 +254,9 @@ namespace UnityFx.Async
 		/// <param name="result">The operation result.</param>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="TrySetResult(T, bool)"/>
-		/// <seealso cref="TrySetResult(T)"/>
-		public void SetResult(T result)
+		/// <seealso cref="TrySetResult(TResult, bool)"/>
+		/// <seealso cref="TrySetResult(TResult)"/>
+		public void SetResult(TResult result)
 		{
 			if (!base.TrySetResult(result, false))
 			{
@@ -270,9 +271,9 @@ namespace UnityFx.Async
 		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="TrySetResult(T, bool)"/>
-		/// <seealso cref="TrySetResult(T)"/>
-		public void SetResult(T result, bool completedSynchronously)
+		/// <seealso cref="TrySetResult(TResult, bool)"/>
+		/// <seealso cref="TrySetResult(TResult)"/>
+		public void SetResult(TResult result, bool completedSynchronously)
 		{
 			if (!base.TrySetResult(result, completedSynchronously))
 			{
@@ -287,14 +288,14 @@ namespace UnityFx.Async
 		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="SetResult(T, bool)"/>
-		/// <seealso cref="TrySetResult(T)"/>
-		public new bool TrySetResult(T result, bool completedSynchronously) => base.TrySetResult(result, completedSynchronously);
+		/// <seealso cref="SetResult(TResult, bool)"/>
+		/// <seealso cref="TrySetResult(TResult)"/>
+		public new bool TrySetResult(TResult result, bool completedSynchronously) => base.TrySetResult(result, completedSynchronously);
 
 		/// <summary>
 		/// Copies state of the specified operation.
 		/// </summary>
-		internal void CopyCompletionState(IAsyncOperation<T> patternOp, bool completedSynchronously)
+		internal void CopyCompletionState(IAsyncOperation<TResult> patternOp, bool completedSynchronously)
 		{
 			if (!TryCopyCompletionState(patternOp, completedSynchronously))
 			{
@@ -305,7 +306,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Attemts to copy state of the specified operation.
 		/// </summary>
-		internal bool TryCopyCompletionState(IAsyncOperation<T> patternOp, bool completedSynchronously)
+		internal bool TryCopyCompletionState(IAsyncOperation<TResult> patternOp, bool completedSynchronously)
 		{
 			if (patternOp.IsCompletedSuccessfully)
 			{
@@ -324,7 +325,7 @@ namespace UnityFx.Async
 		#region IAsyncCompletionSource
 
 		/// <inheritdoc/>
-		public IAsyncOperation<T> Operation => this;
+		public IAsyncOperation<TResult> Operation => this;
 
 		/// <inheritdoc/>
 		/// <seealso cref="TrySetCanceled(bool)"/>
@@ -342,9 +343,9 @@ namespace UnityFx.Async
 		public bool TrySetExceptions(IEnumerable<Exception> exceptions) => base.TrySetExceptions(exceptions, false);
 
 		/// <inheritdoc/>
-		/// <seealso cref="TrySetResult(T, bool)"/>
-		/// <seealso cref="SetResult(T, bool)"/>
-		public bool TrySetResult(T result) => base.TrySetResult(result, false);
+		/// <seealso cref="TrySetResult(TResult, bool)"/>
+		/// <seealso cref="SetResult(TResult, bool)"/>
+		public bool TrySetResult(TResult result) => base.TrySetResult(result, false);
 
 		#endregion
 	}

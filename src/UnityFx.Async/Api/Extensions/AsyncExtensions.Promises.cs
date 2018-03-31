@@ -35,14 +35,14 @@ namespace UnityFx.Async
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
 		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
 		/// <seealso href="https://promisesaplus.com/"/>
-		public static IAsyncOperation Then<T>(this IAsyncOperation<T> op, Action<T> successCallback)
+		public static IAsyncOperation Then<TResult>(this IAsyncOperation<TResult> op, Action<TResult> successCallback)
 		{
 			if (successCallback == null)
 			{
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new ThenContinuationResult<T>(successCallback, null);
+			var result = new ThenContinuationResult<TResult>(successCallback, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -73,14 +73,14 @@ namespace UnityFx.Async
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
 		/// <returns>Returns a continuation operation that completes after both source operation and the operation returned by <paramref name="successCallback"/> has completed.</returns>
 		/// <seealso href="https://promisesaplus.com/"/>
-		public static IAsyncOperation Then<T>(this IAsyncOperation<T> op, Func<T, IAsyncOperation> successCallback)
+		public static IAsyncOperation Then<TResult>(this IAsyncOperation<TResult> op, Func<TResult, IAsyncOperation> successCallback)
 		{
 			if (successCallback == null)
 			{
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new ThenContinuationResult<T>(successCallback, null);
+			var result = new ThenContinuationResult<TResult>(successCallback, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -118,7 +118,7 @@ namespace UnityFx.Async
 		/// <param name="errorCallback">The callback to be executed when the operation has faulted/was canceled.</param>
 		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
 		/// <seealso href="https://promisesaplus.com/"/>
-		public static IAsyncOperation Then<T>(this IAsyncOperation<T> op, Action<T> successCallback, Action<Exception> errorCallback)
+		public static IAsyncOperation Then<TResult>(this IAsyncOperation<TResult> op, Action<TResult> successCallback, Action<Exception> errorCallback)
 		{
 			if (successCallback == null)
 			{
@@ -130,7 +130,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new ThenContinuationResult<T>(successCallback, errorCallback);
+			var result = new ThenContinuationResult<TResult>(successCallback, errorCallback);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -168,7 +168,7 @@ namespace UnityFx.Async
 		/// <param name="errorCallback">The callback to be executed when the operation has faulted/was canceled.</param>
 		/// <returns>Returns a continuation operation that completes after both source operation and the operation returned by <paramref name="successCallback"/> has completed.</returns>
 		/// <seealso href="https://promisesaplus.com/"/>
-		public static IAsyncOperation Then<T>(this IAsyncOperation<T> op, Func<T, IAsyncOperation> successCallback, Action<Exception> errorCallback)
+		public static IAsyncOperation Then<TResult>(this IAsyncOperation<TResult> op, Func<TResult, IAsyncOperation> successCallback, Action<Exception> errorCallback)
 		{
 			if (successCallback == null)
 			{
@@ -180,7 +180,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new ThenContinuationResult<T>(successCallback, errorCallback);
+			var result = new ThenContinuationResult<TResult>(successCallback, errorCallback);
 			op.AddContinuation(result);
 			return result;
 		}

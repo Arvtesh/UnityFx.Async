@@ -121,15 +121,15 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Transitions the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.Canceled"/> state.
+		/// Transitions the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.Canceled"/> state.
 		/// </summary>
 		/// <param name="completionSource">The completion source instance.</param>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="SetException{T}(IAsyncCompletionSource{T}, Exception)"/>
-		/// <seealso cref="SetExceptions{T}(IAsyncCompletionSource{T}, IEnumerable{Exception})"/>
-		/// <seealso cref="SetResult{T}(IAsyncCompletionSource{T}, T)"/>
-		public static void SetCanceled<T>(this IAsyncCompletionSource<T> completionSource)
+		/// <seealso cref="SetException{TResult}(IAsyncCompletionSource{TResult}, Exception)"/>
+		/// <seealso cref="SetExceptions{TResult}(IAsyncCompletionSource{TResult}, IEnumerable{Exception})"/>
+		/// <seealso cref="SetResult{TResult}(IAsyncCompletionSource{TResult}, TResult)"/>
+		public static void SetCanceled<TResult>(this IAsyncCompletionSource<TResult> completionSource)
 		{
 			if (!completionSource.TrySetCanceled())
 			{
@@ -157,17 +157,17 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Transitions the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// Transitions the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
 		/// </summary>
 		/// <param name="completionSource">The completion source instance.</param>
 		/// <param name="exception">An exception that caused the operation to end prematurely.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="SetException{T}(IAsyncCompletionSource{T}, Exception)"/>
-		/// <seealso cref="SetCanceled{T}(IAsyncCompletionSource{T})"/>
-		/// <seealso cref="SetResult{T}(IAsyncCompletionSource{T}, T)"/>
-		public static void SetException<T>(this IAsyncCompletionSource<T> completionSource, Exception exception)
+		/// <seealso cref="SetException{TResult}(IAsyncCompletionSource{TResult}, Exception)"/>
+		/// <seealso cref="SetCanceled{TResult}(IAsyncCompletionSource{TResult})"/>
+		/// <seealso cref="SetResult{TResult}(IAsyncCompletionSource{TResult}, TResult)"/>
+		public static void SetException<TResult>(this IAsyncCompletionSource<TResult> completionSource, Exception exception)
 		{
 			if (!completionSource.TrySetException(exception))
 			{
@@ -195,17 +195,17 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Transitions the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// Transitions the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
 		/// </summary>
 		/// <param name="completionSource">The completion source instance.</param>
 		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="SetException{T}(IAsyncCompletionSource{T}, Exception)"/>
-		/// <seealso cref="SetCanceled{T}(IAsyncCompletionSource{T})"/>
-		/// <seealso cref="SetResult{T}(IAsyncCompletionSource{T}, T)"/>
-		public static void SetExceptions<T>(this IAsyncCompletionSource<T> completionSource, IEnumerable<Exception> exceptions)
+		/// <seealso cref="SetException{TResult}(IAsyncCompletionSource{TResult}, Exception)"/>
+		/// <seealso cref="SetCanceled{TResult}(IAsyncCompletionSource{TResult})"/>
+		/// <seealso cref="SetResult{TResult}(IAsyncCompletionSource{TResult}, TResult)"/>
+		public static void SetExceptions<TResult>(this IAsyncCompletionSource<TResult> completionSource, IEnumerable<Exception> exceptions)
 		{
 			if (!completionSource.TrySetExceptions(exceptions))
 			{
@@ -231,16 +231,16 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Transitions the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
+		/// Transitions the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
 		/// <param name="completionSource">The completion source instance.</param>
 		/// <param name="result">The operation result.</param>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="SetCanceled{T}(IAsyncCompletionSource{T})"/>
-		/// <seealso cref="SetException{T}(IAsyncCompletionSource{T}, Exception)"/>
-		/// <seealso cref="SetExceptions{T}(IAsyncCompletionSource{T}, IEnumerable{Exception})"/>
-		public static void SetResult<T>(this IAsyncCompletionSource<T> completionSource, T result)
+		/// <seealso cref="SetCanceled{TResult}(IAsyncCompletionSource{TResult})"/>
+		/// <seealso cref="SetException{TResult}(IAsyncCompletionSource{TResult}, Exception)"/>
+		/// <seealso cref="SetExceptions{TResult}(IAsyncCompletionSource{TResult}, IEnumerable{Exception})"/>
+		public static void SetResult<TResult>(this IAsyncCompletionSource<TResult> completionSource, TResult result)
 		{
 			if (!completionSource.TrySetResult(result))
 			{

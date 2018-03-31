@@ -631,7 +631,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> that is canceled.
+		/// Creates a <see cref="IAsyncOperation{TResult}"/> that is canceled.
 		/// </summary>
 		/// <returns>A canceled operation.</returns>
 		/// <seealso cref="FromCanceled{T}(object)"/>
@@ -644,7 +644,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> that is canceled.
+		/// Creates a <see cref="IAsyncOperation{TResult}"/> that is canceled.
 		/// </summary>
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
 		/// <returns>A canceled operation.</returns>
@@ -716,7 +716,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with a specified exception.
+		/// Creates a <see cref="IAsyncOperation{TResult}"/> that has completed with a specified exception.
 		/// </summary>
 		/// <param name="exception">The exception to complete the operation with.</param>
 		/// <returns>A faulted operation.</returns>
@@ -730,7 +730,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with a specified exception.
+		/// Creates a <see cref="IAsyncOperation{TResult}"/> that has completed with a specified exception.
 		/// </summary>
 		/// <param name="exception">The exception to complete the operation with.</param>
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
@@ -745,7 +745,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with specified exceptions.
+		/// Creates a <see cref="IAsyncOperation{TResult}"/> that has completed with specified exceptions.
 		/// </summary>
 		/// <param name="exceptions">Exceptions to complete the operation with.</param>
 		/// <returns>A faulted operation.</returns>
@@ -759,7 +759,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with specified exceptions.
+		/// Creates a <see cref="IAsyncOperation{TResult}"/> that has completed with specified exceptions.
 		/// </summary>
 		/// <param name="exceptions">Exceptions to complete the operation with.</param>
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
@@ -774,7 +774,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with a specified result.
+		/// Creates a <see cref="IAsyncOperation{TResult}"/> that has completed with a specified result.
 		/// </summary>
 		/// <param name="result">The result value with which to complete the operation.</param>
 		/// <returns>A completed operation with the specified result value.</returns>
@@ -788,7 +788,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with a specified result.
+		/// Creates a <see cref="IAsyncOperation{TResult}"/> that has completed with a specified result.
 		/// </summary>
 		/// <param name="result">The result value with which to complete the operation.</param>
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
@@ -917,8 +917,8 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="opFactory"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="millisecondsRetryDelay"/> or <paramref name="maxRetryCount"/> is less than zero.</exception>
 		/// <returns>An operation that represents the retry process.</returns>
-		/// <seealso cref="Retry{T}(Func{IAsyncOperation{T}}, TimeSpan, int)"/>
-		public static AsyncResult<T> Retry<T>(Func<IAsyncOperation<T>> opFactory, int millisecondsRetryDelay, int maxRetryCount = 0)
+		/// <seealso cref="Retry{TResult}(Func{IAsyncOperation{TResult}}, TimeSpan, int)"/>
+		public static AsyncResult<TResult> Retry<TResult>(Func<IAsyncOperation<TResult>> opFactory, int millisecondsRetryDelay, int maxRetryCount = 0)
 		{
 			if (opFactory == null)
 			{
@@ -935,7 +935,7 @@ namespace UnityFx.Async
 				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, Constants.ErrorValueIsLessThanZero);
 			}
 
-			return new RetryResult<T>(opFactory, millisecondsRetryDelay, maxRetryCount);
+			return new RetryResult<TResult>(opFactory, millisecondsRetryDelay, maxRetryCount);
 		}
 
 		/// <summary>
@@ -947,8 +947,8 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="opFactory"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="retryDelay"/> or <paramref name="maxRetryCount"/> is less than zero.</exception>
 		/// <returns>An operation that represents the retry process.</returns>
-		/// <seealso cref="Retry{T}(Func{IAsyncOperation{T}}, int, int)"/>
-		public static AsyncResult<T> Retry<T>(Func<IAsyncOperation<T>> opFactory, TimeSpan retryDelay, int maxRetryCount = 0)
+		/// <seealso cref="Retry{TResult}(Func{IAsyncOperation{TResult}}, int, int)"/>
+		public static AsyncResult<TResult> Retry<TResult>(Func<IAsyncOperation<TResult>> opFactory, TimeSpan retryDelay, int maxRetryCount = 0)
 		{
 			var millisecondsDelay = (long)retryDelay.TotalMilliseconds;
 
@@ -971,7 +971,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that represents the completion of all of the supplied operations.</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation..</exception>
-		/// <seealso cref="WhenAll{T}(IEnumerable{IAsyncOperation{T}})"/>
+		/// <seealso cref="WhenAll{TResult}(IEnumerable{IAsyncOperation{TResult}})"/>
 		/// <seealso cref="WhenAll(IAsyncOperation[])"/>
 		public static AsyncResult WhenAll(IEnumerable<IAsyncOperation> ops)
 		{
@@ -1008,7 +1008,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation..</exception>
 		/// <seealso cref="WhenAll(IEnumerable{IAsyncOperation})"/>
-		/// <seealso cref="WhenAll{T}(IAsyncOperation{T}[])"/>
+		/// <seealso cref="WhenAll{TResult}(IAsyncOperation{TResult}[])"/>
 		public static AsyncResult<T[]> WhenAll<T>(IEnumerable<IAsyncOperation<T>> ops)
 		{
 			if (ops == null)

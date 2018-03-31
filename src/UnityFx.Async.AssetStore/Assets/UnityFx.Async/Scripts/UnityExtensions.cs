@@ -49,7 +49,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the Unity <see cref="AsyncOperation"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the Unity <see cref="AsyncOperation"/>.
 		/// </summary>
 		/// <param name="op">The source operation.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this ResourceRequest op) where T : UnityEngine.Object
@@ -78,7 +78,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the Unity <see cref="AsyncOperation"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the Unity <see cref="AsyncOperation"/>.
 		/// </summary>
 		/// <param name="op">The source operation.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this AssetBundleRequest op) where T : UnityEngine.Object
@@ -122,7 +122,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<T> ToAsync<T>(this UnityWebRequest request) where T : class
@@ -131,7 +131,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<AssetBundle> ToAsyncAssetBundle(this UnityWebRequest request)
@@ -140,7 +140,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<Texture2D> ToAsyncTexture(this UnityWebRequest request)
@@ -149,7 +149,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<AudioClip> ToAsyncAudioClip(this UnityWebRequest request)
@@ -158,7 +158,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<MovieTexture> ToAsyncMovieTexture(this UnityWebRequest request)
@@ -167,7 +167,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<byte[]> ToAsyncByteArray(this UnityWebRequest request)
@@ -176,10 +176,10 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
-		/// <returns>Returns a <see cref="IAsyncOperation{T}"/> instance that will complete when the source operation have completed.</returns>
+		/// <returns>Returns a <see cref="IAsyncOperation{TResult}"/> instance that will complete when the source operation have completed.</returns>
 		public static WebRequestResult<string> ToAsyncString(this UnityWebRequest request)
 		{
 			return WebRequestResult<string>.FromUnityWebRequest(request);
@@ -201,7 +201,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="WWW"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<T> ToAsync<T>(this WWW request) where T : class
@@ -210,7 +210,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="WWW"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<AssetBundle> ToAsyncAssetBundle(this WWW request)
@@ -219,7 +219,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="WWW"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<Texture2D> ToAsyncTexture(this WWW request)
@@ -228,7 +228,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="WWW"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<AudioClip> ToAsyncAudioClip(this WWW request)
@@ -237,7 +237,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="WWW"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<MovieTexture> ToAsyncMovieTexture(this WWW request)
@@ -246,7 +246,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="WWW"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<byte[]> ToAsyncByteArray(this WWW request)
@@ -255,7 +255,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="WWW"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<string> ToAsyncString(this WWW request)

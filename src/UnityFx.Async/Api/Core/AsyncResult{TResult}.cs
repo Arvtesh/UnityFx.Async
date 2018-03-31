@@ -14,19 +14,19 @@ namespace UnityFx.Async
 	/// <summary>
 	/// A lightweight net35-compatible asynchronous operation that can return a value.
 	/// </summary>
-	/// <typeparam name="T">Type of the operation result.</typeparam>
+	/// <typeparam name="TResult">Type of the operation result value.</typeparam>
 	/// <seealso cref="AsyncCompletionSource{T}"/>
 	/// <seealso cref="AsyncResult"/>
 	/// <seealso cref="IAsyncResult"/>
 #if NET35
-	public class AsyncResult<T> : AsyncResult, IAsyncOperation<T>
+	public class AsyncResult<TResult> : AsyncResult, IAsyncOperation<TResult>
 #else
-	public class AsyncResult<T> : AsyncResult, IAsyncOperation<T>, IObservable<T>
+	public class AsyncResult<TResult> : AsyncResult, IAsyncOperation<TResult>, IObservable<TResult>
 #endif
 	{
 		#region data
 
-		private T _result;
+		private TResult _result;
 
 		#endregion
 
@@ -104,7 +104,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="result">Result value.</param>
 		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
-		internal AsyncResult(T result, object asyncState)
+		internal AsyncResult(TResult result, object asyncState)
 			: base(AsyncOperationStatus.RanToCompletion, asyncState)
 		{
 			_result = result;
@@ -117,7 +117,7 @@ namespace UnityFx.Async
 		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		protected internal bool TrySetResult(T result, bool completedSynchronously)
+		protected internal bool TrySetResult(TResult result, bool completedSynchronously)
 		{
 			ThrowIfDisposed();
 
@@ -136,7 +136,7 @@ namespace UnityFx.Async
 		#region IAsyncOperation
 
 		/// <inheritdoc/>
-		public T Result
+		public TResult Result
 		{
 			get
 			{
@@ -157,7 +157,7 @@ namespace UnityFx.Async
 #if !NET35
 
 		/// <inheritdoc/>
-		public IDisposable Subscribe(IObserver<T> observer)
+		public IDisposable Subscribe(IObserver<TResult> observer)
 		{
 			ThrowIfDisposed();
 

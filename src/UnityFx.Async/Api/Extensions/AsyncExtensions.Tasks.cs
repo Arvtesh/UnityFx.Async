@@ -61,7 +61,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Provides an object that waits for the completion of an asynchronous operation. This type and its members are intended for compiler use only.
 		/// </summary>
-		/// <seealso cref="IAsyncOperation{T}"/>
+		/// <seealso cref="IAsyncOperation{TResult}"/>
 		public struct AsyncAwaiter<T> : INotifyCompletion
 		{
 			private readonly IAsyncOperation<T> _op;
@@ -126,9 +126,9 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Provides an awaitable object that allows for configured awaits on <see cref="IAsyncOperation{T}"/>. This type is intended for compiler use only.
+		/// Provides an awaitable object that allows for configured awaits on <see cref="IAsyncOperation{TResult}"/>. This type is intended for compiler use only.
 		/// </summary>
-		/// <seealso cref="IAsyncOperation{T}"/>
+		/// <seealso cref="IAsyncOperation{TResult}"/>
 		public struct ConfiguredAsyncAwaitable<T>
 		{
 			private readonly AsyncAwaiter<T> _awaiter;
@@ -151,7 +151,7 @@ namespace UnityFx.Async
 		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
-		/// <seealso cref="GetAwaiter{T}(IAsyncOperation{T})"/>
+		/// <seealso cref="GetAwaiter{TResult}(IAsyncOperation{TResult})"/>
 		public static AsyncAwaiter GetAwaiter(this IAsyncOperation op)
 		{
 			return new AsyncAwaiter(op, false);
@@ -162,9 +162,9 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
 		/// <seealso cref="GetAwaiter(IAsyncOperation)"/>
-		public static AsyncAwaiter<T> GetAwaiter<T>(this IAsyncOperation<T> op)
+		public static AsyncAwaiter<TResult> GetAwaiter<TResult>(this IAsyncOperation<TResult> op)
 		{
-			return new AsyncAwaiter<T>(op, false);
+			return new AsyncAwaiter<TResult>(op, false);
 		}
 
 		/// <summary>
@@ -184,9 +184,9 @@ namespace UnityFx.Async
 		/// <param name="op">The operation to await.</param>
 		/// <param name="continueOnCapturedContext">If <see langword="true"/> attempts to marshal the continuation back to the original context captured.</param>
 		/// <returns>An object used to await the operation.</returns>
-		public static ConfiguredAsyncAwaitable<T> ConfigureAwait<T>(this IAsyncOperation<T> op, bool continueOnCapturedContext)
+		public static ConfiguredAsyncAwaitable<TResult> ConfigureAwait<TResult>(this IAsyncOperation<TResult> op, bool continueOnCapturedContext)
 		{
-			return new ConfiguredAsyncAwaitable<T>(op, continueOnCapturedContext);
+			return new ConfiguredAsyncAwaitable<TResult>(op, continueOnCapturedContext);
 		}
 
 		#endregion
@@ -197,7 +197,7 @@ namespace UnityFx.Async
 		/// Creates a <see cref="Task"/> instance matching the source <see cref="IAsyncOperation"/>.
 		/// </summary>
 		/// <param name="op">The target operation.</param>
-		/// <seealso cref="ToTask{T}(IAsyncOperation{T})"/>
+		/// <seealso cref="ToTask{TResult}(IAsyncOperation{TResult})"/>
 		public static Task ToTask(this IAsyncOperation op)
 		{
 			var status = op.Status;
@@ -232,7 +232,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="op">The target operation.</param>
 		/// <seealso cref="ToTask(IAsyncOperation)"/>
-		public static Task<T> ToTask<T>(this IAsyncOperation<T> op)
+		public static Task<TResult> ToTask<TResult>(this IAsyncOperation<TResult> op)
 		{
 			var status = op.Status;
 
@@ -242,17 +242,17 @@ namespace UnityFx.Async
 			}
 			else if (status == AsyncOperationStatus.Faulted)
 			{
-				return Task.FromException<T>(op.Exception.InnerException);
+				return Task.FromException<TResult>(op.Exception.InnerException);
 			}
 			else if (status == AsyncOperationStatus.Canceled)
 			{
-				return Task.FromCanceled<T>(CancellationToken.None);
+				return Task.FromCanceled<TResult>(CancellationToken.None);
 			}
 			else
 			{
-				var result = new TaskCompletionSource<T>();
+				var result = new TaskCompletionSource<TResult>();
 
-				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp as IAsyncOperation<T>, result), null))
+				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp as IAsyncOperation<TResult>, result), null))
 				{
 					AsyncContinuation.InvokeTaskContinuation(op, result);
 				}
@@ -300,9 +300,9 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="task">The task to convert to <see cref="IAsyncOperation"/>.</param>
 		/// <returns>An <see cref="IAsyncOperation"/> that represents the <paramref name="task"/>.</returns>
-		public static AsyncResult<T> ToAsync<T>(this Task<T> task)
+		public static AsyncResult<TResult> ToAsync<TResult>(this Task<TResult> task)
 		{
-			var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running);
+			var result = new AsyncCompletionSource<TResult>(AsyncOperationStatus.Running);
 
 			task.ContinueWith(
 				t =>
@@ -327,7 +327,7 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region Implementation
+		#region implementation
 
 		private static void SetAwaitContiniation(IAsyncOperation op, Action continuation, bool captureSynchronizationContext)
 		{

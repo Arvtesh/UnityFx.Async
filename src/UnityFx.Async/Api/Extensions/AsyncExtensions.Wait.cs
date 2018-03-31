@@ -116,7 +116,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="Join(IAsyncOperation)"/>
 		/// <seealso cref="Join(IAsyncOperation, TimeSpan)"/>
-		/// <seealso cref="Join{T}(IAsyncOperation{T}, int)"/>
+		/// <seealso cref="Join{TResult}(IAsyncOperation{TResult}, int)"/>
 		public static void Join(this IAsyncOperation op, int millisecondsTimeout)
 		{
 			var result = true;
@@ -146,7 +146,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="Join(IAsyncOperation)"/>
 		/// <seealso cref="Join(IAsyncOperation, int)"/>
-		/// <seealso cref="Join{T}(IAsyncOperation{T}, TimeSpan)"/>
+		/// <seealso cref="Join{TResult}(IAsyncOperation{TResult}, TimeSpan)"/>
 		public static void Join(this IAsyncOperation op, TimeSpan timeout)
 		{
 			var result = true;
@@ -167,7 +167,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Waits for the <see cref="IAsyncOperation{T}"/> to complete execution. After that rethrows the operation exception (if any).
+		/// Waits for the <see cref="IAsyncOperation{TResult}"/> to complete execution. After that rethrows the operation exception (if any).
 		/// </summary>
 		/// <param name="op">The operation to join.</param>
 		/// <returns>The operation result.</returns>
@@ -175,7 +175,7 @@ namespace UnityFx.Async
 		/// <seealso cref="Join{T}(IAsyncOperation{T}, int)"/>
 		/// <seealso cref="Join{T}(IAsyncOperation{T}, TimeSpan)"/>
 		/// <seealso cref="Join(IAsyncOperation)"/>
-		public static T Join<T>(this IAsyncOperation<T> op)
+		public static TResult Join<TResult>(this IAsyncOperation<TResult> op)
 		{
 			if (!op.IsCompleted)
 			{
@@ -187,7 +187,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Waits for the <see cref="IAsyncOperation{T}"/> to complete execution within a specified number of milliseconds. After that rethrows the operation exception (if any).
+		/// Waits for the <see cref="IAsyncOperation{TResult}"/> to complete execution within a specified number of milliseconds. After that rethrows the operation exception (if any).
 		/// </summary>
 		/// <param name="op">The operation to wait for.</param>
 		/// <param name="millisecondsTimeout">The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
@@ -195,10 +195,10 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is a negative number other than -1.</exception>
 		/// <exception cref="TimeoutException">Thrown if the operation did not completed within <paramref name="millisecondsTimeout"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="Join{T}(IAsyncOperation{T})"/>
-		/// <seealso cref="Join{T}(IAsyncOperation{T}, TimeSpan)"/>
+		/// <seealso cref="Join{TResult}(IAsyncOperation{TResult})"/>
+		/// <seealso cref="Join{TResult}(IAsyncOperation{TResult}, TimeSpan)"/>
 		/// <seealso cref="Join(IAsyncOperation, int)"/>
-		public static T Join<T>(this IAsyncOperation<T> op, int millisecondsTimeout)
+		public static TResult Join<TResult>(this IAsyncOperation<TResult> op, int millisecondsTimeout)
 		{
 			var result = true;
 
@@ -220,7 +220,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Waits for the <see cref="IAsyncOperation{T}"/> to complete execution within a specified timeout. After that rethrows the operation exception (if any).
+		/// Waits for the <see cref="IAsyncOperation{TResult}"/> to complete execution within a specified timeout. After that rethrows the operation exception (if any).
 		/// </summary>
 		/// <param name="op">The operation to wait for.</param>
 		/// <param name="timeout">A <see cref="TimeSpan"/> that represents the number of milliseconds to wait, or a <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.</param>
@@ -228,10 +228,10 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentOutOfRangeException"><paramref name="timeout"/> is a negative number other than -1 milliseconds, or <paramref name="timeout"/> is greater than <see cref="int.MaxValue"/>.</exception>
 		/// <exception cref="TimeoutException">Thrown if the operation did not completed within <paramref name="timeout"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="Join{T}(IAsyncOperation{T})"/>
-		/// <seealso cref="Join{T}(IAsyncOperation{T}, int)"/>
+		/// <seealso cref="Join{TResult}(IAsyncOperation{TResult})"/>
+		/// <seealso cref="Join{TResult}(IAsyncOperation{TResult}, int)"/>
 		/// <seealso cref="Join(IAsyncOperation, TimeSpan)"/>
-		public static T Join<T>(this IAsyncOperation<T> op, TimeSpan timeout)
+		public static TResult Join<TResult>(this IAsyncOperation<TResult> op, TimeSpan timeout)
 		{
 			var result = true;
 

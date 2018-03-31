@@ -9,10 +9,11 @@ namespace UnityFx.Async
 	/// Represents the consumer side of an asynchronous operation. Extends an <see cref="IAsyncOperation"/>
 	/// interface with a result value.
 	/// </summary>
+	/// <typeparam name="TResult">Type of th operation result value.</typeparam>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task</seealso>
 	/// <seealso cref="IAsyncOperation"/>
 	/// <seealso cref="IAsyncResult"/>
-	public interface IAsyncOperation<out T> : IAsyncOperation
+	public interface IAsyncOperation<out TResult> : IAsyncOperation
 	{
 		/// <summary>
 		/// Gets the operation result value.
@@ -25,6 +26,6 @@ namespace UnityFx.Async
 		/// <value>Result of the operation.</value>
 		/// <exception cref="InvalidOperationException">Thrown either if the property is accessed before operation is completed.</exception>
 		/// <exception cref="AggregateException">Thrown if the operation is in <see cref="AsyncOperationStatus.Faulted"/> or <see cref="AsyncOperationStatus.Canceled"/> state.</exception>
-		T Result { get; }
+		TResult Result { get; }
 	}
 }

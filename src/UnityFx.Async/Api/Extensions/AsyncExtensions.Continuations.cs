@@ -149,7 +149,7 @@ namespace UnityFx.Async
 		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
-		public static IAsyncOperation<T> ContinueWith<T>(this IAsyncOperation op, Func<IAsyncOperation, T> action)
+		public static IAsyncOperation<TResult> ContinueWith<TResult>(this IAsyncOperation op, Func<IAsyncOperation, TResult> action)
 		{
 			return ContinueWith(op, action, AsyncContinuationOptions.CaptureSynchronizationContext);
 		}
@@ -162,14 +162,14 @@ namespace UnityFx.Async
 		/// <param name="options">Options for when the <paramref name="action"/> is executed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
-		public static IAsyncOperation<T> ContinueWith<T>(this IAsyncOperation op, Func<IAsyncOperation, T> action, AsyncContinuationOptions options)
+		public static IAsyncOperation<TResult> ContinueWith<TResult>(this IAsyncOperation op, Func<IAsyncOperation, TResult> action, AsyncContinuationOptions options)
 		{
 			if (action == null)
 			{
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<T>(options, action, null);
+			var result = new AsyncContinuationResult<TResult>(options, action, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -182,7 +182,7 @@ namespace UnityFx.Async
 		/// <param name="userState">A user-defined state object that is passed as second argument to <paramref name="action"/>.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
-		public static IAsyncOperation<T> ContinueWith<T>(this IAsyncOperation op, Func<IAsyncOperation, object, T> action, object userState)
+		public static IAsyncOperation<TResult> ContinueWith<TResult>(this IAsyncOperation op, Func<IAsyncOperation, object, TResult> action, object userState)
 		{
 			return ContinueWith(op, action, userState, AsyncContinuationOptions.CaptureSynchronizationContext);
 		}
@@ -196,65 +196,65 @@ namespace UnityFx.Async
 		/// <param name="options">Options for when the <paramref name="action"/> is executed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
-		public static IAsyncOperation<T> ContinueWith<T>(this IAsyncOperation op, Func<IAsyncOperation, object, T> action, object userState, AsyncContinuationOptions options)
+		public static IAsyncOperation<TResult> ContinueWith<TResult>(this IAsyncOperation op, Func<IAsyncOperation, object, TResult> action, object userState, AsyncContinuationOptions options)
 		{
 			if (action == null)
 			{
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<T>(options, action, userState);
+			var result = new AsyncContinuationResult<TResult>(options, action, userState);
 			op.AddContinuation(result);
 			return result;
 		}
 
 		/// <summary>
-		/// Creates a continuation that executes when the target <see cref="IAsyncOperation{T}"/> completes.
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation{TResult}"/> completes.
 		/// </summary>
 		/// <param name="op">The operation to continue.</param>
 		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
-		public static IAsyncOperation ContinueWith<T>(this IAsyncOperation<T> op, Action<IAsyncOperation<T>> action)
+		public static IAsyncOperation ContinueWith<TResult>(this IAsyncOperation<TResult> op, Action<IAsyncOperation<TResult>> action)
 		{
 			return ContinueWith(op, action, AsyncContinuationOptions.CaptureSynchronizationContext);
 		}
 
 		/// <summary>
-		/// Creates a continuation that executes when the target <see cref="IAsyncOperation{T}"/> completes.
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation{TResult}"/> completes.
 		/// </summary>
 		/// <param name="op">The operation to continue.</param>
 		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
 		/// <param name="options">Options for when the <paramref name="action"/> is executed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
-		public static IAsyncOperation ContinueWith<T>(this IAsyncOperation<T> op, Action<IAsyncOperation<T>> action, AsyncContinuationOptions options)
+		public static IAsyncOperation ContinueWith<TResult>(this IAsyncOperation<TResult> op, Action<IAsyncOperation<TResult>> action, AsyncContinuationOptions options)
 		{
 			if (action == null)
 			{
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<T, VoidResult>(options, action, null);
+			var result = new AsyncContinuationResult<TResult, VoidResult>(options, action, null);
 			op.AddContinuation(result);
 			return result;
 		}
 
 		/// <summary>
-		/// Creates a continuation that executes when the target <see cref="IAsyncOperation{T}"/> completes.
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation{TResult}"/> completes.
 		/// </summary>
 		/// <param name="op">The operation to continue.</param>
 		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
 		/// <param name="userState">A user-defined state object that is passed as second argument to <paramref name="action"/>.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
-		public static IAsyncOperation ContinueWith<T>(this IAsyncOperation<T> op, Action<IAsyncOperation<T>, object> action, object userState)
+		public static IAsyncOperation ContinueWith<TResult>(this IAsyncOperation<TResult> op, Action<IAsyncOperation<TResult>, object> action, object userState)
 		{
 			return ContinueWith(op, action, userState, AsyncContinuationOptions.CaptureSynchronizationContext);
 		}
 
 		/// <summary>
-		/// Creates a continuation that executes when the target <see cref="IAsyncOperation{T}"/> completes.
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation{TResult}"/> completes.
 		/// </summary>
 		/// <param name="op">The operation to continue.</param>
 		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
@@ -262,14 +262,14 @@ namespace UnityFx.Async
 		/// <param name="options">Options for when the <paramref name="action"/> is executed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
-		public static IAsyncOperation ContinueWith<T>(this IAsyncOperation<T> op, Action<IAsyncOperation<T>, object> action, object userState, AsyncContinuationOptions options)
+		public static IAsyncOperation ContinueWith<TResult>(this IAsyncOperation<TResult> op, Action<IAsyncOperation<TResult>, object> action, object userState, AsyncContinuationOptions options)
 		{
 			if (action == null)
 			{
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<T, VoidResult>(options, action, userState);
+			var result = new AsyncContinuationResult<TResult, VoidResult>(options, action, userState);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -281,7 +281,7 @@ namespace UnityFx.Async
 		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
-		public static IAsyncOperation<U> ContinueWith<T, U>(this IAsyncOperation<T> op, Func<IAsyncOperation<T>, U> action)
+		public static IAsyncOperation<TNewResult> ContinueWith<TResult, TNewResult>(this IAsyncOperation<TResult> op, Func<IAsyncOperation<TResult>, TNewResult> action)
 		{
 			return ContinueWith(op, action, AsyncContinuationOptions.CaptureSynchronizationContext);
 		}
@@ -294,14 +294,14 @@ namespace UnityFx.Async
 		/// <param name="options">Options for when the <paramref name="action"/> is executed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
-		public static IAsyncOperation<U> ContinueWith<T, U>(this IAsyncOperation<T> op, Func<IAsyncOperation<T>, U> action, AsyncContinuationOptions options)
+		public static IAsyncOperation<TNewResult> ContinueWith<TResult, TNewResult>(this IAsyncOperation<TResult> op, Func<IAsyncOperation<TResult>, TNewResult> action, AsyncContinuationOptions options)
 		{
 			if (action == null)
 			{
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<T, U>(options, action, null);
+			var result = new AsyncContinuationResult<TResult, TNewResult>(options, action, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -314,7 +314,7 @@ namespace UnityFx.Async
 		/// <param name="userState">A user-defined state object that is passed as second argument to <paramref name="action"/>.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
-		public static IAsyncOperation<U> ContinueWith<T, U>(this IAsyncOperation<T> op, Func<IAsyncOperation<T>, object, U> action, object userState)
+		public static IAsyncOperation<TNewResult> ContinueWith<TResult, TNewResult>(this IAsyncOperation<TResult> op, Func<IAsyncOperation<TResult>, object, TNewResult> action, object userState)
 		{
 			return ContinueWith(op, action, userState, AsyncContinuationOptions.CaptureSynchronizationContext);
 		}
@@ -328,14 +328,14 @@ namespace UnityFx.Async
 		/// <param name="options">Options for when the <paramref name="action"/> is executed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
-		public static IAsyncOperation<U> ContinueWith<T, U>(this IAsyncOperation<T> op, Func<IAsyncOperation<T>, object, U> action, object userState, AsyncContinuationOptions options)
+		public static IAsyncOperation<TNewResult> ContinueWith<TResult, TNewResult>(this IAsyncOperation<TResult> op, Func<IAsyncOperation<TResult>, object, TNewResult> action, object userState, AsyncContinuationOptions options)
 		{
 			if (action == null)
 			{
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<T, U>(options, action, userState);
+			var result = new AsyncContinuationResult<TResult, TNewResult>(options, action, userState);
 			op.AddContinuation(result);
 			return result;
 		}

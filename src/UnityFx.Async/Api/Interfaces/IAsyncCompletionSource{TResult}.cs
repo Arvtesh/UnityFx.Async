@@ -7,29 +7,30 @@ using System.Collections.Generic;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Represents the producer side of a <see cref="IAsyncOperation{T}"/> unbound to a delegate, providing access to the consumer side through the <see cref="Operation"/> property.
+	/// Represents the producer side of a <see cref="IAsyncOperation{TResult}"/> unbound to a delegate, providing access to the consumer side through the <see cref="Operation"/> property.
 	/// </summary>
-	/// <seealso cref="IAsyncOperation{T}"/>
-	public interface IAsyncCompletionSource<T>
+	/// <typeparam name="TResult">Type of the operation result value.</typeparam>
+	/// <seealso cref="IAsyncOperation{TResult}"/>
+	public interface IAsyncCompletionSource<TResult>
 	{
 		/// <summary>
 		/// Gets the operation being controller by the source.
 		/// </summary>
 		/// <value>The underlying operation instance.</value>
-		IAsyncOperation<T> Operation { get; }
+		IAsyncOperation<TResult> Operation { get; }
 
 		/// <summary>
-		/// Attempts to transition the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.Canceled"/> state.
+		/// Attempts to transition the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.Canceled"/> state.
 		/// </summary>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="TrySetException(Exception)"/>
 		/// <seealso cref="TrySetExceptions(IEnumerable{Exception})"/>
-		/// <seealso cref="TrySetResult(T)"/>
+		/// <seealso cref="TrySetResult(TResult)"/>
 		bool TrySetCanceled();
 
 		/// <summary>
-		/// Attempts to transition the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// Attempts to transition the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
 		/// </summary>
 		/// <param name="exception">An exception that caused the operation to end prematurely.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
@@ -37,11 +38,11 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="TrySetExceptions(IEnumerable{Exception})"/>
 		/// <seealso cref="TrySetCanceled"/>
-		/// <seealso cref="TrySetResult(T)"/>
+		/// <seealso cref="TrySetResult(TResult)"/>
 		bool TrySetException(Exception exception);
 
 		/// <summary>
-		/// Attempts to transition the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// Attempts to transition the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
 		/// </summary>
 		/// <param name="exceptions">An exception that caused the operation to end prematurely.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
@@ -49,11 +50,11 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="TrySetException(Exception)"/>
 		/// <seealso cref="TrySetCanceled"/>
-		/// <seealso cref="TrySetResult(T)"/>
+		/// <seealso cref="TrySetResult(TResult)"/>
 		bool TrySetExceptions(IEnumerable<Exception> exceptions);
 
 		/// <summary>
-		/// Attempts to transition the underlying <see cref="IAsyncOperation{T}"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
+		/// Attempts to transition the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
 		/// <param name="result">The operation result.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
@@ -61,6 +62,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetCanceled"/>
 		/// <seealso cref="TrySetException(Exception)"/>
 		/// <seealso cref="TrySetExceptions(IEnumerable{Exception})"/>
-		bool TrySetResult(T result);
+		bool TrySetResult(TResult result);
 	}
 }
