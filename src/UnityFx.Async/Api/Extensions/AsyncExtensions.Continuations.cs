@@ -103,7 +103,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<object>(options, action, null);
+			var result = new AsyncContinuationResult<VoidResult>(options, action, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -137,7 +137,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<object>(options, action, userState);
+			var result = new AsyncContinuationResult<VoidResult>(options, action, userState);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -235,7 +235,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<T, object>(options, action, null);
+			var result = new AsyncContinuationResult<T, VoidResult>(options, action, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -269,7 +269,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<T, object>(options, action, userState);
+			var result = new AsyncContinuationResult<T, VoidResult>(options, action, userState);
 			op.AddContinuation(result);
 			return result;
 		}
