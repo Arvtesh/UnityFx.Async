@@ -1314,6 +1314,34 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Copies state of the specified operation.
+		/// </summary>
+		internal void CopyCompletionState(IAsyncOperation patternOp, bool completedSynchronously)
+		{
+			if (!TryCopyCompletionState(patternOp, completedSynchronously))
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Attemts to copy state of the specified operation.
+		/// </summary>
+		internal bool TryCopyCompletionState(IAsyncOperation patternOp, bool completedSynchronously)
+		{
+			if (patternOp.IsCompletedSuccessfully)
+			{
+				return TrySetCompleted(completedSynchronously);
+			}
+			else if (patternOp.IsFaulted || patternOp.IsCanceled)
+			{
+				return TrySetException(patternOp.Exception, completedSynchronously);
+			}
+
+			return false;
+		}
+
+		/// <summary>
 		/// Adds a completion callback for <c>await</c> implementation.
 		/// </summary>
 		internal void SetContinuationForAwait(Action continuation, SynchronizationContext syncContext)
