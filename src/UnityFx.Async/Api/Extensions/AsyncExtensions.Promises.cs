@@ -217,6 +217,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="action">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
 		/// <seealso href="https://promisesaplus.com/"/>
 		public static IAsyncOperation Finally(this IAsyncOperation op, Action action)
 		{
@@ -225,21 +226,8 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
-
-			op.AddCompletionCallback(asyncOp =>
-			{
-				try
-				{
-					action();
-					result.TrySetCompleted();
-				}
-				catch (Exception e)
-				{
-					result.TrySetException(e);
-				}
-			});
-
+			var result = new FinallyContinuationResult(action);
+			op.AddContinuation(result);
 			return result;
 		}
 
