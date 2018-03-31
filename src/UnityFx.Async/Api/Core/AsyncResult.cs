@@ -1421,6 +1421,32 @@ namespace UnityFx.Async
 			return false;
 		}
 
+		/// <inheritdoc/>
+		public bool TryAddContinuation(IAsyncContinuation continuation)
+		{
+			ThrowIfDisposed();
+
+			if (continuation == null)
+			{
+				throw new ArgumentNullException(nameof(continuation));
+			}
+
+			return TryAddContinuation(continuation, null);
+		}
+
+		/// <inheritdoc/>
+		public bool RemoveContinuation(IAsyncContinuation continuation)
+		{
+			ThrowIfDisposed();
+
+			if (continuation != null)
+			{
+				return TryRemoveContinuation(continuation);
+			}
+
+			return false;
+		}
+
 		#endregion
 
 		#region IAsyncResult

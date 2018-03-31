@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace UnityFx.Async
 {
-	internal class AsyncContinuation
+	internal class AsyncContinuation : IAsyncContinuation
 	{
 		#region data
 
 		private static SendOrPostCallback _postCallback;
 
-		private readonly AsyncResult _op;
+		private readonly IAsyncOperation _op;
 		private readonly SynchronizationContext _syncContext;
 		private readonly object _continuation;
 
@@ -23,32 +23,11 @@ namespace UnityFx.Async
 
 		#region interface
 
-		internal AsyncContinuation(AsyncResult op, SynchronizationContext syncContext, object continuation)
+		internal AsyncContinuation(IAsyncOperation op, SynchronizationContext syncContext, object continuation)
 		{
 			_op = op;
 			_syncContext = syncContext;
 			_continuation = continuation;
-		}
-
-		internal void Invoke()
-		{
-			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
-			{
-				InvokeInternal(_op, _continuation);
-			}
-			else
-			{
-				if (_postCallback == null)
-				{
-					_postCallback = args =>
-					{
-						var c = args as AsyncContinuation;
-						InvokeInternal(c._op, c._continuation);
-					};
-				}
-
-				_syncContext.Post(_postCallback, this);
-			}
 		}
 
 		internal static bool CanInvoke(IAsyncOperation op, AsyncContinuationOptions options)
@@ -68,7 +47,7 @@ namespace UnityFx.Async
 
 		internal static void Invoke(IAsyncOperation op, object continuation)
 		{
-			if (continuation is AsyncContinuation c)
+			if (continuation is IAsyncContinuation c)
 			{
 				c.Invoke();
 			}
@@ -117,6 +96,31 @@ namespace UnityFx.Async
 		}
 
 #endif
+
+		#endregion
+
+		#region IAsyncContinuation
+
+		public void Invoke()
+		{
+			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
+			{
+				InvokeInternal(_op, _continuation);
+			}
+			else
+			{
+				if (_postCallback == null)
+				{
+					_postCallback = args =>
+					{
+						var c = args as AsyncContinuation;
+						InvokeInternal(c._op, c._continuation);
+					};
+				}
+
+				_syncContext.Post(_postCallback, this);
+			}
+		}
 
 		#endregion
 
