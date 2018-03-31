@@ -31,7 +31,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Schedules a callback to be executed after the operation has succeeded.
 		/// </summary>
-		/// <param name="op">The target operation.</param>
+		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
 		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
 		/// <seealso href="https://promisesaplus.com/"/>
@@ -50,7 +50,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Schedules a callback to be executed after the operation has succeeded.
 		/// </summary>
-		/// <param name="op">The target operation.</param>
+		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
 		/// <returns>Returns a continuation operation that completes after both source operation and the operation returned by <paramref name="successCallback"/> has completed.</returns>
 		/// <seealso href="https://promisesaplus.com/"/>
@@ -69,7 +69,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Schedules a callback to be executed after the operation has succeeded.
 		/// </summary>
-		/// <param name="op">The target operation.</param>
+		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
 		/// <returns>Returns a continuation operation that completes after both source operation and the operation returned by <paramref name="successCallback"/> has completed.</returns>
 		/// <seealso href="https://promisesaplus.com/"/>
@@ -88,7 +88,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Schedules a callbacks to be executed after the operation has completed.
 		/// </summary>
-		/// <param name="op">The target operation.</param>
+		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has succeeded.</param>
 		/// <param name="errorCallback">The callback to be executed when the operation has faulted/was canceled.</param>
 		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
@@ -113,7 +113,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Schedules a callbacks to be executed after the operation has completed.
 		/// </summary>
-		/// <param name="op">The target operation.</param>
+		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has succeeded.</param>
 		/// <param name="errorCallback">The callback to be executed when the operation has faulted/was canceled.</param>
 		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
@@ -138,7 +138,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Adds a completion callback to be executed after the operation has succeeded.
 		/// </summary>
-		/// <param name="op">The target operation.</param>
+		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has succeeded.</param>
 		/// <param name="errorCallback">The callback to be executed when the operation has faulted/was canceled.</param>
 		/// <returns>Returns a continuation operation that completes after both source operation and the operation returned by <paramref name="successCallback"/> has completed.</returns>
@@ -163,7 +163,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Adds a completion callback to be executed after the operation has succeeded.
 		/// </summary>
-		/// <param name="op">The target operation.</param>
+		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has succeeded.</param>
 		/// <param name="errorCallback">The callback to be executed when the operation has faulted/was canceled.</param>
 		/// <returns>Returns a continuation operation that completes after both source operation and the operation returned by <paramref name="successCallback"/> has completed.</returns>
@@ -192,8 +192,9 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Adds a completion callback to be executed after the operation has faulted or was canceled.
 		/// </summary>
-		/// <param name="op">The target operation.</param>
+		/// <param name="op">An operation to be continued.</param>
 		/// <param name="errorCallback">The callback to be executed when the operation has faulted/was canceled.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
 		/// <seealso href="https://promisesaplus.com/"/>
 		public static IAsyncOperation Catch(this IAsyncOperation op, Action<Exception> errorCallback)
 		{
@@ -202,28 +203,8 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
-
-			op.AddCompletionCallback(asyncOp =>
-			{
-				try
-				{
-					if (asyncOp.IsCompletedSuccessfully)
-					{
-						result.TrySetCompleted();
-					}
-					else
-					{
-						errorCallback(asyncOp.Exception.InnerException);
-						result.TrySetCompleted();
-					}
-				}
-				catch (Exception e)
-				{
-					result.TrySetException(e);
-				}
-			});
-
+			var result = new CatchContinuationResult(errorCallback);
+			op.AddContinuation(result);
 			return result;
 		}
 
@@ -234,7 +215,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Adds a completion callback to be executed after the operation has completed.
 		/// </summary>
-		/// <param name="op">The target operation.</param>
+		/// <param name="op">An operation to be continued.</param>
 		/// <param name="action">The callback to be executed when the operation has completed.</param>
 		/// <seealso href="https://promisesaplus.com/"/>
 		public static IAsyncOperation Finally(this IAsyncOperation op, Action action)
