@@ -9,22 +9,24 @@ using System.Threading.Tasks;
 
 namespace UnityFx.Async
 {
-	internal abstract class AsyncContinuation : IAsyncContinuation
+	internal class AsyncContinuation : IAsyncContinuation
 	{
 		#region data
 
 		private static SendOrPostCallback _postCallback;
 
 		private readonly SynchronizationContext _syncContext;
+		private readonly object _continuation;
 		private IAsyncOperation _op;
 
 		#endregion
 
 		#region interface
 
-		internal AsyncContinuation(SynchronizationContext syncContext)
+		internal AsyncContinuation(SynchronizationContext syncContext, object continuation)
 		{
 			_syncContext = syncContext;
+			_continuation = continuation;
 		}
 
 		internal static bool CanInvoke(IAsyncOperation op, AsyncContinuationOptions options)
@@ -51,32 +53,6 @@ namespace UnityFx.Async
 			else
 			{
 				InvokeDelegate(op, continuation);
-			}
-		}
-
-		internal static void InvokeDelegate(IAsyncOperation op, object continuation)
-		{
-			switch (continuation)
-			{
-				case AsyncOperationCallback aoc:
-					aoc.Invoke(op);
-					break;
-
-				////case Action<IAsyncOperation> aop:
-				////	aop.Invoke(op);
-				////	break;
-
-				case Action a:
-					a.Invoke();
-					break;
-
-				case AsyncCallback ac:
-					ac.Invoke(op);
-					break;
-
-				case EventHandler eh:
-					eh.Invoke(op, EventArgs.Empty);
-					break;
 			}
 		}
 
@@ -120,8 +96,6 @@ namespace UnityFx.Async
 
 #endif
 
-		protected abstract void OnInvoke(IAsyncOperation op);
-
 		#endregion
 
 		#region IAsyncContinuation
@@ -130,7 +104,7 @@ namespace UnityFx.Async
 		{
 			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
 			{
-				OnInvoke(op);
+				InvokeDelegate(op, _continuation);
 			}
 			else
 			{
@@ -141,7 +115,7 @@ namespace UnityFx.Async
 					_postCallback = args =>
 					{
 						var c = args as AsyncContinuation;
-						c.OnInvoke(c._op);
+						InvokeDelegate(c._op, c._continuation);
 					};
 				}
 
@@ -151,7 +125,49 @@ namespace UnityFx.Async
 
 		#endregion
 
+		#region Object
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(obj, _continuation))
+			{
+				return true;
+			}
+
+			return base.Equals(obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return _continuation.GetHashCode();
+		}
+
+		#endregion
+
 		#region implementation
+
+		private static void InvokeDelegate(IAsyncOperation op, object continuation)
+		{
+			switch (continuation)
+			{
+				case AsyncOperationCallback aoc:
+					aoc.Invoke(op);
+					break;
+
+				case Action a:
+					a.Invoke();
+					break;
+
+				case AsyncCallback ac:
+					ac.Invoke(op);
+					break;
+
+				case EventHandler eh:
+					eh.Invoke(op, EventArgs.Empty);
+					break;
+			}
+		}
+
 		#endregion
 	}
 }
