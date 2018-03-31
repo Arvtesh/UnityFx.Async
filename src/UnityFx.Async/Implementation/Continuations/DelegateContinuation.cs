@@ -10,18 +10,25 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private readonly AsyncResult _op;
 		private readonly object _continuation;
 
 		#endregion
 
 		#region interface
 
-		internal DelegateContinuation(AsyncResult op, SynchronizationContext syncContext, object continuation)
-			: base(op, syncContext, continuation)
+		internal DelegateContinuation(SynchronizationContext syncContext, object continuation)
+			: base(syncContext)
 		{
-			_op = op;
 			_continuation = continuation;
+		}
+
+		#endregion
+
+		#region AsyncContinuation
+
+		protected override void OnInvoke(IAsyncOperation op)
+		{
+			InvokeDelegate(op, _continuation);
 		}
 
 		#endregion

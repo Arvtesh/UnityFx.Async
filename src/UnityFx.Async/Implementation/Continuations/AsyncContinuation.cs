@@ -9,25 +9,22 @@ using System.Threading.Tasks;
 
 namespace UnityFx.Async
 {
-	internal class AsyncContinuation : IAsyncContinuation
+	internal abstract class AsyncContinuation : IAsyncContinuation
 	{
 		#region data
 
 		private static SendOrPostCallback _postCallback;
 
-		private readonly IAsyncOperation _op;
 		private readonly SynchronizationContext _syncContext;
-		private readonly object _continuation;
+		private IAsyncOperation _op;
 
 		#endregion
 
 		#region interface
 
-		internal AsyncContinuation(IAsyncOperation op, SynchronizationContext syncContext, object continuation)
+		internal AsyncContinuation(SynchronizationContext syncContext)
 		{
-			_op = op;
 			_syncContext = syncContext;
-			_continuation = continuation;
 		}
 
 		internal static bool CanInvoke(IAsyncOperation op, AsyncContinuationOptions options)
@@ -49,11 +46,37 @@ namespace UnityFx.Async
 		{
 			if (continuation is IAsyncContinuation c)
 			{
-				c.Invoke();
+				c.Invoke(op);
 			}
 			else
 			{
-				InvokeInternal(op, continuation);
+				InvokeDelegate(op, continuation);
+			}
+		}
+
+		internal static void InvokeDelegate(IAsyncOperation op, object continuation)
+		{
+			switch (continuation)
+			{
+				case AsyncOperationCallback aoc:
+					aoc.Invoke(op);
+					break;
+
+				////case Action<IAsyncOperation> aop:
+				////	aop.Invoke(op);
+				////	break;
+
+				case Action a:
+					a.Invoke();
+					break;
+
+				case AsyncCallback ac:
+					ac.Invoke(op);
+					break;
+
+				case EventHandler eh:
+					eh.Invoke(op, EventArgs.Empty);
+					break;
 			}
 		}
 
@@ -97,24 +120,28 @@ namespace UnityFx.Async
 
 #endif
 
+		protected abstract void OnInvoke(IAsyncOperation op);
+
 		#endregion
 
 		#region IAsyncContinuation
 
-		public void Invoke()
+		public void Invoke(IAsyncOperation op)
 		{
 			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
 			{
-				InvokeInternal(_op, _continuation);
+				OnInvoke(op);
 			}
 			else
 			{
+				_op = op;
+
 				if (_postCallback == null)
 				{
 					_postCallback = args =>
 					{
 						var c = args as AsyncContinuation;
-						InvokeInternal(c._op, c._continuation);
+						c.OnInvoke(c._op);
 					};
 				}
 
@@ -124,49 +151,7 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region Object
-
-		public override bool Equals(object obj)
-		{
-			if (ReferenceEquals(obj, _continuation))
-			{
-				return true;
-			}
-
-			return base.Equals(obj);
-		}
-
-		public override int GetHashCode()
-		{
-			return _continuation.GetHashCode();
-		}
-
-		#endregion
-
 		#region implementation
-
-		private static void InvokeInternal(IAsyncOperation op, object continuation)
-		{
-			switch (continuation)
-			{
-				case AsyncOperationCallback aoc:
-					aoc.Invoke(op);
-					break;
-
-				case Action a:
-					a.Invoke();
-					break;
-
-				case AsyncCallback ac:
-					ac.Invoke(op);
-					break;
-
-				case EventHandler eh:
-					eh.Invoke(op, EventArgs.Empty);
-					break;
-			}
-		}
-
 		#endregion
 	}
 }

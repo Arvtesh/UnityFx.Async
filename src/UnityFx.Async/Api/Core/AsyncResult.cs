@@ -1615,7 +1615,7 @@ namespace UnityFx.Async
 		{
 			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
 			{
-				continuation = new AsyncContinuation(this, syncContext, continuation);
+				continuation = new DelegateContinuation(syncContext, continuation);
 			}
 
 			return TryAddContinuation(continuation);

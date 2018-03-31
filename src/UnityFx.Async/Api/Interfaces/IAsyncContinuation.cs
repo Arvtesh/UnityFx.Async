@@ -9,6 +9,7 @@ namespace UnityFx.Async
 	/// <summary>
 	/// Specifies the behavior of an asynchronous opration continuation.
 	/// </summary>
+	/// <seealso cref="IAsyncContinuation"/>
 	[Flags]
 	public enum AsyncContinuationOptions
 	{
@@ -57,11 +58,13 @@ namespace UnityFx.Async
 	/// <summary>
 	/// A generic continuation.
 	/// </summary>
+	/// <seealso cref="IAsyncOperation"/>
 	public interface IAsyncContinuation
 	{
 		/// <summary>
 		/// Starts the continuation.
 		/// </summary>
-		void Invoke();
+		/// <param name="op">The completed antecedent operation.</param>
+		void Invoke(IAsyncOperation op);
 	}
 }

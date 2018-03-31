@@ -8,7 +8,24 @@ namespace UnityFx.Async
 {
 	partial class AsyncExtensions
 	{
-		#region AddCompletionCallback
+		#region AddCompletionCallback/AddContinuation
+
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed the <paramref name="continuation"/> is invoked synchronously.
+		/// </summary>
+		/// <param name="op">The target operation.</param>
+		/// <param name="continuation">The callback to be executed when the operation has completed.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="continuation"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="IAsyncOperationEvents"/>
+		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback)"/>
+		public static void AddContinuation(this IAsyncOperation op, IAsyncContinuation continuation)
+		{
+			if (!op.TryAddContinuation(continuation))
+			{
+				continuation.Invoke(op);
+			}
+		}
 
 		/// <summary>
 		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed the <paramref name="action"/> is invoked synchronously.
@@ -68,27 +85,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
 		public static IAsyncOperation ContinueWith(this IAsyncOperation op, Action<IAsyncOperation> action)
 		{
-			if (action == null)
-			{
-				throw new ArgumentNullException(nameof(action));
-			}
-
-			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
-
-			op.AddCompletionCallback(asyncOp =>
-			{
-				try
-				{
-					action(asyncOp);
-					result.TrySetCompleted();
-				}
-				catch (Exception e)
-				{
-					result.TrySetException(e, false);
-				}
-			});
-
-			return result;
+			return ContinueWith(op, action, AsyncContinuationOptions.CaptureSynchronizationContext);
 		}
 
 		/// <summary>
@@ -106,31 +103,8 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
-			var syncContext = (options & AsyncContinuationOptions.CaptureSynchronizationContext) != 0 ? SynchronizationContext.Current : null;
-
-			op.AddCompletionCallback(
-				asyncOp =>
-				{
-					try
-					{
-						if (AsyncContinuation.CanInvoke(asyncOp, options))
-						{
-							action(asyncOp);
-							result.TrySetCompleted();
-						}
-						else
-						{
-							result.TrySetCanceled();
-						}
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				},
-				syncContext);
-
+			var result = new DelegateContinuationResult<object>(options, action, null);
+			op.AddContinuation(result);
 			return result;
 		}
 
@@ -144,27 +118,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
 		public static IAsyncOperation ContinueWith(this IAsyncOperation op, Action<IAsyncOperation, object> action, object userState)
 		{
-			if (action == null)
-			{
-				throw new ArgumentNullException(nameof(action));
-			}
-
-			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
-
-			op.AddCompletionCallback(asyncOp =>
-			{
-				try
-				{
-					action(asyncOp, userState);
-					result.TrySetCompleted();
-				}
-				catch (Exception e)
-				{
-					result.TrySetException(e, false);
-				}
-			});
-
-			return result;
+			return ContinueWith(op, action, userState, AsyncContinuationOptions.CaptureSynchronizationContext);
 		}
 
 		/// <summary>
@@ -183,31 +137,8 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
-			var syncContext = (options & AsyncContinuationOptions.CaptureSynchronizationContext) != 0 ? SynchronizationContext.Current : null;
-
-			op.AddCompletionCallback(
-				asyncOp =>
-				{
-					try
-					{
-						if (AsyncContinuation.CanInvoke(asyncOp, options))
-						{
-							action(asyncOp, userState);
-							result.TrySetCompleted();
-						}
-						else
-						{
-							result.TrySetCanceled();
-						}
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				},
-				syncContext);
-
+			var result = new DelegateContinuationResult<object>(options, action, userState);
+			op.AddContinuation(result);
 			return result;
 		}
 
@@ -220,27 +151,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
 		public static IAsyncOperation<T> ContinueWith<T>(this IAsyncOperation op, Func<IAsyncOperation, T> action)
 		{
-			if (action == null)
-			{
-				throw new ArgumentNullException(nameof(action));
-			}
-
-			var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running);
-
-			op.AddCompletionCallback(asyncOp =>
-			{
-				try
-				{
-					var resultValue = action(asyncOp);
-					result.TrySetResult(resultValue);
-				}
-				catch (Exception e)
-				{
-					result.TrySetException(e, false);
-				}
-			});
-
-			return result;
+			return ContinueWith(op, action, AsyncContinuationOptions.CaptureSynchronizationContext);
 		}
 
 		/// <summary>
@@ -258,31 +169,8 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running);
-			var syncContext = (options & AsyncContinuationOptions.CaptureSynchronizationContext) != 0 ? SynchronizationContext.Current : null;
-
-			op.AddCompletionCallback(
-				asyncOp =>
-				{
-					try
-					{
-						if (AsyncContinuation.CanInvoke(asyncOp, options))
-						{
-							var resultValue = action(asyncOp);
-							result.TrySetResult(resultValue);
-						}
-						else
-						{
-							result.TrySetCanceled();
-						}
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				},
-				syncContext);
-
+			var result = new DelegateContinuationResult<T>(options, action, null);
+			op.AddContinuation(result);
 			return result;
 		}
 
@@ -296,27 +184,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
 		public static IAsyncOperation<T> ContinueWith<T>(this IAsyncOperation op, Func<IAsyncOperation, object, T> action, object userState)
 		{
-			if (action == null)
-			{
-				throw new ArgumentNullException(nameof(action));
-			}
-
-			var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running);
-
-			op.AddCompletionCallback(asyncOp =>
-			{
-				try
-				{
-					var resultValue = action(asyncOp, userState);
-					result.TrySetResult(resultValue);
-				}
-				catch (Exception e)
-				{
-					result.TrySetException(e, false);
-				}
-			});
-
-			return result;
+			return ContinueWith(op, action, userState, AsyncContinuationOptions.CaptureSynchronizationContext);
 		}
 
 		/// <summary>
@@ -335,31 +203,8 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running);
-			var syncContext = (options & AsyncContinuationOptions.CaptureSynchronizationContext) != 0 ? SynchronizationContext.Current : null;
-
-			op.AddCompletionCallback(
-				asyncOp =>
-				{
-					try
-					{
-						if (AsyncContinuation.CanInvoke(asyncOp, options))
-						{
-							var resultValue = action(asyncOp, userState);
-							result.TrySetResult(resultValue);
-						}
-						else
-						{
-							result.TrySetCanceled();
-						}
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				},
-				syncContext);
-
+			var result = new DelegateContinuationResult<T>(options, action, userState);
+			op.AddContinuation(result);
 			return result;
 		}
 
@@ -372,27 +217,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
 		public static IAsyncOperation ContinueWith<T>(this IAsyncOperation<T> op, Action<IAsyncOperation<T>> action)
 		{
-			if (action == null)
-			{
-				throw new ArgumentNullException(nameof(action));
-			}
-
-			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
-
-			op.AddCompletionCallback(asyncOp =>
-			{
-				try
-				{
-					action(asyncOp as IAsyncOperation<T>);
-					result.TrySetCompleted();
-				}
-				catch (Exception e)
-				{
-					result.TrySetException(e, false);
-				}
-			});
-
-			return result;
+			return ContinueWith(op, action, AsyncContinuationOptions.CaptureSynchronizationContext);
 		}
 
 		/// <summary>
@@ -410,31 +235,8 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
-			var syncContext = (options & AsyncContinuationOptions.CaptureSynchronizationContext) != 0 ? SynchronizationContext.Current : null;
-
-			op.AddCompletionCallback(
-				asyncOp =>
-				{
-					try
-					{
-						if (AsyncContinuation.CanInvoke(asyncOp, options))
-						{
-							action(asyncOp as IAsyncOperation<T>);
-							result.TrySetCompleted();
-						}
-						else
-						{
-							result.TrySetCanceled();
-						}
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				},
-				syncContext);
-
+			var result = new DelegateContinuationResult<T, object>(options, action, null);
+			op.AddContinuation(result);
 			return result;
 		}
 
@@ -448,27 +250,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
 		public static IAsyncOperation ContinueWith<T>(this IAsyncOperation<T> op, Action<IAsyncOperation<T>, object> action, object userState)
 		{
-			if (action == null)
-			{
-				throw new ArgumentNullException(nameof(action));
-			}
-
-			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
-
-			op.AddCompletionCallback(asyncOp =>
-			{
-				try
-				{
-					action(asyncOp as IAsyncOperation<T>, userState);
-					result.TrySetCompleted();
-				}
-				catch (Exception e)
-				{
-					result.TrySetException(e, false);
-				}
-			});
-
-			return result;
+			return ContinueWith(op, action, userState, AsyncContinuationOptions.CaptureSynchronizationContext);
 		}
 
 		/// <summary>
@@ -487,31 +269,8 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
-			var syncContext = (options & AsyncContinuationOptions.CaptureSynchronizationContext) != 0 ? SynchronizationContext.Current : null;
-
-			op.AddCompletionCallback(
-				asyncOp =>
-				{
-					try
-					{
-						if (AsyncContinuation.CanInvoke(asyncOp, options))
-						{
-							action(asyncOp as IAsyncOperation<T>, userState);
-							result.TrySetCompleted();
-						}
-						else
-						{
-							result.TrySetCanceled();
-						}
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				},
-				syncContext);
-
+			var result = new DelegateContinuationResult<T, object>(options, action, userState);
+			op.AddContinuation(result);
 			return result;
 		}
 
@@ -524,27 +283,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
 		public static IAsyncOperation<U> ContinueWith<T, U>(this IAsyncOperation<T> op, Func<IAsyncOperation<T>, U> action)
 		{
-			if (action == null)
-			{
-				throw new ArgumentNullException(nameof(action));
-			}
-
-			var result = new AsyncCompletionSource<U>(AsyncOperationStatus.Running);
-
-			op.AddCompletionCallback(asyncOp =>
-			{
-				try
-				{
-					var resultValue = action(asyncOp as IAsyncOperation<T>);
-					result.TrySetResult(resultValue);
-				}
-				catch (Exception e)
-				{
-					result.TrySetException(e, false);
-				}
-			});
-
-			return result;
+			return ContinueWith(op, action, AsyncContinuationOptions.CaptureSynchronizationContext);
 		}
 
 		/// <summary>
@@ -562,31 +301,8 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncCompletionSource<U>(AsyncOperationStatus.Running);
-			var syncContext = (options & AsyncContinuationOptions.CaptureSynchronizationContext) != 0 ? SynchronizationContext.Current : null;
-
-			op.AddCompletionCallback(
-				asyncOp =>
-				{
-					try
-					{
-						if (AsyncContinuation.CanInvoke(asyncOp, options))
-						{
-							var resultValue = action(asyncOp as IAsyncOperation<T>);
-							result.TrySetResult(resultValue);
-						}
-						else
-						{
-							result.TrySetCanceled();
-						}
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				},
-				syncContext);
-
+			var result = new DelegateContinuationResult<T, U>(options, action, null);
+			op.AddContinuation(result);
 			return result;
 		}
 
@@ -600,27 +316,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
 		public static IAsyncOperation<U> ContinueWith<T, U>(this IAsyncOperation<T> op, Func<IAsyncOperation<T>, object, U> action, object userState)
 		{
-			if (action == null)
-			{
-				throw new ArgumentNullException(nameof(action));
-			}
-
-			var result = new AsyncCompletionSource<U>(AsyncOperationStatus.Running);
-
-			op.AddCompletionCallback(asyncOp =>
-			{
-				try
-				{
-					var resultValue = action(asyncOp as IAsyncOperation<T>, userState);
-					result.TrySetResult(resultValue);
-				}
-				catch (Exception e)
-				{
-					result.TrySetException(e, false);
-				}
-			});
-
-			return result;
+			return ContinueWith(op, action, userState, AsyncContinuationOptions.CaptureSynchronizationContext);
 		}
 
 		/// <summary>
@@ -639,31 +335,8 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncCompletionSource<U>(AsyncOperationStatus.Running);
-			var syncContext = (options & AsyncContinuationOptions.CaptureSynchronizationContext) != 0 ? SynchronizationContext.Current : null;
-
-			op.AddCompletionCallback(
-				asyncOp =>
-				{
-					try
-					{
-						if (AsyncContinuation.CanInvoke(asyncOp, options))
-						{
-							var resultValue = action(asyncOp as IAsyncOperation<T>, userState);
-							result.TrySetResult(resultValue);
-						}
-						else
-						{
-							result.TrySetCanceled();
-						}
-					}
-					catch (Exception e)
-					{
-						result.TrySetException(e, false);
-					}
-				},
-				syncContext);
-
+			var result = new DelegateContinuationResult<T, U>(options, action, userState);
+			op.AddContinuation(result);
 			return result;
 		}
 
