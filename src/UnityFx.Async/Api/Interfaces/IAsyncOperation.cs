@@ -44,7 +44,8 @@ namespace UnityFx.Async
 	}
 
 	/// <summary>
-	/// A disposable <see cref="IAsyncResult"/> with completion status information.
+	/// Represents the consumer side of an asynchronous operation. A disposable <see cref="IAsyncResult"/>
+	/// with status information.
 	/// </summary>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</seealso>
 	/// <seealso cref="IAsyncOperation{T}"/>
@@ -95,6 +96,10 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Gets a value indicating whether the operation completed due to being canceled (i.e. with <see cref="AsyncOperationStatus.Canceled"/> status).
 		/// </summary>
+		/// <remarks>
+		/// If <see cref="IsCanceled"/> is <see langword="true"/>, the operation's <see cref="Status"/> will be equal to
+		/// <see cref="AsyncOperationStatus.Canceled"/>, and its <see cref="Exception"/> property will be non-<see langword="null"/>.
+		/// </remarks>
 		/// <value>A value indicating whether the operation was canceled.</value>
 		/// <seealso cref="IsCompletedSuccessfully"/>
 		/// <seealso cref="IsFaulted"/>

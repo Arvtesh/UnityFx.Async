@@ -6,30 +6,25 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class CatchContinuationResult : AsyncResult, IAsyncContinuation
+	internal class CatchContinuationResult<TException> : AsyncResult, IAsyncContinuation where TException : Exception
 	{
 		#region data
 
 		private static SendOrPostCallback _postCallback;
 
 		private readonly SynchronizationContext _syncContext;
-		private readonly Action<Exception> _errorCallback;
+		private readonly Action<TException> _errorCallback;
 		private IAsyncOperation _op;
 
 		#endregion
 
 		#region interface
 
-		public CatchContinuationResult(Action<Exception> errorCallback)
+		public CatchContinuationResult(Action<TException> errorCallback)
 			: base(AsyncOperationStatus.Running)
 		{
 			_syncContext = SynchronizationContext.Current;
 			_errorCallback = errorCallback;
-		}
-
-		protected void InvokeErrorCallback(IAsyncOperation op)
-		{
-			_errorCallback?.Invoke(op.Exception.InnerException);
 		}
 
 		#endregion
@@ -38,7 +33,7 @@ namespace UnityFx.Async
 
 		public void Invoke(IAsyncOperation op)
 		{
-			if (op.IsCompletedSuccessfully)
+			if (op.IsCompletedSuccessfully || !(op.Exception.InnerException is TException))
 			{
 				TrySetCompleted(op.CompletedSynchronously);
 			}
@@ -54,7 +49,7 @@ namespace UnityFx.Async
 				{
 					_postCallback = args =>
 					{
-						var c = args as CatchContinuationResult;
+						var c = args as CatchContinuationResult<TException>;
 						c.InvokeErrorCallback(c._op, false);
 					};
 				}
@@ -71,7 +66,7 @@ namespace UnityFx.Async
 		{
 			try
 			{
-				_errorCallback.Invoke(op.Exception.InnerException);
+				_errorCallback.Invoke(op.Exception.InnerException as TException);
 				TrySetCompleted(completedSynchronously);
 			}
 			catch (Exception e)

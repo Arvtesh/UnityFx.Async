@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Represents the producer side of a <see cref="IAsyncOperation"/> unbound to a delegate, providing access to the consumer side through the <see cref="Operation"/> property.
+	/// Represents the producer side of an asynchronous operation unbound to a delegate, providing access to the consumer side through the <see cref="Operation"/> property.
 	/// </summary>
 	/// <seealso cref="IAsyncOperation"/>
 	public interface IAsyncCompletionSource

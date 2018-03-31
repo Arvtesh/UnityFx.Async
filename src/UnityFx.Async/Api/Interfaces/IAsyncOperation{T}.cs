@@ -6,7 +6,8 @@ using System;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Extends an <see cref="IAsyncOperation"/> interface with a result value.
+	/// Represents the consumer side of an asynchronous operation. Extends an <see cref="IAsyncOperation"/>
+	/// interface with a result value.
 	/// </summary>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task</seealso>
 	/// <seealso cref="IAsyncOperation"/>

@@ -203,7 +203,26 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new CatchContinuationResult(errorCallback);
+			var result = new CatchContinuationResult<Exception>(errorCallback);
+			op.AddContinuation(result);
+			return result;
+		}
+
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has faulted or was canceled.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="errorCallback">The callback to be executed when the operation has faulted/was canceled.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		/// <seealso href="https://promisesaplus.com/"/>
+		public static IAsyncOperation Catch<TException>(this IAsyncOperation op, Action<TException> errorCallback) where TException : Exception
+		{
+			if (errorCallback == null)
+			{
+				throw new ArgumentNullException(nameof(errorCallback));
+			}
+
+			var result = new CatchContinuationResult<TException>(errorCallback);
 			op.AddContinuation(result);
 			return result;
 		}
