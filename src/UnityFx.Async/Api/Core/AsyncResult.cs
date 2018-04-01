@@ -813,6 +813,7 @@ namespace UnityFx.Async
 		/// <param name="task">The source <see cref="Task"/> instance.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="task"/> reference is <see langword="null"/>.</exception>
 		/// <returns>An <see cref="IAsyncOperation"/> that represents the source <paramref name="task"/>.</returns>
+		/// <seealso cref="FromTask{T}(Task{T})"/>
 		public static AsyncResult FromTask(Task task)
 		{
 			if (task == null)
@@ -849,6 +850,7 @@ namespace UnityFx.Async
 		/// <param name="task">The source <see cref="Task{TResult}"/> instance.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="task"/> reference is <see langword="null"/>.</exception>
 		/// <returns>An <see cref="IAsyncOperation"/> that represents the source <paramref name="task"/>.</returns>
+		/// <seealso cref="FromTask(Task)"/>
 		public static AsyncResult<T> FromTask<T>(Task<T> task)
 		{
 			if (task == null)
