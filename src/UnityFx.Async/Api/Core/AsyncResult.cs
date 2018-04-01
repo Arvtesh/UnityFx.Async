@@ -5,11 +5,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 #if !NET35
 using System.Runtime.ExceptionServices;
 #endif
 using System.Threading;
+#if UNITYFX_SUPPORT_TAP
+using System.Threading.Tasks;
+#endif
 
 namespace UnityFx.Async
 {
@@ -802,6 +804,103 @@ namespace UnityFx.Async
 		{
 			return new AsyncResult<T>(result, asyncState);
 		}
+
+#if UNITYFX_SUPPORT_TAP
+
+		/// <summary>
+		/// Creates an <see cref="IAsyncOperation"/> instance that completes when the specified <paramref name="task"/> completes.
+		/// </summary>
+		/// <param name="task">The source <see cref="Task"/> instance.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="task"/> reference is <see langword="null"/>.</exception>
+		/// <returns>An <see cref="IAsyncOperation"/> that represents the source <paramref name="task"/>.</returns>
+		public static AsyncResult FromTask(Task task)
+		{
+			if (task == null)
+			{
+				throw new ArgumentNullException(nameof(task));
+			}
+
+			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
+
+			task.ContinueWith(
+				t =>
+				{
+					if (t.IsFaulted)
+					{
+						result.SetException(t.Exception);
+					}
+					else if (t.IsCanceled)
+					{
+						result.SetCanceled();
+					}
+					else
+					{
+						result.SetCompleted();
+					}
+				},
+				TaskContinuationOptions.ExecuteSynchronously);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> instance that completes when the specified <paramref name="task"/> completes.
+		/// </summary>
+		/// <param name="task">The source <see cref="Task{TResult}"/> instance.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="task"/> reference is <see langword="null"/>.</exception>
+		/// <returns>An <see cref="IAsyncOperation"/> that represents the source <paramref name="task"/>.</returns>
+		public static AsyncResult<T> FromTask<T>(Task<T> task)
+		{
+			if (task == null)
+			{
+				throw new ArgumentNullException(nameof(task));
+			}
+
+			var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running);
+
+			task.ContinueWith(
+				t =>
+				{
+					if (t.IsFaulted)
+					{
+						result.SetException(t.Exception);
+					}
+					else if (t.IsCanceled)
+					{
+						result.SetCanceled();
+					}
+					else
+					{
+						result.SetResult(t.Result);
+					}
+				},
+				TaskContinuationOptions.ExecuteSynchronously);
+
+			return result;
+		}
+
+#endif
+
+#if !NET35
+
+		/// <summary>
+		/// Creates a <see cref="IAsyncOperation{T}"/> instance that can be used to track the source observable.
+		/// </summary>
+		/// <typeparam name="T">Type of the operation result.</typeparam>
+		/// <param name="observable">The source observable.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="observable"/> reference is <see langword="null"/>.</exception>
+		/// <returns>Returns an <see cref="IAsyncOperation{T}"/> instance that can be used to track the observable.</returns>
+		public static AsyncResult<T> FromObservable<T>(IObservable<T> observable)
+		{
+			if (observable == null)
+			{
+				throw new ArgumentNullException(nameof(observable));
+			}
+
+			return new AsyncObservableResult<T>(observable);
+		}
+
+#endif
 
 		#endregion
 

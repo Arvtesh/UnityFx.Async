@@ -272,27 +272,7 @@ namespace UnityFx.Async
 		/// <returns>An <see cref="IAsyncOperation"/> that represents the <paramref name="task"/>.</returns>
 		public static AsyncResult ToAsync(this Task task)
 		{
-			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
-
-			task.ContinueWith(
-				t =>
-				{
-					if (t.IsFaulted)
-					{
-						result.SetException(t.Exception);
-					}
-					else if (t.IsCanceled)
-					{
-						result.SetCanceled();
-					}
-					else
-					{
-						result.SetCompleted();
-					}
-				},
-				TaskContinuationOptions.ExecuteSynchronously);
-
-			return result;
+			return AsyncResult.FromTask(task);
 		}
 
 		/// <summary>
@@ -302,27 +282,7 @@ namespace UnityFx.Async
 		/// <returns>An <see cref="IAsyncOperation"/> that represents the <paramref name="task"/>.</returns>
 		public static AsyncResult<TResult> ToAsync<TResult>(this Task<TResult> task)
 		{
-			var result = new AsyncCompletionSource<TResult>(AsyncOperationStatus.Running);
-
-			task.ContinueWith(
-				t =>
-				{
-					if (t.IsFaulted)
-					{
-						result.SetException(t.Exception);
-					}
-					else if (t.IsCanceled)
-					{
-						result.SetCanceled();
-					}
-					else
-					{
-						result.SetResult(t.Result);
-					}
-				},
-				TaskContinuationOptions.ExecuteSynchronously);
-
-			return result;
+			return AsyncResult.FromTask(task);
 		}
 
 		#endregion

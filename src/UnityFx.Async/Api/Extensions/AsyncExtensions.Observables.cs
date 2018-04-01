@@ -26,7 +26,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> instance that can be used to track the source observable progress.
+		/// Creates a <see cref="IAsyncOperation{T}"/> instance that can be used to track the source observable.
 		/// </summary>
 		/// <typeparam name="T">Type of the operation result.</typeparam>
 		/// <param name="observable">The source observable.</param>
