@@ -8,6 +8,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 
 ### Added
 - Added `AsyncContinuationOptions` support.
+- Added `Promise`-like extensions `Then`, `Catch` and `Finally`.
+- Added `FromTask`/`FromObservable` helpers.
+- Added `ToAsync` extension method for `IObservable` interface.
+- Added `TryAddContinuation`/`RemoveContinuation` methods to `IAsyncOperationEvents` for non-delegate continuations.
+
+### Changed
+- Changed `ContinueWith` extension signatures to match corresponding `Task` methods.
+- Changed `IAsyncOperation.Exception` to always return an exception instance if completed with non-success.
+
+### Fixed
+- Fixed exception not initialized properly for canceled operations sometimes.
+
+### Removed
+- Removed `GetAwaiter`/`ConfigureAwait` instance methods from `AsyncResult` to avoid code duplication (extension methods should be used).
 
 -----------------------
 ## [0.8.2] - 2018-03-28
