@@ -79,26 +79,6 @@ namespace UnityFx.Async
 			}
 		}
 
-#if !NET35
-
-		/// <summary>
-		/// Creates a <see cref="IObservable{T}"/> instance that can be used to track the source operation progress.
-		/// </summary>
-		/// <typeparam name="T">Type of the operation result.</typeparam>
-		/// <param name="op">The operation to track.</param>
-		/// <returns>Returns an <see cref="IObservable{T}"/> instance that can be used to track the operation.</returns>
-		public static IObservable<T> ToObservable<T>(this IAsyncOperation<T> op)
-		{
-			if (op is AsyncResult<T> ar)
-			{
-				return ar;
-			}
-
-			return new AsyncObservable<T>(op);
-		}
-
-#endif
-
 		#endregion
 
 		#region IAsyncCompletionSource
