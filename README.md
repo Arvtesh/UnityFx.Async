@@ -19,6 +19,11 @@ Library is designed as a lightweight [Unity3d](https://unity3d.com)-compatible [
 - [Unity3d](https://unity3d.com) compatibility. This includes possibility to <c>yield</c> any operations in coroutines and net35-compilance.
 
 ## Getting Started
+### Prerequisites
+You may need the following software installed in order to build/use the library:
+- [Microsoft Visual Studio 2017](https://www.visualstudio.com/vs/community/).
+- [Unity3d](https://store.unity.com/).
+
 ### Getting the code
 You can get the code by cloning the github repository using your preffered git client UI or you can do it from command line as follows:
 ```cmd
@@ -196,11 +201,13 @@ Please see the links below for extended information on the product:
 - [CHANGELOG](CHANGELOG.md).
 
 ## Useful links
-- [Microsoft Visual Studio 2017](https://www.visualstudio.com/vs/community/)
-- [Unity3d](https://store.unity.com/)
-- [Unity Asset Store](https://assetstore.unity.com)
-- [Promise pattern](https://en.wikipedia.org/wiki/Futures_and_promises)
-- [Promises for Game Development](http://www.what-could-possibly-go-wrong.com/promises-for-game-development/)
+- [Task-based Asynchronous Pattern (TAP)](https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/task-based-asynchronous-pattern-tap).
+- [Asynchronous programming with async and await (C#)](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/).
+- [.NET Task reference source](https://referencesource.microsoft.com/#mscorlib/System/threading/Tasks/Task.cs).
+- [Promise pattern](https://en.wikipedia.org/wiki/Futures_and_promises).
+- [Promises for Game Development](http://www.what-could-possibly-go-wrong.com/promises-for-game-development/).
+- [Promises/A+ Spec](https://promisesaplus.com/).
+- [Unity coroutines](https://docs.unity3d.com/Manual/Coroutines.html).
 
 ## Contributing
 
