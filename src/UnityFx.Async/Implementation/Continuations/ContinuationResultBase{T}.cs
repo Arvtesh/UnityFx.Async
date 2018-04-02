@@ -37,7 +37,7 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op)
+		public void Invoke(IAsyncOperation op, bool completedSynchronously)
 		{
 			if (AsyncContinuation.CanInvoke(op, _options))
 			{
@@ -45,11 +45,11 @@ namespace UnityFx.Async
 				{
 					try
 					{
-						TrySetResult(OnInvoke(op), op.CompletedSynchronously);
+						TrySetResult(OnInvoke(op), completedSynchronously);
 					}
 					catch (Exception e)
 					{
-						TrySetException(e, op.CompletedSynchronously);
+						TrySetException(e, completedSynchronously);
 					}
 				}
 				else
@@ -78,7 +78,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				TrySetCanceled(op.CompletedSynchronously);
+				TrySetCanceled(completedSynchronously);
 			}
 		}
 

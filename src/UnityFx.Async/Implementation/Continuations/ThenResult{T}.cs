@@ -70,11 +70,11 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op)
+		public void Invoke(IAsyncOperation op, bool completedSynchronously)
 		{
 			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
 			{
-				InvokeCallbacks(op, op.CompletedSynchronously);
+				InvokeCallbacks(op, completedSynchronously);
 			}
 			else if (op.IsCompletedSuccessfully || _errorCallback != null)
 			{
@@ -93,7 +93,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				TrySetException(op.Exception, op.CompletedSynchronously);
+				TrySetException(op.Exception, completedSynchronously);
 			}
 		}
 

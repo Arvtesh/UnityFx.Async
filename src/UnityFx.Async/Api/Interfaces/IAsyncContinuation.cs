@@ -65,6 +65,7 @@ namespace UnityFx.Async
 		/// Starts the continuation.
 		/// </summary>
 		/// <param name="op">The completed antecedent operation.</param>
-		void Invoke(IAsyncOperation op);
+		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
+		void Invoke(IAsyncOperation op, bool completedSynchronously);
 	}
 }

@@ -23,7 +23,7 @@ namespace UnityFx.Async
 		{
 			if (!op.TryAddContinuation(continuation))
 			{
-				continuation.Invoke(op);
+				continuation.Invoke(op, true);
 			}
 		}
 
