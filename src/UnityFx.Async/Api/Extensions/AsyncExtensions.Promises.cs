@@ -418,7 +418,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new CatchResult<Exception>(errorCallback);
+			var result = new CatchResult<VoidResult, Exception>(errorCallback);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -437,7 +437,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new CatchResult<TException>(errorCallback);
+			var result = new CatchResult<VoidResult, TException>(errorCallback);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -460,7 +460,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new FinallyResult(action);
+			var result = new FinallyResult<VoidResult>(action);
 			op.AddContinuation(result);
 			return result;
 		}

@@ -6,30 +6,64 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class ThenResult<T, U> : AsyncResult<U>, IAsyncContinuation
+	internal class ThenResult<T, U> : PromiseResult<U>, IAsyncContinuation
 	{
 		#region data
 
-		private static SendOrPostCallback _postCallback;
-
-		private readonly SynchronizationContext _syncContext;
 		private readonly object _successCallback;
 		private readonly Action<Exception> _errorCallback;
-		private IAsyncOperation _op;
 
 		#endregion
 
 		#region interface
 
 		public ThenResult(object successCallback, Action<Exception> errorCallback)
-			: base(AsyncOperationStatus.Running)
 		{
-			_syncContext = SynchronizationContext.Current;
 			_successCallback = successCallback;
 			_errorCallback = errorCallback;
 		}
 
-		protected bool InvokeSuccessCallback(IAsyncOperation op)
+		#endregion
+
+		#region PromiseResult
+
+		protected override void InvokeCallbacks(IAsyncOperation op, bool completedSynchronously)
+		{
+			if (op.IsCompletedSuccessfully)
+			{
+				if (InvokeSuccessCallback(op))
+				{
+					TrySetCompleted(completedSynchronously);
+				}
+			}
+			else
+			{
+				InvokeErrorCallback(op);
+				TrySetException(op.Exception, completedSynchronously);
+			}
+		}
+
+		#endregion
+
+		#region IAsyncContinuation
+
+		public void Invoke(IAsyncOperation op, bool completedSynchronously)
+		{
+			if (op.IsCompletedSuccessfully || _errorCallback != null)
+			{
+				InvokeOnSyncContext(op, completedSynchronously);
+			}
+			else
+			{
+				TrySetException(op.Exception, completedSynchronously);
+			}
+		}
+
+		#endregion
+
+		#region implementation
+
+		private bool InvokeSuccessCallback(IAsyncOperation op)
 		{
 			var result = false;
 
@@ -69,67 +103,9 @@ namespace UnityFx.Async
 			return result;
 		}
 
-		protected void InvokeErrorCallback(IAsyncOperation op)
+		private void InvokeErrorCallback(IAsyncOperation op)
 		{
 			_errorCallback?.Invoke(op.Exception.InnerException);
-		}
-
-		#endregion
-
-		#region IAsyncContinuation
-
-		public void Invoke(IAsyncOperation op, bool completedSynchronously)
-		{
-			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
-			{
-				InvokeCallbacks(op, completedSynchronously);
-			}
-			else if (op.IsCompletedSuccessfully || _errorCallback != null)
-			{
-				_op = op;
-
-				if (_postCallback == null)
-				{
-					_postCallback = args =>
-					{
-						var c = args as ThenResult<T, U>;
-						c.InvokeCallbacks(c._op, false);
-					};
-				}
-
-				_syncContext.Post(_postCallback, this);
-			}
-			else
-			{
-				TrySetException(op.Exception, completedSynchronously);
-			}
-		}
-
-		#endregion
-
-		#region implementation
-
-		private void InvokeCallbacks(IAsyncOperation op, bool completedSynchronously)
-		{
-			try
-			{
-				if (op.IsCompletedSuccessfully)
-				{
-					if (InvokeSuccessCallback(op))
-					{
-						TrySetCompleted(completedSynchronously);
-					}
-				}
-				else
-				{
-					InvokeErrorCallback(op);
-					TrySetException(op.Exception, completedSynchronously);
-				}
-			}
-			catch (Exception e)
-			{
-				TrySetException(e, completedSynchronously);
-			}
 		}
 
 		#endregion

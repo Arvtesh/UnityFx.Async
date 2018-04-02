@@ -6,39 +6,32 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class FinallyResult : AsyncResult, IAsyncContinuation
-	{
+	internal abstract class PromiseResult<T> : AsyncResult<T>
+    {
 		#region data
 
 		private static SendOrPostCallback _postCallback;
 
 		private readonly SynchronizationContext _syncContext;
-		private readonly Action _continuation;
 		private IAsyncOperation _op;
 
 		#endregion
 
 		#region interface
 
-		public FinallyResult(Action action)
+		protected PromiseResult()
 			: base(AsyncOperationStatus.Running)
 		{
 			_syncContext = SynchronizationContext.Current;
-			_continuation = action;
 		}
 
-		#endregion
-
-		#region IAsyncContinuation
-
-		public void Invoke(IAsyncOperation op, bool completedSynchronously)
+		protected void InvokeOnSyncContext(IAsyncOperation op, bool completedSynchronously)
 		{
 			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
 			{
 				try
 				{
-					_continuation();
-					TrySetCompleted(completedSynchronously);
+					InvokeCallbacks(op, completedSynchronously);
 				}
 				catch (Exception e)
 				{
@@ -53,16 +46,15 @@ namespace UnityFx.Async
 				{
 					_postCallback = args =>
 					{
-						var c = args as FinallyResult;
+						var c = args as PromiseResult<T>;
 
 						try
 						{
-							c._continuation();
-							c.TrySetCompleted(false);
+							c.InvokeCallbacks(c._op, false);
 						}
 						catch (Exception e)
 						{
-							c.TrySetException(e, false);
+							c.TrySetException(e, completedSynchronously);
 						}
 					};
 				}
@@ -70,6 +62,8 @@ namespace UnityFx.Async
 				_syncContext.Post(_postCallback, this);
 			}
 		}
+
+		protected abstract void InvokeCallbacks(IAsyncOperation op, bool completedSynchronously);
 
 		#endregion
 	}
