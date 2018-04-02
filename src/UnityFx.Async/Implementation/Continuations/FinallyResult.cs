@@ -62,7 +62,7 @@ namespace UnityFx.Async
 						}
 						catch (Exception e)
 						{
-							TrySetException(e, false);
+							c.TrySetException(e, false);
 						}
 					};
 				}

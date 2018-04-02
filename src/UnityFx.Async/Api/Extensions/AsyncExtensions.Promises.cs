@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 
 namespace UnityFx.Async
 {
@@ -181,6 +182,182 @@ namespace UnityFx.Async
 			}
 
 			var result = new ThenResult<TResult>(successCallback, errorCallback);
+			op.AddContinuation(result);
+			return result;
+		}
+
+		#endregion
+
+		#region ThenAll
+
+		/// <summary>
+		/// Schedules a callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation ThenAll(this IAsyncOperation op, Func<IEnumerable<IAsyncOperation>> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Schedules a callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation ThenAll<T>(this IAsyncOperation<T> op, Func<T, IEnumerable<IAsyncOperation>> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Schedules a callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation<T[]> ThenAll<T>(this IAsyncOperation op, Func<IEnumerable<IAsyncOperation<T>>> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Schedules a callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation<U[]> ThenAll<T, U>(this IAsyncOperation<T> op, Func<T, IEnumerable<IAsyncOperation<U>>> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			throw new NotImplementedException();
+		}
+
+		#endregion
+
+		#region ThenAny
+
+		/// <summary>
+		/// Schedules a callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation ThenAny(this IAsyncOperation op, Func<IEnumerable<IAsyncOperation>> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Schedules a callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation ThenAny<T>(this IAsyncOperation<T> op, Func<T, IEnumerable<IAsyncOperation>> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Schedules a callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation<T> ThenAny<T>(this IAsyncOperation op, Func<IEnumerable<IAsyncOperation<T>>> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Schedules a callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation<U> ThenAny<T, U>(this IAsyncOperation<T> op, Func<T, IEnumerable<IAsyncOperation<U>>> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			throw new NotImplementedException();
+		}
+
+		#endregion
+
+		#region Rebind
+
+		/// <summary>
+		/// Schedules a callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation<TNewResult> Rebind<TNewResult>(this IAsyncOperation op, Func<TNewResult> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			var result = new RebindResult<VoidResult, TNewResult>(successCallback);
+			op.AddContinuation(result);
+			return result;
+		}
+
+		/// <summary>
+		/// Schedules a callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation<TNewResult> Rebind<TResult, TNewResult>(this IAsyncOperation<TResult> op, Func<TResult, TNewResult> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			var result = new RebindResult<TResult, TNewResult>(successCallback);
 			op.AddContinuation(result);
 			return result;
 		}
