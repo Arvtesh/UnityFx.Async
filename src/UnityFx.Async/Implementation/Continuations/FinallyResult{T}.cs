@@ -16,9 +16,11 @@ namespace UnityFx.Async
 		#region interface
 
 		public FinallyResult(IAsyncOperation op, Action action)
-			: base(op)
 		{
 			_continuation = action;
+
+			// NOTE: Cannot move this to base class because this call might trigger virtual Invoke
+			op.AddContinuation(this);
 		}
 
 		#endregion

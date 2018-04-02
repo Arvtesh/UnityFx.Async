@@ -103,9 +103,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new ContinuationResult<VoidResult>(options, action, null);
-			op.AddContinuation(result);
-			return result;
+			return new ContinuationResult<VoidResult>(op, options, action, null);
 		}
 
 		/// <summary>
@@ -137,9 +135,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new ContinuationResult<VoidResult>(options, action, userState);
-			op.AddContinuation(result);
-			return result;
+			return new ContinuationResult<VoidResult>(op, options, action, userState);
 		}
 
 		/// <summary>
@@ -169,9 +165,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new ContinuationResult<TResult>(options, action, null);
-			op.AddContinuation(result);
-			return result;
+			return new ContinuationResult<TResult>(op, options, action, null);
 		}
 
 		/// <summary>
@@ -203,9 +197,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new ContinuationResult<TResult>(options, action, userState);
-			op.AddContinuation(result);
-			return result;
+			return new ContinuationResult<TResult>(op, options, action, userState);
 		}
 
 		/// <summary>
@@ -235,9 +227,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new ContinuationResult<TResult, VoidResult>(options, action, null);
-			op.AddContinuation(result);
-			return result;
+			return new ContinuationResult<TResult, VoidResult>(op, options, action, null);
 		}
 
 		/// <summary>
@@ -269,9 +259,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new ContinuationResult<TResult, VoidResult>(options, action, userState);
-			op.AddContinuation(result);
-			return result;
+			return new ContinuationResult<TResult, VoidResult>(op, options, action, userState);
 		}
 
 		/// <summary>
@@ -301,9 +289,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new ContinuationResult<TResult, TNewResult>(options, action, null);
-			op.AddContinuation(result);
-			return result;
+			return new ContinuationResult<TResult, TNewResult>(op, options, action, null);
 		}
 
 		/// <summary>
@@ -335,9 +321,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new ContinuationResult<TResult, TNewResult>(options, action, userState);
-			op.AddContinuation(result);
-			return result;
+			return new ContinuationResult<TResult, TNewResult>(op, options, action, userState);
 		}
 
 		#endregion

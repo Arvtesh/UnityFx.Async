@@ -16,11 +16,14 @@ namespace UnityFx.Async
 
 		#region interface
 
-		internal ContinuationResult(AsyncContinuationOptions options, object continuation, object userState)
+		internal ContinuationResult(IAsyncOperation op, AsyncContinuationOptions options, object continuation, object userState)
 			: base(options)
 		{
 			_continuation = continuation;
 			_userState = userState;
+
+			// NOTE: Cannot move this to base class because this call might trigger _continuation (and it would be uninitialized in base ctor)
+			op.AddContinuation(this);
 		}
 
 		#endregion

@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
-using System.Threading;
 
 namespace UnityFx.Async
 {
@@ -18,10 +17,12 @@ namespace UnityFx.Async
 		#region interface
 
 		public ThenResult(IAsyncOperation op, object successCallback, Action<Exception> errorCallback)
-			: base(op)
 		{
 			_successCallback = successCallback;
 			_errorCallback = errorCallback;
+
+			// NOTE: Cannot move this to base class because this call might trigger virtual Invoke
+			op.AddContinuation(this);
 		}
 
 		#endregion

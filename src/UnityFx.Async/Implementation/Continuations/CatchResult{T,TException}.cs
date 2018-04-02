@@ -17,9 +17,11 @@ namespace UnityFx.Async
 		#region interface
 
 		public CatchResult(IAsyncOperation op, Action<TException> errorCallback)
-			: base(op)
 		{
 			_errorCallback = errorCallback;
+
+			// NOTE: Cannot move this to base class because this call might trigger virtual Invoke
+			op.AddContinuation(this);
 		}
 
 		#endregion

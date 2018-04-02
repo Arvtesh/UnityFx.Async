@@ -13,18 +13,16 @@ namespace UnityFx.Async
 		private static SendOrPostCallback _postCallback;
 
 		private readonly SynchronizationContext _syncContext;
-		private readonly IAsyncOperation _op;
+		private IAsyncOperation _op;
 
 		#endregion
 
 		#region interface
 
-		protected PromiseResult(IAsyncOperation op)
+		protected PromiseResult()
 			: base(AsyncOperationStatus.Running)
 		{
 			_syncContext = SynchronizationContext.Current;
-			_op = op;
-			_op.AddContinuation(this);
 		}
 
 		protected abstract void InvokeCallbacks(IAsyncOperation op, bool completedSynchronously);
@@ -48,6 +46,8 @@ namespace UnityFx.Async
 			}
 			else
 			{
+				_op = op;
+
 				if (_postCallback == null)
 				{
 					_postCallback = args =>
