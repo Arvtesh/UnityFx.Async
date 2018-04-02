@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class ThenResult<T> : AsyncResult, IAsyncContinuation
+	internal class ThenResult<T, U> : AsyncResult<U>, IAsyncContinuation
 	{
 		#region data
 
@@ -45,12 +45,20 @@ namespace UnityFx.Async
 					result = true;
 					break;
 
-				case Func<IAsyncOperation> f:
-					f.Invoke().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+				case Func<IAsyncOperation<U>> f3:
+					f3().AddCompletionCallback(op2 => TryCopyCompletionState(op2 as IAsyncOperation<U>, false), null);
 					break;
 
-				case Func<T, IAsyncOperation> f1:
-					f1.Invoke((op as IAsyncOperation<T>).Result).AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+				case Func<IAsyncOperation> f1:
+					f1().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+					break;
+
+				case Func<T, IAsyncOperation<U>> f4:
+					f4((op as IAsyncOperation<T>).Result).AddCompletionCallback(op2 => TryCopyCompletionState(op2 as IAsyncOperation<U>, false), null);
+					break;
+
+				case Func<T, IAsyncOperation> f2:
+					f2((op as IAsyncOperation<T>).Result).AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				default:
@@ -84,7 +92,7 @@ namespace UnityFx.Async
 				{
 					_postCallback = args =>
 					{
-						var c = args as ThenResult<T>;
+						var c = args as ThenResult<T, U>;
 						c.InvokeCallbacks(c._op, false);
 					};
 				}

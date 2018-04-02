@@ -24,7 +24,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new ThenResult<VoidResult>(successCallback, null);
+			var result = new ThenResult<VoidResult, VoidResult>(successCallback, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -43,7 +43,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new ThenResult<TResult>(successCallback, null);
+			var result = new ThenResult<TResult, VoidResult>(successCallback, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -62,7 +62,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new ThenResult<VoidResult>(successCallback, null);
+			var result = new ThenResult<VoidResult, VoidResult>(successCallback, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -81,7 +81,45 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new ThenResult<TResult>(successCallback, null);
+			var result = new ThenResult<TResult, VoidResult>(successCallback, null);
+			op.AddContinuation(result);
+			return result;
+		}
+
+		/// <summary>
+		/// Schedules a callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the operation returned by <paramref name="successCallback"/> has completed.</returns>
+		/// <seealso href="https://promisesaplus.com/"/>
+		public static IAsyncOperation<TResult> Then<TResult>(this IAsyncOperation op, Func<IAsyncOperation<TResult>> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			var result = new ThenResult<VoidResult, TResult>(successCallback, null);
+			op.AddContinuation(result);
+			return result;
+		}
+
+		/// <summary>
+		/// Schedules a callback to be executed after the operation has succeeded.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the operation returned by <paramref name="successCallback"/> has completed.</returns>
+		/// <seealso href="https://promisesaplus.com/"/>
+		public static IAsyncOperation<TNewResult> Then<TResult, TNewResult>(this IAsyncOperation<TResult> op, Func<TResult, IAsyncOperation<TNewResult>> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			var result = new ThenResult<TResult, TNewResult>(successCallback, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -106,7 +144,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new ThenResult<VoidResult>(successCallback, errorCallback);
+			var result = new ThenResult<VoidResult, VoidResult>(successCallback, errorCallback);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -131,7 +169,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new ThenResult<TResult>(successCallback, errorCallback);
+			var result = new ThenResult<TResult, VoidResult>(successCallback, errorCallback);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -156,7 +194,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new ThenResult<VoidResult>(successCallback, errorCallback);
+			var result = new ThenResult<VoidResult, VoidResult>(successCallback, errorCallback);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -181,7 +219,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new ThenResult<TResult>(successCallback, errorCallback);
+			var result = new ThenResult<TResult, VoidResult>(successCallback, errorCallback);
 			op.AddContinuation(result);
 			return result;
 		}
