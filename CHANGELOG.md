@@ -4,11 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
 -----------------------
-## [Unreleased]
+## [0.9.0] - Unreleased
 
 ### Added
 - Added `AsyncContinuationOptions` support.
-- Added `Promise`-like extensions `Then`, `Catch` and `Finally`.
+- Added `Promise`-like extensions `Then`, `ThenAll`, `ThenAny`, `Rebind`, `Catch` and `Finally`.
+- Added `Unwrap` extension methods.
 - Added `FromTask`/`FromObservable` helpers.
 - Added `ToAsync` extension method for `IObservable` interface.
 - Added `TryAddContinuation`/`RemoveContinuation` methods to `IAsyncOperationEvents` for non-delegate continuations.
