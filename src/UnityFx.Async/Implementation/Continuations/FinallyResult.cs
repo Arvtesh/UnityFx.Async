@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class FinallyContinuationResult : AsyncResult, IAsyncContinuation
+	internal class FinallyResult : AsyncResult, IAsyncContinuation
 	{
 		#region data
 
@@ -20,7 +20,7 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public FinallyContinuationResult(Action action)
+		public FinallyResult(Action action)
 			: base(AsyncOperationStatus.Running)
 		{
 			_syncContext = SynchronizationContext.Current;
@@ -53,7 +53,7 @@ namespace UnityFx.Async
 				{
 					_postCallback = args =>
 					{
-						var c = args as FinallyContinuationResult;
+						var c = args as FinallyResult;
 
 						try
 						{

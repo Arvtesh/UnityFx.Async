@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class ThenContinuationResult<T> : AsyncResult, IAsyncContinuation
+	internal class ThenResult<T> : AsyncResult, IAsyncContinuation
 	{
 		#region data
 
@@ -21,7 +21,7 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public ThenContinuationResult(object successCallback, Action<Exception> errorCallback)
+		public ThenResult(object successCallback, Action<Exception> errorCallback)
 			: base(AsyncOperationStatus.Running)
 		{
 			_syncContext = SynchronizationContext.Current;
@@ -84,7 +84,7 @@ namespace UnityFx.Async
 				{
 					_postCallback = args =>
 					{
-						var c = args as ThenContinuationResult<T>;
+						var c = args as ThenResult<T>;
 						c.InvokeCallbacks(c._op, false);
 					};
 				}

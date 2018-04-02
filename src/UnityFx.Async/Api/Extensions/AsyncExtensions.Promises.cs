@@ -23,7 +23,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new ThenContinuationResult<VoidResult>(successCallback, null);
+			var result = new ThenResult<VoidResult>(successCallback, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -42,7 +42,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new ThenContinuationResult<TResult>(successCallback, null);
+			var result = new ThenResult<TResult>(successCallback, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -61,7 +61,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new ThenContinuationResult<VoidResult>(successCallback, null);
+			var result = new ThenResult<VoidResult>(successCallback, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -80,7 +80,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new ThenContinuationResult<TResult>(successCallback, null);
+			var result = new ThenResult<TResult>(successCallback, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -105,7 +105,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new ThenContinuationResult<VoidResult>(successCallback, errorCallback);
+			var result = new ThenResult<VoidResult>(successCallback, errorCallback);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -130,7 +130,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new ThenContinuationResult<TResult>(successCallback, errorCallback);
+			var result = new ThenResult<TResult>(successCallback, errorCallback);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -155,7 +155,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new ThenContinuationResult<VoidResult>(successCallback, errorCallback);
+			var result = new ThenResult<VoidResult>(successCallback, errorCallback);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -180,7 +180,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new ThenContinuationResult<TResult>(successCallback, errorCallback);
+			var result = new ThenResult<TResult>(successCallback, errorCallback);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -203,7 +203,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new CatchContinuationResult<Exception>(errorCallback);
+			var result = new CatchResult<Exception>(errorCallback);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -222,7 +222,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new CatchContinuationResult<TException>(errorCallback);
+			var result = new CatchResult<TException>(errorCallback);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -245,7 +245,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new FinallyContinuationResult(action);
+			var result = new FinallyResult(action);
 			op.AddContinuation(result);
 			return result;
 		}

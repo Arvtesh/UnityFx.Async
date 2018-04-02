@@ -2,89 +2,61 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
-using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal abstract class ContinuationResult<T> : AsyncResult<T>, IAsyncContinuation
+	internal class ContinuationResult<T> : ContinuationResultBase<T>
 	{
 		#region data
 
-		private static SendOrPostCallback _postCallback;
-
-		private readonly SynchronizationContext _syncContext;
-		private readonly AsyncContinuationOptions _options;
-		private IAsyncOperation _op;
+		private readonly object _continuation;
+		private readonly object _userState;
 
 		#endregion
 
 		#region interface
 
-		protected ContinuationResult(AsyncContinuationOptions options)
-			: base(AsyncOperationStatus.Running)
+		internal ContinuationResult(AsyncContinuationOptions options, object continuation, object userState)
+			: base(options)
 		{
-			if ((options & AsyncContinuationOptions.CaptureSynchronizationContext) != 0)
-			{
-				_syncContext = SynchronizationContext.Current;
-			}
-
-			_options = options;
-		}
-
-		protected abstract T OnInvoke(IAsyncOperation op);
-
-		#endregion
-
-		#region IAsyncContinuation
-
-		public void Invoke(IAsyncOperation op)
-		{
-			if (AsyncContinuation.CanInvoke(op, _options))
-			{
-				if (_syncContext == null || _syncContext == SynchronizationContext.Current)
-				{
-					try
-					{
-						TrySetResult(OnInvoke(op), op.CompletedSynchronously);
-					}
-					catch (Exception e)
-					{
-						TrySetException(e, op.CompletedSynchronously);
-					}
-				}
-				else
-				{
-					_op = op;
-
-					if (_postCallback == null)
-					{
-						_postCallback = args =>
-						{
-							var c = args as ContinuationResult<T>;
-
-							try
-							{
-								c.TrySetResult(c.OnInvoke(c._op), false);
-							}
-							catch (Exception e)
-							{
-								c.TrySetException(e, false);
-							}
-						};
-					}
-
-					_syncContext.Post(_postCallback, this);
-				}
-			}
-			else
-			{
-				TrySetCanceled(op.CompletedSynchronously);
-			}
+			_continuation = continuation;
+			_userState = userState;
 		}
 
 		#endregion
 
-		#region implementation
+		#region AsyncContinuation
+
+		protected override T OnInvoke(IAsyncOperation op)
+		{
+			var result = default(T);
+
+			switch (_continuation)
+			{
+				case Action<IAsyncOperation> a:
+					a.Invoke(op);
+					break;
+
+				case Func<IAsyncOperation, T> f:
+					result = f.Invoke(op);
+					break;
+
+				case Action<IAsyncOperation, object> ao:
+					ao.Invoke(op, _userState);
+					break;
+
+				case Func<IAsyncOperation, object, T> fo:
+					result = fo.Invoke(op, _userState);
+					break;
+
+				default:
+					// Should not get here.
+					throw new InvalidOperationException();
+			}
+
+			return result;
+		}
+
 		#endregion
 	}
 }

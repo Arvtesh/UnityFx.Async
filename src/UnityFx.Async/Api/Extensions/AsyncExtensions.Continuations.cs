@@ -103,7 +103,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<VoidResult>(options, action, null);
+			var result = new ContinuationResult<VoidResult>(options, action, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -137,7 +137,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<VoidResult>(options, action, userState);
+			var result = new ContinuationResult<VoidResult>(options, action, userState);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -169,7 +169,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<TResult>(options, action, null);
+			var result = new ContinuationResult<TResult>(options, action, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -203,7 +203,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<TResult>(options, action, userState);
+			var result = new ContinuationResult<TResult>(options, action, userState);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -235,7 +235,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<TResult, VoidResult>(options, action, null);
+			var result = new ContinuationResult<TResult, VoidResult>(options, action, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -269,7 +269,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<TResult, VoidResult>(options, action, userState);
+			var result = new ContinuationResult<TResult, VoidResult>(options, action, userState);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -301,7 +301,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<TResult, TNewResult>(options, action, null);
+			var result = new ContinuationResult<TResult, TNewResult>(options, action, null);
 			op.AddContinuation(result);
 			return result;
 		}
@@ -335,9 +335,33 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new AsyncContinuationResult<TResult, TNewResult>(options, action, userState);
+			var result = new ContinuationResult<TResult, TNewResult>(options, action, userState);
 			op.AddContinuation(result);
 			return result;
+		}
+
+		#endregion
+
+		#region Unwrap
+
+		/// <summary>
+		/// Creates a proxy <see cref="IAsyncOperation"/> that represents the asynchronous operation of a <c>IAsyncOperation&lt;IAsyncOperation&gt;</c>.
+		/// </summary>
+		/// <param name="op">The source operation.</param>
+		/// <returns>The unwrapped operation.</returns>
+		public static IAsyncOperation Unwrap(this IAsyncOperation<IAsyncOperation> op)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Creates a proxy <see cref="IAsyncOperation{TResult}"/> that represents the asynchronous operation of a <c>IAsyncOperation&lt;IAsyncOperation&lt;TResult&gt;&gt;</c>.
+		/// </summary>
+		/// <param name="op">The source operation.</param>
+		/// <returns>The unwrapped operation.</returns>
+		public static IAsyncOperation<TResult> Unwrap<TResult>(this IAsyncOperation<IAsyncOperation<TResult>> op)
+		{
+			throw new NotImplementedException();
 		}
 
 		#endregion

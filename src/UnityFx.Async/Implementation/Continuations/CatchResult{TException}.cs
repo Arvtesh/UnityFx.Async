@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class CatchContinuationResult<TException> : AsyncResult, IAsyncContinuation where TException : Exception
+	internal class CatchResult<TException> : AsyncResult, IAsyncContinuation where TException : Exception
 	{
 		#region data
 
@@ -20,7 +20,7 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public CatchContinuationResult(Action<TException> errorCallback)
+		public CatchResult(Action<TException> errorCallback)
 			: base(AsyncOperationStatus.Running)
 		{
 			_syncContext = SynchronizationContext.Current;
@@ -49,7 +49,7 @@ namespace UnityFx.Async
 				{
 					_postCallback = args =>
 					{
-						var c = args as CatchContinuationResult<TException>;
+						var c = args as CatchResult<TException>;
 						c.InvokeErrorCallback(c._op, false);
 					};
 				}

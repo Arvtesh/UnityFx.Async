@@ -5,7 +5,7 @@ using System;
 
 namespace UnityFx.Async
 {
-	internal class AsyncContinuationResult<T> : ContinuationResult<T>
+	internal class ContinuationResult<T, U> : ContinuationResultBase<U>
 	{
 		#region data
 
@@ -16,7 +16,7 @@ namespace UnityFx.Async
 
 		#region interface
 
-		internal AsyncContinuationResult(AsyncContinuationOptions options, object continuation, object userState)
+		internal ContinuationResult(AsyncContinuationOptions options, object continuation, object userState)
 			: base(options)
 		{
 			_continuation = continuation;
@@ -27,26 +27,26 @@ namespace UnityFx.Async
 
 		#region AsyncContinuation
 
-		protected override T OnInvoke(IAsyncOperation op)
+		protected override U OnInvoke(IAsyncOperation op)
 		{
-			var result = default(T);
+			var result = default(U);
 
 			switch (_continuation)
 			{
-				case Action<IAsyncOperation> a:
-					a.Invoke(op);
+				case Action<IAsyncOperation<T>> a:
+					a.Invoke(op as IAsyncOperation<T>);
 					break;
 
-				case Func<IAsyncOperation, T> f:
-					result = f.Invoke(op);
+				case Func<IAsyncOperation<T>, U> f:
+					result = f.Invoke(op as IAsyncOperation<T>);
 					break;
 
-				case Action<IAsyncOperation, object> ao:
-					ao.Invoke(op, _userState);
+				case Action<IAsyncOperation<T>, object> ao:
+					ao.Invoke(op as IAsyncOperation<T>, _userState);
 					break;
 
-				case Func<IAsyncOperation, object, T> fo:
-					result = fo.Invoke(op, _userState);
+				case Func<IAsyncOperation<T>, object, U> fo:
+					result = fo.Invoke(op as IAsyncOperation<T>, _userState);
 					break;
 
 				default:
