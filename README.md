@@ -44,19 +44,38 @@ TODO
 ### Promises to the Rescue
 TODO
 
-## Code Example
-Typical use-case of the library is wrapping [Unity3d](https://unity3d.com) web requests in [Task-based Asynchronous Pattern](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming) manner:
+## Using the library
+Reference the DLL and import the namespace:
 ```csharp
-public IAsyncOperation<Texture2D> LoadTextureAsync(string textureUrl)
+using UnityFx.Async;
+```
+Create an operation instance like this:
+```csharp
+var op = new AsyncCompletionSource<string>();
+```
+The type of the operation should reflect its result type. In this case we have created a special kind of operations - a completion source, that incapsulated both producer and consumer operation interfaces (consumer side is represented via `IAsyncOperation` / `IAsyncOperation<TResult>` interfaces and producer side is `IAsyncCompletionSource` / `IAsyncCompletionSource<TResult>`, `AsyncCompletionSource` implements both of the interfaces).
+
+Upon completion of the asynchronous operation notify its users:
+```csharp
+op.SetResult(resultValue);
+```
+Alternatively, if the operation has failed:
+```csharp
+op.SetException(ex);
+```
+
+To see it in context, here is an example of a function that downloads text from URL using [UnityWebRequest](https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html):
+```csharp
+public IAsyncOperation<string> DownloadTextAsync(string url)
 {
-    var result = new AsyncCompletionSource<Texture2D>();
-    StartCoroutine(LoadTextureInternal(result, textureUrl));
-    return result.Operation;
+    var result = new AsyncCompletionSource<string>();
+    StartCoroutine(DownloadTextInternal(result, url));
+    return result;
 }
 
-private IEnumerator LoadTextureInternal(IAsyncCompletionSource<Texture2D> op, string textureUrl)
+private IEnumerator DownloadTextInternal(IAsyncCompletionSource<string> op, string url)
 {
-    var www = UnityWebRequestTexture.GetTexture(textureUrl);
+    var www = UnityWebRequest.Get(url);
     yield return www.Send();
 
     if (www.isNetworkError || www.isHttpError)
@@ -65,99 +84,106 @@ private IEnumerator LoadTextureInternal(IAsyncCompletionSource<Texture2D> op, st
     }
     else
     {
-        op.SetResult(((DownloadHandlerTexture)www.downloadHandler).texture);
+        op.SetResult(www.downloadHandler.text);
     }
 }
 ```
-Once that is done we can use `LoadTextureAsync()` result in many ways. For example we can yield it in Unity coroutine to wait for its completion:
-```csharp
-IEnumerator WaitForLoadOperationInCoroutine(string textureUrl)
-{
-    var op = LoadTextureAsync(textureUrl);
-    yield return op;
 
-    if (op.IsCompletedSuccessfully)
-    {
-        Debug.Log("Yay!");
-    }
-    else if (op.IsFaulted)
-    {
-        Debug.LogException(op.Exception);
-    }
-    else if (op.IsCanceled)
-    {
-        Debug.LogWarning("The operation was canceled.");
-    }
-}
-```
-With Unity 2017+ and .NET 4.6 scripting backend it can be used just like a [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task). The await continuation is scheduled on the captured [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) (if any):
+### Waiting for an operation to complete
+The simpliest way to get notified of an operation completion is registering a completion handler to be invoked when the operation succeeds (the JS promise-like way):
 ```csharp
-async Task WaitForLoadOperationWithAwait(string textureUrl)
-{
-    try
-    {
-        var texture = await LoadTextureAsync(textureUrl);
-        Debug.Log("Yay! The texture is loaded!");
-    }
-    catch (OperationCanceledException)
-    {
-        Debug.LogWarning("The operation was canceled.");
-    }
-    catch (Exception e)
-    {
-        Debug.LogException(e);
-    }
-}
+DownloadTextAsync("http://www.google.com").Then(text => Debug.Log(text));
 ```
-An operation can have any number of completion callbacks registered:
+The above code downloads content of Google's front page and prints it to Unity console. To make this example closer to real life applications let's add simple error handling code to it:
 ```csharp
-void WaitForLoadOperationInCompletionCallback(string textureUrl)
-{
-    LoadTextureAsync(textureUrl).AddCompletionCallback(op =>
-    {
-        if (op.IsCompletedSuccessfully)
-        {
-            var texture = (op as IAsyncOperation<Texture2D>).Result;
-            Debug.Log("Yay!");
-        }
-        else if (op.IsFaulted)
-        {
-            Debug.LogException(op.Exception);
-        }
-        else if (op.IsCanceled)
-        {
-            Debug.LogWarning("The operation was canceled.");
-        }
-    });
-}
+DownloadTextAsync("http://www.google.com")
+    .Then(text => Debug.Log(text))
+    .Catch(e => Debug.LogException(e));
 ```
-Also one can access/wait for operations from other threads:
+One can also yield the operation in Unity coroutine:
 ```csharp
-void WaitForLoadOperationInAnotherThread(string textureUrl)
-{
-    var op = LoadTextureAsync(textureUrl);
+var op = DownloadTextAsync("http://www.google.com");
+yield return op;
 
-    ThreadPool.QueueUserWorkItem(
-        args =>
-        {
-            try
-            {
-                var texture = (args as IAsyncOperation<Texture2D>).Join();
-
-                // The texture is loaded
-            }
-            catch (OperationCanceledException)
-            {
-                // The operation was canceled
-            }
-            catch (Exception)
-            {
-                // Load failed
-            }
-        },
-        op);
+if (op.IsCompletedSuccessfully)
+{
+    Debug.Log(op.Result);
+}
+else if (op.IsFaulted)
+{
+    Debug.LogException(op.Exception);
+}
+else if (op.IsCanceled)
+{
+    Debug.LogWarning("The operation was canceled.");
 }
 ```
+With Unity 2017+ and .NET 4.6 it can be used just like a [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task). The await continuation is scheduled on the captured [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) (if any):
+```csharp
+try
+{
+    var text = await DownloadTextAsync("http://www.google.com");
+    Debug.Log(text);
+}
+catch (OperationCanceledException)
+{
+    Debug.LogWarning("The operation was canceled.");
+}
+catch (Exception e)
+{
+    Debug.LogException(e);
+}
+```
+Or, you can just block current thread while waiting (don't do that from UI thread!). Note usage of `using` with operation instance:
+```csharp
+try
+{
+    using (var op = DownloadTextAsync("http://www.google.com"))
+    {
+        var text = op.Join();
+        Debug.Log(text);
+    }
+}
+catch (Exception e)
+{
+    Debug.LogException(e);
+}
+```
+
+### Chaining asynchronous operations
+Multiple asynchronous operations can be chained one after other using `Then`:
+```csharp
+DownloadTextAsync("http://www.google.com")
+    .Then(text => ExtractFirstParagraph(text))
+    .Then(firstParagraph => Debug.Log(firstParagraph))
+    .Catch(e => Debug.LogException(e));
+```
+Alternatively, with .NET 4.6:
+```csharp
+try
+{
+    var text = await DownloadTextAsync("http://www.google.com");
+    var firstParagraph = await ExtractFirstParagraph(text);
+    Debug.Log(firstParagraph);
+}
+catch (OperationCanceledException)
+{
+    Debug.LogWarning("The operation was canceled.");
+}
+catch (Exception e)
+{
+    Debug.LogException(e);
+}
+```
+
+### Error handling
+TODO
+
+### Completed asynchronous operations
+TODO
+
+### Interfaces
+TODO
 
 ## Comparison to .NET Tasks
 The comparison table below shows how *UnityFx.Async* entities relate to [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task):
