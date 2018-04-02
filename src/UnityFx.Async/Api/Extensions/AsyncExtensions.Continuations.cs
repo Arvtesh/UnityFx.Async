@@ -351,7 +351,7 @@ namespace UnityFx.Async
 		/// <returns>The unwrapped operation.</returns>
 		public static IAsyncOperation Unwrap(this IAsyncOperation<IAsyncOperation> op)
 		{
-			throw new NotImplementedException();
+			return new UnwrapResult<VoidResult>(op);
 		}
 
 		/// <summary>
@@ -361,7 +361,7 @@ namespace UnityFx.Async
 		/// <returns>The unwrapped operation.</returns>
 		public static IAsyncOperation<TResult> Unwrap<TResult>(this IAsyncOperation<IAsyncOperation<TResult>> op)
 		{
-			throw new NotImplementedException();
+			return new UnwrapResult<TResult>(op);
 		}
 
 		#endregion
