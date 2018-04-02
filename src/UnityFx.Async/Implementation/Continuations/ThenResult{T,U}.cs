@@ -17,7 +17,8 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public ThenResult(object successCallback, Action<Exception> errorCallback)
+		public ThenResult(IAsyncOperation op, object successCallback, Action<Exception> errorCallback)
+			: base(op)
 		{
 			_successCallback = successCallback;
 			_errorCallback = errorCallback;
@@ -47,11 +48,11 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool completedSynchronously)
+		public override void Invoke(IAsyncOperation op, bool completedSynchronously)
 		{
 			if (op.IsCompletedSuccessfully || _errorCallback != null)
 			{
-				InvokeOnSyncContext(op, completedSynchronously);
+				base.Invoke(op, completedSynchronously);
 			}
 			else
 			{

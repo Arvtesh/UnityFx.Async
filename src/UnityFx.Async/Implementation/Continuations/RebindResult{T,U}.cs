@@ -16,7 +16,8 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public RebindResult(object action)
+		public RebindResult(IAsyncOperation op, object action)
+			: base(op)
 		{
 			_continuation = action;
 		}
@@ -47,11 +48,11 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool completedSynchronously)
+		public override void Invoke(IAsyncOperation op, bool completedSynchronously)
 		{
 			if (op.IsCompletedSuccessfully)
 			{
-				InvokeOnSyncContext(op, completedSynchronously);
+				base.Invoke(op, completedSynchronously);
 			}
 			else
 			{

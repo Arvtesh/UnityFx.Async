@@ -16,7 +16,8 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public CatchResult(Action<TException> errorCallback)
+		public CatchResult(IAsyncOperation op, Action<TException> errorCallback)
+			: base(op)
 		{
 			_errorCallback = errorCallback;
 		}
@@ -35,7 +36,7 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool completedSynchronously)
+		public override void Invoke(IAsyncOperation op, bool completedSynchronously)
 		{
 			if (op.IsCompletedSuccessfully || !(op.Exception.InnerException is TException))
 			{
@@ -43,7 +44,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				InvokeOnSyncContext(op, completedSynchronously);
+				base.Invoke(op, completedSynchronously);
 			}
 		}
 

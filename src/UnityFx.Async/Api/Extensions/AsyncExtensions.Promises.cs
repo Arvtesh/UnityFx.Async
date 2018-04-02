@@ -24,9 +24,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new ThenResult<VoidResult, VoidResult>(successCallback, null);
-			op.AddContinuation(result);
-			return result;
+			return new ThenResult<VoidResult, VoidResult>(op, successCallback, null);
 		}
 
 		/// <summary>
@@ -43,9 +41,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new ThenResult<TResult, VoidResult>(successCallback, null);
-			op.AddContinuation(result);
-			return result;
+			return new ThenResult<TResult, VoidResult>(op, successCallback, null);
 		}
 
 		/// <summary>
@@ -62,9 +58,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new ThenResult<VoidResult, VoidResult>(successCallback, null);
-			op.AddContinuation(result);
-			return result;
+			return new ThenResult<VoidResult, VoidResult>(op, successCallback, null);
 		}
 
 		/// <summary>
@@ -81,9 +75,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new ThenResult<TResult, VoidResult>(successCallback, null);
-			op.AddContinuation(result);
-			return result;
+			return new ThenResult<TResult, VoidResult>(op, successCallback, null);
 		}
 
 		/// <summary>
@@ -100,9 +92,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new ThenResult<VoidResult, TResult>(successCallback, null);
-			op.AddContinuation(result);
-			return result;
+			return new ThenResult<VoidResult, TResult>(op, successCallback, null);
 		}
 
 		/// <summary>
@@ -119,9 +109,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new ThenResult<TResult, TNewResult>(successCallback, null);
-			op.AddContinuation(result);
-			return result;
+			return new ThenResult<TResult, TNewResult>(op, successCallback, null);
 		}
 
 		/// <summary>
@@ -144,9 +132,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new ThenResult<VoidResult, VoidResult>(successCallback, errorCallback);
-			op.AddContinuation(result);
-			return result;
+			return new ThenResult<VoidResult, VoidResult>(op, successCallback, errorCallback);
 		}
 
 		/// <summary>
@@ -169,9 +155,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new ThenResult<TResult, VoidResult>(successCallback, errorCallback);
-			op.AddContinuation(result);
-			return result;
+			return new ThenResult<TResult, VoidResult>(op, successCallback, errorCallback);
 		}
 
 		/// <summary>
@@ -194,9 +178,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new ThenResult<VoidResult, VoidResult>(successCallback, errorCallback);
-			op.AddContinuation(result);
-			return result;
+			return new ThenResult<VoidResult, VoidResult>(op, successCallback, errorCallback);
 		}
 
 		/// <summary>
@@ -219,9 +201,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new ThenResult<TResult, VoidResult>(successCallback, errorCallback);
-			op.AddContinuation(result);
-			return result;
+			return new ThenResult<TResult, VoidResult>(op, successCallback, errorCallback);
 		}
 
 		#endregion
@@ -377,9 +357,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new RebindResult<VoidResult, TNewResult>(successCallback);
-			op.AddContinuation(result);
-			return result;
+			return new RebindResult<VoidResult, TNewResult>(op, successCallback);
 		}
 
 		/// <summary>
@@ -395,9 +373,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			var result = new RebindResult<TResult, TNewResult>(successCallback);
-			op.AddContinuation(result);
-			return result;
+			return new RebindResult<TResult, TNewResult>(op, successCallback);
 		}
 
 		#endregion
@@ -418,9 +394,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new CatchResult<VoidResult, Exception>(errorCallback);
-			op.AddContinuation(result);
-			return result;
+			return new CatchResult<VoidResult, Exception>(op, errorCallback);
 		}
 
 		/// <summary>
@@ -437,9 +411,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			var result = new CatchResult<VoidResult, TException>(errorCallback);
-			op.AddContinuation(result);
-			return result;
+			return new CatchResult<VoidResult, TException>(op, errorCallback);
 		}
 
 		#endregion
@@ -460,9 +432,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			var result = new FinallyResult<VoidResult>(action);
-			op.AddContinuation(result);
-			return result;
+			return new FinallyResult<VoidResult>(op, action);
 		}
 
 		#endregion

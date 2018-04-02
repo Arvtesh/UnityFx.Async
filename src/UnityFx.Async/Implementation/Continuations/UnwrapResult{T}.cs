@@ -24,6 +24,7 @@ namespace UnityFx.Async
 		#region interface
 
 		public UnwrapResult(IAsyncOperation outerOp)
+			: base(AsyncOperationStatus.Running)
 		{
 			outerOp.AddContinuation(this);
 		}

@@ -15,7 +15,8 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public FinallyResult(Action action)
+		public FinallyResult(IAsyncOperation op, Action action)
+			: base(op)
 		{
 			_continuation = action;
 		}
@@ -28,15 +29,6 @@ namespace UnityFx.Async
 		{
 			_continuation();
 			TrySetCompleted(completedSynchronously);
-		}
-
-		#endregion
-
-		#region IAsyncContinuation
-
-		public void Invoke(IAsyncOperation op, bool completedSynchronously)
-		{
-			InvokeOnSyncContext(op, completedSynchronously);
 		}
 
 		#endregion
