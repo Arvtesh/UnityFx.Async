@@ -289,7 +289,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			throw new NotImplementedException();
+			return new ThenAnyResult<VoidResult, VoidResult>(op, successCallback, null);
 		}
 
 		/// <summary>
@@ -305,7 +305,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			throw new NotImplementedException();
+			return new ThenAnyResult<T, VoidResult>(op, successCallback, null);
 		}
 
 		/// <summary>
@@ -314,14 +314,14 @@ namespace UnityFx.Async
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
 		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
-		public static IAsyncOperation<T> ThenAny<T>(this IAsyncOperation op, Func<IEnumerable<IAsyncOperation<T>>> successCallback)
+		public static IAsyncOperation<TResult> ThenAny<TResult>(this IAsyncOperation op, Func<IEnumerable<IAsyncOperation<TResult>>> successCallback)
 		{
 			if (successCallback == null)
 			{
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			throw new NotImplementedException();
+			return new ThenAnyResult<VoidResult, TResult>(op, successCallback, null);
 		}
 
 		/// <summary>
@@ -330,14 +330,14 @@ namespace UnityFx.Async
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
 		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
-		public static IAsyncOperation<U> ThenAny<T, U>(this IAsyncOperation<T> op, Func<T, IEnumerable<IAsyncOperation<U>>> successCallback)
+		public static IAsyncOperation<TResult> ThenAny<T, TResult>(this IAsyncOperation<T> op, Func<T, IEnumerable<IAsyncOperation<TResult>>> successCallback)
 		{
 			if (successCallback == null)
 			{
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			throw new NotImplementedException();
+			return new ThenAnyResult<T, TResult>(op, successCallback, null);
 		}
 
 		#endregion

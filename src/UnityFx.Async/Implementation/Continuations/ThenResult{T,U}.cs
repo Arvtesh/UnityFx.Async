@@ -28,23 +28,55 @@ namespace UnityFx.Async
 			}
 		}
 
+		protected virtual void InvokeSuccessCallback(IAsyncOperation op, bool completedSynchronously, object continuation)
+		{
+			switch (continuation)
+			{
+				case Action a:
+					a.Invoke();
+					TrySetCompleted(completedSynchronously);
+					break;
+
+				case Action<T> a1:
+					a1.Invoke((op as IAsyncOperation<T>).Result);
+					TrySetCompleted(completedSynchronously);
+					break;
+
+				case Func<IAsyncOperation<U>> f3:
+					f3().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+					break;
+
+				case Func<IAsyncOperation> f1:
+					f1().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+					break;
+
+				case Func<T, IAsyncOperation<U>> f4:
+					f4((op as IAsyncOperation<T>).Result).AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+					break;
+
+				case Func<T, IAsyncOperation> f2:
+					f2((op as IAsyncOperation<T>).Result).AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+					break;
+
+				default:
+					TrySetCanceled(completedSynchronously);
+					break;
+			}
+		}
+
 		#endregion
 
 		#region PromiseResult
 
-		protected override void InvokeUnsafe(IAsyncOperation op, bool completedSynchronously)
+		protected sealed override void InvokeUnsafe(IAsyncOperation op, bool completedSynchronously)
 		{
 			if (op.IsCompletedSuccessfully)
 			{
-				if (InvokeSuccessCallback(op))
-				{
-					TrySetCompleted(completedSynchronously);
-				}
+				InvokeSuccessCallback(op, completedSynchronously, _successCallback);
 			}
 			else
 			{
-				InvokeErrorCallback(op);
-				TrySetException(op.Exception, completedSynchronously);
+				InvokeErrorCallback(op, completedSynchronously);
 			}
 		}
 
@@ -73,49 +105,10 @@ namespace UnityFx.Async
 			}
 		}
 
-		private bool InvokeSuccessCallback(IAsyncOperation op)
-		{
-			var result = false;
-
-			switch (_successCallback)
-			{
-				case Action a:
-					a.Invoke();
-					result = true;
-					break;
-
-				case Action<T> a1:
-					a1.Invoke((op as IAsyncOperation<T>).Result);
-					result = true;
-					break;
-
-				case Func<IAsyncOperation<U>> f3:
-					f3().AddCompletionCallback(op2 => TryCopyCompletionState(op2 as IAsyncOperation<U>, false), null);
-					break;
-
-				case Func<IAsyncOperation> f1:
-					f1().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
-					break;
-
-				case Func<T, IAsyncOperation<U>> f4:
-					f4((op as IAsyncOperation<T>).Result).AddCompletionCallback(op2 => TryCopyCompletionState(op2 as IAsyncOperation<U>, false), null);
-					break;
-
-				case Func<T, IAsyncOperation> f2:
-					f2((op as IAsyncOperation<T>).Result).AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
-					break;
-
-				default:
-					// Should not get here.
-					throw new InvalidOperationException();
-			}
-
-			return result;
-		}
-
-		private void InvokeErrorCallback(IAsyncOperation op)
+		private void InvokeErrorCallback(IAsyncOperation op, bool completedSynchronously)
 		{
 			_errorCallback?.Invoke(op.Exception.InnerException);
+			TrySetException(op.Exception, completedSynchronously);
 		}
 
 		#endregion
