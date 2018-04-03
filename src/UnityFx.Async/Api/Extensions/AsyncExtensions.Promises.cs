@@ -221,7 +221,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			throw new NotImplementedException();
+			return new ThenAllResult<VoidResult, VoidResult>(op, successCallback, null);
 		}
 
 		/// <summary>
@@ -237,7 +237,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			throw new NotImplementedException();
+			return new ThenAllResult<T, VoidResult>(op, successCallback, null);
 		}
 
 		/// <summary>
@@ -253,7 +253,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			throw new NotImplementedException();
+			return new ThenAllResult<VoidResult, T>(op, successCallback, null);
 		}
 
 		/// <summary>
@@ -269,7 +269,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			throw new NotImplementedException();
+			return new ThenAllResult<T, U>(op, successCallback, null);
 		}
 
 		#endregion
