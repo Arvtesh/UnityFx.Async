@@ -103,7 +103,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return new ContinuationResult<VoidResult>(op, options, action, null);
+			return new ContinueWithResult<VoidResult>(op, options, action, null);
 		}
 
 		/// <summary>
@@ -135,7 +135,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return new ContinuationResult<VoidResult>(op, options, action, userState);
+			return new ContinueWithResult<VoidResult>(op, options, action, userState);
 		}
 
 		/// <summary>
@@ -165,7 +165,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return new ContinuationResult<TResult>(op, options, action, null);
+			return new ContinueWithResult<TResult>(op, options, action, null);
 		}
 
 		/// <summary>
@@ -197,7 +197,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return new ContinuationResult<TResult>(op, options, action, userState);
+			return new ContinueWithResult<TResult>(op, options, action, userState);
 		}
 
 		/// <summary>
@@ -227,7 +227,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return new ContinuationResult<TResult, VoidResult>(op, options, action, null);
+			return new ContinueWithResult<TResult, VoidResult>(op, options, action, null);
 		}
 
 		/// <summary>
@@ -259,7 +259,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return new ContinuationResult<TResult, VoidResult>(op, options, action, userState);
+			return new ContinueWithResult<TResult, VoidResult>(op, options, action, userState);
 		}
 
 		/// <summary>
@@ -289,7 +289,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return new ContinuationResult<TResult, TNewResult>(op, options, action, null);
+			return new ContinueWithResult<TResult, TNewResult>(op, options, action, null);
 		}
 
 		/// <summary>
@@ -321,7 +321,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return new ContinuationResult<TResult, TNewResult>(op, options, action, userState);
+			return new ContinueWithResult<TResult, TNewResult>(op, options, action, userState);
 		}
 
 		#endregion

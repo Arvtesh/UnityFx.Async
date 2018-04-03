@@ -2,75 +2,77 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class ContinuationResult<T> : ContinuationResultBase<T>, IAsyncContinuation
+	internal abstract class ContinuationResult<T> : AsyncResult<T>
 	{
 		#region data
 
-		private readonly object _continuation;
-		private readonly object _userState;
+		private static SendOrPostCallback _postCallback;
+
+		private readonly SynchronizationContext _syncContext;
+		private IAsyncOperation _op;
 
 		#endregion
 
 		#region interface
 
-		internal ContinuationResult(IAsyncOperation op, AsyncContinuationOptions options, object continuation, object userState)
-			: base(options)
+		protected ContinuationResult()
+			: base(AsyncOperationStatus.Running)
 		{
-			_continuation = continuation;
-			_userState = userState;
+			_syncContext = SynchronizationContext.Current;
+		}
 
-			// NOTE: Cannot move this to base class because this call might trigger _continuation (and it would be uninitialized in base ctor)
-			if (!op.TryAddContinuation(this))
+		protected ContinuationResult(bool captureSynchronizationContext)
+			: base(AsyncOperationStatus.Running)
+		{
+			if (captureSynchronizationContext)
 			{
-				InvokeOnSyncContext(op, true);
+				_syncContext = SynchronizationContext.Current;
 			}
 		}
 
-		#endregion
-
-		#region AsyncContinuation
-
-		protected override T OnInvoke(IAsyncOperation op)
+		protected void InvokeOnSyncContext(IAsyncOperation op, bool completedSynchronously)
 		{
-			var result = default(T);
-
-			switch (_continuation)
+			if (completedSynchronously || _syncContext == null || _syncContext == SynchronizationContext.Current)
 			{
-				case Action<IAsyncOperation> a:
-					a.Invoke(op);
-					break;
-
-				case Func<IAsyncOperation, T> f:
-					result = f.Invoke(op);
-					break;
-
-				case Action<IAsyncOperation, object> ao:
-					ao.Invoke(op, _userState);
-					break;
-
-				case Func<IAsyncOperation, object, T> fo:
-					result = fo.Invoke(op, _userState);
-					break;
-
-				default:
-					// Should not get here.
-					throw new InvalidOperationException();
+				try
+				{
+					InvokeUnsafe(op, completedSynchronously);
+				}
+				catch (Exception e)
+				{
+					TrySetException(e, completedSynchronously);
+				}
 			}
+			else
+			{
+				_op = op;
 
-			return result;
+				if (_postCallback == null)
+				{
+					_postCallback = args =>
+					{
+						var c = args as ContinuationResult<T>;
+
+						try
+						{
+							c.InvokeUnsafe(c._op, false);
+						}
+						catch (Exception e)
+						{
+							c.TrySetException(e, false);
+						}
+					};
+				}
+
+				_syncContext.Post(_postCallback, this);
+			}
 		}
 
-		#endregion
-
-		#region IAsyncContinuation
-
-		public void Invoke(IAsyncOperation op)
-		{
-			InvokeOnSyncContext(op, false);
-		}
+		protected abstract void InvokeUnsafe(IAsyncOperation op, bool completedSynchronously);
 
 		#endregion
 	}

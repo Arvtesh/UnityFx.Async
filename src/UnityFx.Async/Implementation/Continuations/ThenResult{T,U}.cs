@@ -5,7 +5,7 @@ using System;
 
 namespace UnityFx.Async
 {
-	internal class ThenResult<T, U> : PromiseResult<U>, IAsyncContinuation
+	internal class ThenResult<T, U> : ContinuationResult<U>, IAsyncContinuation
 	{
 		#region data
 
@@ -32,7 +32,7 @@ namespace UnityFx.Async
 
 		#region PromiseResult
 
-		protected override void InvokeCallbacks(IAsyncOperation op, bool completedSynchronously)
+		protected override void InvokeUnsafe(IAsyncOperation op, bool completedSynchronously)
 		{
 			if (op.IsCompletedSuccessfully)
 			{

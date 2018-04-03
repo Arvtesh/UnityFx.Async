@@ -5,7 +5,7 @@ using System;
 
 namespace UnityFx.Async
 {
-	internal class CatchResult<T, TException> : PromiseResult<T>, IAsyncContinuation where TException : Exception
+	internal class CatchResult<T, TException> : ContinuationResult<T>, IAsyncContinuation where TException : Exception
 	{
 		#region data
 
@@ -30,7 +30,7 @@ namespace UnityFx.Async
 
 		#region PromiseResult
 
-		protected override void InvokeCallbacks(IAsyncOperation op, bool completedSynchronously)
+		protected override void InvokeUnsafe(IAsyncOperation op, bool completedSynchronously)
 		{
 			_errorCallback.Invoke(op.Exception.InnerException as TException);
 			TrySetCompleted(completedSynchronously);

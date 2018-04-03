@@ -5,10 +5,11 @@ using System;
 
 namespace UnityFx.Async
 {
-	internal class ContinuationResult<T, U> : ContinuationResultBase<U>, IAsyncContinuation
+	internal class ContinueWithResult<T, U> : ContinuationResult<U>, IAsyncContinuation
 	{
 		#region data
 
+		private readonly AsyncContinuationOptions _options;
 		private readonly object _continuation;
 		private readonly object _userState;
 
@@ -16,24 +17,25 @@ namespace UnityFx.Async
 
 		#region interface
 
-		internal ContinuationResult(IAsyncOperation op, AsyncContinuationOptions options, object continuation, object userState)
-			: base(options)
+		internal ContinueWithResult(IAsyncOperation op, AsyncContinuationOptions options, object continuation, object userState)
+			: base((options & AsyncContinuationOptions.CaptureSynchronizationContext) != 0)
 		{
+			_options = options;
 			_continuation = continuation;
 			_userState = userState;
 
 			// NOTE: Cannot move this to base class because this call might trigger _continuation (and it would be uninitialized in base ctor)
 			if (!op.TryAddContinuation(this))
 			{
-				InvokeOnSyncContext(op, true);
+				InvokeInternal(op, true);
 			}
 		}
 
 		#endregion
 
-		#region AsyncContinuation
+		#region PromiseResult
 
-		protected override U OnInvoke(IAsyncOperation op)
+		protected override void InvokeUnsafe(IAsyncOperation op, bool completedSynchronously)
 		{
 			var result = default(U);
 
@@ -56,11 +58,11 @@ namespace UnityFx.Async
 					break;
 
 				default:
-					// Should not get here.
-					throw new InvalidOperationException();
+					TrySetCanceled(completedSynchronously);
+					return;
 			}
 
-			return result;
+			TrySetResult(result, completedSynchronously);
 		}
 
 		#endregion
@@ -69,7 +71,23 @@ namespace UnityFx.Async
 
 		public void Invoke(IAsyncOperation op)
 		{
-			InvokeOnSyncContext(op, false);
+			InvokeInternal(op, false);
+		}
+
+		#endregion
+
+		#region implementation
+
+		private void InvokeInternal(IAsyncOperation op, bool completedSynchronously)
+		{
+			if (AsyncContinuation.CanInvoke(op, _options))
+			{
+				InvokeOnSyncContext(op, completedSynchronously);
+			}
+			else
+			{
+				TrySetCanceled(completedSynchronously);
+			}
 		}
 
 		#endregion

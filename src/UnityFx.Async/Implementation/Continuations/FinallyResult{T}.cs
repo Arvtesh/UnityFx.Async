@@ -5,7 +5,7 @@ using System;
 
 namespace UnityFx.Async
 {
-	internal class FinallyResult<T> : PromiseResult<T>, IAsyncContinuation
+	internal class FinallyResult<T> : ContinuationResult<T>, IAsyncContinuation
 	{
 		#region data
 
@@ -30,7 +30,7 @@ namespace UnityFx.Async
 
 		#region PromiseResult
 
-		protected override void InvokeCallbacks(IAsyncOperation op, bool completedSynchronously)
+		protected override void InvokeUnsafe(IAsyncOperation op, bool completedSynchronously)
 		{
 			_continuation();
 			TrySetCompleted(completedSynchronously);
