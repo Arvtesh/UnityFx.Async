@@ -7,11 +7,10 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class WhenAllResult<T> : AsyncResult<T[]>
+	internal class WhenAllResult<T> : AsyncResult<T[]>, IAsyncContinuation
 	{
 		#region data
 
-		private readonly AsyncOperationCallback _completionAction;
 		private readonly IAsyncOperation[] _ops;
 
 		private int _count;
@@ -24,16 +23,15 @@ namespace UnityFx.Async
 		public WhenAllResult(IAsyncOperation[] ops)
 			: base(AsyncOperationStatus.Running)
 		{
-			_completionAction = OnOperationCompleted;
 			_ops = ops;
 			_count = ops.Length;
 			_completedSynchronously = true;
 
 			foreach (var op in ops)
 			{
-				if (!op.TryAddCompletionCallback(_completionAction, null))
+				if (!op.TryAddContinuation(this))
 				{
-					OnOperationCompleted(op);
+					Invoke(op);
 				}
 			}
 
@@ -47,9 +45,9 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region implementation
+		#region IAsyncContinuation
 
-		private void OnOperationCompleted(IAsyncOperation asyncOp)
+		public void Invoke(IAsyncOperation asyncOp)
 		{
 			if (IsCompleted)
 			{

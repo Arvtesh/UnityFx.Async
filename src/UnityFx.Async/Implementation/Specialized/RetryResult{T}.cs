@@ -7,12 +7,11 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class RetryResult<T> : AsyncResult<T>
+	internal class RetryResult<T> : AsyncResult<T>, IAsyncContinuation
 	{
 		#region data
 
 		private readonly object _opFactory;
-		private readonly AsyncOperationCallback _opCompletionCallback;
 		private readonly int _millisecondsRetryDelay;
 		private readonly int _maxRetryCount;
 
@@ -31,7 +30,6 @@ namespace UnityFx.Async
 			_opFactory = opFactory;
 			_millisecondsRetryDelay = millisecondsRetryDelay;
 			_maxRetryCount = maxRetryCount;
-			_opCompletionCallback = OnOperationCompleted;
 			_numberOfRetriesLeft = maxRetryCount;
 
 			StartOperation(true);
@@ -54,44 +52,9 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region implementation
+		#region IAsyncContinuation
 
-		private void StartOperation(bool calledFromConstructor)
-		{
-			try
-			{
-				if (_opFactory is Func<IAsyncOperation> f1)
-				{
-					_op = f1();
-				}
-				else if (_opFactory is Func<IAsyncOperation<T>> f2)
-				{
-					_op = f2();
-				}
-				else
-				{
-					throw new InvalidOperationException("Invalid delegate type.");
-				}
-
-				if (!_op.TryAddCompletionCallback(_opCompletionCallback, null))
-				{
-					if (_op.IsCompletedSuccessfully)
-					{
-						SetResult(calledFromConstructor);
-					}
-					else
-					{
-						Retry(calledFromConstructor);
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				TrySetException(e, calledFromConstructor);
-			}
-		}
-
-		private void OnOperationCompleted(IAsyncOperation op)
+		public void Invoke(IAsyncOperation op)
 		{
 			Debug.Assert(_op == op);
 			Debug.Assert(_op.IsCompleted);
@@ -122,6 +85,45 @@ namespace UnityFx.Async
 				{
 					Retry(false);
 				}
+			}
+		}
+
+		#endregion
+
+		#region implementation
+
+		private void StartOperation(bool calledFromConstructor)
+		{
+			try
+			{
+				if (_opFactory is Func<IAsyncOperation> f1)
+				{
+					_op = f1();
+				}
+				else if (_opFactory is Func<IAsyncOperation<T>> f2)
+				{
+					_op = f2();
+				}
+				else
+				{
+					throw new InvalidOperationException("Invalid delegate type.");
+				}
+
+				if (!_op.TryAddContinuation(this))
+				{
+					if (_op.IsCompletedSuccessfully)
+					{
+						SetResult(calledFromConstructor);
+					}
+					else
+					{
+						Retry(calledFromConstructor);
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				TrySetException(e, calledFromConstructor);
 			}
 		}
 

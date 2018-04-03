@@ -5,11 +5,10 @@ using System;
 
 namespace UnityFx.Async
 {
-	internal class WhenAnyResult<T> : AsyncResult<T> where T : IAsyncOperation
+	internal class WhenAnyResult<T> : AsyncResult<T>, IAsyncContinuation where T : IAsyncOperation
 	{
 		#region data
 
-		private readonly AsyncOperationCallback _completionAction;
 		private readonly T[] _ops;
 
 		#endregion
@@ -19,12 +18,11 @@ namespace UnityFx.Async
 		public WhenAnyResult(T[] ops)
 			: base(AsyncOperationStatus.Running)
 		{
-			_completionAction = OnOperationCompleted;
 			_ops = ops;
 
 			foreach (var op in ops)
 			{
-				if (!op.TryAddCompletionCallback(_completionAction, null))
+				if (!op.TryAddContinuation(this))
 				{
 					TrySetResult(op, true);
 					break;
@@ -39,9 +37,9 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region implementation
+		#region IAsyncContinuation
 
-		private void OnOperationCompleted(IAsyncOperation op)
+		public void Invoke(IAsyncOperation op)
 		{
 			TrySetResult((T)op, false);
 		}
