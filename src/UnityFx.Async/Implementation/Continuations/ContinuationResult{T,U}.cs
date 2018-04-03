@@ -5,7 +5,7 @@ using System;
 
 namespace UnityFx.Async
 {
-	internal class ContinuationResult<T, U> : ContinuationResultBase<U>
+	internal class ContinuationResult<T, U> : ContinuationResultBase<U>, IAsyncContinuation
 	{
 		#region data
 
@@ -23,7 +23,10 @@ namespace UnityFx.Async
 			_userState = userState;
 
 			// NOTE: Cannot move this to base class because this call might trigger _continuation (and it would be uninitialized in base ctor)
-			op.AddContinuation(this);
+			if (!op.TryAddContinuation(this))
+			{
+				InvokeOnSyncContext(op, true);
+			}
 		}
 
 		#endregion
@@ -58,6 +61,15 @@ namespace UnityFx.Async
 			}
 
 			return result;
+		}
+
+		#endregion
+
+		#region IAsyncContinuation
+
+		public void Invoke(IAsyncOperation op)
+		{
+			InvokeOnSyncContext(op, false);
 		}
 
 		#endregion

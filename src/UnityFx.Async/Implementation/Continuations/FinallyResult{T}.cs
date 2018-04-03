@@ -20,7 +20,10 @@ namespace UnityFx.Async
 			_continuation = action;
 
 			// NOTE: Cannot move this to base class because this call might trigger virtual Invoke
-			op.AddContinuation(this);
+			if (!op.TryAddContinuation(this))
+			{
+				InvokeOnSyncContext(op, true);
+			}
 		}
 
 		#endregion
@@ -31,6 +34,15 @@ namespace UnityFx.Async
 		{
 			_continuation();
 			TrySetCompleted(completedSynchronously);
+		}
+
+		#endregion
+
+		#region IAsyncContinuation
+
+		public void Invoke(IAsyncOperation op)
+		{
+			InvokeOnSyncContext(op, false);
 		}
 
 		#endregion

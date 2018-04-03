@@ -1870,7 +1870,7 @@ namespace UnityFx.Async
 		{
 			if (continuation is IAsyncContinuation c)
 			{
-				c.Invoke(op, false);
+				c.Invoke(op);
 			}
 			else
 			{

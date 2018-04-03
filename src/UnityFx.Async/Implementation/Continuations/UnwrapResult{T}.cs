@@ -33,7 +33,7 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool completedSynchronously)
+		public void Invoke(IAsyncOperation op)
 		{
 			if (_state == State.WaitingForOuterOperation)
 			{
@@ -42,21 +42,21 @@ namespace UnityFx.Async
 					switch (op)
 					{
 						case IAsyncOperation<IAsyncOperation<T>> innerOp1:
-							ProcessInnerOperation(innerOp1, completedSynchronously);
+							ProcessInnerOperation(innerOp1, false);
 							break;
 
 						case IAsyncOperation<IAsyncOperation> innerOp2:
-							ProcessInnerOperation(innerOp2, completedSynchronously);
+							ProcessInnerOperation(innerOp2, false);
 							break;
 
 						default:
-							ProcessInnerOperation(null, completedSynchronously);
+							ProcessInnerOperation(null, false);
 							break;
 					}
 				}
 				else
 				{
-					TrySetException(op.Exception, completedSynchronously);
+					TrySetException(op.Exception, false);
 				}
 
 				_state = State.WaitingForInnerOperation;

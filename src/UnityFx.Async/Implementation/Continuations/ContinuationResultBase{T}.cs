@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal abstract class ContinuationResultBase<T> : AsyncResult<T>, IAsyncContinuation
+	internal abstract class ContinuationResultBase<T> : AsyncResult<T>
 	{
 		#region data
 
@@ -31,17 +31,11 @@ namespace UnityFx.Async
 			_options = options;
 		}
 
-		protected abstract T OnInvoke(IAsyncOperation op);
-
-		#endregion
-
-		#region IAsyncContinuation
-
-		public void Invoke(IAsyncOperation op, bool completedSynchronously)
+		protected void InvokeOnSyncContext(IAsyncOperation op, bool completedSynchronously)
 		{
 			if (AsyncContinuation.CanInvoke(op, _options))
 			{
-				if (_syncContext == null || _syncContext == SynchronizationContext.Current)
+				if (completedSynchronously || _syncContext == null || _syncContext == SynchronizationContext.Current)
 				{
 					try
 					{
@@ -81,6 +75,8 @@ namespace UnityFx.Async
 				TrySetCanceled(completedSynchronously);
 			}
 		}
+
+		protected abstract T OnInvoke(IAsyncOperation op);
 
 		#endregion
 

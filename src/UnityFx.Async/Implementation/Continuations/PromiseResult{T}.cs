@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal abstract class PromiseResult<T> : AsyncResult<T>, IAsyncContinuation
+	internal abstract class PromiseResult<T> : AsyncResult<T>
 	{
 		#region data
 
@@ -25,15 +25,9 @@ namespace UnityFx.Async
 			_syncContext = SynchronizationContext.Current;
 		}
 
-		protected abstract void InvokeCallbacks(IAsyncOperation op, bool completedSynchronously);
-
-		#endregion
-
-		#region IAsyncContinuation
-
-		public virtual void Invoke(IAsyncOperation op, bool completedSynchronously)
+		protected void InvokeOnSyncContext(IAsyncOperation op, bool completedSynchronously)
 		{
-			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
+			if (completedSynchronously || _syncContext == null || _syncContext == SynchronizationContext.Current)
 			{
 				try
 				{
@@ -60,7 +54,7 @@ namespace UnityFx.Async
 						}
 						catch (Exception e)
 						{
-							c.TrySetException(e, completedSynchronously);
+							c.TrySetException(e, false);
 						}
 					};
 				}
@@ -68,6 +62,8 @@ namespace UnityFx.Async
 				_syncContext.Post(_postCallback, this);
 			}
 		}
+
+		protected abstract void InvokeCallbacks(IAsyncOperation op, bool completedSynchronously);
 
 		#endregion
 	}

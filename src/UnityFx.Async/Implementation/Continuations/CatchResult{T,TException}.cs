@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
-using System.Threading;
 
 namespace UnityFx.Async
 {
@@ -21,7 +20,10 @@ namespace UnityFx.Async
 			_errorCallback = errorCallback;
 
 			// NOTE: Cannot move this to base class because this call might trigger virtual Invoke
-			op.AddContinuation(this);
+			if (!op.TryAddContinuation(this))
+			{
+				InvokeInternal(op, true);
+			}
 		}
 
 		#endregion
@@ -38,7 +40,16 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public override void Invoke(IAsyncOperation op, bool completedSynchronously)
+		public void Invoke(IAsyncOperation op)
+		{
+			InvokeInternal(op, false);
+		}
+
+		#endregion
+
+		#region implementation
+
+		private void InvokeInternal(IAsyncOperation op, bool completedSynchronously)
 		{
 			if (op.IsCompletedSuccessfully || !(op.Exception.InnerException is TException))
 			{
@@ -46,7 +57,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				base.Invoke(op, completedSynchronously);
+				InvokeOnSyncContext(op, completedSynchronously);
 			}
 		}
 

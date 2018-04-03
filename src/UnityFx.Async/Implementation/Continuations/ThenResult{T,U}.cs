@@ -22,7 +22,10 @@ namespace UnityFx.Async
 			_errorCallback = errorCallback;
 
 			// NOTE: Cannot move this to base class because this call might trigger virtual Invoke
-			op.AddContinuation(this);
+			if (!op.TryAddContinuation(this))
+			{
+				InvokeInternal(op, true);
+			}
 		}
 
 		#endregion
@@ -49,21 +52,26 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public override void Invoke(IAsyncOperation op, bool completedSynchronously)
+		public void Invoke(IAsyncOperation op)
+		{
+			InvokeInternal(op, false);
+		}
+
+		#endregion
+
+		#region implementation
+
+		private void InvokeInternal(IAsyncOperation op, bool completedSynchronously)
 		{
 			if (op.IsCompletedSuccessfully || _errorCallback != null)
 			{
-				base.Invoke(op, completedSynchronously);
+				InvokeOnSyncContext(op, completedSynchronously);
 			}
 			else
 			{
 				TrySetException(op.Exception, completedSynchronously);
 			}
 		}
-
-		#endregion
-
-		#region implementation
 
 		private bool InvokeSuccessCallback(IAsyncOperation op)
 		{

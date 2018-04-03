@@ -110,7 +110,7 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool completedSynchronously)
+		public void Invoke(IAsyncOperation op)
 		{
 			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
 			{
