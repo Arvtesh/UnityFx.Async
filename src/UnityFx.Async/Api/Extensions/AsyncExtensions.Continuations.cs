@@ -85,7 +85,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
 		public static IAsyncOperation ContinueWith(this IAsyncOperation op, Action<IAsyncOperation> action)
 		{
-			return ContinueWith(op, action, AsyncContinuationOptions.CaptureSynchronizationContext);
+			return ContinueWith(op, action, AsyncContinuationOptions.None);
 		}
 
 		/// <summary>
@@ -116,7 +116,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
 		public static IAsyncOperation ContinueWith(this IAsyncOperation op, Action<IAsyncOperation, object> action, object userState)
 		{
-			return ContinueWith(op, action, userState, AsyncContinuationOptions.CaptureSynchronizationContext);
+			return ContinueWith(op, action, userState, AsyncContinuationOptions.None);
 		}
 
 		/// <summary>
@@ -147,7 +147,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
 		public static IAsyncOperation<TResult> ContinueWith<TResult>(this IAsyncOperation op, Func<IAsyncOperation, TResult> action)
 		{
-			return ContinueWith(op, action, AsyncContinuationOptions.CaptureSynchronizationContext);
+			return ContinueWith(op, action, AsyncContinuationOptions.None);
 		}
 
 		/// <summary>
@@ -178,7 +178,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
 		public static IAsyncOperation<TResult> ContinueWith<TResult>(this IAsyncOperation op, Func<IAsyncOperation, object, TResult> action, object userState)
 		{
-			return ContinueWith(op, action, userState, AsyncContinuationOptions.CaptureSynchronizationContext);
+			return ContinueWith(op, action, userState, AsyncContinuationOptions.None);
 		}
 
 		/// <summary>
@@ -209,7 +209,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
 		public static IAsyncOperation ContinueWith<TResult>(this IAsyncOperation<TResult> op, Action<IAsyncOperation<TResult>> action)
 		{
-			return ContinueWith(op, action, AsyncContinuationOptions.CaptureSynchronizationContext);
+			return ContinueWith(op, action, AsyncContinuationOptions.None);
 		}
 
 		/// <summary>
@@ -240,7 +240,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
 		public static IAsyncOperation ContinueWith<TResult>(this IAsyncOperation<TResult> op, Action<IAsyncOperation<TResult>, object> action, object userState)
 		{
-			return ContinueWith(op, action, userState, AsyncContinuationOptions.CaptureSynchronizationContext);
+			return ContinueWith(op, action, userState, AsyncContinuationOptions.None);
 		}
 
 		/// <summary>
@@ -271,7 +271,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
 		public static IAsyncOperation<TNewResult> ContinueWith<TResult, TNewResult>(this IAsyncOperation<TResult> op, Func<IAsyncOperation<TResult>, TNewResult> action)
 		{
-			return ContinueWith(op, action, AsyncContinuationOptions.CaptureSynchronizationContext);
+			return ContinueWith(op, action, AsyncContinuationOptions.None);
 		}
 
 		/// <summary>
@@ -302,7 +302,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
 		public static IAsyncOperation<TNewResult> ContinueWith<TResult, TNewResult>(this IAsyncOperation<TResult> op, Func<IAsyncOperation<TResult>, object, TNewResult> action, object userState)
 		{
-			return ContinueWith(op, action, userState, AsyncContinuationOptions.CaptureSynchronizationContext);
+			return ContinueWith(op, action, userState, AsyncContinuationOptions.None);
 		}
 
 		/// <summary>

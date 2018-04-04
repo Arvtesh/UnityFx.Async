@@ -8,7 +8,7 @@ using Xunit;
 
 namespace UnityFx.Async
 {
-	public class AsyncExtensionsTests
+	public partial class AsyncExtensionsTests
 	{
 		#region ToObservable
 
@@ -89,12 +89,6 @@ namespace UnityFx.Async
 			Assert.Equal(1, observer.OnErrorCount);
 			Assert.Equal(e, observer.Exception);
 		}
-
-		#endregion
-
-		#region ContinueWith
-
-		// TODO
 
 		#endregion
 

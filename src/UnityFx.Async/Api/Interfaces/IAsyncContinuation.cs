@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexander Bogarsukov.
+﻿ // Copyright (c) Alexander Bogarsukov.
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
@@ -15,7 +15,7 @@ namespace UnityFx.Async
 	{
 		/// <summary>
 		/// When no continuation options are specified, specifies that default behavior should be used when executing a continuation.
-		/// I.e. continuation is scheduled independently of the operation completion status.
+		/// I.e. continuation is scheduled оn the same <see cref="SynchronizationContext"/> that was active when the continuation was created.
 		/// </summary>
 		None = 0,
 
@@ -50,9 +50,10 @@ namespace UnityFx.Async
 		OnlyOnCanceled = NotOnRanToCompletion | NotOnFaulted,
 
 		/// <summary>
-		/// Specifies whether a <see cref="SynchronizationContext"/> should be captured when a continuation is registered.
+		/// Specifies that the continuation should be executed synchronously. With this option specified, the continuation runs on
+		/// the same thread that causes the antecedent task to transition into its final state.
 		/// </summary>
-		CaptureSynchronizationContext = 8
+		ExecuteSynchronously = 8
 	}
 
 	/// <summary>

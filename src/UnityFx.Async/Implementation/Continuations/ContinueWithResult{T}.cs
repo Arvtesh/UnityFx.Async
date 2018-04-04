@@ -18,7 +18,7 @@ namespace UnityFx.Async
 		#region interface
 
 		internal ContinueWithResult(IAsyncOperation op, AsyncContinuationOptions options, object continuation, object userState)
-			: base((options & AsyncContinuationOptions.CaptureSynchronizationContext) != 0)
+			: base((options & AsyncContinuationOptions.ExecuteSynchronously) == 0)
 		{
 			_options = options;
 			_continuation = continuation;
