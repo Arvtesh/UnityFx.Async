@@ -8,7 +8,7 @@ using Xunit;
 
 namespace UnityFx.Async
 {
-	public class PromiseTests
+	public class ThenAnyTests
 	{
 	}
 }
