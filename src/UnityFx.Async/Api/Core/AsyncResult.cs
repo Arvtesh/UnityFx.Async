@@ -914,6 +914,7 @@ namespace UnityFx.Async
 		/// <param name="millisecondsDelay">The number of milliseconds to wait before completing the returned operation, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="millisecondsDelay"/> is less than -1.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
+		/// <seealso cref="Delay(int, IAsyncUpdateSource)"/>
 		/// <seealso cref="Delay(TimeSpan)"/>
 		public static AsyncResult Delay(int millisecondsDelay)
 		{
@@ -932,7 +933,37 @@ namespace UnityFx.Async
 				return new AsyncResult();
 			}
 
-			return new DelayResult(millisecondsDelay);
+			return new TimerDelayResult(millisecondsDelay);
+		}
+
+		/// <summary>
+		/// Creates an operation that completes after a time delay. This method creates a more effecient operation
+		/// than <see cref="Delay(int)"/> but requires a specialized updates source.
+		/// </summary>
+		/// <param name="millisecondsDelay">The number of milliseconds to wait before completing the returned operation, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
+		/// <param name="updateSource">Update notifications provider.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="updateSource"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="millisecondsDelay"/> is less than -1.</exception>
+		/// <returns>An operation that represents the time delay.</returns>
+		/// <seealso cref="Delay(int)"/>
+		public static AsyncResult Delay(int millisecondsDelay, IAsyncUpdateSource updateSource)
+		{
+			if (millisecondsDelay < Timeout.Infinite)
+			{
+				throw new ArgumentOutOfRangeException(nameof(millisecondsDelay), millisecondsDelay, Constants.ErrorValueIsLessThanZero);
+			}
+
+			if (millisecondsDelay == 0)
+			{
+				return CompletedOperation;
+			}
+
+			if (millisecondsDelay == Timeout.Infinite)
+			{
+				return new AsyncResult();
+			}
+
+			return new UpdatableDelayResult(millisecondsDelay, updateSource);
 		}
 
 		/// <summary>
@@ -941,6 +972,7 @@ namespace UnityFx.Async
 		/// <param name="delay">The time span to wait before completing the returned operation, or <c>TimeSpan.FromMilliseconds(-1)</c> to wait indefinitely.</param>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="delay"/> represents a negative time interval other than <c>TimeSpan.FromMillseconds(-1)</c>.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
+		/// <seealso cref="Delay(TimeSpan, IAsyncUpdateSource)"/>
 		/// <seealso cref="Delay(int)"/>
 		public static AsyncResult Delay(TimeSpan delay)
 		{
@@ -952,6 +984,28 @@ namespace UnityFx.Async
 			}
 
 			return Delay((int)millisecondsDelay);
+		}
+
+		/// <summary>
+		/// Creates an operation that completes after a specified time interval. This method creates a more effecient operation
+		/// than <see cref="Delay(TimeSpan)"/> but requires a specialized updates source.
+		/// </summary>
+		/// <param name="delay">The time span to wait before completing the returned operation, or <c>TimeSpan.FromMilliseconds(-1)</c> to wait indefinitely.</param>
+		/// <param name="updateSource">Update notifications provider.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="updateSource"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="delay"/> represents a negative time interval other than <c>TimeSpan.FromMillseconds(-1)</c>.</exception>
+		/// <returns>An operation that represents the time delay.</returns>
+		/// <seealso cref="Delay(TimeSpan)"/>
+		public static AsyncResult Delay(TimeSpan delay, IAsyncUpdateSource updateSource)
+		{
+			var millisecondsDelay = (long)delay.TotalMilliseconds;
+
+			if (millisecondsDelay > int.MaxValue)
+			{
+				throw new ArgumentOutOfRangeException(nameof(delay));
+			}
+
+			return Delay((int)millisecondsDelay, updateSource);
 		}
 
 		#endregion
