@@ -8,7 +8,7 @@ using Xunit;
 
 namespace UnityFx.Async
 {
-	public partial class AsyncExtensionsTests
+	public class AsyncExtensionsTests
 	{
 		#region ToObservable
 

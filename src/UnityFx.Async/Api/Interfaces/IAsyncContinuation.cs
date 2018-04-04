@@ -51,7 +51,7 @@ namespace UnityFx.Async
 
 		/// <summary>
 		/// Specifies that the continuation should be executed synchronously. With this option specified, the continuation runs on
-		/// the same thread that causes the antecedent task to transition into its final state.
+		/// the same thread that causes the antecedent operation to transition into its final state.
 		/// </summary>
 		ExecuteSynchronously = 8
 	}
