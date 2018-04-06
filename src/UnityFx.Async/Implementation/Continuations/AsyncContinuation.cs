@@ -68,7 +68,7 @@ namespace UnityFx.Async
 
 #if UNITYFX_SUPPORT_TAP
 
-		internal static void InvokeTaskContinuation(IAsyncOperation op, TaskCompletionSource<object> tcs)
+		internal static void InvokeTaskContinuation(IAsyncOperation op, TaskCompletionSource<VoidResult> tcs)
 		{
 			var status = op.Status;
 
