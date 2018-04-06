@@ -1661,13 +1661,20 @@ namespace UnityFx.Async
 				}
 
 #if UNITYFX_NOT_THREAD_SAFE
+
 				if (!TryAddContinuationInternal(value))
-#else
-				if (!TryAddContinuationInternal(value, SynchronizationContext.Current))
-#endif
 				{
 					value(this);
 				}
+
+#else
+
+				if (!TryAddContinuationInternal(value, SynchronizationContext.Current))
+				{
+					value(this);
+				}
+
+#endif
 			}
 			remove
 			{

@@ -19,6 +19,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Spins until the operation has completed.
 		/// </summary>
+		/// <param name="op">The operation to wait for.</param>
 		public static void SpinUntilCompleted(this IAsyncResult op)
 		{
 #if NET35
@@ -38,6 +39,30 @@ namespace UnityFx.Async
 			}
 
 #endif
+		}
+
+		/// <summary>
+		/// Spins until the operation has completed within a specified timeout.
+		/// </summary>
+		/// <param name="op">The operation to wait for.</param>
+		/// <param name="millisecondsTimeout">The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
+		/// <exception cref="ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is a negative number other than -1.</exception>
+		/// <returns>Returns <see langword="true"/> if the operation was completed within the specified time interfval; <see langword="false"/> otherwise.</returns>
+		public static bool SpinUntilCompleted(this IAsyncResult op, int millisecondsTimeout)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Spins until the operation has completed within a specified timeout.
+		/// </summary>
+		/// <param name="op">The operation to wait for.</param>
+		/// <param name="timeout">A <see cref="TimeSpan"/> that represents the number of milliseconds to wait, or a <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.</param>
+		/// <exception cref="ArgumentOutOfRangeException"><paramref name="timeout"/> is a negative number other than -1 milliseconds, or <paramref name="timeout"/> is greater than <see cref="int.MaxValue"/>.</exception>
+		/// <returns>Returns <see langword="true"/> if the operation was completed within the specified time interfval; <see langword="false"/> otherwise.</returns>
+		public static bool SpinUntilCompleted(this IAsyncResult op, TimeSpan timeout)
+		{
+			throw new NotImplementedException();
 		}
 
 		/// <summary>
