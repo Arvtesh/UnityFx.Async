@@ -76,7 +76,6 @@ namespace UnityFx.Async
 			{
 				TrySetCanceled(completedSynchronously);
 			}
-
 		}
 
 		#endregion

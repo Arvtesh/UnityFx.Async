@@ -66,11 +66,20 @@ namespace UnityFx.Async
 
 		private readonly object _asyncState;
 
-		private EventWaitHandle _waitHandle;
 		private AggregateException _exception;
 
+#if UNITYFX_NOT_THREAD_SAFE
+
+		private object _continuation;
+		private int _flags;
+
+#else
+
+		private EventWaitHandle _waitHandle;
 		private volatile object _continuation;
 		private volatile int _flags;
+
+#endif
 
 		#endregion
 
@@ -525,6 +534,27 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetExceptions(IEnumerable{System.Exception}, bool)"/>
 		protected virtual void OnCompleted()
 		{
+#if UNITYFX_NOT_THREAD_SAFE
+
+			var continuation = _continuation;
+
+			if (continuation != null)
+			{
+				if (continuation is IEnumerable continuationList)
+				{
+					foreach (var item in continuationList)
+					{
+						InvokeContinuation(this, item);
+					}
+				}
+				else
+				{
+					InvokeContinuation(this, continuation);
+				}
+			}
+
+#else
+
 			try
 			{
 				var continuation = Interlocked.Exchange(ref _continuation, _continuationCompletionSentinel);
@@ -551,6 +581,8 @@ namespace UnityFx.Async
 			{
 				_waitHandle?.Set();
 			}
+
+#endif
 		}
 
 		/// <summary>
@@ -568,6 +600,8 @@ namespace UnityFx.Async
 			{
 				_flags |= _flagDisposed;
 
+#if !UNITYFX_NOT_THREAD_SAFE
+
 				if (_waitHandle != null)
 				{
 #if NET35
@@ -577,6 +611,8 @@ namespace UnityFx.Async
 #endif
 					_waitHandle = null;
 				}
+
+#endif
 			}
 		}
 
@@ -1358,6 +1394,28 @@ namespace UnityFx.Async
 		{
 			Debug.Assert(newStatus < StatusRanToCompletion);
 
+#if UNITYFX_NOT_THREAD_SAFE
+
+			var flags = _flags;
+
+			if ((flags & (_flagCompleted | _flagCompletionReserved)) != 0)
+			{
+				return false;
+			}
+
+			var status = flags & _statusMask;
+
+			if (status >= newStatus)
+			{
+				return false;
+			}
+
+			_flags = (flags & ~_statusMask) | newStatus;
+			OnStatusChanged((AsyncOperationStatus)newStatus);
+			return true;
+
+#else
+
 			do
 			{
 				var flags = _flags;
@@ -1383,6 +1441,8 @@ namespace UnityFx.Async
 				}
 			}
 			while (true);
+
+#endif
 		}
 
 		/// <summary>
@@ -1399,6 +1459,22 @@ namespace UnityFx.Async
 			{
 				status |= _flagSynchronous;
 			}
+
+#if UNITYFX_NOT_THREAD_SAFE
+
+			var flags = _flags;
+
+			if ((flags & (_flagCompletionReserved | _flagCompleted)) != 0)
+			{
+				return false;
+			}
+
+			_flags = (flags & ~_statusMask) | status;
+			OnStatusChanged((AsyncOperationStatus)status);
+			OnCompleted();
+			return true;
+
+#else
 
 			do
 			{
@@ -1419,6 +1495,8 @@ namespace UnityFx.Async
 				}
 			}
 			while (true);
+
+#endif
 		}
 
 		/// <summary>
@@ -1426,6 +1504,19 @@ namespace UnityFx.Async
 		/// </summary>
 		internal bool TryReserveCompletion()
 		{
+#if UNITYFX_NOT_THREAD_SAFE
+
+			var flags = _flags;
+
+			if ((flags & (_flagCompletionReserved | _flagCompleted)) != 0)
+			{
+				return false;
+			}
+
+			_flags = flags | _flagCompletionReserved;
+			return true;
+#else
+
 			do
 			{
 				var flags = _flags;
@@ -1441,6 +1532,8 @@ namespace UnityFx.Async
 				}
 			}
 			while (true);
+
+#endif
 		}
 
 		/// <summary>
@@ -1461,8 +1554,12 @@ namespace UnityFx.Async
 				newFlags |= _flagSynchronous;
 			}
 
-			// Set completed status. After this call IsCompleted will return true.
+			// Set completed status. After this line IsCompleted will return true.
+#if UNITYFX_NOT_THREAD_SAFE
+			_flags = oldFlags | newFlags;
+#else
 			Interlocked.Exchange(ref _flags, oldFlags | newFlags);
+#endif
 
 			// Invoke completion callbacks.
 			OnStatusChanged((AsyncOperationStatus)status);
@@ -1504,7 +1601,7 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 
-			if (!TryAddContinuation(continuation, syncContext))
+			if (!TryAddContinuationInternal(continuation, syncContext))
 			{
 				continuation();
 			}
@@ -1563,7 +1660,11 @@ namespace UnityFx.Async
 					throw new ArgumentNullException(nameof(value));
 				}
 
-				if (!TryAddContinuation(value, SynchronizationContext.Current))
+#if UNITYFX_NOT_THREAD_SAFE
+				if (!TryAddContinuationInternal(value))
+#else
+				if (!TryAddContinuationInternal(value, SynchronizationContext.Current))
+#endif
 				{
 					value(this);
 				}
@@ -1574,9 +1675,30 @@ namespace UnityFx.Async
 
 				if (value != null)
 				{
-					TryRemoveContinuation(value);
+					TryRemoveContinuationInternal(value);
 				}
 			}
+		}
+
+		/// <inheritdoc/>
+		public bool TryAddCompletionCallback(AsyncOperationCallback action)
+		{
+			ThrowIfDisposed();
+
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+#if UNITYFX_NOT_THREAD_SAFE
+
+			return TryAddContinuationInternal(action);
+
+#else
+
+			return TryAddContinuationInternal(action, SynchronizationContext.Current);
+
+#endif
 		}
 
 		/// <inheritdoc/>
@@ -1589,7 +1711,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return TryAddContinuation(action, syncContext);
+			return TryAddContinuationInternal(action, syncContext);
 		}
 
 		/// <inheritdoc/>
@@ -1599,7 +1721,7 @@ namespace UnityFx.Async
 
 			if (action != null)
 			{
-				return TryRemoveContinuation(action);
+				return TryRemoveContinuationInternal(action);
 			}
 
 			return false;
@@ -1615,7 +1737,15 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(continuation));
 			}
 
-			return TryAddContinuation(continuation, null);
+#if UNITYFX_NOT_THREAD_SAFE
+
+			return TryAddContinuationInternal(continuation);
+
+#else
+
+			return TryAddContinuationInternal(continuation, null);
+
+#endif
 		}
 
 		/// <inheritdoc/>
@@ -1625,7 +1755,7 @@ namespace UnityFx.Async
 
 			if (continuation != null)
 			{
-				return TryRemoveContinuation(continuation);
+				return TryRemoveContinuationInternal(continuation);
 			}
 
 			return false;
@@ -1640,6 +1770,12 @@ namespace UnityFx.Async
 		{
 			get
 			{
+#if UNITYFX_NOT_THREAD_SAFE
+
+				throw new NotSupportedException();
+
+#else
+
 				ThrowIfDisposed();
 
 				if (_waitHandle == null)
@@ -1665,6 +1801,8 @@ namespace UnityFx.Async
 				}
 
 				return _waitHandle;
+
+#endif
 			}
 		}
 
@@ -1795,22 +1933,86 @@ namespace UnityFx.Async
 		/// <param name="continuation">The continuation object to add.</param>
 		/// <param name="syncContext">A <see cref="SynchronizationContext"/> instance to execute continuation on.</param>
 		/// <returns>Returns <see langword="true"/> if the continuation was added; <see langword="false"/> otherwise.</returns>
-		private bool TryAddContinuation(object continuation, SynchronizationContext syncContext)
+		private bool TryAddContinuationInternal(object continuation, SynchronizationContext syncContext)
 		{
 			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
 			{
 				continuation = new AsyncContinuation(syncContext, continuation);
 			}
 
-			return TryAddContinuation(continuation);
+			return TryAddContinuationInternal(continuation);
 		}
+
+#if UNITYFX_NOT_THREAD_SAFE
 
 		/// <summary>
 		/// Attempts to register a continuation object. For internal use only.
 		/// </summary>
 		/// <param name="valueToAdd">The continuation object to add.</param>
 		/// <returns>Returns <see langword="true"/> if the continuation was added; <see langword="false"/> otherwise.</returns>
-		private bool TryAddContinuation(object valueToAdd)
+		private bool TryAddContinuationInternal(object valueToAdd)
+		{
+			var oldValue = _continuation;
+
+			// Quick return if the operation is completed.
+			if (oldValue != _continuationCompletionSentinel)
+			{
+				// If no continuation is stored yet, try to store it as _continuation.
+				if (oldValue == null)
+				{
+					_continuation = valueToAdd;
+				}
+
+				// Logic for the case where we were previously storing a single continuation.
+				if (oldValue is IList list)
+				{
+					list.Add(valueToAdd);
+				}
+				else
+				{
+					_continuation = new List<object>() { oldValue, valueToAdd };
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Attempts to remove the specified continuation. For internal use only.
+		/// </summary>
+		/// <param name="valueToRemove">The continuation object to remove.</param>
+		/// <returns>Returns <see langword="true"/> if the continuation was removed; <see langword="false"/> otherwise.</returns>
+		private bool TryRemoveContinuationInternal(object valueToRemove)
+		{
+			var value = _continuation;
+
+			if (value != _continuationCompletionSentinel)
+			{
+				if (value is IList list)
+				{
+					list.Remove(valueToRemove);
+				}
+				else
+				{
+					_continuation = null;
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+#else
+
+		/// <summary>
+		/// Attempts to register a continuation object. For internal use only.
+		/// </summary>
+		/// <param name="valueToAdd">The continuation object to add.</param>
+		/// <returns>Returns <see langword="true"/> if the continuation was added; <see langword="false"/> otherwise.</returns>
+		private bool TryAddContinuationInternal(object valueToAdd)
 		{
 			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
 			var oldValue = _continuation;
@@ -1867,7 +2069,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="valueToRemove">The continuation object to remove.</param>
 		/// <returns>Returns <see langword="true"/> if the continuation was removed; <see langword="false"/> otherwise.</returns>
-		private bool TryRemoveContinuation(object valueToRemove)
+		private bool TryRemoveContinuationInternal(object valueToRemove)
 		{
 			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
 			var value = _continuation;
@@ -1916,6 +2118,8 @@ namespace UnityFx.Async
 
 			return false;
 		}
+
+#endif
 
 		/// <summary>
 		/// Invokes the specified continuation instance.

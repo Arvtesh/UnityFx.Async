@@ -36,9 +36,10 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="IAsyncOperationEvents"/>
 		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, SynchronizationContext)"/>
+		/// <seealso cref="AddContinuation(IAsyncOperation, IAsyncContinuation)"/>
 		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action)
 		{
-			if (!op.TryAddCompletionCallback(action, SynchronizationContext.Current))
+			if (!op.TryAddCompletionCallback(action))
 			{
 				action(op);
 			}

@@ -29,9 +29,22 @@ namespace UnityFx.Async
 		/// </remarks>
 		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="TryAddCompletionCallback(AsyncOperationCallback)"/>
 		/// <seealso cref="TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)"/>
 		/// <seealso cref="RemoveCompletionCallback(AsyncOperationCallback)"/>
 		event AsyncOperationCallback Completed;
+
+		/// <summary>
+		/// Attempts to add a completion callback to be executed after the operation has finished. If the operation is already completed
+		/// the method does nothing and just returns <see langword="false"/>.
+		/// </summary>
+		/// <param name="action">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)"/>
+		/// <seealso cref="RemoveCompletionCallback(AsyncOperationCallback)"/>
+		bool TryAddCompletionCallback(AsyncOperationCallback action);
 
 		/// <summary>
 		/// Attempts to add a completion callback to be executed after the operation has finished. If the operation is already completed
@@ -44,6 +57,7 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="TryAddCompletionCallback(AsyncOperationCallback)"/>
 		/// <seealso cref="RemoveCompletionCallback(AsyncOperationCallback)"/>
 		bool TryAddCompletionCallback(AsyncOperationCallback action, SynchronizationContext syncContext);
 
@@ -53,7 +67,7 @@ namespace UnityFx.Async
 		/// <param name="action">The callback to remove. Can be <see langword="null"/>.</param>
 		/// <returns>Returns <see langword="true"/> if the <paramref name="action"/> was removed; <see langword="false"/> otherwise.</returns>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)"/>
+		/// <seealso cref="TryAddCompletionCallback(AsyncOperationCallback)"/>
 		bool RemoveCompletionCallback(AsyncOperationCallback action);
 
 		/// <summary>
