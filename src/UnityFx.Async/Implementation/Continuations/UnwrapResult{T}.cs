@@ -37,16 +37,18 @@ namespace UnityFx.Async
 		{
 			if (_state == State.WaitingForOuterOperation)
 			{
+				_state = State.WaitingForInnerOperation;
+
 				if (op.IsCompletedSuccessfully)
 				{
 					switch (op)
 					{
 						case IAsyncOperation<IAsyncOperation<T>> innerOp1:
-							ProcessInnerOperation(innerOp1, false);
+							ProcessInnerOperation(innerOp1.Result, false);
 							break;
 
 						case IAsyncOperation<IAsyncOperation> innerOp2:
-							ProcessInnerOperation(innerOp2, false);
+							ProcessInnerOperation(innerOp2.Result, false);
 							break;
 
 						default:
@@ -58,8 +60,6 @@ namespace UnityFx.Async
 				{
 					TrySetException(op.Exception, false);
 				}
-
-				_state = State.WaitingForInnerOperation;
 			}
 			else if (_state == State.WaitingForInnerOperation)
 			{

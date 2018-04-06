@@ -350,14 +350,14 @@ namespace UnityFx.Async
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
 		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
-		public static IAsyncOperation<TNewResult> Rebind<TNewResult>(this IAsyncOperation op, Func<TNewResult> successCallback)
+		public static IAsyncOperation<TResult> Rebind<TResult>(this IAsyncOperation op, Func<TResult> successCallback)
 		{
 			if (successCallback == null)
 			{
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			return new RebindResult<VoidResult, TNewResult>(op, successCallback);
+			return new RebindResult<VoidResult, TResult>(op, successCallback);
 		}
 
 		/// <summary>
