@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Diagnostics;
 using System.Threading;
 
 namespace UnityFx.Async
@@ -13,29 +14,34 @@ namespace UnityFx.Async
 		private static SendOrPostCallback _postCallback;
 
 		private readonly SynchronizationContext _syncContext;
-		private IAsyncOperation _op;
+		private readonly IAsyncOperation _op;
 
 		#endregion
 
 		#region interface
 
-		protected ContinuationResult()
+		protected ContinuationResult(IAsyncOperation op)
 			: base(AsyncOperationStatus.Running)
 		{
 			_syncContext = SynchronizationContext.Current;
+			_op = op;
 		}
 
-		protected ContinuationResult(bool captureSynchronizationContext)
+		protected ContinuationResult(IAsyncOperation op, bool captureSynchronizationContext)
 			: base(AsyncOperationStatus.Running)
 		{
 			if (captureSynchronizationContext)
 			{
 				_syncContext = SynchronizationContext.Current;
 			}
+
+			_op = op;
 		}
 
 		protected void InvokeOnSyncContext(IAsyncOperation op, bool completedSynchronously)
 		{
+			Debug.Assert(op == _op);
+
 			if (completedSynchronously || _syncContext == null || _syncContext == SynchronizationContext.Current)
 			{
 				try
@@ -49,8 +55,6 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				_op = op;
-
 				if (_postCallback == null)
 				{
 					_postCallback = args =>

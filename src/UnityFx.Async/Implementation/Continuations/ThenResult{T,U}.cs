@@ -17,6 +17,7 @@ namespace UnityFx.Async
 		#region interface
 
 		public ThenResult(IAsyncOperation op, object successCallback, Action<Exception> errorCallback)
+			: base(op)
 		{
 			_successCallback = successCallback;
 			_errorCallback = errorCallback;

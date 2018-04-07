@@ -16,6 +16,7 @@ namespace UnityFx.Async
 		#region interface
 
 		public FinallyResult(IAsyncOperation op, Action action)
+			: base(op)
 		{
 			_continuation = action;
 

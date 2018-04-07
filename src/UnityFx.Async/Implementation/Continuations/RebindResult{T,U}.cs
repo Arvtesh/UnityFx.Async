@@ -17,6 +17,7 @@ namespace UnityFx.Async
 		#region interface
 
 		public RebindResult(IAsyncOperation op, object action)
+			: base(op)
 		{
 			_continuation = action;
 
