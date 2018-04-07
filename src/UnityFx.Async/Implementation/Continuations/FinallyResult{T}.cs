@@ -9,13 +9,13 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private readonly Action _continuation;
+		private readonly object _continuation;
 
 		#endregion
 
 		#region interface
 
-		public FinallyResult(IAsyncOperation op, Action action)
+		public FinallyResult(IAsyncOperation op, object action)
 			: base(op)
 		{
 			_continuation = action;
@@ -33,8 +33,25 @@ namespace UnityFx.Async
 
 		protected override void InvokeUnsafe(IAsyncOperation op, bool completedSynchronously)
 		{
-			_continuation();
-			TrySetCompleted(completedSynchronously);
+			switch (_continuation)
+			{
+				case Action a:
+					a.Invoke();
+					TrySetCompleted(completedSynchronously);
+					break;
+
+				case Func<IAsyncOperation<T>> f1:
+					f1().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+					break;
+
+				case Func<IAsyncOperation> f2:
+					f2().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+					break;
+
+				default:
+					TrySetCanceled(completedSynchronously);
+					break;
+			}
 		}
 
 		#endregion

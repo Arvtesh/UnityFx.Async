@@ -416,6 +416,44 @@ namespace UnityFx.Async
 
 		#endregion
 
+		#region ContinueWith
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <param name="op">The operation to continue.</param>
+		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		public static IAsyncOperation ContinueWith(this IAsyncOperation op, Func<IAsyncOperation> action)
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			return new FinallyResult<VoidResult>(op, action);
+		}
+
+		/// <summary>
+		/// Creates a continuation that executes when the target <see cref="IAsyncOperation"/> completes.
+		/// </summary>
+		/// <param name="op">The operation to continue.</param>
+		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		public static IAsyncOperation<TResult> ContinueWith<TResult>(this IAsyncOperation op, Func<IAsyncOperation<TResult>> action)
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			return new FinallyResult<TResult>(op, action);
+		}
+
+		#endregion
+
 		#region Finally
 
 		/// <summary>
