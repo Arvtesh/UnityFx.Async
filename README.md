@@ -92,7 +92,8 @@ private IEnumerator DownloadTextInternal(IAsyncCompletionSource<string> op, stri
 ### Waiting for an operation to complete
 The simpliest way to get notified of an operation completion is registering a completion handler to be invoked when the operation succeeds (the JS promise-like way):
 ```csharp
-DownloadTextAsync("http://www.google.com").Then(text => Debug.Log(text));
+DownloadTextAsync("http://www.google.com")
+    .Then(text => Debug.Log(text));
 ```
 The above code downloads content of Google's front page and prints it to Unity console. To make this example closer to real life applications let's add simple error handling code to it:
 ```csharp
@@ -134,7 +135,7 @@ catch (Exception e)
     Debug.LogException(e);
 }
 ```
-Or, you can just block current thread while waiting (don't do that from UI thread!). Note usage of `using` with operation instance:
+Or, you can just block current thread while waiting (don't do that from UI thread!):
 ```csharp
 try
 {
@@ -151,12 +152,13 @@ catch (Exception e)
 ```
 
 ### Chaining asynchronous operations
-Multiple asynchronous operations can be chained one after other using `Then`:
+Multiple asynchronous operations can be chained one after other using `Then` / `ContinueWith` / `Catch` / `Finally`:
 ```csharp
 DownloadTextAsync("http://www.google.com")
     .Then(text => ExtractFirstParagraph(text))
     .Then(firstParagraph => Debug.Log(firstParagraph))
-    .Catch(e => Debug.LogException(e));
+    .Catch(e => Debug.LogException(e))
+    .Finally(() => Debug.Log("Done"));
 ```
 Alternatively, with .NET 4.6:
 ```csharp
@@ -166,24 +168,53 @@ try
     var firstParagraph = await ExtractFirstParagraph(text);
     Debug.Log(firstParagraph);
 }
-catch (OperationCanceledException)
-{
-    Debug.LogWarning("The operation was canceled.");
-}
 catch (Exception e)
 {
     Debug.LogException(e);
 }
+finally
+{
+    Debug.Log("Done");
+}
 ```
 
-### Error handling
-TODO
+The chain of processing ends as soon as an exception occurs. In this case when an error occurs the `Catch` handler would be called (if present).
+
+`Then` continuations get executed only if previous operation in the chain completed successfully. Otherwise they are skipped. Also note that `Then` expects the return value to be another operation. `Rebind` is a special kind of continuation for transforming operation result to a different type.
+
+`ContinueWith` delegates get called in any case. The list of `ContinueWith` overloads closely matches [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) interface.
+
+### Synchronization context capturing
+The default behaviour of all library methods is to capture current synchronization context and try to schedule all continuations on it. If there is not synchronization context attached to current thread continuations are executed on a thread that initiated an operation completion. The same behaviour applies to `async` / `await` implementation unless explicitly overriden with `ConfigureAwait`.
+```csharp
+// thread1
+await DownloadTextAsync("http://www.google.com");
+// Back on thread1 (if SynchronizationContext.Current is set)
+await DownloadTextAsync("http://www.yahoo.com").ConfigureAwait(false);
+// Most likely some other thread
+```
+
+### Completion callbacks
+All operations defined in the library support addition of completion callbacks that are executed when the operation completes:
+```csharp
+var op = DownloadTextAsync("http://www.google.com");
+op.AddCompletionCallback(o => Debug.Log("Done"));
+// or
+op.Completed += o => Debug.Log("Done");
+```
+Unlike `ContinueWith`-like stuff completion callbacks cannot be chained and do not handle exceptions. That's why they should be used with care.
+
+### Disposing of operations
+All operations implement [IDisposable](https://docs.microsoft.com/en-us/dotnet/api/system.idisposable) interface. So strictly speaking users should call `Dispose` when an operation is not in use. That said library implementation only requires this if `AsyncWaitHandle` was accessed. This behaviour closely matches [Tasks](https://blogs.msdn.microsoft.com/pfxteam/2012/03/25/do-i-need-to-dispose-of-tasks/).
 
 ### Completed asynchronous operations
-TODO
-
-### Interfaces
-TODO
+There are a number of helper methods for creating completed operations:
+```csharp
+var op1 = AsyncResult.CompletedOperation;
+var op2 = AsyncResult.FromResult(10);
+var op3 = AsyncResult.FromException(new Exception());
+var op4 = AsyncResult.FromCanceled();
+```
 
 ## Comparison to .NET Tasks
 The comparison table below shows how *UnityFx.Async* entities relate to [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task):
