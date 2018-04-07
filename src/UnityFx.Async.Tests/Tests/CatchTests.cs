@@ -86,13 +86,22 @@ namespace UnityFx.Async
 		{
 			// Arrange
 			var called = false;
+			var exceptionThrown = false;
 			var op = AsyncResult.FromCanceled().Catch<InvalidOperationException>(e => called = true);
 
 			// Act
-			await op;
+			try
+			{
+				await op;
+			}
+			catch (Exception e)
+			{
+				exceptionThrown = true;
+			}
 
 			// Assert
 			Assert.False(called);
+			Assert.True(exceptionThrown);
 		}
 	}
 }

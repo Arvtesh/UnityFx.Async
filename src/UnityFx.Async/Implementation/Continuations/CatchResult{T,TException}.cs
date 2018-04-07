@@ -52,9 +52,13 @@ namespace UnityFx.Async
 
 		private void InvokeInternal(IAsyncOperation op, bool completedSynchronously)
 		{
-			if (op.IsCompletedSuccessfully || !(op.Exception.InnerException is TException))
+			if (op.IsCompletedSuccessfully)
 			{
 				TrySetCompleted(completedSynchronously);
+			}
+			else if (!(op.Exception.InnerException is TException))
+			{
+				TrySetException(op.Exception, completedSynchronously);
 			}
 			else
 			{
