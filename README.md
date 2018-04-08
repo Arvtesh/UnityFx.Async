@@ -19,18 +19,19 @@ Library is designed as a lightweight [Unity3d](https://unity3d.com)-compatible [
 - [Unity3d](https://unity3d.com) compatibility. This includes possibility to <c>yield</c> operations in coroutines and net35-compilance.
 
 The table below summarizes differences berween *UnityFx.Async* and other popular asynchronous operation frameworks:
-Stat | UnityFx.Async | [C-Sharp-Promise](https://github.com/Real-Serious-Games/C-Sharp-Promise) | [TPL](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-parallel-library-tpl)
-:---|:---:|:---:|:---:
-Thread-safe | ✔️ | - | ✔️
-Can capture synchronization context | ✔️ | - | ✔️
-.NET 3.5 compilance | ✔️ | ✔️ | -️️
-Supports continuations | ✔️ | ✔️ | ✔️
-Supports Unity coroutines | ️️✔️ | - | -
-Supports `async` / `await` | ✔️ | - | ✔️
-Supports `promise`-like continuations | ✔️ | ✔️ | -
-Supports child operations | - | - | ✔️
-Minimum operation data size for 32-bit systems (in bytes) | 28+ | 36+ | 40+
-Minimjm number of allocations per continuation | 1+ | 5+ | 2+
+
+| Stat | UnityFx.Async | [C-Sharp-Promise](https://github.com/Real-Serious-Games/C-Sharp-Promise) |  [TPL](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-parallel-library-tpl) |
+| :--- | :---: | :---: | :---: |
+| Thread-safe | ✔️ | - | ✔️ |
+| Can capture synchronization context | ✔️ | - | ✔️ |
+| .NET 3.5 compilance | ✔️ | ✔️ | -️️ |
+| Supports continuations | ✔️ | ✔️ | ✔️ |
+| Supports Unity coroutines | ️️✔️ | - | - |
+| Supports `async` / `await` | ✔️ | - | ✔️ |
+| Supports `promise`-like continuations | ✔️ | ✔️ | - |
+| Supports child operations | - | - | ✔️ |
+| Minimum operation data size for 32-bit systems (in bytes) | 28+ | 36+ | 40+ |
+| Minimjm number of allocations per continuation | 1+ | 5+ | 2+ |
 
 ## Getting Started
 ### Prerequisites
