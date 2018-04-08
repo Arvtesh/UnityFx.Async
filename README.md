@@ -18,6 +18,20 @@ Library is designed as a lightweight [Unity3d](https://unity3d.com)-compatible [
 - [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)-like interface and behaviour. In many cases library classes can be used much like corresponding [TPL](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-parallel-library-tpl) entities.
 - [Unity3d](https://unity3d.com) compatibility. This includes possibility to <c>yield</c> operations in coroutines and net35-compilance.
 
+The table below summarizes differences berween *UnityFx.Async* and other popular asynchronous operation frameworks:
+Stat | UnityFx.Async | [C-Sharp-Promise](https://github.com/Real-Serious-Games/C-Sharp-Promise) | [TPL](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-parallel-library-tpl)
+-|:-:|:-:|:-:
+Thread-safe | ✔️ | - | ✔️
+Can capture synchronization context | ✔️ | - | ✔️
+.NET 3.5 compilance | ✔️ | ✔️ | -️️
+Supports continuations | ✔️ | ✔️ | ✔️
+Supports Unity coroutines | ️️✔️ | - | -
+Supports `async` / `await` | ✔️ | - | ✔️
+Supports `promise`-like continuations | ✔️ | ✔️ | -
+Supports child operations | - | - | ✔️
+Minimum operation data size for 32-bit systems (in bytes) | 28+ | 36+ | 40+
+Minimjm number of allocations per continuation | 1+ | 5+ | 2+
+
 ## Getting Started
 ### Prerequisites
 You may need the following software installed in order to build/use the library:
@@ -273,7 +287,7 @@ op.AddContinuation(new MyContinuation());
 ### Disposing of operations
 All operations implement [IDisposable](https://docs.microsoft.com/en-us/dotnet/api/system.idisposable) interface. So strictly speaking users should call `Dispose` when an operation is not in use. That said library implementation only requires this if `AsyncWaitHandle` was accessed (just like [tasks](https://blogs.msdn.microsoft.com/pfxteam/2012/03/25/do-i-need-to-dispose-of-tasks/)).
 
-Please note that `Dispose` implementation is NOT thread-safe and it can only be called after an operation has completed (the same restrictions apply to [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)).
+Please note that `Dispose` implementation is NOT thread-safe and can only be called after an operation has completed (the same restrictions apply to [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)).
 
 ### Completed asynchronous operations
 There are a number of helper methods for creating completed operations:
@@ -344,21 +358,6 @@ Please note that the library is NOT a replacement for [Tasks](https://docs.micro
 - .NET 3.5/[Unity3d](https://unity3d.com) compatibility is required.
 - Memory usage is a concern ([Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) tend to do quite a lot of allocations).
 - An extendable [IAsyncResult](https://docs.microsoft.com/en-us/dotnet/api/system.iasyncresult) implementation is needed.
-
-## Performance
-
-The tables below contains comparison of performance to several other popular frameworks (NOTE: this section needs performing more precise tests, the results below might not be accurate enough):
-
-Stat | UnityFx.Async | [C-Sharp-Promise](https://github.com/Real-Serious-Games/C-Sharp-Promise) | [TPL](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-parallel-library-tpl)
--|-|-|-
-Thread-safe | ✔️ | - | ✔️
-Can capture synchronization context | ✔️ | - | ✔️
-.NET 3.5 compilance | ✔️ | ✔️ | -️️
-Supports Unity coroutines | ️️✔️ | - | -
-Supports `async` / `await` | ✔️ | - | ✔️
-Supports `promise`-like continuations | ✔️ | ✔️ | -
-Operation data size for 32-bit systems (in bytes) | 28+ | 36+ | 40+
-Number of allocations per continuation (`ContinueWith`/`Then`) | 1+ | 5+ | 2+
 
 ## Future work
 * Progress reporting (via [IProgress](https://docs.microsoft.com/en-us/dotnet/api/system.iprogress-1)).
