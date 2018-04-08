@@ -94,7 +94,7 @@ InitiateSomeAsyncOperation(
 Doesn't look that simple now, right? And that's just the async method calls without actual result processing and error handling. Production code would have `try` / `catch` blocks in each handler  and much more result processing code. The code complexity (and maintainability problems as a result) produced by extensive callback usage is exactly what is called a [callback hell](http://callbackhell.com/).
 
 ### Unity coroutines - another way to shoot yourself in the foot
-TODO
+Unity coroutines are another popular approach to prorgamming asynchronous operations.
 
 ### Promises to the rescue
 TODO
@@ -297,6 +297,19 @@ var op1 = AsyncResult.CompletedOperation;
 var op2 = AsyncResult.FromResult(10);
 var op3 = AsyncResult.FromException(new Exception());
 var op4 = AsyncResult.FromCanceled();
+```
+
+### Convertions
+Library defines convertion methods between `IAsyncOperation` and `Task`, `IObservable`, `UnityWebRequest`, `AsyncOperation`, `WWW`:
+```csharp
+var task = op.ToTask();
+var observable = op.ToObservable();
+
+var op1 = task.ToAsync();
+var op2 = observable.ToAsync();
+var op3 = unityWebRequest.ToAsync();
+var op4 = unityAsyncOperation.ToAsync();
+var op5 = unityWWW.ToAsync();
 ```
 
 ### Creating own asynchronous operations
