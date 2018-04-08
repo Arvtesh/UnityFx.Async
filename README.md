@@ -34,14 +34,57 @@ git submodule -q update --init
 The binaries are available as a [NuGet package](https://www.nuget.org/packages/UnityFx.Async). See [here](http://docs.nuget.org/docs/start-here/using-the-package-manager-console) for instructions on installing a package via nuget. One can also download them directly from [Github releases](https://github.com/Arvtesh/UnityFx.Async/releases). Unity3d users can import corresponding [Unity Asset Store package](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696) from the editor.
 
 ## Understanding the concepts
-The below listed topics are just a quict summary of the problems and the proposed solutions. For more details on the topic please see this [excellent article](http://www.what-could-possibly-go-wrong.com/promises-for-game-development/).
-### Why callbacks are bad
+The below listed topics are just a quick summary of problems and the proposed solutions. For more details on the topic please see useful links at the end of this document.
+### Callback hell
+Getting notified of an asynchronous operation completion via callbacks is the most common (as well as low-level) approach. It is very simple and obvious at first glance:
+```csharp
+InitiateSomeAsyncOperation(
+    result =>
+    {
+        // Success handler
+    },
+    e =>
+    {
+        // Error handler
+    });
+```
+Now let's chain several operations:
+```csharp
+InitiateSomeAsyncOperation(
+    result =>
+    {
+        InitiateAsyncOperation2(result,
+            result2 =>
+            {
+                InitiateAsyncOperation3(result2,
+                    result3 =>
+                    {
+                        // ...
+                    },
+                    e =>
+                    {
+                        // Error handler 3
+                    });
+            },
+            e =>
+            {
+                // Error handler 2
+            });
+    },
+    e =>
+    {
+        // Error handler
+    });
+```
+Doesn't look that simple now, right? And that's just the async method calls without actual result processing and error handling. Production code would have `try` / `catch` blocks in each handler  and much more result processing code. The code complexity (and maintainability problems as a result) produced by extensive callback usage is exactly what is called a [callback hell](http://callbackhell.com/).
+
+### Unity coroutines - another way to shoot yourself in the foot
 TODO
 
-### Why coroutines are bad
+### Promises to the rescue
 TODO
 
-### Promises to the Rescue
+### Asynchronous programming with async and await
 TODO
 
 ## Using the library
@@ -53,13 +96,13 @@ Create an operation instance like this:
 ```csharp
 var op = new AsyncCompletionSource<string>();
 ```
-The type of the operation should reflect its result type. In this case we have created a special kind of operations - a completion source, that incapsulated both producer and consumer operation interfaces (consumer side is represented via `IAsyncOperation` / `IAsyncOperation<TResult>` interfaces and producer side is `IAsyncCompletionSource` / `IAsyncCompletionSource<TResult>`, `AsyncCompletionSource` implements both of the interfaces).
+The type of the operation should reflect its result type. In this case we have created a special kind of operation - a completion source that incapsulated both producer and consumer interfaces (consumer side is represented via `IAsyncOperation` / `IAsyncOperation<TResult>` interfaces and producer side is `IAsyncCompletionSource` / `IAsyncCompletionSource<TResult>`, `AsyncCompletionSource` implements both of the interfaces).
 
-Upon completion of the asynchronous operation notify its users:
+Upon completion of an asynchronous operation transition it to one of the final states (`RanToCompletion`, `Faulted` or `Canceled`):
 ```csharp
 op.SetResult(resultValue);
 ```
-Alternatively, if the operation has failed:
+Or, if the operation has failed:
 ```csharp
 op.SetException(ex);
 ```
@@ -119,7 +162,7 @@ else if (op.IsCanceled)
     Debug.LogWarning("The operation was canceled.");
 }
 ```
-With Unity 2017+ and .NET 4.6 it can be used just like a [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task). The await continuation is scheduled on the captured [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) (if any):
+With Unity 2017+ and .NET 4.6 it can be used just like a [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task). The await continuation is scheduled on a captured [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) (if any):
 ```csharp
 try
 {
@@ -152,7 +195,7 @@ catch (Exception e)
 ```
 
 ### Chaining asynchronous operations
-Multiple asynchronous operations can be chained one after other using `Then` / `ContinueWith` / `Catch` / `Finally`:
+Multiple asynchronous operations can be chained one after other using `Then` / `Rebind` / `ContinueWith` / `Catch` / `Finally`:
 ```csharp
 DownloadTextAsync("http://www.google.com")
     .Then(text => ExtractFirstParagraph(text))
@@ -160,7 +203,24 @@ DownloadTextAsync("http://www.google.com")
     .Catch(e => Debug.LogException(e))
     .Finally(() => Debug.Log("Done"));
 ```
-Alternatively, with .NET 4.6:
+The chain of processing ends as soon as an exception occurs. In this case when an error occurs the `Catch` handler would be called.
+
+`Then` continuations get executed only if previous operation in the chain completed successfully. Otherwise they are skipped. Also note that `Then` expects the handler return value to be another operation.
+
+`Rebind` is a special kind of continuation for transforming operation result to a different type:
+```csharp
+DownloadTextAsync("http://www.google.com")
+    .Then(text => ExtractFirstUrl(text))
+    .Rebind(url => new Url(url));
+```
+`ContinueWith` and `Finally` delegates get called independently of the antecedent operation result. `ContinueWith` also define overloads accepting `AsyncContinuationOptions` argument that allows to customize its behaviour:
+```csharp
+DownloadTextAsync("http://www.google.com")
+    .ContinueWith(op => Debug.Log("1"))
+    .ContinueWith(op => Debug.Log("2"), AsyncContinuationOptions.NotOnCanceled)
+    .ContinueWith(op => Debug.Log("3"), AsyncContinuationOptions.OnlyOnFaulted);
+```
+That said with .NET 4.6 the recommented approach is using `async` / `await`:
 ```csharp
 try
 {
@@ -178,34 +238,42 @@ finally
 }
 ```
 
-The chain of processing ends as soon as an exception occurs. In this case when an error occurs the `Catch` handler would be called (if present).
-
-`Then` continuations get executed only if previous operation in the chain completed successfully. Otherwise they are skipped. Also note that `Then` expects the return value to be another operation. `Rebind` is a special kind of continuation for transforming operation result to a different type.
-
-`ContinueWith` delegates get called in any case. The list of `ContinueWith` overloads closely matches [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) interface.
-
 ### Synchronization context capturing
-The default behaviour of all library methods is to capture current synchronization context and try to schedule all continuations on it. If there is not synchronization context attached to current thread continuations are executed on a thread that initiated an operation completion. The same behaviour applies to `async` / `await` implementation unless explicitly overriden with `ConfigureAwait`.
+The default behaviour of all library methods is to capture current [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) and try to schedule continuations on it. If there is no synchronization context attached to current thread, continuations are executed on a thread that initiated an operation completion. The same behaviour applies to `async` / `await` implementation unless explicitly overriden with `ConfigureAwait`:
 ```csharp
 // thread1
 await DownloadTextAsync("http://www.google.com");
-// Back on thread1 (if SynchronizationContext.Current is set)
+// Back on thread1
 await DownloadTextAsync("http://www.yahoo.com").ConfigureAwait(false);
 // Most likely some other thread
 ```
 
 ### Completion callbacks
-All operations defined in the library support addition of completion callbacks that are executed when the operation completes:
+All operations defined in the library support adding of completion callbacks that are executed when an operation completes:
 ```csharp
 var op = DownloadTextAsync("http://www.google.com");
-op.AddCompletionCallback(o => Debug.Log("Done"));
-// or
-op.Completed += o => Debug.Log("Done");
+op.Completed += o => Debug.Log("1");
+op.AddCompletionCallback(o => Debug.Log("2"));
 ```
-Unlike `ContinueWith`-like stuff completion callbacks cannot be chained and do not handle exceptions. That's why they should be used with care.
+Unlike `ContinueWith`-like stuff completion callbacks cannot be chained and do not handle exceptions automatically. Throwing an exception from a completion callback results in unspecified behavior.
+
+There is also a low-level continuation interface (`IAsyncContinuation`):
+```csharp
+class MyContinuation : IAsyncContinuation
+{
+    public void Invoke(IAsyncOperation op) => Debug.Log("Done");
+}
+
+// ...
+
+var op = DownloadTextAsync("http://www.google.com");
+op.AddContinuation(new MyContinuation());
+```
 
 ### Disposing of operations
-All operations implement [IDisposable](https://docs.microsoft.com/en-us/dotnet/api/system.idisposable) interface. So strictly speaking users should call `Dispose` when an operation is not in use. That said library implementation only requires this if `AsyncWaitHandle` was accessed. This behaviour closely matches [Tasks](https://blogs.msdn.microsoft.com/pfxteam/2012/03/25/do-i-need-to-dispose-of-tasks/).
+All operations implement [IDisposable](https://docs.microsoft.com/en-us/dotnet/api/system.idisposable) interface. So strictly speaking users should call `Dispose` when an operation is not in use. That said library implementation only requires this if `AsyncWaitHandle` was accessed (just like [tasks](https://blogs.msdn.microsoft.com/pfxteam/2012/03/25/do-i-need-to-dispose-of-tasks/)).
+
+Please note that `Dispose` implementation is NOT thread-safe and it can only be called after an operation has completed (the same restrictions apply to [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)).
 
 ### Completed asynchronous operations
 There are a number of helper methods for creating completed operations:
@@ -214,6 +282,46 @@ var op1 = AsyncResult.CompletedOperation;
 var op2 = AsyncResult.FromResult(10);
 var op3 = AsyncResult.FromException(new Exception());
 var op4 = AsyncResult.FromCanceled();
+```
+
+### Creating own asynchronous operations
+Most common way of creating own asynchronous operation is instantiating `AsyncCompletionSource` instance and call `SetResult` / `SetException` / `SetCanceled` when done. Still there are cases when more control is required. For this purpose the library provides two public extendable implementations for asynchronous operations:
+* `AsyncResult`: an operation without a result value.
+* `AsyncResult<TResult>`: an asynchronous operation with a generic result value.
+
+The sample code below demostrates creating a delay operation:
+```csharp
+public class TimerDelayResult : AsyncResult
+{
+    private readonly Timer _timer;
+
+    public TimerDelayResult(int millisecondsDelay)
+        : base(AsyncOperationStatus.Running)
+    {
+        _timer = new Timer(TimerCompletionCallback, this, millisecondsDelay, Timeout.Infinite);
+    }
+
+    protected override void OnCompleted()
+    {
+        _timer.Dispose();
+        base.OnCompleted();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _timer.Dispose();
+        }
+
+        base.Dispose(disposing);
+    }
+
+    private static void TimerCompletionCallback(object state)
+    {
+        (state as TimerDelayResult).TrySetCompleted(false);
+    }
+}
 ```
 
 ## Comparison to .NET Tasks
