@@ -94,7 +94,12 @@ InitiateSomeAsyncOperation(
 Doesn't look that simple now, right? And that's just the async method calls without actual result processing and error handling. Production code would have `try` / `catch` blocks in each handler  and much more result processing code. The code complexity (and maintainability problems as a result) produced by extensive callback usage is exactly what is called a [callback hell](http://callbackhell.com/).
 
 ### Unity coroutines - another way to shoot yourself in the foot
-Unity coroutines are another popular approach to prorgamming asynchronous operations.
+Coroutines are another popular approach to programming asynchronous operations available for Unity users by default. While it allows convenient way of operation chaining there are quite a lot of drawbacks that make it not suited well for large applications:
+* Coroutines cannot return result values (since the return type must be `IEnumerator`).
+* Coroutines can't handle exceptions, because `yield return` statements cannot be surrounded with a `try`-`catch` construction. This makes error handling a pain.
+* Coroutine require a `MonoBehaviour` to run.
+* There is no way to wait for a coroutine other than yield.
+* There is no way to get coroutine state information.
 
 ### Promises to the rescue
 TODO
@@ -411,5 +416,6 @@ Please see the [![license](https://img.shields.io/github/license/Arvtesh/UnityFx
 ## Acknowledgments
 Working on this project is a great experience. Please see below list of sources of my inspiration (in no particular order):
 * [.NET reference source](https://referencesource.microsoft.com/mscorlib/System/threading/Tasks/Task.cs.html). A great source of knowledge and good programming practices.
-* [C-Sharp-Promise](https://github.com/Real-Serious-Games/C-Sharp-Promise) - another great C# promise library with excellent documentation.
+* [C-Sharp-Promise](https://github.com/Real-Serious-Games/C-Sharp-Promise). Another great C# promise library with excellent documentation.
+* [UniRx](https://github.com/neuecc/UniRx). A deeply reworked [Rx.NET](https://github.com/Reactive-Extensions/Rx.NET) port to Unity.
 * Everyone who ever commented or left any feedback on the project. It's always very helpful.
