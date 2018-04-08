@@ -13,10 +13,10 @@ Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io
 
 Library is designed as a lightweight [Unity3d](https://unity3d.com)-compatible [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) alternative (not a replacement though). Main design goals are:
 - Minimum object size and number of allocations.
-- Extensibility. The library operations are designed to be inherited (if needed).
+- Extensibility. The library operations are designed to be inherited.
 - Thread-safe. The library classes can be safely used from different threads (unless explicitly stated otherwise).
 - [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)-like interface and behaviour. In many cases library classes can be used much like corresponding [TPL](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-parallel-library-tpl) entities.
-- [Unity3d](https://unity3d.com) compatibility. This includes possibility to <c>yield</c> any operations in coroutines and net35-compilance.
+- [Unity3d](https://unity3d.com) compatibility. This includes possibility to <c>yield</c> operations in coroutines and net35-compilance.
 
 ## Getting Started
 ### Prerequisites
@@ -351,6 +351,12 @@ The tables below contains comparison of performance to several other popular fra
 
 Stat | UnityFx.Async | [C-Sharp-Promise](https://github.com/Real-Serious-Games/C-Sharp-Promise) | [TPL](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-parallel-library-tpl)
 -|-|-|-
+Thread-safe | ✔️ | - | ✔️
+Can capture synchronization context | ✔️ | - | ✔️
+.NET 3.5 compilance | ✔️ | ✔️ | -️️
+Supports Unity coroutines | ️️✔️ | - | -
+Supports `async` / `await` | ✔️ | - | ✔️
+Supports `promise`-like continuations | ✔️ | ✔️ | -
 Operation data size for 32-bit systems (in bytes) | 28+ | 36+ | 40+
 Number of allocations per continuation (`ContinueWith`/`Then`) | 1+ | 5+ | 2+
 
