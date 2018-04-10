@@ -46,10 +46,10 @@ git clone https://github.com/Arvtesh/UnityFx.Async.git
 git submodule -q update --init
 ```
 ### Getting binaries
-The binaries are available as a [NuGet package](https://www.nuget.org/packages/UnityFx.Async). See [here](http://docs.nuget.org/docs/start-here/using-the-package-manager-console) for instructions on installing a package via nuget. One can also download them directly from [Github releases](https://github.com/Arvtesh/UnityFx.Async/releases). Unity3d users can import corresponding [Unity Asset Store package](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696) from the editor.
+The binaries are available as a [NuGet package](https://www.nuget.org/packages/UnityFx.Async). See [here](http://docs.nuget.org/docs/start-here/using-the-package-manager-console) for instructions on installing a package via nuget. One can also download them directly from [Github releases](https://github.com/Arvtesh/UnityFx.Async/releases). Unity3d users can import corresponding [Unity Asset Store package](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696) using the editor.
 
 ## Understanding the concepts
-The below listed topics are just a quick summary of problems and the proposed solutions. For more details on the topic please see useful links at the end of this document.
+The topics below are just a quick summary of problems and the proposed solutions. For more details on the topic please see useful links at the end of this document.
 ### Callback hell
 Getting notified of an asynchronous operation completion via callbacks is the most common (as well as low-level) approach. It is very simple and obvious at first glance:
 ```csharp
@@ -94,7 +94,7 @@ InitiateSomeAsyncOperation(
 Doesn't look that simple now, right? And that's just the async method calls without actual result processing and error handling. Production code would have `try` / `catch` blocks in each handler  and much more result processing code. The code complexity (and maintainability problems as a result) produced by extensive callback usage is exactly what is called a [callback hell](http://callbackhell.com/).
 
 ### Unity coroutines - another way to shoot yourself in the foot
-Coroutines are another popular approach of programming asynchronous operations available for Unity users by default. While it allows convenient way of operation chaining there are quite a lot of drawbacks that make it not suited well for large applications:
+Coroutines are another popular approach of programming asynchronous operations available for Unity users by default. While it allows convenient way of operation chaining there are quite a lot of drawbacks that make it not suited well for large projects:
 * Coroutines cannot return result values (since the return type must be `IEnumerator`).
 * Coroutines can't handle exceptions, because `yield return` statements cannot be surrounded with a `try`-`catch` construction. This makes error handling a pain.
 * Coroutine require a `MonoBehaviour` to run.
@@ -115,7 +115,7 @@ yield return InitiateAsyncOperation3(result2, result3);
 /// ...
 /// No way to handle exceptions here
 ```
-As you can see while coroutines allow more streamlined coding, we have to wrap result values into custom classes and there is no easy way of error handling.
+As you can see we had to wrap result values into custom classes (which resulted in quire unobvious code) and no error handling can be done at this level (have to rely on the methods been called).
 
 ### Promises to the rescue
 Promises are a design pattern to structure asynchronous code as a sequence of chained (not nested!) operations. This concept was introduces for JS and has even become a [standard](https://promisesaplus.com/) since then. At low level a promise is an object containing a state (Running, Resolved or Rejected), a result value and (optionally) success/error callbacks. At high level the point of promises is to give us functional composition and error handling is the async world.
@@ -130,7 +130,7 @@ InitiateSomeAsyncOperation()
 ```
 This does exaclty the same job as the callbacks sample, but it's much more readable.
 
-That said promises are still not an ideal solution (at least for C#). They still require quite a lot of filler code at rely heavily on delegate usage.
+That said promises are still not an ideal solution (at least for C#). They require quite a lot of filler code and rely heavily on delegate usage.
 
 ### Asynchronous programming with async and await
 C# 5.0/.NET 4.5 introduced a new appoach to asynchronous programming. By using `async` and `await` one can write an asynchronous methods almost as synchronous methods. The following example shows implementation of the callback hell method with this technique:
@@ -421,6 +421,7 @@ Please note that the library is NOT a replacement for [Tasks](https://docs.micro
 - An extendable [IAsyncResult](https://docs.microsoft.com/en-us/dotnet/api/system.iasyncresult) implementation is needed.
 
 ## Future work
+* Implementation of noalloc completion callbacks.
 * Progress reporting (via [IProgress](https://docs.microsoft.com/en-us/dotnet/api/system.iprogress-1)).
 * Cancellation support (via [CancellationToken](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken)).
 
