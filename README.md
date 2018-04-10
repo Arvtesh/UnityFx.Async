@@ -20,7 +20,7 @@ Library is designed as a lightweight [Unity3d](https://unity3d.com)-compatible [
 
 The table below summarizes differences berween *UnityFx.Async* and other popular asynchronous operation frameworks:
 
-| Stat | UnityFx.Async | [C-Sharp-Promise](https://github.com/Real-Serious-Games/C-Sharp-Promise) |  [TPL](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-parallel-library-tpl) |
+| Stat | UnityFx.Async | [C-Sharp-Promise](https://github.com/Real-Serious-Games/C-Sharp-Promise) | [TPL](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-parallel-library-tpl) |
 | :--- | :---: | :---: | :---: |
 | Thread-safe | ✔️ | - | ✔️ |
 | Can capture synchronization context | ✔️ | - | ✔️ |
@@ -31,7 +31,7 @@ The table below summarizes differences berween *UnityFx.Async* and other popular
 | Supports `promise`-like continuations | ✔️ | ✔️ | - |
 | Supports child operations | - | - | ✔️ |
 | Minimum operation data size for 32-bit systems (in bytes) | 28+ | 36+ | 40+ |
-| Minimjm number of allocations per continuation | 1+ | 5+ | 2+ |
+| Minimum number of allocations per continuation | 1+ | 5+ | 2+ |
 
 ## Getting Started
 ### Prerequisites
@@ -94,18 +94,60 @@ InitiateSomeAsyncOperation(
 Doesn't look that simple now, right? And that's just the async method calls without actual result processing and error handling. Production code would have `try` / `catch` blocks in each handler  and much more result processing code. The code complexity (and maintainability problems as a result) produced by extensive callback usage is exactly what is called a [callback hell](http://callbackhell.com/).
 
 ### Unity coroutines - another way to shoot yourself in the foot
-Coroutines are another popular approach to programming asynchronous operations available for Unity users by default. While it allows convenient way of operation chaining there are quite a lot of drawbacks that make it not suited well for large applications:
+Coroutines are another popular approach of programming asynchronous operations available for Unity users by default. While it allows convenient way of operation chaining there are quite a lot of drawbacks that make it not suited well for large applications:
 * Coroutines cannot return result values (since the return type must be `IEnumerator`).
 * Coroutines can't handle exceptions, because `yield return` statements cannot be surrounded with a `try`-`catch` construction. This makes error handling a pain.
 * Coroutine require a `MonoBehaviour` to run.
 * There is no way to wait for a coroutine other than yield.
 * There is no way to get coroutine state information.
 
+That said, here is the previous example rewrited using coroutines:
+```csharp
+var result = new MyResultType();
+yield return InitiateSomeAsyncOperation(result);
+
+var result2 = new MyResultType2();
+yield return InitiateAsyncOperation2(result, result2);
+
+var result3 = new MyResultType3();
+yield return InitiateAsyncOperation3(result2, result3);
+
+/// ...
+/// No way to handle exceptions here
+```
+As you can see while coroutines allow more streamlined coding, we have to wrap result values into custom classes and there is no easy way of error handling.
+
 ### Promises to the rescue
-TODO
+Promises are a design pattern to structure asynchronous code as a sequence of chained (not nested!) operations. This concept was introduces for JS and has even become a [standard](https://promisesaplus.com/) since then. At low level a promise is an object containing a state (Running, Resolved or Rejected), a result value and (optionally) success/error callbacks. At high level the point of promises is to give us functional composition and error handling is the async world.
+
+Let's rewrite the last callback hell sample using promises:
+```csharp
+InitiateSomeAsyncOperation()
+    .Then(result => InitiateAsyncOperation2(result))
+    .Then(result2 => InitiateAsyncOperation3(result2))
+    .Then(result3 => /* ... */)
+    .Catch(e => /* Shared error handler */);
+```
+This does exaclty the same job as the callbacks sample, but it's much more readable.
+
+That said promises are still not an ideal solution (at least for C#). They still require quite a lot of filler code at rely heavily on delegate usage.
 
 ### Asynchronous programming with async and await
-TODO
+C# 5.0/.NET 4.5 introduced a new appoach to asynchronous programming. By using `async` and `await` one can write an asynchronous methods almost as synchronous methods. The following example shows implementation of the callback hell method with this technique:
+```csharp
+try
+{
+    var result = await InitiateSomeAsyncOperation();
+    var result2 = await InitiateAsyncOperation2(result);
+    var result3 = await InitiateAsyncOperation3(result2);
+    // ...
+}
+catch (Exception e)
+{
+    // Error handling code
+}
+```
+In fact the only notable difference from synchronous implementation is usage of the mentioned `async` and `await` keywords. It's worth mentioning that there is lots of hidden work done by both the C# compliter and asynchronous operation to allow this.
 
 ## Using the library
 Reference the DLL and import the namespace:
