@@ -9,7 +9,7 @@ Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io
 
 ## Synopsis
 
-*UnityFx.Async* is a set of of classes and interfaces that extend [Unity3d](https://unity3d.com) asynchronous operations and can be used very much like [Task-based Asynchronous Pattern (TAP)](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming) in .NET or [Promises](https://developers.google.com/web/fundamentals/primers/promises) in Javascript. The library at its core defines a container ([AsyncResult](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncResult.html)) for state and result value of an asynchronous operation (aka `promise` or `future`). In many aspects it mimics [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) (for example, it can be used with `async`/`await` operators, supports continuations and synchronization context capturing).
+*UnityFx.Async* is a set of classes and interfaces that extend [Unity3d](https://unity3d.com) asynchronous operations and can be used very much like [Task-based Asynchronous Pattern (TAP)](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming) in .NET or [Promises](https://developers.google.com/web/fundamentals/primers/promises) in Javascript. The library at its core defines a container ([AsyncResult](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncResult.html)) for state and result value of an asynchronous operation (aka `promise` or `future`). In many aspects it mimics [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) (for example, it can be used with `async`/`await` operators, supports continuations and synchronization context capturing).
 
 Library is designed as a lightweight [Unity3d](https://unity3d.com)-compatible [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) alternative (not a replacement though). Main design goals are:
 - Minimum object size and number of allocations.
@@ -97,7 +97,7 @@ Doesn't look that simple now, right? And that's just the async method calls with
 Coroutines are another popular approach of programming asynchronous operations available for Unity users by default. While it allows convenient way of operation chaining there are quite a lot of drawbacks that make it not suited well for large projects:
 * Coroutines cannot return result values (since the return type must be `IEnumerator`).
 * Coroutines can't handle exceptions, because `yield return` statements cannot be surrounded with a `try`-`catch` construction. This makes error handling a pain.
-* Coroutine require a `MonoBehaviour` to run.
+* Coroutine requires a `MonoBehaviour` to run.
 * There is no way to wait for a coroutine other than yield.
 * There is no way to get coroutine state information.
 
@@ -133,7 +133,7 @@ This does exaclty the same job as the callbacks sample, but it's much more reada
 That said promises are still not an ideal solution (at least for C#). They require quite a lot of filler code and rely heavily on delegate usage.
 
 ### Asynchronous programming with async and await
-C# 5.0/.NET 4.5 introduced a new appoach to asynchronous programming. By using `async` and `await` one can write an asynchronous methods almost as synchronous methods. The following example shows implementation of the callback hell method with this technique:
+C# 5.0/.NET 4.5 introduced a new appoach to asynchronous programming. By using `async` and `await` one can write asynchronous methods almost as synchronous methods. The following example shows implementation of the callback hell method with this technique:
 ```csharp
 try
 {
@@ -147,7 +147,7 @@ catch (Exception e)
     // Error handling code
 }
 ```
-In fact the only notable difference from synchronous implementation is usage of the mentioned `async` and `await` keywords. It's worth mentioning that there is lots of hidden work done by both the C# compliter and asynchronous operation to allow this.
+In fact the only notable difference from synchronous implementation is usage of the mentioned `async` and `await` keywords. It's worth mentioning that a lot of hidden work is done by both the C# compliter and asynchronous operation to allow this.
 
 ## Using the library
 Reference the DLL and import the namespace:
@@ -224,7 +224,7 @@ else if (op.IsCanceled)
     Debug.LogWarning("The operation was canceled.");
 }
 ```
-With Unity 2017+ and .NET 4.6 it can be used just like a [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task). The await continuation is scheduled on a captured [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) (if any):
+With Unity 2017+ and .NET 4.6 it can be used just like a [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task). An await continuation is scheduled on a captured [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) (if any):
 ```csharp
 try
 {
@@ -267,7 +267,7 @@ DownloadTextAsync("http://www.google.com")
 ```
 The chain of processing ends as soon as an exception occurs. In this case when an error occurs the `Catch` handler would be called.
 
-`Then` continuations get executed only if previous operation in the chain completed successfully. Otherwise they are skipped. Also note that `Then` expects the handler return value to be another operation.
+`Then` continuations get executed only if previous operation in the chain completed successfully. Otherwise, they are skipped. Note that `Then` expects the handler return value to be another operation.
 
 `Rebind` is a special kind of continuation for transforming operation result to a different type:
 ```csharp
