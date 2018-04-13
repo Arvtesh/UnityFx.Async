@@ -94,7 +94,7 @@ namespace UnityFx.Async
 			{
 				await op;
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				exceptionThrown = true;
 			}
