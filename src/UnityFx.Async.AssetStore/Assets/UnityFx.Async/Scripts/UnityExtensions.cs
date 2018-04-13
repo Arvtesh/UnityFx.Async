@@ -147,7 +147,7 @@ namespace UnityFx.Async
 
 #else
 
-				AsyncUtility.AddCompletionCallback(_op, () => continuation());
+				AsyncUtility.AddCompletionCallback(_op, continuation);
 
 #endif
 			}
@@ -276,7 +276,7 @@ namespace UnityFx.Async
 			/// <inheritdoc/>
 			public void OnCompleted(Action continuation)
 			{
-				AsyncUtility.AddCompletionCallback(_op, () => continuation());
+				AsyncUtility.AddCompletionCallback(_op, continuation);
 			}
 		}
 
@@ -402,7 +402,7 @@ namespace UnityFx.Async
 			/// <inheritdoc/>
 			public void OnCompleted(Action continuation)
 			{
-				AsyncUtility.AddCompletionCallback(_op, () => continuation());
+				AsyncUtility.AddCompletionCallback(_op, continuation);
 			}
 		}
 
