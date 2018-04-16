@@ -30,11 +30,6 @@ namespace UnityFx.Async
 			}
 		}
 
-		public void Cancel()
-		{
-			TrySetCanceled(false);
-		}
-
 		#endregion
 
 		#region IAsyncContinuation

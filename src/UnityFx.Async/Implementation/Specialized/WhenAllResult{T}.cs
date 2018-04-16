@@ -38,11 +38,6 @@ namespace UnityFx.Async
 			_completedSynchronously = false;
 		}
 
-		public void Cancel()
-		{
-			TrySetCanceled(false);
-		}
-
 		#endregion
 
 		#region IAsyncContinuation

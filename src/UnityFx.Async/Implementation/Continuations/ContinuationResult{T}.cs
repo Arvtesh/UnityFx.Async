@@ -79,5 +79,17 @@ namespace UnityFx.Async
 		protected abstract void InvokeUnsafe(IAsyncOperation op, bool completedSynchronously);
 
 		#endregion
+
+		#region AsyncResult
+
+		protected override void OnCancel()
+		{
+			if (_op is IAsyncCancellable c)
+			{
+				c.Cancel();
+			}
+		}
+
+		#endregion
 	}
 }

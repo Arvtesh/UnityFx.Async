@@ -12,6 +12,8 @@ namespace UnityFx.Async
 		private readonly object _successCallback;
 		private readonly Action<Exception> _errorCallback;
 
+		private IAsyncOperation _continuation;
+
 		#endregion
 
 		#region interface
@@ -44,19 +46,23 @@ namespace UnityFx.Async
 					break;
 
 				case Func<IAsyncOperation<U>> f3:
-					f3().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+					_continuation = f3();
+					_continuation.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				case Func<IAsyncOperation> f1:
-					f1().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+					_continuation = f1();
+					_continuation.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				case Func<T, IAsyncOperation<U>> f4:
-					f4((op as IAsyncOperation<T>).Result).AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+					_continuation = f4((op as IAsyncOperation<T>).Result);
+					_continuation.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				case Func<T, IAsyncOperation> f2:
-					f2((op as IAsyncOperation<T>).Result).AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+					_continuation = f2((op as IAsyncOperation<T>).Result);
+					_continuation.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				default:
@@ -73,11 +79,32 @@ namespace UnityFx.Async
 		{
 			if (op.IsCompletedSuccessfully)
 			{
-				InvokeSuccessCallback(op, completedSynchronously, _successCallback);
+				if (IsCancellationRequested)
+				{
+					TrySetCanceled(completedSynchronously);
+				}
+				else
+				{
+					InvokeSuccessCallback(op, completedSynchronously, _successCallback);
+				}
 			}
 			else
 			{
 				InvokeErrorCallback(op, completedSynchronously);
+			}
+		}
+
+		#endregion
+
+		#region AsyncResult
+
+		protected override void OnCancel()
+		{
+			base.OnCancel();
+
+			if (_continuation is IAsyncCancellable c)
+			{
+				c.Cancel();
 			}
 		}
 

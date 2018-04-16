@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace UnityFx.Async
 {
@@ -440,6 +441,44 @@ namespace UnityFx.Async
 
 			return new CatchResult<VoidResult, TException>(op, errorCallback);
 		}
+
+		#endregion
+
+		#region WithCancellation
+
+#if !NET35
+
+		/// <summary>
+		/// Registers a <see cref="CancellationToken"/> that can be used to cancel the specified operation.
+		/// </summary>
+		/// <param name="op">An operation to register <paramref name="cancellationToken"/> for.</param>
+		/// <param name="cancellationToken">A cancellation token that can be used to cancel the oepration.</param>
+		/// <returns>Returns the source operation.</returns>
+		public static IAsyncOperation WithCancellation(this IAsyncOperation op, CancellationToken cancellationToken)
+		{
+			if (cancellationToken.CanBeCanceled && !op.IsCompleted)
+			{
+				if (op is IAsyncCancellable c)
+				{
+					if (cancellationToken.IsCancellationRequested)
+					{
+						c.Cancel();
+					}
+					else
+					{
+						cancellationToken.Register(c.Cancel);
+					}
+				}
+				else
+				{
+					throw new NotSupportedException();
+				}
+			}
+
+			return op;
+		}
+
+#endif
 
 		#endregion
 

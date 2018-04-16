@@ -48,7 +48,7 @@ namespace UnityFx.Async
 	/// <seealso cref="AsyncResult{T}"/>
 	/// <seealso cref="IAsyncResult"/>
 	[DebuggerDisplay("{DebuggerDisplay,nq}")]
-	public class AsyncResult : IAsyncOperation, IEnumerator
+	public class AsyncResult : IAsyncOperation, IAsyncCancellable, IEnumerator
 	{
 		#region data
 
@@ -239,43 +239,6 @@ namespace UnityFx.Async
 		public bool TryStart()
 		{
 			return TrySetRunning();
-		}
-
-		/// <summary>
-		/// Requests the operation cancellation (if possible).
-		/// </summary>
-		/// <exception cref="InvalidOperationException">Thrown if the transition has failed.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="TryCancel"/>
-		/// <seealso cref="OnCancel"/>
-		/// <seealso cref="Start"/>
-		public void Cancel()
-		{
-			if (!TryCancel())
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <summary>
-		/// Attempts to request the operation cancellation. Calling this method multiple times or when the operation is completed results in a failure.
-		/// </summary>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the cancellation request was made; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="Cancel"/>
-		/// <seealso cref="OnCancel"/>
-		/// <seealso cref="TryStart"/>
-		public bool TryCancel()
-		{
-			ThrowIfDisposed();
-
-			if (TrySetFlag(_flagCancellationRequested))
-			{
-				OnCancel();
-				return true;
-			}
-
-			return false;
 		}
 
 		/// <summary>
@@ -572,7 +535,6 @@ namespace UnityFx.Async
 		/// Called when the operation cancellation has been requested. Default implementation throws <see cref="NotSupportedException"/>.
 		/// </summary>
 		/// <seealso cref="Cancel"/>
-		/// <seealso cref="TryCancel"/>
 		protected virtual void OnCancel()
 		{
 			throw new NotSupportedException();
@@ -1913,6 +1875,21 @@ namespace UnityFx.Async
 
 		/// <inheritdoc/>
 		public bool IsCompleted => (_flags & _flagCompleted) != 0;
+
+		#endregion
+
+		#region IAsyncCancellable
+
+		/// <inheritdoc/>
+		public void Cancel()
+		{
+			ThrowIfDisposed();
+
+			if (TrySetFlag(_flagCancellationRequested))
+			{
+				OnCancel();
+			}
+		}
 
 		#endregion
 
