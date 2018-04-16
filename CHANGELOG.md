@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `TryAddContinuation`/`RemoveContinuation` methods to `IAsyncOperationEvents` for non-delegate continuations.
 - Added `IAsyncUpdatable` and `IAsyncUpdateSource` interfaces.
 - Added `Delay` overload that uses `IAsyncUpdateSource`-based service for time management.
+- Added cancellation support (`IAsyncCancellable` interface).
 
 ### Changed
 - Changed `ContinueWith` extension signatures to match corresponding `Task` methods.
