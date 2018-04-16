@@ -29,6 +29,7 @@ The table below summarizes differences berween *UnityFx.Async* and other popular
 | Supports Unity coroutines | ️️✔️ | - | - |
 | Supports `async` / `await` | ✔️ | - | ✔️ |
 | Supports `promise`-like continuations | ✔️ | ✔️ | - |
+| Supports cancellation | ✔️ | -️ | ✔️ |
 | Supports child operations | - | - | ✔️ |
 | Minimum operation data size for 32-bit systems (in bytes) | 28+ | 36+ | 40+ |
 | Minimum number of allocations per continuation | 1+ | 5+ | 2+ |
@@ -423,7 +424,6 @@ Please note that the library is NOT a replacement for [Tasks](https://docs.micro
 ## Future work
 * Implementation of noalloc completion callbacks.
 * Progress reporting (via [IProgress](https://docs.microsoft.com/en-us/dotnet/api/system.iprogress-1)).
-* Cancellation support (via [CancellationToken](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken)).
 
 ## Motivation
 The project was initially created to help author with his [Unity3d](https://unity3d.com) projects. Unity's [AsyncOperation](https://docs.unity3d.com/ScriptReference/AsyncOperation.html) and the like can only be used in coroutines, cannot be extended and mostly do not return result or error information, .NET 3.5 does not provide much help either and even with .NET 4.6 support compatibility requirements often do not allow using [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task). When I caught myself writing the same asynchronous operation wrappers in each project I decided to share my experience for the best of human kind.
