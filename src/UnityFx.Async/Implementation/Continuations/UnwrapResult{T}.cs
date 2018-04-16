@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class UnwrapResult<T> : AsyncResult<T>, IAsyncContinuation
+	internal sealed class UnwrapResult<T> : AsyncResult<T>, IAsyncContinuation
 	{
 		#region data
 

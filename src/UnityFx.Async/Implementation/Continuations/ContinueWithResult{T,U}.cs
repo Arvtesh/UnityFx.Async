@@ -5,7 +5,7 @@ using System;
 
 namespace UnityFx.Async
 {
-	internal class ContinueWithResult<T, U> : ContinuationResult<U>, IAsyncContinuation
+	internal sealed class ContinueWithResult<T, U> : ContinuationResult<U>, IAsyncContinuation
 	{
 		#region data
 
@@ -33,7 +33,7 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region PromiseResult
+		#region ContinuationResult
 
 		protected override void InvokeUnsafe(IAsyncOperation op, bool completedSynchronously)
 		{

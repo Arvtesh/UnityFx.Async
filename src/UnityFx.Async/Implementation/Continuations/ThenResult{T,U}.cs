@@ -73,7 +73,7 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region PromiseResult
+		#region ContinuationResult
 
 		protected sealed override void InvokeUnsafe(IAsyncOperation op, bool completedSynchronously)
 		{

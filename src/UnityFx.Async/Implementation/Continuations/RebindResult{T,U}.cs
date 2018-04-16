@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class RebindResult<T, U> : ContinuationResult<U>, IAsyncContinuation
+	internal sealed class RebindResult<T, U> : ContinuationResult<U>, IAsyncContinuation
 	{
 		#region data
 
@@ -30,7 +30,7 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region PromiseResult
+		#region ContinuationResult
 
 		protected override void InvokeUnsafe(IAsyncOperation op, bool completedSynchronously)
 		{

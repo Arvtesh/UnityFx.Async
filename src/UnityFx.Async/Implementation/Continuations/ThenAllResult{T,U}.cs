@@ -7,11 +7,11 @@ using System.Linq;
 
 namespace UnityFx.Async
 {
-	internal class ThenAllResult<T, U> : ThenResult<T, U[]>
+	internal sealed class ThenAllResult<T, U> : ThenResult<T, U[]>
 	{
 		#region data
 
-		private IAsyncOperation _op2;
+		private WhenAllResult<U> _op2;
 
 		#endregion
 
@@ -55,6 +55,16 @@ namespace UnityFx.Async
 			{
 				TrySetCanceled(completedSynchronously);
 			}
+		}
+
+		#endregion
+
+		#region AsyncResult
+
+		protected override void OnCancel()
+		{
+			base.OnCancel();
+			_op2?.Cancel();
 		}
 
 		#endregion
