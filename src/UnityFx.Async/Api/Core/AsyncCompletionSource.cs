@@ -290,6 +290,16 @@ namespace UnityFx.Async
 
 		#endregion
 
+		#region AsyncResult
+
+		/// <inheritdoc/>
+		protected override void OnCancel()
+		{
+			base.TrySetCanceled(false);
+		}
+
+		#endregion
+
 		#region IAsyncCompletionSource
 
 		/// <inheritdoc/>

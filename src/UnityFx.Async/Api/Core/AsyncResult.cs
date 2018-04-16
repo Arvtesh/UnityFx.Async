@@ -52,9 +52,10 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private const int _flagCompletionReserved = 0x00100000;
-		private const int _flagCompleted = 0x00200000;
-		private const int _flagSynchronous = 0x00400000;
+		private const int _flagCompletionReserved = 0x00010000;
+		private const int _flagCompleted = 0x00020000;
+		private const int _flagSynchronous = 0x00040000;
+		private const int _flagCancellationRequested = 0x00100000;
 		private const int _flagCompletedSynchronously = _flagCompleted | _flagCompletionReserved | _flagSynchronous;
 		private const int _flagDisposed = 0x01000000;
 		private const int _flagDoNotDispose = 0x10000000;
@@ -90,6 +91,12 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <value>The disposed flag.</value>
 		protected bool IsDisposed => (_flags & _flagDisposed) != 0;
+
+		/// <summary>
+		/// Gets a value indicating whether the operation cancellation was requested.
+		/// </summary>
+		/// <value>The cancellation request flag.</value>
+		protected bool IsCancellationRequested => (_flags & _flagCancellationRequested) != 0;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
@@ -225,12 +232,50 @@ namespace UnityFx.Async
 		/// Attempts to transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
 		/// </summary>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the operation status was changed to <see cref="AsyncOperationStatus.Running"/>; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="Start"/>
 		/// <seealso cref="TrySetRunning"/>
 		/// <seealso cref="OnStarted"/>
 		public bool TryStart()
 		{
 			return TrySetRunning();
+		}
+
+		/// <summary>
+		/// Requests the operation cancellation (if possible).
+		/// </summary>
+		/// <exception cref="InvalidOperationException">Thrown if the transition has failed.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="TryCancel"/>
+		/// <seealso cref="OnCancel"/>
+		/// <seealso cref="Start"/>
+		public void Cancel()
+		{
+			if (!TryCancel())
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Attempts to request the operation cancellation. Calling this method multiple times or when the operation is completed results in a failure.
+		/// </summary>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the cancellation request was made; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="Cancel"/>
+		/// <seealso cref="OnCancel"/>
+		/// <seealso cref="TryStart"/>
+		public bool TryCancel()
+		{
+			ThrowIfDisposed();
+
+			if (TrySetFlag(_flagCancellationRequested))
+			{
+				OnCancel();
+				return true;
+			}
+
+			return false;
 		}
 
 		/// <summary>
@@ -521,6 +566,16 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetRunning"/>
 		protected virtual void OnStarted()
 		{
+		}
+
+		/// <summary>
+		/// Called when the operation cancellation has been requested. Default implementation throws <see cref="NotSupportedException"/>.
+		/// </summary>
+		/// <seealso cref="Cancel"/>
+		/// <seealso cref="TryCancel"/>
+		protected virtual void OnCancel()
+		{
+			throw new NotSupportedException();
 		}
 
 		/// <summary>
@@ -1527,6 +1582,43 @@ namespace UnityFx.Async
 				}
 
 				if (Interlocked.CompareExchange(ref _flags, flags | _flagCompletionReserved, flags) == flags)
+				{
+					return true;
+				}
+			}
+			while (true);
+
+#endif
+		}
+
+		/// <summary>
+		/// Attempts to add a new flag value.
+		/// </summary>
+		internal bool TrySetFlag(int newFlag)
+		{
+#if UNITYFX_NOT_THREAD_SAFE
+
+			var flags = _flags;
+
+			if ((flags & (newFlag | _flagCompletionReserved | _flagCompleted)) != 0)
+			{
+				return false;
+			}
+
+			_flags = flags | newFlag;
+			return true;
+#else
+
+			do
+			{
+				var flags = _flags;
+
+				if ((flags & (newFlag | _flagCompletionReserved | _flagCompleted)) != 0)
+				{
+					return false;
+				}
+
+				if (Interlocked.CompareExchange(ref _flags, flags | newFlag, flags) == flags)
 				{
 					return true;
 				}
