@@ -63,5 +63,29 @@ namespace UnityFx.Async
 			// Assert
 			Assert.False(called);
 		}
+
+		[Fact]
+		public async Task Then_CompletesWhenCanceled()
+		{
+			// Arrange
+			var cs = new CancellationTokenSource();
+			cs.Cancel();
+
+			var op2 = new AsyncCompletionSource();
+			var op = AsyncResult.CompletedOperation.Then(() => op2).WithCancellation(cs.Token);
+
+			// Act
+			try
+			{
+				await op;
+			}
+			catch
+			{
+			}
+
+			// Assert
+			Assert.True(op.IsCanceled);
+			Assert.True(op2.IsCanceled);
+		}
 	}
 }

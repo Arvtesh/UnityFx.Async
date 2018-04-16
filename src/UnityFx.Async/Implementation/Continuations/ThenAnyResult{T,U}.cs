@@ -52,7 +52,11 @@ namespace UnityFx.Async
 				_op2.AddCompletionCallback(
 					op2 =>
 					{
-						if (op2.IsCompletedSuccessfully)
+						if (IsCancellationRequested)
+						{
+							TrySetCanceled(false);
+						}
+						else if (op2.IsCompletedSuccessfully)
 						{
 							var op3 = (op2 as IAsyncOperation<IAsyncOperation>).Result;
 
