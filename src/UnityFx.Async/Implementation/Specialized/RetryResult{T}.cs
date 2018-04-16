@@ -39,6 +39,14 @@ namespace UnityFx.Async
 
 		#region AsyncResult
 
+		protected override void OnCancel()
+		{
+			if (_op is IAsyncCancellable c)
+			{
+				c.Cancel();
+			}
+		}
+
 		protected override void OnCompleted()
 		{
 			base.OnCompleted();
@@ -64,6 +72,10 @@ namespace UnityFx.Async
 				if (_op.IsCompletedSuccessfully)
 				{
 					SetResult(false);
+				}
+				else if (IsCancellationRequested)
+				{
+					TrySetCanceled(false);
 				}
 				else if (_millisecondsRetryDelay > 0)
 				{
@@ -131,7 +143,14 @@ namespace UnityFx.Async
 		{
 			if (!IsCompleted)
 			{
-				Retry(false);
+				if (IsCancellationRequested)
+				{
+					TrySetCanceled(false);
+				}
+				else
+				{
+					Retry(false);
+				}
 			}
 		}
 

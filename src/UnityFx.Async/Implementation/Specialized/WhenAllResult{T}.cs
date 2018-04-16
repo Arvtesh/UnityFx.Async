@@ -40,6 +40,21 @@ namespace UnityFx.Async
 
 		#endregion
 
+		#region AsyncResult
+
+		protected override void OnCancel()
+		{
+			foreach (var op in _ops)
+			{
+				if (op is IAsyncCancellable c)
+				{
+					c.Cancel();
+				}
+			}
+		}
+
+		#endregion
+
 		#region IAsyncContinuation
 
 		public void Invoke(IAsyncOperation asyncOp)

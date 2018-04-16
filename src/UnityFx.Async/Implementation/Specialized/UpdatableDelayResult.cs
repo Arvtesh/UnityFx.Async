@@ -26,6 +26,21 @@ namespace UnityFx.Async
 
 		#endregion
 
+		#region AsyncResult
+
+		protected override void OnCancel()
+		{
+			TrySetCanceled(false);
+		}
+
+		protected override void OnCompleted()
+		{
+			_updateService.RemoveListener(this);
+			base.OnCompleted();
+		}
+
+		#endregion
+
 		#region IAsyncUpdatable
 
 		public void Update(float frameTime)
@@ -35,7 +50,6 @@ namespace UnityFx.Async
 			if (_timer <= 0)
 			{
 				TrySetCompleted(false);
-				_updateService.RemoveListener(this);
 			}
 		}
 

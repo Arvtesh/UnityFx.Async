@@ -19,12 +19,21 @@ namespace UnityFx.Async
 		public TimerDelayResult(int millisecondsDelay)
 			: base(AsyncOperationStatus.Running)
 		{
-			_timer = new Timer(TimerCompletionCallback, this, millisecondsDelay, Timeout.Infinite);
+			_timer = new Timer(
+				state => (state as AsyncResult).TrySetCompleted(false),
+				this,
+				millisecondsDelay,
+				Timeout.Infinite);
 		}
 
 		#endregion
 
 		#region AsyncResult
+
+		protected override void OnCancel()
+		{
+			TrySetCanceled(false);
+		}
 
 		protected override void OnCompleted()
 		{
@@ -36,20 +45,10 @@ namespace UnityFx.Async
 		{
 			if (disposing)
 			{
-				_timer?.Dispose();
+				_timer.Dispose();
 			}
 
 			base.Dispose(disposing);
-		}
-
-		#endregion
-
-		#region implementation
-
-		private static void TimerCompletionCallback(object state)
-		{
-			var asyncResult = state as AsyncResult;
-			asyncResult.TrySetCompleted(false);
 		}
 
 		#endregion
