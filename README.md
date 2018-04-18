@@ -133,6 +133,9 @@ This does exaclty the same job as the callbacks sample, but it's much more reada
 
 That said promises are still not an ideal solution (at least for C#). They require quite a lot of filler code and rely heavily on delegate usage.
 
+### Observables and reactive programming
+Observable event streams as defined in [reactive programming](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754) provide a convenient way of managing push-based event notifications (opposed to pull-based nature of `IEnumerable`). One of the core differences is multiple resulting values for observables versus single promise result. While observables may represent an asynchronous operation it is not always the case (and it is generally not recommended to use them in this way). That is why the concept is ot of the scope covered by this document.
+
 ### Asynchronous programming with async and await
 C# 5.0/.NET 4.5 introduced a new appoach to asynchronous programming. By using `async` and `await` one can write asynchronous methods almost as synchronous methods. The following example shows implementation of the callback hell method with this technique:
 ```csharp
@@ -301,6 +304,15 @@ finally
 }
 ```
 
+### Cancellation
+All library operatinos can be cancelled using `AsyncResult.Cancel` method or with `WithCancellation` extension:
+```csharp
+DownloadTextAsync("http://www.google.com")
+    .Then(text => ExtractFirstParagraph(text))
+    .WithCancellation(cancellationToken);
+```
+If the [token](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken) passed to `WithCancellation` the target operation is cancelled (and that means cancelling all of the chain operations as well) as soon as possible. The cancellation might not be instant (depends on specific operation implementation). Also please note that not all operations might support cancellation.
+
 ### Synchronization context capturing
 The default behaviour of all library methods is to capture current [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) and try to schedule continuations on it. If there is no synchronization context attached to current thread, continuations are executed on a thread that initiated an operation completion. The same behaviour applies to `async` / `await` implementation unless explicitly overriden with `ConfigureAwait`:
 ```csharp
@@ -439,6 +451,7 @@ Please see the links below for extended information on the product:
 - [Task-based Asynchronous Pattern (TAP)](https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/task-based-asynchronous-pattern-tap).
 - [Asynchronous programming with async and await (C#)](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/).
 - [.NET Task reference source](https://referencesource.microsoft.com/#mscorlib/System/threading/Tasks/Task.cs).
+- [Introduction to Reactive Programming](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754).
 - [Promise pattern](https://en.wikipedia.org/wiki/Futures_and_promises).
 - [Promises for Game Development](http://www.what-could-possibly-go-wrong.com/promises-for-game-development/).
 - [Promises/A+ Spec](https://promisesaplus.com/).
