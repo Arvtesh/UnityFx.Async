@@ -12,7 +12,7 @@ namespace UnityFx.Async
 		#region Then
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been resolved.
+		/// Schedules a callback to be executed after the promise has been resolved.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -30,7 +30,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been resolved.
+		/// Schedules a callback to be executed after the promise has been resolved.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -48,7 +48,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been resolved.
+		/// Schedules a callback to be executed after the promise has been resolved.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -67,7 +67,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been resolved.
+		/// Schedules a callback to be executed after the promise has been resolved.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -86,7 +86,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been resolved.
+		/// Schedules a callback to be executed after the promise has been resolved.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -105,7 +105,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been resolved.
+		/// Schedules a callback to be executed after the promise has been resolved.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -173,7 +173,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Adds a completion callback to be executed after the operation has been resolved.
+		/// Schedules a callbacks to be executed after the operation has been resolved.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has succeeded.</param>
@@ -197,7 +197,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Adds a completion callback to be executed after the operation has been resolved.
+		/// Schedules a callbacks to be executed after the operation has been resolved.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has succeeded.</param>
@@ -225,7 +225,7 @@ namespace UnityFx.Async
 		#region ThenAll
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been resolved. The resulting operation will complete after all of the operations in the callback return value have completed.
+		/// Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback return value have completed.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -242,7 +242,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been resolved. The resulting operation will complete after all of the operations in the callback return value have completed.
+		/// Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback return value have completed.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -259,7 +259,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been resolved. The resulting operation will complete after all of the operations in the callback return value have completed.
+		/// Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback return value have completed.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -276,7 +276,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been resolved. The resulting operation will complete after all of the specified objects in an array have completed.
+		/// Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the specified objects in an array have completed.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -297,7 +297,7 @@ namespace UnityFx.Async
 		#region ThenAny
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been resolved. The resulting operation will complete after any of the operations in the callback return value have completed.
+		/// Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after any of the operations in the callback return value have completed.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -314,7 +314,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been resolved. The resulting operation will complete after any of the operations in the callback return value have completed.
+		/// Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after any of the operations in the callback return value have completed.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -331,7 +331,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been resolved. The resulting operation will complete after any of the operations in the callback return value have completed.
+		/// Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after any of the operations in the callback return value have completed.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -348,7 +348,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been resolved. The resulting operation will complete after any of the operations in the callback return value have completed.
+		/// Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after any of the operations in the callback return value have completed.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -369,7 +369,7 @@ namespace UnityFx.Async
 		#region Rebind
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been resolved.
+		/// Schedules a callback to be executed after the promise has been resolved.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -386,7 +386,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been resolved.
+		/// Schedules a callback to be executed after the promise has been resolved.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -407,7 +407,7 @@ namespace UnityFx.Async
 		#region Catch
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been rejected.
+		/// Schedules a callback to be executed after the promise has been rejected.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="errorCallback">The callback to be executed when the operation has faulted/was canceled.</param>
@@ -425,7 +425,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has been rejected.
+		/// Schedules a callback to be executed after the promise has been rejected.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="errorCallback">The callback to be executed when the operation has faulted/was canceled.</param>
@@ -444,48 +444,10 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region WithCancellation
-
-#if !NET35
-
-		/// <summary>
-		/// Registers a <see cref="CancellationToken"/> that can be used to cancel the specified operation.
-		/// </summary>
-		/// <param name="op">An operation to register <paramref name="cancellationToken"/> for.</param>
-		/// <param name="cancellationToken">A cancellation token that can be used to cancel the oepration.</param>
-		/// <returns>Returns the source operation.</returns>
-		public static IAsyncOperation WithCancellation(this IAsyncOperation op, CancellationToken cancellationToken)
-		{
-			if (cancellationToken.CanBeCanceled && !op.IsCompleted)
-			{
-				if (op is IAsyncCancellable c)
-				{
-					if (cancellationToken.IsCancellationRequested)
-					{
-						c.Cancel();
-					}
-					else
-					{
-						cancellationToken.Register(c.Cancel);
-					}
-				}
-				else
-				{
-					throw new NotSupportedException();
-				}
-			}
-
-			return op;
-		}
-
-#endif
-
-		#endregion
-
 		#region Finally
 
 		/// <summary>
-		/// Schedules a callback to be executed after the operation has completed.
+		/// Schedules a callback to be executed after the promise has completed.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="action">The callback to be executed when the operation has completed.</param>

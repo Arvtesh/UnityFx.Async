@@ -14,6 +14,12 @@ namespace UnityFx.Async
 	[EditorBrowsable(EditorBrowsableState.Advanced)]
 	public static partial class AsyncExtensions
 	{
+		#region data
+
+		private static Action<object> _cancelHandler;
+
+		#endregion
+
 		#region Common
 
 		/// <summary>
@@ -103,6 +109,46 @@ namespace UnityFx.Async
 				}
 			}
 		}
+
+#if !NET35
+
+		/// <summary>
+		/// Registers a <see cref="CancellationToken"/> that can be used to cancel the specified operation.
+		/// </summary>
+		/// <param name="op">An operation to register <paramref name="cancellationToken"/> for.</param>
+		/// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+		/// <exception cref="NotSupportedException">Thrown if the target operation does not support cancellation.</exception>
+		/// <returns>Returns the target operation.</returns>
+		public static IAsyncOperation WithCancellation(this IAsyncOperation op, CancellationToken cancellationToken)
+		{
+			if (cancellationToken.CanBeCanceled && !op.IsCompleted)
+			{
+				if (op is IAsyncCancellable c)
+				{
+					if (cancellationToken.IsCancellationRequested)
+					{
+						c.Cancel();
+					}
+					else
+					{
+						if (_cancelHandler == null)
+						{
+							_cancelHandler = args => (args as IAsyncCancellable).Cancel();
+						}
+
+						cancellationToken.Register(_cancelHandler, op, false);
+					}
+				}
+				else
+				{
+					throw new NotSupportedException();
+				}
+			}
+
+			return op;
+		}
+
+#endif
 
 		#endregion
 

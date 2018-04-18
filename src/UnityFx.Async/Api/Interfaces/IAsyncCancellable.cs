@@ -12,9 +12,8 @@ namespace UnityFx.Async
 	public interface IAsyncCancellable
 	{
 		/// <summary>
-		/// Attempts to cancel the operation.
+		/// Attempts to cancel the operation. When this method returns the operation can still be uncompleted.
 		/// </summary>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		void Cancel();
 	}
 }

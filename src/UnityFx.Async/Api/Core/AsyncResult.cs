@@ -64,6 +64,7 @@ namespace UnityFx.Async
 
 		private static readonly object _continuationCompletionSentinel = new object();
 		private static AsyncResult _completedOperation;
+		private static AsyncResult _canceledOperation;
 
 		private readonly object _asyncState;
 
@@ -654,6 +655,26 @@ namespace UnityFx.Async
 				}
 
 				return _completedOperation;
+			}
+		}
+
+		/// <summary>
+		/// Gets an operation that's already been canceled.
+		/// </summary>
+		/// <remarks>
+		/// Note that <see cref="Dispose()"/> call have no effect on operations returned with the property. May not always return the same instance.
+		/// </remarks>
+		/// <value>Completed <see cref="IAsyncOperation"/> instance.</value>
+		public static AsyncResult CanceledOperation
+		{
+			get
+			{
+				if (_canceledOperation == null)
+				{
+					_canceledOperation = new AsyncResult(_flagDoNotDispose | _flagCompletedSynchronously | StatusCanceled);
+				}
+
+				return _canceledOperation;
 			}
 		}
 
@@ -1883,8 +1904,6 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		public void Cancel()
 		{
-			ThrowIfDisposed();
-
 			if (TrySetFlag(_flagCancellationRequested))
 			{
 				OnCancel();
