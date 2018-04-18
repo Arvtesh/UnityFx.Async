@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class RetryResult<T> : AsyncResult<T>, IAsyncContinuation
+	internal abstract class RetryResult<T> : AsyncResult<T>, IAsyncContinuation
 	{
 		#region data
 
@@ -15,8 +15,6 @@ namespace UnityFx.Async
 		private readonly int _millisecondsRetryDelay;
 		private readonly int _maxRetryCount;
 
-		private Timer _timer;
-		private TimerCallback _timerCallback;
 		private IAsyncOperation _op;
 		private int _numberOfRetriesLeft;
 
@@ -24,37 +22,45 @@ namespace UnityFx.Async
 
 		#region interface
 
-		internal RetryResult(object opFactory, int millisecondsRetryDelay, int maxRetryCount)
-			: base(AsyncOperationStatus.Running)
+		protected RetryResult(object opFactory, int millisecondsRetryDelay, int maxRetryCount)
 		{
 			_opFactory = opFactory;
 			_millisecondsRetryDelay = millisecondsRetryDelay;
 			_maxRetryCount = maxRetryCount;
 			_numberOfRetriesLeft = maxRetryCount;
-
-			StartOperation(true);
 		}
+
+		protected void EndWait()
+		{
+			if (!IsCompleted)
+			{
+				if (IsCancellationRequested)
+				{
+					TrySetCanceled(false);
+				}
+				else
+				{
+					Retry();
+				}
+			}
+		}
+
+		protected abstract void BeginWait(int millisecondsDelay);
 
 		#endregion
 
 		#region AsyncResult
+
+		protected override void OnStarted()
+		{
+			StartOperation();
+		}
 
 		protected override void OnCancel()
 		{
 			if (_op is IAsyncCancellable c)
 			{
 				c.Cancel();
-			}
-		}
-
-		protected override void OnCompleted()
-		{
-			base.OnCompleted();
-
-			if (_timer != null)
-			{
-				_timer.Dispose();
-				_timer = null;
 			}
 		}
 
@@ -71,7 +77,7 @@ namespace UnityFx.Async
 			{
 				if (_op.IsCompletedSuccessfully)
 				{
-					SetResult(false);
+					SetResult();
 				}
 				else if (IsCancellationRequested)
 				{
@@ -79,23 +85,11 @@ namespace UnityFx.Async
 				}
 				else if (_millisecondsRetryDelay > 0)
 				{
-					if (_timerCallback == null)
-					{
-						_timerCallback = OnTimer;
-					}
-
-					if (_timer == null)
-					{
-						_timer = new Timer(_timerCallback, null, _millisecondsRetryDelay, Timeout.Infinite);
-					}
-					else
-					{
-						_timer.Change(_millisecondsRetryDelay, Timeout.Infinite);
-					}
+					BeginWait(_millisecondsRetryDelay);
 				}
 				else
 				{
-					Retry(false);
+					Retry();
 				}
 			}
 		}
@@ -104,7 +98,7 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		private void StartOperation(bool calledFromConstructor)
+		private void StartOperation()
 		{
 			try
 			{
@@ -125,71 +119,56 @@ namespace UnityFx.Async
 				{
 					if (_op.IsCompletedSuccessfully)
 					{
-						SetResult(calledFromConstructor);
+						SetResult();
 					}
 					else
 					{
-						Retry(calledFromConstructor);
+						Retry();
 					}
 				}
 			}
 			catch (Exception e)
 			{
-				TrySetException(e, calledFromConstructor);
+				TrySetException(e, false);
 			}
 		}
 
-		private void OnTimer(object args)
-		{
-			if (!IsCompleted)
-			{
-				if (IsCancellationRequested)
-				{
-					TrySetCanceled(false);
-				}
-				else
-				{
-					Retry(false);
-				}
-			}
-		}
-
-		private void Retry(bool calledFromConstructor)
+		private void Retry()
 		{
 			Debug.Assert(_op != null);
 			Debug.Assert(!_op.IsCompletedSuccessfully);
 
 			if (_maxRetryCount == 0 || --_numberOfRetriesLeft > 0)
 			{
-				StartOperation(calledFromConstructor);
+				StartOperation();
 			}
 			else if (_op.IsFaulted)
 			{
-				TrySetException(_op.Exception, calledFromConstructor);
+				TrySetException(_op.Exception, false);
 			}
 			else if (_op.IsCanceled)
 			{
-				TrySetCanceled(calledFromConstructor);
+				TrySetCanceled(false);
 			}
 			else
 			{
 				// NOTE: should not get here.
-				TrySetException(new Exception("Maximum number of retries exceeded."), calledFromConstructor);
+				TrySetException(new Exception("Maximum number of retries exceeded."), false);
 			}
 		}
 
-		private void SetResult(bool completedSynchronously)
+		private void SetResult()
 		{
 			Debug.Assert(_op != null);
 			Debug.Assert(_op.IsCompletedSuccessfully);
 
 			if (_op is IAsyncOperation<T> rop)
 			{
-				TrySetResult(rop.Result, completedSynchronously);
+				TrySetResult(rop.Result, false);
 			}
 			else
 			{
-				TrySetCompleted(completedSynchronously);
+				TrySetCompleted(false);
 			}
 		}
 

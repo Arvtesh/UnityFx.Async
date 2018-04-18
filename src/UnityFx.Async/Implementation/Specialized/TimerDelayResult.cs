@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class TimerDelayResult : AsyncResult
+	internal sealed class TimerDelayResult : AsyncResult
 	{
 		#region data
 
