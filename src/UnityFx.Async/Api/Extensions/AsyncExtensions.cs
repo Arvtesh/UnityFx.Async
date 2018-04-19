@@ -113,6 +113,60 @@ namespace UnityFx.Async
 #if !NET35
 
 		/// <summary>
+		/// Spins until the operation has completed or until canceled.
+		/// </summary>
+		/// <param name="op">The operation to wait for.</param>
+		/// <param name="cancellationToken">A cancellation token that can be used to cancel wait operation.</param>
+		/// <exception cref="OperationCanceledException">The cancellationToken was canceled.</exception>
+		/// <seealso cref="SpinUntilCompleted(IAsyncResult)"/>
+		public static void SpinUntilCompleted(this IAsyncResult op, CancellationToken cancellationToken)
+		{
+			var sw = new SpinWait();
+
+			if (cancellationToken.CanBeCanceled)
+			{
+				while (!op.IsCompleted)
+				{
+					cancellationToken.ThrowIfCancellationRequested();
+					sw.SpinOnce();
+				}
+			}
+			else
+			{
+				while (!op.IsCompleted)
+				{
+					sw.SpinOnce();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Spins until the operation has completed within a specified timeout or until canceled.
+		/// </summary>
+		/// <param name="op">The operation to wait for.</param>
+		/// <param name="millisecondsTimeout">The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
+		/// <param name="cancellationToken">A cancellation token that can be used to cancel wait operation.</param>
+		/// <exception cref="ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is a negative number other than -1.</exception>
+		/// <returns>Returns <see langword="true"/> if the operation was completed within the specified time interfval; <see langword="false"/> otherwise.</returns>
+		public static bool SpinUntilCompleted(this IAsyncResult op, int millisecondsTimeout, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Spins until the operation has completed within a specified timeout or until canceled.
+		/// </summary>
+		/// <param name="op">The operation to wait for.</param>
+		/// <param name="timeout">A <see cref="TimeSpan"/> that represents the number of milliseconds to wait, or a <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.</param>
+		/// <param name="cancellationToken">A cancellation token that can be used to cancel wait operation.</param>
+		/// <exception cref="ArgumentOutOfRangeException"><paramref name="timeout"/> is a negative number other than -1 milliseconds, or <paramref name="timeout"/> is greater than <see cref="int.MaxValue"/>.</exception>
+		/// <returns>Returns <see langword="true"/> if the operation was completed within the specified time interfval; <see langword="false"/> otherwise.</returns>
+		public static bool SpinUntilCompleted(this IAsyncResult op, TimeSpan timeout, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
 		/// Registers a <see cref="CancellationToken"/> that can be used to cancel the specified operation.
 		/// </summary>
 		/// <param name="op">An operation to register <paramref name="cancellationToken"/> for.</param>

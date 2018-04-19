@@ -108,6 +108,161 @@ namespace UnityFx.Async
 			return result;
 		}
 
+#if !NET35
+
+		/// <summary>
+		/// Waits for the <see cref="IAsyncOperation"/> to complete execution. The wait terminates if a cancellation token is canceled before the operation completes.
+		/// </summary>
+		/// <param name="op">The operation to wait for.</param>
+		/// <param name="cancellationToken">A cancellation token to observe while waiting for the operation to complete.</param>
+		/// <exception cref="AggregateException">Thrown if the operation was canceled or faulted.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <exception cref="OperationCanceledException">The cancellationToken was canceled.</exception>
+		/// <seealso cref="Wait(IAsyncOperation)"/>
+		public static void Wait(this IAsyncOperation op, CancellationToken cancellationToken)
+		{
+#if UNITYFX_NOT_THREAD_SAFE
+
+			SpinUntilCompleted(op, cancellationToken);
+
+#else
+
+			if (!op.IsCompleted)
+			{
+				if (cancellationToken.CanBeCanceled)
+				{
+					cancellationToken.ThrowIfCancellationRequested();
+
+					var index = WaitHandle.WaitAny(new WaitHandle[] { op.AsyncWaitHandle, cancellationToken.WaitHandle });
+
+					if (index == 1)
+					{
+						throw new OperationCanceledException();
+					}
+				}
+				else
+				{
+					op.AsyncWaitHandle.WaitOne();
+				}
+			}
+
+#endif
+
+			ThrowIfNonSuccess(op, true);
+		}
+
+		/// <summary>
+		/// Waits for the <see cref="IAsyncOperation"/> to complete execution within a specified number of milliseconds. The wait terminates
+		/// if a timeout interval elapses or a cancellation token is canceled before the operation completes.
+		/// </summary>
+		/// <param name="op">The operation to wait for.</param>
+		/// <param name="millisecondsTimeout">The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
+		/// <param name="cancellationToken">A cancellation token to observe while waiting for the operation to complete.</param>
+		/// <returns><see langword="true"/> if the operation completed execution within the allotted time; otherwise, <see langword="false"/>.</returns>
+		/// <exception cref="ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is a negative number other than -1.</exception>
+		/// <exception cref="AggregateException">Thrown if the operation was canceled or faulted.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="Wait(IAsyncOperation, int)"/>
+		public static bool Wait(this IAsyncOperation op, int millisecondsTimeout, CancellationToken cancellationToken)
+		{
+#if UNITYFX_NOT_THREAD_SAFE
+
+			var result = SpinUntilCompleted(op, millisecondsTimeout, cancellationToken);
+
+#else
+
+			var result = true;
+
+			if (!op.IsCompleted)
+			{
+				if (cancellationToken.CanBeCanceled)
+				{
+					cancellationToken.ThrowIfCancellationRequested();
+
+					var index = WaitHandle.WaitAny(new WaitHandle[] { op.AsyncWaitHandle, cancellationToken.WaitHandle }, millisecondsTimeout);
+
+					if (index == WaitHandle.WaitTimeout)
+					{
+						result = false;
+					}
+					else if (index == 1)
+					{
+						throw new OperationCanceledException();
+					}
+				}
+				else
+				{
+					result = op.AsyncWaitHandle.WaitOne(millisecondsTimeout);
+				}
+			}
+
+#endif
+
+			if (result)
+			{
+				ThrowIfNonSuccess(op, true);
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// Waits for the <see cref="IAsyncOperation"/> to complete execution within a specified time interval. The wait terminates
+		/// if a timeout interval elapses or a cancellation token is canceled before the operation completes.
+		/// </summary>
+		/// <param name="op">The operation to wait for.</param>
+		/// <param name="timeout">A <see cref="TimeSpan"/> that represents the number of milliseconds to wait, or a <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.</param>
+		/// <param name="cancellationToken">A cancellation token to observe while waiting for the operation to complete.</param>
+		/// <returns><see langword="true"/> if the operation completed execution within the allotted time; otherwise, <see langword="false"/>.</returns>
+		/// <exception cref="ArgumentOutOfRangeException"><paramref name="timeout"/> is a negative number other than -1 milliseconds, or <paramref name="timeout"/> is greater than <see cref="int.MaxValue"/>.</exception>
+		/// <exception cref="AggregateException">Thrown if the operation was canceled or faulted.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="Wait(IAsyncOperation, TimeSpan)"/>
+		public static bool Wait(this IAsyncOperation op, TimeSpan timeout, CancellationToken cancellationToken)
+		{
+#if UNITYFX_NOT_THREAD_SAFE
+
+			var result = SpinUntilCompleted(op, timeout, cancellationToken);
+
+#else
+
+			var result = true;
+
+			if (!op.IsCompleted)
+			{
+				if (cancellationToken.CanBeCanceled)
+				{
+					cancellationToken.ThrowIfCancellationRequested();
+
+					var index = WaitHandle.WaitAny(new WaitHandle[] { op.AsyncWaitHandle, cancellationToken.WaitHandle }, timeout);
+
+					if (index == WaitHandle.WaitTimeout)
+					{
+						result = false;
+					}
+					else if (index == 1)
+					{
+						throw new OperationCanceledException();
+					}
+				}
+				else
+				{
+					result = op.AsyncWaitHandle.WaitOne(timeout);
+				}
+			}
+
+#endif
+
+			if (result)
+			{
+				ThrowIfNonSuccess(op, true);
+			}
+
+			return result;
+		}
+
+#endif
+
 		#endregion
 
 		#region Join
