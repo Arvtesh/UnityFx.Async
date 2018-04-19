@@ -55,6 +55,36 @@ namespace UnityFx.Async
 		}
 
 		[Fact]
+		public async Task TryAddCompletionCallback_IsThreadSafe()
+		{
+			// Arrange
+			var op = new AsyncCompletionSource();
+			var counter = 0;
+
+			void CompletionCallback(IAsyncOperation o)
+			{
+				++counter;
+			}
+
+			void TestMethod()
+			{
+				for (int i = 0; i < 1000; ++i)
+				{
+					op.TryAddCompletionCallback(CompletionCallback);
+				}
+			}
+
+			// Act
+			await Task.Run(new Action(TestMethod));
+			await Task.Run(new Action(TestMethod));
+			await Task.Run(new Action(TestMethod));
+			op.SetCompleted();
+
+			// Assert
+			Assert.Equal(3000, counter);
+		}
+
+		[Fact]
 		public void TryAddContinuation_ExecutesWhenOperationCompletes()
 		{
 			// Arrange

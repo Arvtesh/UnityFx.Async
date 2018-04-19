@@ -55,6 +55,7 @@ namespace UnityFx.Async
 		private const int _flagCompletedSynchronously = _flagCompleted | _flagCompletionReserved | _flagSynchronous;
 		private const int _flagDisposed = 0x01000000;
 		private const int _flagDoNotDispose = 0x10000000;
+		private const int _flagRunContinuationsAsynchronously = 0x20000000;
 		private const int _statusMask = 0x0000000f;
 		private const int _resetMask = 0x70000000;
 
@@ -578,13 +579,13 @@ namespace UnityFx.Async
 						{
 							foreach (var item in continuationList)
 							{
-								InvokeContinuation(this, item);
+								InvokeContinuation(item);
 							}
 						}
 					}
 					else
 					{
-						InvokeContinuation(this, continuation);
+						InvokeContinuation(continuation);
 					}
 				}
 			}
@@ -1245,9 +1246,11 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if the continuation was added; <see langword="false"/> otherwise.</returns>
 		private bool TryAddContinuationInternal(object continuation, SynchronizationContext syncContext)
 		{
-			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
+			var runContinuationsAsynchronously = (_flags & _flagRunContinuationsAsynchronously) != 0;
+
+			if ((syncContext != null && syncContext.GetType() != typeof(SynchronizationContext)) || runContinuationsAsynchronously)
 			{
-				continuation = new AsyncContinuation(syncContext, continuation);
+				continuation = new AsyncContinuation(syncContext, continuation, runContinuationsAsynchronously);
 			}
 
 			return TryAddContinuationInternal(continuation);
@@ -1434,15 +1437,15 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Invokes the specified continuation instance.
 		/// </summary>
-		private static void InvokeContinuation(IAsyncOperation op, object continuation)
+		private void InvokeContinuation(object continuation)
 		{
 			if (continuation is IAsyncContinuation c)
 			{
-				c.Invoke(op);
+				c.Invoke(this);
 			}
 			else
 			{
-				AsyncContinuation.InvokeDelegate(op, continuation);
+				AsyncContinuation.InvokeDelegate(this, continuation);
 			}
 		}
 

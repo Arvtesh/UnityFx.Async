@@ -13,20 +13,23 @@ namespace UnityFx.Async
 	{
 		#region data
 
+		private static WaitCallback _waitCallback;
 		private static SendOrPostCallback _postCallback;
 
-		private readonly SynchronizationContext _syncContext;
-		private readonly object _continuation;
+		private SynchronizationContext _syncContext;
+		private object _continuation;
+		private bool _runAsynchronously;
 		private IAsyncOperation _op;
 
 		#endregion
 
 		#region interface
 
-		internal AsyncContinuation(SynchronizationContext syncContext, object continuation)
+		internal AsyncContinuation(SynchronizationContext syncContext, object continuation, bool runAsynchronously)
 		{
 			_syncContext = syncContext;
 			_continuation = continuation;
+			_runAsynchronously = runAsynchronously;
 		}
 
 		internal static bool CanInvoke(IAsyncOperation op, AsyncContinuationOptions options)
@@ -114,22 +117,18 @@ namespace UnityFx.Async
 		{
 			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
 			{
-				InvokeDelegate(op, _continuation);
+				if (_runAsynchronously)
+				{
+					InvokeAsync(op, SynchronizationContext.Current);
+				}
+				else
+				{
+					InvokeDelegate(op, _continuation);
+				}
 			}
 			else
 			{
-				_op = op;
-
-				if (_postCallback == null)
-				{
-					_postCallback = args =>
-					{
-						var c = args as AsyncContinuation;
-						InvokeDelegate(c._op, c._continuation);
-					};
-				}
-
-				_syncContext.Post(_postCallback, this);
+				InvokeAsync(op, _syncContext);
 			}
 		}
 
@@ -155,6 +154,37 @@ namespace UnityFx.Async
 		#endregion
 
 		#region implementation
+
+		private void InvokeAsync(IAsyncOperation op, SynchronizationContext syncContext)
+		{
+			_op = op;
+
+			if (syncContext != null)
+			{
+				if (_postCallback == null)
+				{
+					_postCallback = PostCallback;
+				}
+
+				_syncContext.Post(_postCallback, this);
+			}
+			else
+			{
+				if (_waitCallback == null)
+				{
+					_waitCallback = PostCallback;
+				}
+
+				ThreadPool.QueueUserWorkItem(_waitCallback, this);
+			}
+		}
+
+		private static void PostCallback(object args)
+		{
+			var c = args as AsyncContinuation;
+			InvokeDelegate(c._op, c._continuation);
+		}
+
 		#endregion
 	}
 }
