@@ -17,7 +17,6 @@ namespace UnityFx.Async
 		#region interface
 
 		public UpdatableDelayResult(int millisecondsDelay, IAsyncUpdateSource updateSource)
-			: base(AsyncOperationStatus.Running)
 		{
 			_timer = millisecondsDelay;
 			_updateService = updateSource;

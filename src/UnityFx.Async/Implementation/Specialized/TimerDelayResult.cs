@@ -17,7 +17,6 @@ namespace UnityFx.Async
 		#region interface
 
 		public TimerDelayResult(int millisecondsDelay)
-			: base(AsyncOperationStatus.Running)
 		{
 			_timer = new Timer(
 				state => (state as AsyncResult).TrySetCompleted(false),
