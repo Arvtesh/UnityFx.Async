@@ -131,7 +131,7 @@ InitiateSomeAsyncOperation()
 ```
 This does exaclty the same job as the callbacks sample, but it's much more readable.
 
-That said promises are still not an ideal solution (at least for C#). They require quite a lot of filler code and rely heavily on delegate usage.
+That said promises are still not an ideal solution (at least for C#). They require quite much filler code and rely heavily on delegate usage.
 
 ### Observables and reactive programming
 Observable event streams as defined in [reactive programming](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754) provide a convenient way of managing push-based event notifications (opposed to pull-based nature of `IEnumerable`). One of the core differences is multiple result values for observables versus single promise result. While observables may represent an asynchronous operation it is not always the case (and it is generally not recommended to use them in this way). That is why the concept is ot of the scope covered by this document.
@@ -152,6 +152,8 @@ catch (Exception e)
 }
 ```
 In fact the only notable difference from synchronous implementation is usage of the mentioned `async` and `await` keywords. It's worth mentioning that a lot of hidden work is done by both the C# compliter and asynchronous operation to allow this.
+
+*UnityFx.Async* supports all of the asynchronous programming approaches described.
 
 ## Using the library
 Reference the DLL and import the namespace:
@@ -360,7 +362,7 @@ var op4 = AsyncResult.FromCanceled();
 ```
 
 ### Convertions
-Library defines convertion methods between `IAsyncOperation` and `Task`, `IObservable`, `UnityWebRequest`, `AsyncOperation`, `WWW`:
+Library defines convertion methods between `IAsyncOperation` and `Task`, `IObservable`, `UnityWebRequest`, `AsyncOperation`, `WWW` with corresponding extension methods:
 ```csharp
 var task = op.ToTask();
 var observable = op.ToObservable();
