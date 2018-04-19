@@ -22,8 +22,7 @@ namespace UnityFx.Async
 	/// call or implicitly using <c>async</c>/<c>await</c> keywords). These continuations can be
 	/// invoked on a captured <see cref="SynchronizationContext"/>. The class inherits <see cref="IAsyncResult"/>
 	/// (just like <c>Task</c>) and can be used to implement Asynchronous Programming Model (APM).
-	/// There is a number of operation state accessors that can be used exactly like corresponding
-	/// properties of <c>Task</c>.
+	/// There are operation state accessors that can be used exactly like corresponding properties of <c>Task</c>.
 	/// </para>
 	/// <para>The class implements <see cref="IDisposable"/> interface. So strictly speaking <see cref="Dispose()"/>
 	/// should be called when the operation is no longed in use. In practice that is only required
