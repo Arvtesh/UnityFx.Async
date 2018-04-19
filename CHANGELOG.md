@@ -14,8 +14,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `ToAsync` extension method for `IObservable` interface.
 - Added `TryAddContinuation`/`RemoveContinuation` methods to `IAsyncOperationEvents` for non-delegate continuations.
 - Added `IAsyncUpdatable` and `IAsyncUpdateSource` interfaces.
-- Added `Delay` overload that uses `IAsyncUpdateSource`-based service for time management.
-- Added cancellation support (`IAsyncCancellable` interface).
+- Added `Delay`/`Retry` overload that uses `IAsyncUpdateSource`-based service for time management.
+- Added cancellation support (`IAsyncCancellable` interface, `WithCancellation` extension method and many implementation changes).
+- Added `Wait`/`Join` overloads with `CancellationToken` argument.
 
 ### Changed
 - Changed `ContinueWith` extension signatures to match corresponding `Task` methods.
