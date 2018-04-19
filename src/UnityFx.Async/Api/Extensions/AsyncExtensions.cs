@@ -16,7 +16,11 @@ namespace UnityFx.Async
 	{
 		#region data
 
+#if !NET35
+
 		private static Action<object> _cancelHandler;
+
+#endif
 
 		#endregion
 
