@@ -100,7 +100,7 @@ Coroutines are another popular approach of programming asynchronous operations a
 * Coroutines can't handle exceptions, because `yield return` statements cannot be surrounded with a `try`-`catch` construction. This makes error handling a pain.
 * Coroutine requires a `MonoBehaviour` to run.
 * There is no way to wait for a coroutine other than yield.
-* There is no way to get coroutine state information.
+* There is no way to get coroutine status information.
 
 That said, here is the previous example rewrited using coroutines:
 ```csharp
@@ -116,10 +116,10 @@ yield return InitiateAsyncOperation3(result2, result3);
 /// ...
 /// No way to handle exceptions here
 ```
-As you can see we had to wrap result values into custom classes (which resulted in quire unobvious code) and no error handling can be done at this level (have to rely on the methods been called).
+As you can see we had to wrap result values into custom classes (which resulted in quite unobvious code) and no error handling can be done at this level.
 
 ### Promises to the rescue
-Promises are a design pattern to structure asynchronous code as a sequence of chained (not nested!) operations. This concept was introduces for JS and has even become a [standard](https://promisesaplus.com/) since then. At low level a promise is an object containing a state (Running, Resolved or Rejected), a result value and (optionally) success/error callbacks. At high level the point of promises is to give us functional composition and error handling is the async world.
+Promises are a design pattern to structure asynchronous code as a sequence of chained (not nested!) operations. This concept was introduces for JS and has even become a [standard](https://promisesaplus.com/) since then. At low level a promise is an object containing a state (Running, Resolved or Rejected), a result value and (optionally) success/error callbacks. At high level the point of promises is to provide functional composition and error handling is the async world.
 
 Let's rewrite the last callback hell sample using promises:
 ```csharp
@@ -131,10 +131,10 @@ InitiateSomeAsyncOperation()
 ```
 This does exaclty the same job as the callbacks sample, but it's much more readable.
 
-That said promises are still not an ideal solution (at least for C#). They require quite much filler code and rely heavily on delegate usage.
+That said promises are still not an ideal solution (at least for C#). They require quite much filler code and rely heavily on delegates usage.
 
 ### Observables and reactive programming
-Observable event streams as defined in [reactive programming](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754) provide a convenient way of managing push-based event notifications (opposed to pull-based nature of `IEnumerable`). One of the core differences is multiple result values for observables versus single promise result. While observables may represent an asynchronous operation it is not always the case (and it is generally not recommended to use them in this way). That is why the concept is ot of the scope covered by this document.
+Observable event streams as defined in [reactive programming](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754) provide a convenient way of managing push-based event notifications (opposed to pull-based nature of `IEnumerable`). One of the core differences is multiple result values for observables versus single promise result. While observables may represent an asynchronous operation it is not always the case (and it is generally not recommended to use them in this way). That is why the concept is out of the scope covered by this document.
 
 ### Asynchronous programming with async and await
 C# 5.0/.NET 4.5 introduced a new appoach to asynchronous programming. By using `async` and `await` one can write asynchronous methods almost as synchronous methods. The following example shows implementation of the callback hell method with this technique:
