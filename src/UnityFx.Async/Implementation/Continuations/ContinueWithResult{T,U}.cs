@@ -35,7 +35,7 @@ namespace UnityFx.Async
 
 		#region ContinuationResult
 
-		protected override void InvokeUnsafe(IAsyncOperation op, bool completedSynchronously)
+		protected override void InvokeInline(IAsyncOperation op, bool completedSynchronously)
 		{
 			var result = default(U);
 

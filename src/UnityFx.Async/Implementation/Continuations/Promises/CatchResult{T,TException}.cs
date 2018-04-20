@@ -31,7 +31,7 @@ namespace UnityFx.Async.Promises
 
 		#region ContinuationResult
 
-		protected override void InvokeUnsafe(IAsyncOperation op, bool completedSynchronously)
+		protected override void InvokeInline(IAsyncOperation op, bool completedSynchronously)
 		{
 			_errorCallback.Invoke(op.Exception.InnerException as TException);
 			TrySetCompleted(completedSynchronously);

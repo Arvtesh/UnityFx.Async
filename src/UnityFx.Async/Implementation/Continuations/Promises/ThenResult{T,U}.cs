@@ -75,7 +75,7 @@ namespace UnityFx.Async.Promises
 
 		#region ContinuationResult
 
-		protected sealed override void InvokeUnsafe(IAsyncOperation op, bool completedSynchronously)
+		protected sealed override void InvokeInline(IAsyncOperation op, bool completedSynchronously)
 		{
 			if (op.IsCompletedSuccessfully)
 			{

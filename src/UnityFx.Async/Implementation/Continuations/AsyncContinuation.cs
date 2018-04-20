@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Diagnostics;
 using System.Threading;
 #if UNITYFX_SUPPORT_TAP
 using System.Threading.Tasks;
@@ -45,6 +46,11 @@ namespace UnityFx.Async
 			}
 
 			return (options & AsyncContinuationOptions.NotOnCanceled) == 0;
+		}
+
+		internal static bool CanInvokeInline(IAsyncOperation op, SynchronizationContext syncContext)
+		{
+			return syncContext == null || syncContext == SynchronizationContext.Current;
 		}
 
 		internal static void InvokeDelegate(IAsyncOperation op, object continuation)
@@ -115,20 +121,33 @@ namespace UnityFx.Async
 
 		public void Invoke(IAsyncOperation op)
 		{
+			////if (CanInvokeInline(op, _syncContext))
+			////{
+			////	InvokeDelegate(op, _continuation);
+			////}
+			////else
+			////{
+			////	if (_syncContext != null)
+			////	{
+			////		InvokeOnSyncContext(op, _syncContext);
+			////	}
+			////	else if (SynchronizationContext.Current != null)
+			////	{
+			////		InvokeOnSyncContext(op, SynchronizationContext.Current);
+			////	}
+			////	else
+			////	{
+			////		InvokeAsync(op);
+			////	}
+			////}
+
 			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
 			{
-				if (_runAsynchronously)
-				{
-					InvokeAsync(op, SynchronizationContext.Current);
-				}
-				else
-				{
-					InvokeDelegate(op, _continuation);
-				}
+				InvokeDelegate(op, _continuation);
 			}
 			else
 			{
-				InvokeAsync(op, _syncContext);
+				InvokeOnSyncContext(op, _syncContext);
 			}
 		}
 
@@ -155,28 +174,30 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		private void InvokeAsync(IAsyncOperation op, SynchronizationContext syncContext)
+		private void InvokeOnSyncContext(IAsyncOperation op, SynchronizationContext syncContext)
+		{
+			Debug.Assert(_syncContext != null);
+
+			_op = op;
+
+			if (_postCallback == null)
+			{
+				_postCallback = PostCallback;
+			}
+
+			syncContext.Post(_postCallback, this);
+		}
+
+		private void InvokeAsync(IAsyncOperation op)
 		{
 			_op = op;
 
-			if (syncContext != null)
+			if (_waitCallback == null)
 			{
-				if (_postCallback == null)
-				{
-					_postCallback = PostCallback;
-				}
-
-				_syncContext.Post(_postCallback, this);
+				_waitCallback = PostCallback;
 			}
-			else
-			{
-				if (_waitCallback == null)
-				{
-					_waitCallback = PostCallback;
-				}
 
-				ThreadPool.QueueUserWorkItem(_waitCallback, this);
-			}
+			ThreadPool.QueueUserWorkItem(_waitCallback, this);
 		}
 
 		private static void PostCallback(object args)

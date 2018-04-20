@@ -11,6 +11,7 @@ namespace UnityFx.Async
 	{
 		#region data
 
+		private static WaitCallback _waitCallback;
 		private static SendOrPostCallback _postCallback;
 
 		private readonly SynchronizationContext _syncContext;
@@ -46,7 +47,7 @@ namespace UnityFx.Async
 			{
 				try
 				{
-					InvokeUnsafe(op, completedSynchronously);
+					InvokeInline(op, completedSynchronously);
 				}
 				catch (Exception e)
 				{
@@ -55,28 +56,11 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				if (_postCallback == null)
-				{
-					_postCallback = args =>
-					{
-						var c = args as ContinuationResult<T>;
-
-						try
-						{
-							c.InvokeUnsafe(c._op, false);
-						}
-						catch (Exception e)
-						{
-							c.TrySetException(e, false);
-						}
-					};
-				}
-
-				_syncContext.Post(_postCallback, this);
+				InvokeOnSyncContext(op, _syncContext);
 			}
 		}
 
-		protected abstract void InvokeUnsafe(IAsyncOperation op, bool completedSynchronously);
+		protected abstract void InvokeInline(IAsyncOperation op, bool completedSynchronously);
 
 		#endregion
 
@@ -87,6 +71,46 @@ namespace UnityFx.Async
 			if (_op is IAsyncCancellable c)
 			{
 				c.Cancel();
+			}
+		}
+
+		#endregion
+
+		#region implementation
+
+		private void InvokeOnSyncContext(IAsyncOperation op, SynchronizationContext syncContext)
+		{
+			Debug.Assert(_syncContext != null);
+
+			if (_postCallback == null)
+			{
+				_postCallback = PostCallback;
+			}
+
+			syncContext.Post(_postCallback, this);
+		}
+
+		private void InvokeAsync(IAsyncOperation op)
+		{
+			if (_waitCallback == null)
+			{
+				_waitCallback = PostCallback;
+			}
+
+			ThreadPool.QueueUserWorkItem(_waitCallback, this);
+		}
+
+		private static void PostCallback(object args)
+		{
+			var c = args as ContinuationResult<T>;
+
+			try
+			{
+				c.InvokeInline(c._op, false);
+			}
+			catch (Exception e)
+			{
+				c.TrySetException(e, false);
 			}
 		}
 
