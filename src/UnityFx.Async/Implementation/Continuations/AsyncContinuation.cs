@@ -10,27 +10,64 @@ using System.Threading.Tasks;
 
 namespace UnityFx.Async
 {
-	internal class AsyncContinuation : IAsyncContinuation
+	internal class AsyncContinuation
 	{
 		#region data
 
 		private static WaitCallback _waitCallback;
 		private static SendOrPostCallback _postCallback;
 
+		private IAsyncOperation _op;
 		private SynchronizationContext _syncContext;
 		private object _continuation;
-		private bool _runAsynchronously;
-		private IAsyncOperation _op;
 
 		#endregion
 
 		#region interface
 
-		internal AsyncContinuation(SynchronizationContext syncContext, object continuation, bool runAsynchronously)
+		internal AsyncContinuation(IAsyncOperation op, SynchronizationContext syncContext, object continuation)
 		{
+			_op = op;
 			_syncContext = syncContext;
 			_continuation = continuation;
-			_runAsynchronously = runAsynchronously;
+		}
+
+		internal void InvokeAsync()
+		{
+			if (_syncContext != null)
+			{
+				InvokeOnSyncContext(_syncContext);
+			}
+			else
+			{
+				var syncContext = SynchronizationContext.Current;
+
+				if (syncContext != null)
+				{
+					InvokeOnSyncContext(syncContext);
+				}
+				else
+				{
+					if (_waitCallback == null)
+					{
+						_waitCallback = PostCallback;
+					}
+
+					ThreadPool.QueueUserWorkItem(_waitCallback, this);
+				}
+			}
+		}
+
+		internal void Invoke()
+		{
+			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
+			{
+				InvokeInline(_op, _continuation);
+			}
+			else
+			{
+				InvokeOnSyncContext(_syncContext);
+			}
 		}
 
 		internal static bool CanInvoke(IAsyncOperation op, AsyncContinuationOptions options)
@@ -53,10 +90,14 @@ namespace UnityFx.Async
 			return syncContext == null || syncContext == SynchronizationContext.Current;
 		}
 
-		internal static void InvokeDelegate(IAsyncOperation op, object continuation)
+		internal static void InvokeInline(IAsyncOperation op, object continuation)
 		{
 			switch (continuation)
 			{
+				case IAsyncContinuation c:
+					c.Invoke(op);
+					break;
+
 				case AsyncOperationCallback aoc:
 					aoc.Invoke(op);
 					break;
@@ -117,42 +158,6 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region IAsyncContinuation
-
-		public void Invoke(IAsyncOperation op)
-		{
-			////if (CanInvokeInline(op, _syncContext))
-			////{
-			////	InvokeDelegate(op, _continuation);
-			////}
-			////else
-			////{
-			////	if (_syncContext != null)
-			////	{
-			////		InvokeOnSyncContext(op, _syncContext);
-			////	}
-			////	else if (SynchronizationContext.Current != null)
-			////	{
-			////		InvokeOnSyncContext(op, SynchronizationContext.Current);
-			////	}
-			////	else
-			////	{
-			////		InvokeAsync(op);
-			////	}
-			////}
-
-			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
-			{
-				InvokeDelegate(op, _continuation);
-			}
-			else
-			{
-				InvokeOnSyncContext(op, _syncContext);
-			}
-		}
-
-		#endregion
-
 		#region Object
 
 		public override bool Equals(object obj)
@@ -174,11 +179,9 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		private void InvokeOnSyncContext(IAsyncOperation op, SynchronizationContext syncContext)
+		private void InvokeOnSyncContext(SynchronizationContext syncContext)
 		{
 			Debug.Assert(_syncContext != null);
-
-			_op = op;
 
 			if (_postCallback == null)
 			{
@@ -188,22 +191,10 @@ namespace UnityFx.Async
 			syncContext.Post(_postCallback, this);
 		}
 
-		private void InvokeAsync(IAsyncOperation op)
-		{
-			_op = op;
-
-			if (_waitCallback == null)
-			{
-				_waitCallback = PostCallback;
-			}
-
-			ThreadPool.QueueUserWorkItem(_waitCallback, this);
-		}
-
 		private static void PostCallback(object args)
 		{
 			var c = args as AsyncContinuation;
-			InvokeDelegate(c._op, c._continuation);
+			InvokeInline(c._op, c._continuation);
 		}
 
 		#endregion

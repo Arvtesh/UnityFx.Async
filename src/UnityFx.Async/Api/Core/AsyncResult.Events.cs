@@ -69,7 +69,7 @@ namespace UnityFx.Async
 
 				if (!TryAddContinuationInternal(value, SynchronizationContext.Current))
 				{
-					value(this);
+					InvokeContinuation(value, SynchronizationContext.Current);
 				}
 
 #endif
@@ -90,7 +90,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddCompletionCallback(action))
 			{
-				action(this);
+				InvokeContinuation(action, SynchronizationContext.Current);
 			}
 		}
 
@@ -120,14 +120,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddCompletionCallback(action, syncContext))
 			{
-				if (syncContext == null || syncContext.GetType() == typeof(SynchronizationContext) || syncContext == SynchronizationContext.Current)
-				{
-					action(this);
-				}
-				else
-				{
-					syncContext.Post(args => action(args as IAsyncOperation), this);
-				}
+				InvokeContinuation(action, syncContext);
 			}
 		}
 
@@ -162,7 +155,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddContinuation(continuation))
 			{
-				continuation.Invoke(this);
+				InvokeContinuation(continuation, SynchronizationContext.Current);
 			}
 		}
 
@@ -204,52 +197,6 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		private void InvokeContinuations()
-		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			var continuation = _continuation;
-
-			if (continuation != null)
-			{
-				if (continuation is IEnumerable continuationList)
-				{
-					foreach (var item in continuationList)
-					{
-						InvokeContinuation(this, item);
-					}
-				}
-				else
-				{
-					InvokeContinuation(this, continuation);
-				}
-			}
-
-#else
-
-			var continuation = Interlocked.Exchange(ref _continuation, _continuationCompletionSentinel);
-
-			if (continuation != null)
-			{
-				if (continuation is IEnumerable continuationList)
-				{
-					lock (continuationList)
-					{
-						foreach (var item in continuationList)
-						{
-							InvokeContinuation(item);
-						}
-					}
-				}
-				else
-				{
-					InvokeContinuation(continuation);
-				}
-			}
-
-#endif
-		}
-
 		/// <summary>
 		/// Attempts to register a continuation object. For internal use only.
 		/// </summary>
@@ -262,7 +209,7 @@ namespace UnityFx.Async
 
 			if ((syncContext != null && syncContext.GetType() != typeof(SynchronizationContext)) || runContinuationsAsynchronously)
 			{
-				continuation = new AsyncContinuation(syncContext, continuation, runContinuationsAsynchronously);
+				continuation = new AsyncContinuation(this, syncContext, continuation);
 			}
 
 			return TryAddContinuationInternal(continuation);
@@ -444,21 +391,114 @@ namespace UnityFx.Async
 			return false;
 		}
 
-#endif
+		private void InvokeContinuations()
+		{
+#if UNITYFX_NOT_THREAD_SAFE
 
-		/// <summary>
-		/// Invokes the specified continuation instance.
-		/// </summary>
+			var continuation = _continuation;
+
+			if (continuation != null)
+			{
+				if (continuation is IEnumerable continuationList)
+				{
+					foreach (var item in continuationList)
+					{
+						InvokeContinuationInline(this, item);
+					}
+				}
+				else
+				{
+					InvokeContinuationInline(this, continuation);
+				}
+			}
+
+#else
+
+			var continuation = Interlocked.Exchange(ref _continuation, _continuationCompletionSentinel);
+
+			if (continuation != null)
+			{
+				if (continuation is IEnumerable continuationList)
+				{
+					lock (continuationList)
+					{
+						foreach (var item in continuationList)
+						{
+							InvokeContinuation(item);
+						}
+					}
+				}
+				else
+				{
+					InvokeContinuation(continuation);
+				}
+			}
+
+#endif
+		}
+
 		private void InvokeContinuation(object continuation)
 		{
-			if (continuation is IAsyncContinuation c)
+			var runContinuationsAsynchronously = (_flags & _flagRunContinuationsAsynchronously) != 0;
+
+			if (runContinuationsAsynchronously)
 			{
-				c.Invoke(this);
+				if (continuation is AsyncContinuation c)
+				{
+					// NOTE: This is more effective than InvokeContinuationAsync().
+					c.InvokeAsync();
+				}
+				else
+				{
+					InvokeContinuationAsync(continuation, SynchronizationContext.Current);
+				}
 			}
 			else
 			{
-				AsyncContinuation.InvokeDelegate(this, continuation);
+				if (continuation is AsyncContinuation c)
+				{
+					c.Invoke();
+				}
+				else
+				{
+					InvokeContinuationInline(continuation);
+				}
 			}
+		}
+
+		private void InvokeContinuation(object continuation, SynchronizationContext syncContext)
+		{
+			if ((_flags & _flagRunContinuationsAsynchronously) != 0)
+			{
+				InvokeContinuationAsync(continuation, syncContext);
+			}
+			else if (syncContext == null || syncContext == SynchronizationContext.Current)
+			{
+				InvokeContinuationInline(continuation);
+			}
+			else
+			{
+				syncContext.Post(args => InvokeContinuationInline(args), continuation);
+			}
+		}
+
+		private void InvokeContinuationAsync(object continuation, SynchronizationContext syncContext)
+		{
+			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
+			{
+				syncContext.Post(args => InvokeContinuationInline(args), continuation);
+			}
+			else
+			{
+				ThreadPool.QueueUserWorkItem(args => InvokeContinuationInline(args), continuation);
+			}
+		}
+
+#endif
+
+		private void InvokeContinuationInline(object continuation)
+		{
+			AsyncContinuation.InvokeInline(this, continuation);
 		}
 
 		#endregion

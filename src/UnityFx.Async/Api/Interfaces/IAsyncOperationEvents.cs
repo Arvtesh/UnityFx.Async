@@ -65,7 +65,7 @@ namespace UnityFx.Async
 		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
 		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
 		/// </param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> or <paramref name="syncContext"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)"/>
 		/// <seealso cref="RemoveCompletionCallback(AsyncOperationCallback)"/>
@@ -80,7 +80,7 @@ namespace UnityFx.Async
 		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
 		/// </param>
 		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> or <paramref name="syncContext"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="AddCompletionCallback(AsyncOperationCallback, SynchronizationContext)"/>
 		/// <seealso cref="TryAddCompletionCallback(AsyncOperationCallback)"/>
