@@ -2,11 +2,10 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
-using System.Threading;
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Promises
 {
-	internal sealed class RebindResult<T, U> : ContinuationResult<U>, IAsyncContinuation
+	internal sealed class FinallyResult<T> : ContinuationResult<T>, IAsyncContinuation
 	{
 		#region data
 
@@ -16,7 +15,7 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public RebindResult(IAsyncOperation op, object action)
+		public FinallyResult(IAsyncOperation op, object action)
 			: base(op)
 		{
 			_continuation = action;
@@ -24,7 +23,7 @@ namespace UnityFx.Async
 			// NOTE: Cannot move this to base class because this call might trigger virtual Invoke
 			if (!op.TryAddContinuation(this))
 			{
-				InvokeInternal(op, true);
+				InvokeOnSyncContext(op, true);
 			}
 		}
 
@@ -36,12 +35,17 @@ namespace UnityFx.Async
 		{
 			switch (_continuation)
 			{
-				case Func<U> f1:
-					TrySetResult(f1(), completedSynchronously);
+				case Action a:
+					a.Invoke();
+					TrySetCompleted(completedSynchronously);
 					break;
 
-				case Func<T, U> f2:
-					TrySetResult(f2((op as IAsyncOperation<T>).Result), completedSynchronously);
+				case Func<IAsyncOperation<T>> f1:
+					f1().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+					break;
+
+				case Func<IAsyncOperation> f2:
+					f2().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				default:
@@ -57,22 +61,6 @@ namespace UnityFx.Async
 		public void Invoke(IAsyncOperation op)
 		{
 			InvokeOnSyncContext(op, false);
-		}
-
-		#endregion
-
-		#region implementation
-
-		private void InvokeInternal(IAsyncOperation op, bool completedSynchronously)
-		{
-			if (op.IsCompletedSuccessfully)
-			{
-				InvokeOnSyncContext(op, completedSynchronously);
-			}
-			else
-			{
-				TrySetException(op.Exception, completedSynchronously);
-			}
 		}
 
 		#endregion

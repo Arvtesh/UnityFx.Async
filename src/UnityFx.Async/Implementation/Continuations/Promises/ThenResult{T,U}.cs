@@ -3,7 +3,7 @@
 
 using System;
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Promises
 {
 	internal class ThenResult<T, U> : ContinuationResult<U>, IAsyncContinuation
 	{

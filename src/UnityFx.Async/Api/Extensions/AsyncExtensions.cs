@@ -9,7 +9,7 @@ using System.Threading;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Extension methods for <see cref="IAsyncOperation"/> related classes.
+	/// Extension methods for <see cref="IAsyncOperation"/>.
 	/// </summary>
 	[EditorBrowsable(EditorBrowsableState.Advanced)]
 	public static partial class AsyncExtensions

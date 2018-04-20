@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Promises
 {
 	internal sealed class ThenAnyResult<T, U> : ThenResult<T, U>
 	{
