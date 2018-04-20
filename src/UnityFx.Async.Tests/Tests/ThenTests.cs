@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Promises
 {
 	public class ThenTests
 	{

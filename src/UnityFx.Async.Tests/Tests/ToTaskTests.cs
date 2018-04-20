@@ -29,7 +29,7 @@ namespace UnityFx.Async
 		public async Task ToTask_FailsWhenSourceFails()
 		{
 			// Arrange
-			var op = AsyncResult.Delay(1).Then(() => AsyncResult.FromException(new Exception()));
+			var op = AsyncResult.FromException(new Exception());
 			var task = op.ToTask();
 
 			// Act/Assert
@@ -40,7 +40,7 @@ namespace UnityFx.Async
 		public async Task ToTask_FailsWhenSourceIsCanceled()
 		{
 			// Arrange
-			var op = AsyncResult.Delay(1).Then(() => AsyncResult.FromCanceled());
+			var op = AsyncResult.FromCanceled();
 			var task = op.ToTask();
 
 			// Act/Assert

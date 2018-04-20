@@ -3,11 +3,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.ComponentModel;
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Promises
 {
-	partial class AsyncExtensions
+	/// <summary>
+	/// Promise extensions for <see cref="IAsyncOperation"/>.
+	/// </summary>
+	[EditorBrowsable(EditorBrowsableState.Advanced)]
+	public static class AsyncExtensions
 	{
 		#region Then
 
@@ -369,7 +373,7 @@ namespace UnityFx.Async
 		#region Rebind
 
 		/// <summary>
-		/// Schedules a callback to be executed after the promise has been resolved.
+		/// Transforms the promise result to another type.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
@@ -386,7 +390,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the promise has been resolved.
+		/// Transforms the promise result to another type.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
