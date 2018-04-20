@@ -21,12 +21,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ### Changed
 - Changed `ContinueWith` extension signatures to match corresponding `Task` methods.
 - Changed `IAsyncOperation.Exception` to always return an exception instance if completed with non-success.
+- Changed `AddCompletionCallback`/`AddContinuation` to instance methods (instead of extensions).
 
 ### Fixed
 - Fixed exception not initialized properly for canceled operations sometimes.
 
 ### Removed
 - Removed `GetAwaiter`/`ConfigureAwait` instance methods from `AsyncResult` to avoid code duplication (extension methods should be used).
+- Removed all `AsyncCompletionSource` methods having `completedSynchronously` argument.
 
 -----------------------
 ## [0.8.2] - 2018-03-28
