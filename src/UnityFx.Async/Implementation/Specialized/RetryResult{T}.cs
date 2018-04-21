@@ -68,7 +68,7 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op)
+		public void Invoke(IAsyncOperation op, bool inline)
 		{
 			Debug.Assert(_op == op);
 			Debug.Assert(_op.IsCompleted);

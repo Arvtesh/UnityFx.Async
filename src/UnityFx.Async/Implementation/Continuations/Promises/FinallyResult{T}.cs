@@ -5,10 +5,11 @@ using System;
 
 namespace UnityFx.Async.Promises
 {
-	internal sealed class FinallyResult<T> : ContinuationResult<T>, IAsyncContinuation
+	internal sealed class FinallyResult<T> : AsyncResult<T>, IAsyncContinuation
 	{
 		#region data
 
+		private readonly IAsyncOperation _op;
 		private readonly object _continuation;
 
 		#endregion
@@ -16,41 +17,23 @@ namespace UnityFx.Async.Promises
 		#region interface
 
 		public FinallyResult(IAsyncOperation op, object action)
-			: base(op)
+			: base(AsyncOperationStatus.Running)
 		{
+			_op = op;
 			_continuation = action;
 
-			// NOTE: Cannot move this to base class because this call might trigger virtual Invoke
-			if (!op.TryAddContinuation(this))
-			{
-				InvokeOnSyncContext(op, true);
-			}
+			op.AddContinuation(this);
 		}
 
 		#endregion
 
-		#region ContinuationResult
+		#region AsyncResult
 
-		protected override void InvokeInline(IAsyncOperation op, bool completedSynchronously)
+		protected override void OnCancel()
 		{
-			switch (_continuation)
+			if (_op is IAsyncCancellable c)
 			{
-				case Action a:
-					a.Invoke();
-					TrySetCompleted(completedSynchronously);
-					break;
-
-				case Func<IAsyncOperation<T>> f1:
-					f1().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
-					break;
-
-				case Func<IAsyncOperation> f2:
-					f2().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
-					break;
-
-				default:
-					TrySetCanceled(completedSynchronously);
-					break;
+				c.Cancel();
 			}
 		}
 
@@ -58,9 +41,34 @@ namespace UnityFx.Async.Promises
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op)
+		public void Invoke(IAsyncOperation op, bool inline)
 		{
-			InvokeOnSyncContext(op, false);
+			try
+			{
+				switch (_continuation)
+				{
+					case Action a:
+						a.Invoke();
+						TrySetCompleted(inline);
+						break;
+
+					case Func<IAsyncOperation<T>> f1:
+						f1().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+						break;
+
+					case Func<IAsyncOperation> f2:
+						f2().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+						break;
+
+					default:
+						TrySetCanceled(inline);
+						break;
+				}
+			}
+			catch (Exception e)
+			{
+				TrySetException(e, inline);
+			}
 		}
 
 		#endregion

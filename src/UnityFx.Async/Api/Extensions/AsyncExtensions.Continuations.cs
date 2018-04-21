@@ -39,7 +39,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return new ContinueWithResult<VoidResult>(op, options, action, null);
+			return new ContinueWithResult<VoidResult, VoidResult>(op, options, action, null);
 		}
 
 		/// <summary>
@@ -73,7 +73,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return new ContinueWithResult<VoidResult>(op, options, action, userState);
+			return new ContinueWithResult<VoidResult, VoidResult>(op, options, action, userState);
 		}
 
 		/// <summary>
@@ -105,7 +105,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return new ContinueWithResult<TResult>(op, options, action, null);
+			return new ContinueWithResult<VoidResult, TResult>(op, options, action, null);
 		}
 
 		/// <summary>
@@ -139,7 +139,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return new ContinueWithResult<TResult>(op, options, action, userState);
+			return new ContinueWithResult<VoidResult, TResult>(op, options, action, userState);
 		}
 
 		/// <summary>

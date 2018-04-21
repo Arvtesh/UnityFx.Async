@@ -104,6 +104,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="continuation"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="TryAddContinuation(IAsyncContinuation)"/>
+		/// <seealso cref="AddContinuation(IAsyncContinuation, SynchronizationContext)"/>
 		/// <seealso cref="RemoveContinuation(IAsyncContinuation)"/>
 		void AddContinuation(IAsyncContinuation continuation);
 
@@ -116,8 +117,39 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="continuation"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="AddContinuation(IAsyncContinuation)"/>
+		/// <seealso cref="TryAddContinuation(IAsyncContinuation, SynchronizationContext)"/>
 		/// <seealso cref="RemoveContinuation(IAsyncContinuation)"/>
 		bool TryAddContinuation(IAsyncContinuation continuation);
+
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed <paramref name="continuation"/> is invoked synchronously.
+		/// </summary>
+		/// <param name="continuation">The callback to be executed when the operation has completed.</param>
+		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
+		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
+		/// </param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="continuation"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="TryAddContinuation(IAsyncContinuation, SynchronizationContext)"/>
+		/// <seealso cref="AddContinuation(IAsyncContinuation)"/>
+		/// <seealso cref="RemoveContinuation(IAsyncContinuation)"/>
+		void AddContinuation(IAsyncContinuation continuation, SynchronizationContext syncContext);
+
+		/// <summary>
+		/// Attempts to add a completion callback to be executed after the operation has finished. If the operation is already completed
+		/// the method does nothing and just returns <see langword="false"/>.
+		/// </summary>
+		/// <param name="continuation">The cotinuation to be executed when the operation has completed.</param>
+		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
+		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
+		/// </param>
+		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="continuation"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="AddContinuation(IAsyncContinuation, SynchronizationContext)"/>
+		/// <seealso cref="TryAddContinuation(IAsyncContinuation)"/>
+		/// <seealso cref="RemoveContinuation(IAsyncContinuation)"/>
+		bool TryAddContinuation(IAsyncContinuation continuation, SynchronizationContext syncContext);
 
 		/// <summary>
 		/// Removes an existing completion callback.

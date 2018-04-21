@@ -66,6 +66,8 @@ namespace UnityFx.Async
 		/// Starts the continuation.
 		/// </summary>
 		/// <param name="op">The completed antecedent operation.</param>
-		void Invoke(IAsyncOperation op);
+		/// <param name="inline">Inline call flag: <see langword="true"/> means the continuation was called without actually being
+		/// added to the operation continuation list (the operation was already completed at the time).</param>
+		void Invoke(IAsyncOperation op, bool inline);
 	}
 }

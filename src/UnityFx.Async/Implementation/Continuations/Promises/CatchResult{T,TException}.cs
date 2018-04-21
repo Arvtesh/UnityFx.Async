@@ -5,10 +5,11 @@ using System;
 
 namespace UnityFx.Async.Promises
 {
-	internal sealed class CatchResult<T, TException> : ContinuationResult<T>, IAsyncContinuation where TException : Exception
+	internal sealed class CatchResult<T, TException> : AsyncResult<T>, IAsyncContinuation where TException : Exception
 	{
 		#region data
 
+		private readonly IAsyncOperation _op;
 		private readonly Action<TException> _errorCallback;
 
 		#endregion
@@ -16,56 +17,57 @@ namespace UnityFx.Async.Promises
 		#region interface
 
 		public CatchResult(IAsyncOperation op, Action<TException> errorCallback)
-			: base(op)
+			: base(AsyncOperationStatus.Running)
 		{
+			_op = op;
 			_errorCallback = errorCallback;
 
-			// NOTE: Cannot move this to base class because this call might trigger virtual Invoke
-			if (!op.TryAddContinuation(this))
-			{
-				InvokeInternal(op, true);
-			}
+			op.AddContinuation(this);
 		}
 
 		#endregion
 
-		#region ContinuationResult
+		#region AsyncResult
 
-		protected override void InvokeInline(IAsyncOperation op, bool completedSynchronously)
+		protected override void OnCancel()
 		{
-			_errorCallback.Invoke(op.Exception.InnerException as TException);
-			TrySetCompleted(completedSynchronously);
+			if (_op is IAsyncCancellable c)
+			{
+				c.Cancel();
+			}
 		}
 
 		#endregion
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op)
+		public void Invoke(IAsyncOperation op, bool inline)
 		{
-			InvokeInternal(op, false);
+			if (op.IsCompletedSuccessfully)
+			{
+				TrySetCompleted(inline);
+			}
+			else if (!(op.Exception.InnerException is TException))
+			{
+				TrySetException(op.Exception, inline);
+			}
+			else
+			{
+				try
+				{
+					_errorCallback.Invoke(op.Exception.InnerException as TException);
+					TrySetCompleted(inline);
+				}
+				catch (Exception e)
+				{
+					TrySetException(e, inline);
+				}
+			}
 		}
 
 		#endregion
 
 		#region implementation
-
-		private void InvokeInternal(IAsyncOperation op, bool completedSynchronously)
-		{
-			if (op.IsCompletedSuccessfully)
-			{
-				TrySetCompleted(completedSynchronously);
-			}
-			else if (!(op.Exception.InnerException is TException))
-			{
-				TrySetException(op.Exception, completedSynchronously);
-			}
-			else
-			{
-				InvokeOnSyncContext(op, completedSynchronously);
-			}
-		}
-
 		#endregion
 	}
 }

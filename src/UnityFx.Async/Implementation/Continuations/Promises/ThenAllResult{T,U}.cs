@@ -24,7 +24,7 @@ namespace UnityFx.Async.Promises
 
 		#endregion
 
-		#region ThenAnyResult
+		#region ThenResult
 
 		protected override void InvokeSuccessCallback(IAsyncOperation op, bool completedSynchronously, object continuation)
 		{

@@ -12,9 +12,7 @@ namespace UnityFx.Async
 		#region data
 
 		private readonly IAsyncOperation[] _ops;
-
 		private int _count;
-		private bool _completedSynchronously;
 
 		#endregion
 
@@ -25,17 +23,11 @@ namespace UnityFx.Async
 		{
 			_ops = ops;
 			_count = ops.Length;
-			_completedSynchronously = true;
 
 			foreach (var op in ops)
 			{
-				if (!op.TryAddContinuation(this))
-				{
-					Invoke(op);
-				}
+				op.AddContinuation(this, null);
 			}
-
-			_completedSynchronously = false;
 		}
 
 		#endregion
@@ -57,7 +49,7 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation asyncOp)
+		public void Invoke(IAsyncOperation asyncOp, bool inline)
 		{
 			if (IsCompleted)
 			{
@@ -86,15 +78,15 @@ namespace UnityFx.Async
 
 				if (exceptions != null)
 				{
-					TrySetExceptions(exceptions, _completedSynchronously);
+					TrySetExceptions(exceptions, false);
 				}
 				else if (canceledOp != null)
 				{
-					TrySetCanceled(_completedSynchronously);
+					TrySetCanceled(false);
 				}
 				else if (typeof(T) == typeof(VoidResult))
 				{
-					TrySetCompleted(_completedSynchronously);
+					TrySetCompleted(false);
 				}
 				else
 				{

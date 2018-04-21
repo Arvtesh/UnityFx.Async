@@ -6,10 +6,11 @@ using System.Threading;
 
 namespace UnityFx.Async.Promises
 {
-	internal sealed class RebindResult<T, U> : ContinuationResult<U>, IAsyncContinuation
+	internal sealed class RebindResult<T, U> : AsyncResult<U>, IAsyncContinuation
 	{
 		#region data
 
+		private readonly IAsyncOperation _op;
 		private readonly object _continuation;
 
 		#endregion
@@ -17,36 +18,23 @@ namespace UnityFx.Async.Promises
 		#region interface
 
 		public RebindResult(IAsyncOperation op, object action)
-			: base(op)
+			: base(AsyncOperationStatus.Running)
 		{
+			_op = op;
 			_continuation = action;
 
-			// NOTE: Cannot move this to base class because this call might trigger virtual Invoke
-			if (!op.TryAddContinuation(this))
-			{
-				InvokeInternal(op, true);
-			}
+			op.AddContinuation(this);
 		}
 
 		#endregion
 
-		#region ContinuationResult
+		#region AsyncResult
 
-		protected override void InvokeInline(IAsyncOperation op, bool completedSynchronously)
+		protected override void OnCancel()
 		{
-			switch (_continuation)
+			if (_op is IAsyncCancellable c)
 			{
-				case Func<U> f1:
-					TrySetResult(f1(), completedSynchronously);
-					break;
-
-				case Func<T, U> f2:
-					TrySetResult(f2((op as IAsyncOperation<T>).Result), completedSynchronously);
-					break;
-
-				default:
-					TrySetCanceled(completedSynchronously);
-					break;
+				c.Cancel();
 			}
 		}
 
@@ -54,24 +42,35 @@ namespace UnityFx.Async.Promises
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op)
+		public void Invoke(IAsyncOperation op, bool inline)
 		{
-			InvokeOnSyncContext(op, false);
-		}
-
-		#endregion
-
-		#region implementation
-
-		private void InvokeInternal(IAsyncOperation op, bool completedSynchronously)
-		{
-			if (op.IsCompletedSuccessfully)
+			try
 			{
-				InvokeOnSyncContext(op, completedSynchronously);
+				if (op.IsCompletedSuccessfully)
+				{
+					switch (_continuation)
+					{
+						case Func<U> f1:
+							TrySetResult(f1(), inline);
+							break;
+
+						case Func<T, U> f2:
+							TrySetResult(f2((op as IAsyncOperation<T>).Result), inline);
+							break;
+
+						default:
+							TrySetCanceled(inline);
+							break;
+					}
+				}
+				else
+				{
+					TrySetException(op.Exception, inline);
+				}
 			}
-			else
+			catch (Exception e)
 			{
-				TrySetException(op.Exception, completedSynchronously);
+				TrySetException(e, inline);
 			}
 		}
 

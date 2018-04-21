@@ -62,7 +62,7 @@ namespace UnityFx.Async
 		{
 			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
 			{
-				InvokeInline(_op, _continuation);
+				InvokeInline(_op, _continuation, false);
 			}
 			else
 			{
@@ -90,12 +90,12 @@ namespace UnityFx.Async
 			return syncContext == null || syncContext == SynchronizationContext.Current;
 		}
 
-		internal static void InvokeInline(IAsyncOperation op, object continuation)
+		internal static void InvokeInline(IAsyncOperation op, object continuation, bool inline)
 		{
 			switch (continuation)
 			{
 				case IAsyncContinuation c:
-					c.Invoke(op);
+					c.Invoke(op, inline);
 					break;
 
 				case AsyncOperationCallback aoc:
@@ -194,7 +194,7 @@ namespace UnityFx.Async
 		private static void PostCallback(object args)
 		{
 			var c = args as AsyncContinuation;
-			InvokeInline(c._op, c._continuation);
+			InvokeInline(c._op, c._continuation, false);
 		}
 
 		#endregion

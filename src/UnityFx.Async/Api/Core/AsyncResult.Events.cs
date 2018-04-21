@@ -175,7 +175,37 @@ namespace UnityFx.Async
 
 #else
 
-			return TryAddContinuationInternal(continuation, null);
+			return TryAddContinuationInternal(continuation, SynchronizationContext.Current);
+
+#endif
+		}
+
+		/// <inheritdoc/>
+		public void AddContinuation(IAsyncContinuation continuation, SynchronizationContext syncContext)
+		{
+			if (!TryAddContinuation(continuation, syncContext))
+			{
+				InvokeContinuation(continuation, syncContext);
+			}
+		}
+
+		/// <inheritdoc/>
+		public bool TryAddContinuation(IAsyncContinuation continuation, SynchronizationContext syncContext)
+		{
+			ThrowIfDisposed();
+
+			if (continuation == null)
+			{
+				throw new ArgumentNullException(nameof(continuation));
+			}
+
+#if UNITYFX_NOT_THREAD_SAFE
+
+			return TryAddContinuationInternal(continuation);
+
+#else
+
+			return TryAddContinuationInternal(continuation, syncContext);
 
 #endif
 		}
@@ -403,12 +433,12 @@ namespace UnityFx.Async
 				{
 					foreach (var item in continuationList)
 					{
-						InvokeContinuationInline(this, item);
+						AsyncContinuation.InvokeInline(this, item);
 					}
 				}
 				else
 				{
-					InvokeContinuationInline(this, continuation);
+					AsyncContinuation.InvokeInline(this, continuation);
 				}
 			}
 
@@ -450,7 +480,7 @@ namespace UnityFx.Async
 				}
 				else
 				{
-					InvokeContinuationAsync(continuation, SynchronizationContext.Current);
+					InvokeContinuationAsync(continuation, SynchronizationContext.Current, false);
 				}
 			}
 			else
@@ -461,7 +491,7 @@ namespace UnityFx.Async
 				}
 				else
 				{
-					InvokeContinuationInline(continuation);
+					AsyncContinuation.InvokeInline(this, continuation, false);
 				}
 			}
 		}
@@ -470,36 +500,31 @@ namespace UnityFx.Async
 		{
 			if ((_flags & _flagRunContinuationsAsynchronously) != 0)
 			{
-				InvokeContinuationAsync(continuation, syncContext);
+				InvokeContinuationAsync(continuation, syncContext, true);
 			}
 			else if (syncContext == null || syncContext == SynchronizationContext.Current)
 			{
-				InvokeContinuationInline(continuation);
+				AsyncContinuation.InvokeInline(this, continuation, true);
 			}
 			else
 			{
-				syncContext.Post(args => InvokeContinuationInline(args), continuation);
+				syncContext.Post(args => AsyncContinuation.InvokeInline(this, args, true), continuation);
 			}
 		}
 
-		private void InvokeContinuationAsync(object continuation, SynchronizationContext syncContext)
+		private void InvokeContinuationAsync(object continuation, SynchronizationContext syncContext, bool inline)
 		{
 			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
 			{
-				syncContext.Post(args => InvokeContinuationInline(args), continuation);
+				syncContext.Post(args => AsyncContinuation.InvokeInline(this, args, inline), continuation);
 			}
 			else
 			{
-				ThreadPool.QueueUserWorkItem(args => InvokeContinuationInline(args), continuation);
+				ThreadPool.QueueUserWorkItem(args => AsyncContinuation.InvokeInline(this, args, inline), continuation);
 			}
 		}
 
 #endif
-
-		private void InvokeContinuationInline(object continuation)
-		{
-			AsyncContinuation.InvokeInline(this, continuation);
-		}
 
 		#endregion
 	}

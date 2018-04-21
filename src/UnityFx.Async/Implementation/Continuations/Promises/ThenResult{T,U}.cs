@@ -5,10 +5,11 @@ using System;
 
 namespace UnityFx.Async.Promises
 {
-	internal class ThenResult<T, U> : ContinuationResult<U>, IAsyncContinuation
+	internal class ThenResult<T, U> : AsyncResult<U>, IAsyncContinuation
 	{
 		#region data
 
+		private readonly IAsyncOperation _op;
 		private readonly object _successCallback;
 		private readonly Action<Exception> _errorCallback;
 
@@ -19,16 +20,13 @@ namespace UnityFx.Async.Promises
 		#region interface
 
 		public ThenResult(IAsyncOperation op, object successCallback, Action<Exception> errorCallback)
-			: base(op)
+			: base(AsyncOperationStatus.Running)
 		{
+			_op = op;
 			_successCallback = successCallback;
 			_errorCallback = errorCallback;
 
-			// NOTE: Cannot move this to base class because this call might trigger virtual Invoke
-			if (!op.TryAddContinuation(this))
-			{
-				InvokeInternal(op, true);
-			}
+			op.AddContinuation(this);
 		}
 
 		protected virtual void InvokeSuccessCallback(IAsyncOperation op, bool completedSynchronously, object continuation)
@@ -73,38 +71,18 @@ namespace UnityFx.Async.Promises
 
 		#endregion
 
-		#region ContinuationResult
-
-		protected sealed override void InvokeInline(IAsyncOperation op, bool completedSynchronously)
-		{
-			if (op.IsCompletedSuccessfully)
-			{
-				if (IsCancellationRequested)
-				{
-					TrySetCanceled(completedSynchronously);
-				}
-				else
-				{
-					InvokeSuccessCallback(op, completedSynchronously, _successCallback);
-				}
-			}
-			else
-			{
-				InvokeErrorCallback(op, completedSynchronously);
-			}
-		}
-
-		#endregion
-
 		#region AsyncResult
 
 		protected override void OnCancel()
 		{
-			base.OnCancel();
-
-			if (_continuation is IAsyncCancellable c)
+			if (_op is IAsyncCancellable c)
 			{
 				c.Cancel();
+			}
+
+			if (_continuation is IAsyncCancellable c2)
+			{
+				c2.Cancel();
 			}
 		}
 
@@ -112,31 +90,31 @@ namespace UnityFx.Async.Promises
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op)
+		public void Invoke(IAsyncOperation op, bool inline)
 		{
-			InvokeInternal(op, false);
-		}
-
-		#endregion
-
-		#region implementation
-
-		private void InvokeInternal(IAsyncOperation op, bool completedSynchronously)
-		{
-			if (op.IsCompletedSuccessfully || _errorCallback != null)
+			try
 			{
-				InvokeOnSyncContext(op, completedSynchronously);
+				if (op.IsCompletedSuccessfully)
+				{
+					if (IsCancellationRequested)
+					{
+						TrySetCanceled(inline);
+					}
+					else
+					{
+						InvokeSuccessCallback(op, inline, _successCallback);
+					}
+				}
+				else
+				{
+					_errorCallback?.Invoke(op.Exception.InnerException);
+					TrySetException(op.Exception, inline);
+				}
 			}
-			else
+			catch (Exception e)
 			{
-				TrySetException(op.Exception, completedSynchronously);
+				TrySetException(e, inline);
 			}
-		}
-
-		private void InvokeErrorCallback(IAsyncOperation op, bool completedSynchronously)
-		{
-			_errorCallback?.Invoke(op.Exception.InnerException);
-			TrySetException(op.Exception, completedSynchronously);
 		}
 
 		#endregion

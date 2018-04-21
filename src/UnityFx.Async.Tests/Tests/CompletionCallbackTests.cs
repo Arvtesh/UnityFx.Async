@@ -68,19 +68,17 @@ namespace UnityFx.Async
 
 			void TestMethod()
 			{
-				for (int i = 0; i < 1000; ++i)
+				for (var i = 0; i < 1000; ++i)
 				{
 					op.TryAddCompletionCallback(CompletionCallback);
 				}
 			}
 
 			// Act
-			await Task.Run(new Action(TestMethod));
-			await Task.Run(new Action(TestMethod));
-			await Task.Run(new Action(TestMethod));
-			op.SetCompleted();
+			await Task.WhenAll(Task.Run(new Action(TestMethod)), Task.Run(new Action(TestMethod)), Task.Run(new Action(TestMethod)));
 
 			// Assert
+			op.SetCompleted();
 			Assert.Equal(3000, counter);
 		}
 
@@ -96,7 +94,7 @@ namespace UnityFx.Async
 			op.SetCompleted();
 
 			// Assert
-			continuation.Received(1).Invoke(op);
+			continuation.Received(1).Invoke(op, false);
 		}
 	}
 }
