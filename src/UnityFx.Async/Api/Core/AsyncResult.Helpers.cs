@@ -264,6 +264,56 @@ namespace UnityFx.Async
 			return new AsyncResult<T>(result, asyncState);
 		}
 
+		/// <summary>
+		/// Creates a completed <see cref="IAsyncOperation"/> that represents result of the <paramref name="action"/> specified.
+		/// </summary>
+		/// <param name="action">The delegate to execute.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <returns>A completed operation that represents <paramref name="action"/> result.</returns>
+		/// <seealso cref="FromAction{TResult}(Func{TResult})"/>
+		public static AsyncResult FromAction(Action action)
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			try
+			{
+				action();
+				return CompletedOperation;
+			}
+			catch (Exception e)
+			{
+				return new AsyncResult(e, null);
+			}
+		}
+
+		/// <summary>
+		/// Creates a completed <see cref="IAsyncOperation{TResult}"/> that represents result of the <paramref name="action"/> specified.
+		/// </summary>
+		/// <param name="action">The delegate to execute.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <returns>A completed operation that represents <paramref name="action"/> result.</returns>
+		/// <seealso cref="FromAction(Action)"/>
+		public static AsyncResult<TResult> FromAction<TResult>(Func<TResult> action)
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			try
+			{
+				var result = action();
+				return new AsyncResult<TResult>(result, null);
+			}
+			catch (Exception e)
+			{
+				return new AsyncResult<TResult>(e, null);
+			}
+		}
+
 #if UNITYFX_SUPPORT_TAP
 
 		/// <summary>
@@ -343,6 +393,42 @@ namespace UnityFx.Async
 #endif
 
 #if !NET35
+
+		/// <summary>
+		/// Creates a completed <see cref="IAsyncOperation"/> that represents result of the <paramref name="action"/> specified.
+		/// </summary>
+		/// <param name="action">The delegate to execute.</param>
+		/// <param name="cancellationToken">A cancellation token to check before executing the <paramref name="action"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <returns>A completed operation that represents <paramref name="action"/> result.</returns>
+		/// <seealso cref="FromAction(Action)"/>
+		public static AsyncResult FromAction(Action action, CancellationToken cancellationToken)
+		{
+			if (cancellationToken.IsCancellationRequested)
+			{
+				return CanceledOperation;
+			}
+
+			return FromAction(action);
+		}
+
+		/// <summary>
+		/// Creates a completed <see cref="IAsyncOperation{TResult}"/> that represents result of the <paramref name="action"/> specified.
+		/// </summary>
+		/// <param name="action">The delegate to execute.</param>
+		/// <param name="cancellationToken">A cancellation token to check before executing the <paramref name="action"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <returns>A completed operation that represents <paramref name="action"/> result.</returns>
+		/// <seealso cref="FromAction{TResult}(Func{TResult})"/>
+		public static AsyncResult<TResult> FromAction<TResult>(Func<TResult> action, CancellationToken cancellationToken)
+		{
+			if (cancellationToken.IsCancellationRequested)
+			{
+				return new AsyncResult<TResult>(AsyncOperationStatus.Canceled);
+			}
+
+			return FromAction(action);
+		}
 
 		/// <summary>
 		/// Creates a <see cref="IAsyncOperation{T}"/> instance that can be used to track the source observable.
