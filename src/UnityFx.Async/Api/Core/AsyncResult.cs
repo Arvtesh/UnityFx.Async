@@ -51,13 +51,16 @@ namespace UnityFx.Async
 		private const int _flagCompletionReserved = 0x00010000;
 		private const int _flagCompleted = 0x00020000;
 		private const int _flagSynchronous = 0x00040000;
-		private const int _flagCancellationRequested = 0x00100000;
 		private const int _flagCompletedSynchronously = _flagCompleted | _flagCompletionReserved | _flagSynchronous;
-		private const int _flagDisposed = 0x01000000;
-		private const int _flagDoNotDispose = 0x10000000;
-		private const int _flagRunContinuationsAsynchronously = 0x20000000;
+		private const int _flagCancellationRequested = 0x00100000;
+		private const int _flagDisposed = 0x00200000;
+
+		private const int _flagDoNotDispose = OptionDoNotDispose << _optionsOffset;
+		private const int _flagRunContinuationsAsynchronously = OptionRunContinuationsAsynchronously << _optionsOffset;
+
 		private const int _statusMask = 0x0000000f;
-		private const int _resetMask = 0x70000000;
+		private const int _optionsMask = 0x70000000;
+		private const int _optionsOffset = 28;
 
 		private readonly object _asyncState;
 		private AggregateException _exception;
@@ -76,6 +79,12 @@ namespace UnityFx.Async
 		#endregion
 
 		#region interface
+
+		/// <summary>
+		/// Gets the <see cref="AsyncCreationOptions"/> used to create this operation.
+		/// </summary>
+		/// <value>The operation creation options.</value>
+		public AsyncCreationOptions CreationOptions => (AsyncCreationOptions)(_flags >> _optionsOffset);
 
 		/// <summary>
 		/// Gets a value indicating whether the operation instance is disposed.
@@ -97,11 +106,33 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class with the specified <see cref="CreationOptions"/>.
+		/// </summary>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncResult(AsyncCreationOptions options)
+			: this((int)options << _optionsOffset)
+		{
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
 		/// </summary>
 		/// <param name="asyncCallback">User-defined completion callback.</param>
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
 		public AsyncResult(AsyncCallback asyncCallback, object asyncState)
+		{
+			_asyncState = asyncState;
+			_continuation = asyncCallback;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
+		/// </summary>
+		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncResult(AsyncCallback asyncCallback, object asyncState, AsyncCreationOptions options)
+			: this((int)options << _optionsOffset)
 		{
 			_asyncState = asyncState;
 			_continuation = asyncCallback;
@@ -117,12 +148,34 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class with the specified <see cref="Status"/> and <see cref="CreationOptions"/>.
+		/// </summary>
+		/// <param name="status">Initial value of the <see cref="Status"/> property.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncResult(AsyncOperationStatus status, AsyncCreationOptions options)
+			: this((int)status | ((int)options << _optionsOffset))
+		{
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class with the specified <see cref="Status"/>.
 		/// </summary>
 		/// <param name="status">Initial value of the <see cref="Status"/> property.</param>
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
 		public AsyncResult(AsyncOperationStatus status, object asyncState)
 			: this((int)status)
+		{
+			_asyncState = asyncState;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class with the specified <see cref="Status"/> and <see cref="CreationOptions"/>.
+		/// </summary>
+		/// <param name="status">Initial value of the <see cref="Status"/> property.</param>
+		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncResult(AsyncOperationStatus status, object asyncState, AsyncCreationOptions options)
+			: this((int)status | ((int)options << _optionsOffset))
 		{
 			_asyncState = asyncState;
 		}
@@ -135,6 +188,20 @@ namespace UnityFx.Async
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
 		public AsyncResult(AsyncOperationStatus status, AsyncCallback asyncCallback, object asyncState)
 			: this((int)status)
+		{
+			_asyncState = asyncState;
+			_continuation = asyncCallback;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class with the specified <see cref="Status"/> and <see cref="CreationOptions"/>.
+		/// </summary>
+		/// <param name="status">Initial value of the <see cref="Status"/> property.</param>
+		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncResult(AsyncOperationStatus status, AsyncCallback asyncCallback, object asyncState, AsyncCreationOptions options)
+			: this((int)status | ((int)options << _optionsOffset))
 		{
 			_asyncState = asyncState;
 			_continuation = asyncCallback;
@@ -601,6 +668,9 @@ namespace UnityFx.Async
 		internal const int StatusRanToCompletion = 3;
 		internal const int StatusCanceled = 4;
 		internal const int StatusFaulted = 5;
+
+		internal const int OptionDoNotDispose = 1;
+		internal const int OptionRunContinuationsAsynchronously = 2;
 
 		/// <summary>
 		/// Special status setter for <see cref="AsyncOperationStatus.Scheduled"/> and <see cref="AsyncOperationStatus.Running"/>.

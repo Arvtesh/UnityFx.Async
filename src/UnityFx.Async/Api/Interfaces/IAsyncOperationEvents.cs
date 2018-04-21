@@ -12,6 +12,7 @@ namespace UnityFx.Async
 	/// <param name="op">The asynchronous operation.</param>
 	/// <seealso cref="IAsyncOperationEvents"/>
 	/// <seealso cref="IAsyncOperation"/>
+	/// <seealso cref="IAsyncContinuation"/>
 	public delegate void AsyncOperationCallback(IAsyncOperation op);
 
 	/// <summary>
