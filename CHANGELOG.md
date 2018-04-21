@@ -7,10 +7,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ## [0.9.0] - Unreleased
 
 ### Added
-- Added `AsyncContinuationOptions` support.
+- Added `AsyncContinuationOptions`.
+- Added `AsyncCreationOptions`.
 - Added `Promise`-like extensions `Then`, `ThenAll`, `ThenAny`, `Rebind`, `Catch` and `Finally`.
 - Added `Unwrap` extension methods.
 - Added `FromTask`/`FromObservable` helpers.
+- Added `FromAction` helpers.
 - Added `ToAsync` extension method for `IObservable` interface.
 - Added `TryAddContinuation`/`RemoveContinuation` methods to `IAsyncOperationEvents` for non-delegate continuations.
 - Added `IAsyncUpdatable` and `IAsyncUpdateSource` interfaces.
