@@ -181,25 +181,18 @@ namespace UnityFx.Async
 		{
 			if (cancellationToken.CanBeCanceled && !op.IsCompleted)
 			{
-				if (op is IAsyncCancellable c)
+				if (cancellationToken.IsCancellationRequested)
 				{
-					if (cancellationToken.IsCancellationRequested)
-					{
-						c.Cancel();
-					}
-					else
-					{
-						if (_cancelHandler == null)
-						{
-							_cancelHandler = args => (args as IAsyncCancellable).Cancel();
-						}
-
-						cancellationToken.Register(_cancelHandler, op, false);
-					}
+					op.Cancel();
 				}
 				else
 				{
-					throw new NotSupportedException();
+					if (_cancelHandler == null)
+					{
+						_cancelHandler = args => (args as IAsyncCancellable).Cancel();
+					}
+
+					cancellationToken.Register(_cancelHandler, op, false);
 				}
 			}
 

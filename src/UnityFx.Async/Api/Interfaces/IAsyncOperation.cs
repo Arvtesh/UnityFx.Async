@@ -50,7 +50,7 @@ namespace UnityFx.Async
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</seealso>
 	/// <seealso cref="IAsyncOperation{TResult}"/>
 	/// <seealso cref="IAsyncResult"/>
-	public interface IAsyncOperation : IAsyncOperationEvents, IAsyncResult, IDisposable
+	public interface IAsyncOperation : IAsyncOperationEvents, IAsyncCancellable, IAsyncResult, IDisposable
 	{
 		/// <summary>
 		/// Gets the operation status identifier.

@@ -34,10 +34,7 @@ namespace UnityFx.Async
 		{
 			foreach (var op in _ops)
 			{
-				if (op is IAsyncCancellable c)
-				{
-					c.Cancel();
-				}
+				op.Cancel();
 			}
 		}
 

@@ -75,15 +75,8 @@ namespace UnityFx.Async.Promises
 
 		protected override void OnCancel()
 		{
-			if (_op is IAsyncCancellable c)
-			{
-				c.Cancel();
-			}
-
-			if (_continuation is IAsyncCancellable c2)
-			{
-				c2.Cancel();
-			}
+			_op.Cancel();
+			_continuation?.Cancel();
 		}
 
 		#endregion

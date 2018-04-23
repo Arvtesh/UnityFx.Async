@@ -44,7 +44,7 @@ namespace UnityFx.Async
 	/// <seealso cref="AsyncResult{T}"/>
 	/// <seealso cref="IAsyncResult"/>
 	[DebuggerDisplay("{DebuggerDisplay,nq}")]
-	public partial class AsyncResult : IAsyncOperation, IAsyncCancellable, IEnumerator
+	public partial class AsyncResult : IAsyncOperation, IEnumerator
 	{
 		#region data
 
@@ -955,6 +955,21 @@ namespace UnityFx.Async
 
 		#endregion
 
+		#region IAsyncCancellable
+
+		/// <inheritdoc/>
+		public void Cancel()
+		{
+			ThrowIfDisposed();
+
+			if (TrySetFlag(_flagCancellationRequested))
+			{
+				OnCancel();
+			}
+		}
+
+		#endregion
+
 		#region IAsyncResult
 
 		/// <inheritdoc/>
@@ -1006,21 +1021,6 @@ namespace UnityFx.Async
 
 		/// <inheritdoc/>
 		public bool IsCompleted => (_flags & _flagCompleted) != 0;
-
-		#endregion
-
-		#region IAsyncCancellable
-
-		/// <inheritdoc/>
-		public void Cancel()
-		{
-			ThrowIfDisposed();
-
-			if (TrySetFlag(_flagCancellationRequested))
-			{
-				OnCancel();
-			}
-		}
 
 		#endregion
 
