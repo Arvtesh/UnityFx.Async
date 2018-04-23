@@ -308,13 +308,17 @@ finally
 ```
 
 ### Cancellation
-All library operations can be cancelled using `AsyncResult.Cancel` method or with `WithCancellation` extension:
+All library operations can be cancelled using `Cancel` method:
 ```csharp
+    op.Cancel();
+```
+Or with `WithCancellation` extension:
 DownloadTextAsync("http://www.google.com")
     .Then(text => ExtractFirstParagraph(text))
     .WithCancellation(cancellationToken);
+```csharp
 ```
-If the [token](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken) passed to `WithCancellation` is cancelled the target operation is cancelled as well (and that means cancelling all chained operations) as soon as possible. Cancellation might not be instant (depends on specific operation implementation). Also, please note that not all operations might support cancellation.
+If the [token](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken) passed to `WithCancellation` is cancelled the target operation is cancelled as well (and that means cancelling all chained operations) as soon as possible. Cancellation might not be instant (depends on specific operation implementation). Also, please note that not all operations might support cancellation; in this case `Cancel` will throw `NotSupportedException`.
 
 ### Synchronization context capturing
 The default behaviour of all library methods is to capture current [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) and try to schedule continuations on it. If there is no synchronization context attached to current thread, continuations are executed on a thread that initiated an operation completion. The same behaviour applies to `async` / `await` implementation unless explicitly overriden with `ConfigureAwait`:
