@@ -314,7 +314,7 @@ DownloadTextAsync("http://www.google.com")
     .Then(text => ExtractFirstParagraph(text))
     .WithCancellation(cancellationToken);
 ```
-If the [token](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken) passed to `WithCancellation` is cancelled the target operation is cancelled as well (and that means cancelling all of the chain operations) as soon as possible. The cancellation might not be instant (depends on specific operation implementation). Also please note that not all operations might support cancellation.
+If the [token](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken) passed to `WithCancellation` is cancelled the target operation is cancelled as well (and that means cancelling all chained operations) as soon as possible. Cancellation might not be instant (depends on specific operation implementation). Also, please note that not all operations might support cancellation.
 
 ### Synchronization context capturing
 The default behaviour of all library methods is to capture current [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) and try to schedule continuations on it. If there is no synchronization context attached to current thread, continuations are executed on a thread that initiated an operation completion. The same behaviour applies to `async` / `await` implementation unless explicitly overriden with `ConfigureAwait`:
@@ -327,19 +327,19 @@ await DownloadTextAsync("http://www.yahoo.com").ConfigureAwait(false);
 ```
 
 ### Completion callbacks
-All operations defined in the library support adding of completion callbacks that are executed when an operation completes:
+Completion callbacks are basicly low-level continuations. Just like continuations they are executed when parent operation completes:
 ```csharp
 var op = DownloadTextAsync("http://www.google.com");
 op.Completed += o => Debug.Log("1");
 op.AddCompletionCallback(o => Debug.Log("2"));
 ```
-Unlike `ContinueWith`-like stuff completion callbacks cannot be chained and do not handle exceptions automatically. Throwing an exception from a completion callback results in unspecified behavior.
+That said, unlike `ContinueWith`-like stuff completion callbacks cannot be chained and do not handle exceptions automatically. Throwing an exception from a completion callback results in unspecified behavior.
 
-There is also a low-level continuation interface (`IAsyncContinuation`):
+There are also non-delegate completion callbacks (`IAsyncContinuation`):
 ```csharp
 class MyContinuation : IAsyncContinuation
 {
-    public void Invoke(IAsyncOperation op) => Debug.Log("Done");
+    public void Invoke(IAsyncOperation op, bool inline) => Debug.Log("Done");
 }
 
 // ...
@@ -357,9 +357,10 @@ Please note that `Dispose` implementation is NOT thread-safe and can only be cal
 There are a number of helper methods for creating completed operations:
 ```csharp
 var op1 = AsyncResult.CompletedOperation;
-var op2 = AsyncResult.FromResult(10);
-var op3 = AsyncResult.FromException(new Exception());
-var op4 = AsyncResult.FromCanceled();
+var op2 = AsyncResult.CanceledOperation;
+var op3 = AsyncResult.FromResult(10);
+var op4 = AsyncResult.FromException(new Exception());
+var op5 = AsyncResult.FromCanceled();
 ```
 
 ### Convertions
@@ -377,8 +378,8 @@ var op5 = unityWWW.ToAsync();
 
 ### Creating own asynchronous operations
 Most common way of creating own asynchronous operation is instantiating `AsyncCompletionSource` instance and call `SetResult` / `SetException` / `SetCanceled` when done. Still there are cases when more control is required. For this purpose the library provides two public extendable implementations for asynchronous operations:
-* `AsyncResult`: an operation without a result value.
-* `AsyncResult<TResult>`: an asynchronous operation with a generic result value.
+* `AsyncResult`: a generic asynchronous operation without a result value.
+* `AsyncResult<TResult>`: an asynchronous operation with a result value.
 
 The sample code below demostrates creating a delay operation:
 ```csharp
@@ -389,13 +390,22 @@ public class TimerDelayResult : AsyncResult
     public TimerDelayResult(int millisecondsDelay)
         : base(AsyncOperationStatus.Running)
     {
-        _timer = new Timer(TimerCompletionCallback, this, millisecondsDelay, Timeout.Infinite);
+        _timer = new Timer(
+            state => (state as TimerDelayResult).TrySetCompleted(false),
+            this,
+            millisecondsDelay,
+            Timeout.Infinite);
     }
 
     protected override void OnCompleted()
     {
         _timer.Dispose();
         base.OnCompleted();
+    }
+
+    protected override void OnCancel()
+    {
+        _timer.Dispose();
     }
 
     protected override void Dispose(bool disposing)
@@ -406,11 +416,6 @@ public class TimerDelayResult : AsyncResult
         }
 
         base.Dispose(disposing);
-    }
-
-    private static void TimerCompletionCallback(object state)
-    {
-        (state as TimerDelayResult).TrySetCompleted(false);
     }
 }
 ```
