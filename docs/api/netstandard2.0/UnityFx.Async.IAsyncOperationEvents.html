@@ -86,10 +86,267 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_UnityFx_Async_AsyncOperationCallback_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.RemoveCompletionCallback(UnityFx.Async.AsyncOperationCallback)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_AsyncOperationCallback_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback(UnityFx.Async.AsyncOperationCallback)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L57">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L46">View Source</a>
+  </span>
+  <a id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback*"></a>
+  <h4 id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_AsyncOperationCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback(UnityFx.Async.AsyncOperationCallback)">AddCompletionCallback(AsyncOperationCallback)</h4>
+  <div class="markdown level1 summary"><p>Adds a completion callback to be executed after the operation has completed. If the operation is completed <code data-dev-comment-type="paramref" class="paramref">action</code> is invoked synchronously.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void AddCompletionCallback(AsyncOperationCallback action)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.AsyncOperationCallback.html">AsyncOperationCallback</a></td>
+        <td><span class="parametername">action</span></td>
+        <td><p>The callback to be executed when the operation has completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">action</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>Thrown is the operation has been disposed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_AsyncOperationCallback__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback_">TryAddCompletionCallback(AsyncOperationCallback)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_UnityFx_Async_AsyncOperationCallback_">RemoveCompletionCallback(AsyncOperationCallback)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback(UnityFx.Async.AsyncOperationCallback%2CSystem.Threading.SynchronizationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L73">View Source</a>
+  </span>
+  <a id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback*"></a>
+  <h4 id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback(UnityFx.Async.AsyncOperationCallback,System.Threading.SynchronizationContext)">AddCompletionCallback(AsyncOperationCallback, SynchronizationContext)</h4>
+  <div class="markdown level1 summary"><p>Adds a completion callback to be executed after the operation has completed. If the operation is completed <code data-dev-comment-type="paramref" class="paramref">action</code> is invoked
+on the <code data-dev-comment-type="paramref" class="paramref">syncContext</code> specified.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void AddCompletionCallback(AsyncOperationCallback action, SynchronizationContext syncContext)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.AsyncOperationCallback.html">AsyncOperationCallback</a></td>
+        <td><span class="parametername">action</span></td>
+        <td><p>The callback to be executed when the operation has completed.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">syncContext</span></td>
+        <td><p>If not <span class="xref">null</span> method attempts to marshal the continuation to the synchronization context.
+Otherwise the callback is invoked on a thread that initiated the operation completion.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">action</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>Thrown is the operation has been disposed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext_">TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_UnityFx_Async_AsyncOperationCallback_">RemoveCompletionCallback(AsyncOperationCallback)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_AddContinuation_UnityFx_Async_IAsyncContinuation_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.AddContinuation(UnityFx.Async.IAsyncContinuation)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L110">View Source</a>
+  </span>
+  <a id="UnityFx_Async_IAsyncOperationEvents_AddContinuation_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddContinuation*"></a>
+  <h4 id="UnityFx_Async_IAsyncOperationEvents_AddContinuation_UnityFx_Async_IAsyncContinuation_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddContinuation(UnityFx.Async.IAsyncContinuation)">AddContinuation(IAsyncContinuation)</h4>
+  <div class="markdown level1 summary"><p>Adds a completion callback to be executed after the operation has completed. If the operation is completed <code data-dev-comment-type="paramref" class="paramref">continuation</code> is invoked synchronously.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void AddContinuation(IAsyncContinuation continuation)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncContinuation.html">IAsyncContinuation</a></td>
+        <td><span class="parametername">continuation</span></td>
+        <td><p>The callback to be executed when the operation has completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">continuation</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>Thrown is the operation has been disposed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationEvents_AddContinuation_UnityFx_Async_IAsyncContinuation__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddContinuation_UnityFx_Async_IAsyncContinuation_">TryAddContinuation(IAsyncContinuation)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddContinuation_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_">AddContinuation(IAsyncContinuation, SynchronizationContext)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveContinuation_UnityFx_Async_IAsyncContinuation_">RemoveContinuation(IAsyncContinuation)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_AddContinuation_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.AddContinuation(UnityFx.Async.IAsyncContinuation%2CSystem.Threading.SynchronizationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L137">View Source</a>
+  </span>
+  <a id="UnityFx_Async_IAsyncOperationEvents_AddContinuation_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddContinuation*"></a>
+  <h4 id="UnityFx_Async_IAsyncOperationEvents_AddContinuation_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddContinuation(UnityFx.Async.IAsyncContinuation,System.Threading.SynchronizationContext)">AddContinuation(IAsyncContinuation, SynchronizationContext)</h4>
+  <div class="markdown level1 summary"><p>Adds a completion callback to be executed after the operation has completed. If the operation is completed <code data-dev-comment-type="paramref" class="paramref">continuation</code> is invoked synchronously.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void AddContinuation(IAsyncContinuation continuation, SynchronizationContext syncContext)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncContinuation.html">IAsyncContinuation</a></td>
+        <td><span class="parametername">continuation</span></td>
+        <td><p>The callback to be executed when the operation has completed.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">syncContext</span></td>
+        <td><p>If not <span class="xref">null</span> method attempts to marshal the continuation to the synchronization context.
+Otherwise the callback is invoked on a thread that initiated the operation completion.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">continuation</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>Thrown is the operation has been disposed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationEvents_AddContinuation_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddContinuation_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_">TryAddContinuation(IAsyncContinuation, SynchronizationContext)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddContinuation_UnityFx_Async_IAsyncContinuation_">AddContinuation(IAsyncContinuation)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveContinuation_UnityFx_Async_IAsyncContinuation_">RemoveContinuation(IAsyncContinuation)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_UnityFx_Async_AsyncOperationCallback_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.RemoveCompletionCallback(UnityFx.Async.AsyncOperationCallback)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L99">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.RemoveCompletionCallback*"></a>
   <h4 id="UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_UnityFx_Async_AsyncOperationCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.RemoveCompletionCallback(UnityFx.Async.AsyncOperationCallback)">RemoveCompletionCallback(AsyncOperationCallback)</h4>
@@ -129,7 +386,7 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
-        <td><p>Returns <span class="xref">true</span> if the <code data-dev-comment-type="paramref" class="paramref">action</code> was removed; <span class="xref">false</span> otherwise.</p>
+        <td><p>Returns <span class="xref">true</span> if <code data-dev-comment-type="paramref" class="paramref">action</code> was removed; <span class="xref">false</span> otherwise.</p>
 </td>
       </tr>
     </tbody>
@@ -152,14 +409,163 @@
   </table>
   <h5 id="UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_UnityFx_Async_AsyncOperationCallback__seealso">See Also</h5>
   <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext_">TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_AsyncOperationCallback_">AddCompletionCallback(AsyncOperationCallback)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback_">TryAddCompletionCallback(AsyncOperationCallback)</a></div>
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.TryAddCompletionCallback(UnityFx.Async.AsyncOperationCallback%2CSystem.Threading.SynchronizationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_RemoveContinuation_UnityFx_Async_IAsyncContinuation_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.RemoveContinuation(UnityFx.Async.IAsyncContinuation)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L48">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L162">View Source</a>
+  </span>
+  <a id="UnityFx_Async_IAsyncOperationEvents_RemoveContinuation_" data-uid="UnityFx.Async.IAsyncOperationEvents.RemoveContinuation*"></a>
+  <h4 id="UnityFx_Async_IAsyncOperationEvents_RemoveContinuation_UnityFx_Async_IAsyncContinuation_" data-uid="UnityFx.Async.IAsyncOperationEvents.RemoveContinuation(UnityFx.Async.IAsyncContinuation)">RemoveContinuation(IAsyncContinuation)</h4>
+  <div class="markdown level1 summary"><p>Removes an existing completion callback.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool RemoveContinuation(IAsyncContinuation continuation)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncContinuation.html">IAsyncContinuation</a></td>
+        <td><span class="parametername">continuation</span></td>
+        <td><p>The continuation to remove. Can be <span class="xref">null</span>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p>Returns <span class="xref">true</span> if <code data-dev-comment-type="paramref" class="paramref">continuation</code> was removed; <span class="xref">false</span> otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>Thrown is the operation has been disposed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationEvents_RemoveContinuation_UnityFx_Async_IAsyncContinuation__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddContinuation_UnityFx_Async_IAsyncContinuation_">TryAddContinuation(IAsyncContinuation)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.TryAddCompletionCallback(UnityFx.Async.AsyncOperationCallback)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L59">View Source</a>
+  </span>
+  <a id="UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.TryAddCompletionCallback*"></a>
+  <h4 id="UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.TryAddCompletionCallback(UnityFx.Async.AsyncOperationCallback)">TryAddCompletionCallback(AsyncOperationCallback)</h4>
+  <div class="markdown level1 summary"><p>Attempts to add a completion callback to be executed after the operation has finished. If the operation is already completed
+the method does nothing and just returns <span class="xref">false</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool TryAddCompletionCallback(AsyncOperationCallback action)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.AsyncOperationCallback.html">AsyncOperationCallback</a></td>
+        <td><span class="parametername">action</span></td>
+        <td><p>The callback to be executed when the operation has completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p>Returns <span class="xref">true</span> if the callback was added; <span class="xref">false</span> otherwise (the operation is completed).</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">action</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>Thrown is the operation has been disposed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_AsyncOperationCallback_">AddCompletionCallback(AsyncOperationCallback)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext_">TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_UnityFx_Async_AsyncOperationCallback_">RemoveCompletionCallback(AsyncOperationCallback)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.TryAddCompletionCallback(UnityFx.Async.AsyncOperationCallback%2CSystem.Threading.SynchronizationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L89">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.TryAddCompletionCallback*"></a>
   <h4 id="UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext_" data-uid="UnityFx.Async.IAsyncOperationEvents.TryAddCompletionCallback(UnityFx.Async.AsyncOperationCallback,System.Threading.SynchronizationContext)">TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)</h4>
@@ -223,7 +629,7 @@ Otherwise the callback is invoked on a thread that initiated the operation compl
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
-        <td><p>Thrown if the <code data-dev-comment-type="paramref" class="paramref">action</code> is <span class="xref">null</span>.</p>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">action</code> is <span class="xref">null</span>.</p>
 </td>
       </tr>
       <tr>
@@ -235,16 +641,181 @@ Otherwise the callback is invoked on a thread that initiated the operation compl
   </table>
   <h5 id="UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext__seealso">See Also</h5>
   <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext_">AddCompletionCallback(AsyncOperationCallback, SynchronizationContext)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback_">TryAddCompletionCallback(AsyncOperationCallback)</a></div>
       <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_UnityFx_Async_AsyncOperationCallback_">RemoveCompletionCallback(AsyncOperationCallback)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_TryAddContinuation_UnityFx_Async_IAsyncContinuation_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.TryAddContinuation(UnityFx.Async.IAsyncContinuation)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L123">View Source</a>
+  </span>
+  <a id="UnityFx_Async_IAsyncOperationEvents_TryAddContinuation_" data-uid="UnityFx.Async.IAsyncOperationEvents.TryAddContinuation*"></a>
+  <h4 id="UnityFx_Async_IAsyncOperationEvents_TryAddContinuation_UnityFx_Async_IAsyncContinuation_" data-uid="UnityFx.Async.IAsyncOperationEvents.TryAddContinuation(UnityFx.Async.IAsyncContinuation)">TryAddContinuation(IAsyncContinuation)</h4>
+  <div class="markdown level1 summary"><p>Attempts to add a completion callback to be executed after the operation has finished. If the operation is already completed
+the method does nothing and just returns <span class="xref">false</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool TryAddContinuation(IAsyncContinuation continuation)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncContinuation.html">IAsyncContinuation</a></td>
+        <td><span class="parametername">continuation</span></td>
+        <td><p>The cotinuation to be executed when the operation has completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p>Returns <span class="xref">true</span> if the callback was added; <span class="xref">false</span> otherwise (the operation is completed).</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">continuation</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>Thrown is the operation has been disposed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationEvents_TryAddContinuation_UnityFx_Async_IAsyncContinuation__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddContinuation_UnityFx_Async_IAsyncContinuation_">AddContinuation(IAsyncContinuation)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddContinuation_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_">TryAddContinuation(IAsyncContinuation, SynchronizationContext)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveContinuation_UnityFx_Async_IAsyncContinuation_">RemoveContinuation(IAsyncContinuation)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_TryAddContinuation_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.TryAddContinuation(UnityFx.Async.IAsyncContinuation%2CSystem.Threading.SynchronizationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L153">View Source</a>
+  </span>
+  <a id="UnityFx_Async_IAsyncOperationEvents_TryAddContinuation_" data-uid="UnityFx.Async.IAsyncOperationEvents.TryAddContinuation*"></a>
+  <h4 id="UnityFx_Async_IAsyncOperationEvents_TryAddContinuation_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_" data-uid="UnityFx.Async.IAsyncOperationEvents.TryAddContinuation(UnityFx.Async.IAsyncContinuation,System.Threading.SynchronizationContext)">TryAddContinuation(IAsyncContinuation, SynchronizationContext)</h4>
+  <div class="markdown level1 summary"><p>Attempts to add a completion callback to be executed after the operation has finished. If the operation is already completed
+the method does nothing and just returns <span class="xref">false</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool TryAddContinuation(IAsyncContinuation continuation, SynchronizationContext syncContext)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncContinuation.html">IAsyncContinuation</a></td>
+        <td><span class="parametername">continuation</span></td>
+        <td><p>The cotinuation to be executed when the operation has completed.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">syncContext</span></td>
+        <td><p>If not <span class="xref">null</span> method attempts to marshal the continuation to the synchronization context.
+Otherwise the callback is invoked on a thread that initiated the operation completion.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p>Returns <span class="xref">true</span> if the callback was added; <span class="xref">false</span> otherwise (the operation is completed).</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">continuation</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>Thrown is the operation has been disposed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationEvents_TryAddContinuation_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddContinuation_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_">AddContinuation(IAsyncContinuation, SynchronizationContext)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddContinuation_UnityFx_Async_IAsyncContinuation_">TryAddContinuation(IAsyncContinuation)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveContinuation_UnityFx_Async_IAsyncContinuation_">RemoveContinuation(IAsyncContinuation)</a></div>
   </div>
   <h3 id="events">Events
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_Completed.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.Completed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_Completed.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.Completed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L34">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L36">View Source</a>
   </span>
   <h4 id="UnityFx_Async_IAsyncOperationEvents_Completed" data-uid="UnityFx.Async.IAsyncOperationEvents.Completed">Completed</h4>
   <div class="markdown level1 summary"><p>Raised when the operation has completed.</p>
@@ -296,6 +867,7 @@ If the operation is already completed the event handler is called synchronously.
   </table>
   <h5 id="UnityFx_Async_IAsyncOperationEvents_Completed_seealso">See Also</h5>
   <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback_">TryAddCompletionCallback(AsyncOperationCallback)</a></div>
       <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext_">TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)</a></div>
       <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_UnityFx_Async_AsyncOperationCallback_">RemoveCompletionCallback(AsyncOperationCallback)</a></div>
   </div>
@@ -311,10 +883,10 @@ If the operation is already completed the event handler is called synchronously.
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L21" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L22" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

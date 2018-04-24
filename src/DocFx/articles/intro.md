@@ -27,16 +27,11 @@ void Foo(IAsyncOperation<int> op)
 	{
 		if (o.IsCompletedSuccessfully)
 		{
-			var result = (o as IAsyncOperation<int>).Result;
-			// TODO: use the result
+			Debug.Log("Result: " + (o as IAsyncOperation<int>).Result);
 		}
-		else if (o.IsFaulted)
+		else
 		{
-			// TODO: process failure
-		}
-		else if (o.IsCanceled)
-		{
-			// TODO: process cancellation
+			Debug.LogException(o.Exception);
 		}
 	});
 }
@@ -47,7 +42,7 @@ IAsyncOperation<int> Foo(Task<int> task)
 {
 	var result = new AsyncCompletionSource<int>();
 
-	task.ContinueWith(t => 
+	task.ContinueWith(t =>
 	{
 		if (t.IsFaulted)
 		{

@@ -90,16 +90,11 @@
     {
         if (o.IsCompletedSuccessfully)
         {
-            var result = (o as IAsyncOperation&lt;int&gt;).Result;
-            // TODO: use the result
+            Debug.Log(&quot;Result: &quot; + (o as IAsyncOperation&lt;int&gt;).Result);
         }
-        else if (o.IsFaulted)
+        else
         {
-            // TODO: process failure
-        }
-        else if (o.IsCanceled)
-        {
-            // TODO: process cancellation
+            Debug.LogException(o.Exception);
         }
     });
 }
@@ -108,7 +103,7 @@
 {
     var result = new AsyncCompletionSource&lt;int&gt;();
 
-    task.ContinueWith(t =&gt; 
+    task.ContinueWith(t =&gt;
     {
         if (t.IsFaulted)
         {

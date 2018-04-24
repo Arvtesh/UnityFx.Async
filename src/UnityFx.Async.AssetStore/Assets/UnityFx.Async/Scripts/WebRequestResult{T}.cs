@@ -61,17 +61,6 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Attempts to calcel the web request.
-		/// </summary>
-		public void Cancel()
-		{
-			if (TrySetCanceled(false))
-			{
-				_request.Abort();
-			}
-		}
-
-		/// <summary>
 		/// Initializes the operation result value. Called when the underlying <see cref="UnityWebRequest"/> has completed withou errors.
 		/// </summary>
 		protected virtual T GetResult(UnityWebRequest request)
@@ -150,6 +139,15 @@ namespace UnityFx.Async
 			AsyncUtility.AddCompletionCallback(_request, () => SetCompleted(false));
 
 #endif
+		}
+
+		/// <inheritdoc/>
+		protected override void OnCancel()
+		{
+			if (TrySetCanceled(false))
+			{
+				_request.Abort();
+			}
 		}
 
 		/// <inheritdoc/>

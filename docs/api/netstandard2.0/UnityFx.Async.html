@@ -80,16 +80,16 @@
       <h4><a class="xref" href="UnityFx.Async.AsyncCompletionSource.html">AsyncCompletionSource</a></h4>
       <section><p>Represents an asynchronous operation with external completion control.</p>
 </section>
-      <h4><a class="xref" href="UnityFx.Async.AsyncCompletionSource-1.html">AsyncCompletionSource&lt;T&gt;</a></h4>
-      <section><p>Represents an asynchronous operation with external completion control.</p>
+      <h4><a class="xref" href="UnityFx.Async.AsyncCompletionSource-1.html">AsyncCompletionSource&lt;TResult&gt;</a></h4>
+      <section><p>Represents an asynchronous operation with external completion control. <a class="xref" href="UnityFx.Async.IAsyncCompletionSource-1.html">IAsyncCompletionSource&lt;TResult&gt;</a></p>
 </section>
       <h4><a class="xref" href="UnityFx.Async.AsyncExtensions.html">AsyncExtensions</a></h4>
-      <section><p>Extension methods for <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a> related classes.</p>
+      <section><p>Extension methods for <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>.</p>
 </section>
       <h4><a class="xref" href="UnityFx.Async.AsyncResult.html">AsyncResult</a></h4>
       <section><p>A lightweight <code>net35</code>-compatible asynchronous operation for <code>Unity3d</code>.</p>
 </section>
-      <h4><a class="xref" href="UnityFx.Async.AsyncResult-1.html">AsyncResult&lt;T&gt;</a></h4>
+      <h4><a class="xref" href="UnityFx.Async.AsyncResult-1.html">AsyncResult&lt;TResult&gt;</a></h4>
       <section><p>A lightweight net35-compatible asynchronous operation that can return a value.</p>
 </section>
       <h4><a class="xref" href="UnityFx.Async.AsyncResultQueue-1.html">AsyncResultQueue&lt;T&gt;</a></h4>
@@ -107,39 +107,47 @@
       <section><p>Provides an awaitable object that allows for configured awaits on <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>. This type is intended for compiler use only.</p>
 </section>
       <h4><a class="xref" href="UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable-1.html">AsyncExtensions.ConfiguredAsyncAwaitable&lt;T&gt;</a></h4>
-      <section><p>Provides an awaitable object that allows for configured awaits on <a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation&lt;T&gt;</a>. This type is intended for compiler use only.</p>
-</section>
-      <h4><a class="xref" href="UnityFx.Async.AsyncResult.AsyncAwaiter.html">AsyncResult.AsyncAwaiter</a></h4>
-      <section><p>Provides an object that waits for the completion of <a class="xref" href="UnityFx.Async.AsyncResult.html">AsyncResult</a>. This type and its members are intended for compiler use only.</p>
-</section>
-      <h4><a class="xref" href="UnityFx.Async.AsyncResult.ConfiguredAsyncAwaitable.html">AsyncResult.ConfiguredAsyncAwaitable</a></h4>
-      <section><p>Provides an awaitable object that allows for configured awaits on <a class="xref" href="UnityFx.Async.AsyncResult.html">AsyncResult</a>. This type is intended for compiler use only.</p>
-</section>
-      <h4><a class="xref" href="UnityFx.Async.AsyncResult-1.AsyncAwaiter.html">AsyncResult&lt;T&gt;.AsyncAwaiter</a></h4>
-      <section><p>Provides an object that waits for the completion of <a class="xref" href="UnityFx.Async.AsyncResult.html">AsyncResult</a>. This type and its members are intended for compiler use only.</p>
-</section>
-      <h4><a class="xref" href="UnityFx.Async.AsyncResult-1.ConfiguredAsyncAwaitable.html">AsyncResult&lt;T&gt;.ConfiguredAsyncAwaitable</a></h4>
-      <section><p>Provides an awaitable object that allows for configured awaits on <a class="xref" href="UnityFx.Async.AsyncResult-1.html">AsyncResult&lt;T&gt;</a>. This type is intended for compiler use only.</p>
+      <section><p>Provides an awaitable object that allows for configured awaits on <a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation&lt;TResult&gt;</a>. This type is intended for compiler use only.</p>
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
-      <h4><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html">IAsyncCompletionSource</a></h4>
-      <section><p>Represents the producer side of a <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a> unbound to a delegate, providing access to the consumer side through the <a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_Operation">Operation</a> property.</p>
+      <h4><a class="xref" href="UnityFx.Async.IAsyncCancellable.html">IAsyncCancellable</a></h4>
+      <section><p>A cancellable operation.</p>
 </section>
-      <h4><a class="xref" href="UnityFx.Async.IAsyncCompletionSource-1.html">IAsyncCompletionSource&lt;T&gt;</a></h4>
-      <section><p>Represents the producer side of a <a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation&lt;T&gt;</a> unbound to a delegate, providing access to the consumer side through the <a class="xref" href="UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_Operation">Operation</a> property.</p>
+      <h4><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html">IAsyncCompletionSource</a></h4>
+      <section><p>Represents the producer side of an asynchronous operation unbound to a delegate, providing access to the consumer side through the <a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_Operation">Operation</a> property.</p>
+</section>
+      <h4><a class="xref" href="UnityFx.Async.IAsyncCompletionSource-1.html">IAsyncCompletionSource&lt;TResult&gt;</a></h4>
+      <section><p>Represents the producer side of a <a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation&lt;TResult&gt;</a> unbound to a delegate, providing access to the consumer side through the <a class="xref" href="UnityFx.Async.IAsyncCompletionSource-1.html#UnityFx_Async_IAsyncCompletionSource_1_Operation">Operation</a> property.</p>
+</section>
+      <h4><a class="xref" href="UnityFx.Async.IAsyncContinuation.html">IAsyncContinuation</a></h4>
+      <section><p>A generic non-delegate continuation.</p>
 </section>
       <h4><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></h4>
-      <section><p>A disposable <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iasyncresult">IAsyncResult</a> with completion status information.</p>
+      <section><p>Represents the consumer side of an asynchronous operation. A disposable <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iasyncresult">IAsyncResult</a>
+with status information.</p>
 </section>
-      <h4><a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation&lt;T&gt;</a></h4>
-      <section><p>Extends an <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a> interface with a result value.</p>
+      <h4><a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation&lt;TResult&gt;</a></h4>
+      <section><p>Represents the consumer side of an asynchronous operation. Extends an <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>
+interface with a result value.</p>
 </section>
       <h4><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html">IAsyncOperationEvents</a></h4>
       <section><p>A controller for <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a> completion callbacks.</p>
 </section>
+      <h4><a class="xref" href="UnityFx.Async.IAsyncUpdatable.html">IAsyncUpdatable</a></h4>
+      <section><p>An updatable object.</p>
+</section>
+      <h4><a class="xref" href="UnityFx.Async.IAsyncUpdateSource.html">IAsyncUpdateSource</a></h4>
+      <section><p>A provider of update notifications.</p>
+</section>
     <h3 id="enums">Enums
   </h3>
+      <h4><a class="xref" href="UnityFx.Async.AsyncContinuationOptions.html">AsyncContinuationOptions</a></h4>
+      <section><p>Specifies behavior of an asynchronous opration continuation.</p>
+</section>
+      <h4><a class="xref" href="UnityFx.Async.AsyncCreationOptions.html">AsyncCreationOptions</a></h4>
+      <section><p>Specifies flags that control optional behavior for the creation and execution of operations.</p>
+</section>
       <h4><a class="xref" href="UnityFx.Async.AsyncOperationStatus.html">AsyncOperationStatus</a></h4>
       <section><p>Enumerates possible status values for <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>.</p>
 </section>
