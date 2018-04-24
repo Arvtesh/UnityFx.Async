@@ -5,7 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 #if !NET35
 using System.Runtime.ExceptionServices;
 #endif
@@ -19,12 +18,11 @@ namespace UnityFx.Async
 	/// <remarks>
 	/// <para>This class is the core entity of the library. In many aspects it mimics <c>Task</c>
 	/// interface and behaviour. For example, any <see cref="AsyncResult"/> instance can have any
-	/// number of continuations (added either explicitly via <see cref="TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)"/>
+	/// number of continuations (added either explicitly via <c>TryAddCompletionCallback</c>
 	/// call or implicitly using <c>async</c>/<c>await</c> keywords). These continuations can be
 	/// invoked on a captured <see cref="SynchronizationContext"/>. The class inherits <see cref="IAsyncResult"/>
 	/// (just like <c>Task</c>) and can be used to implement Asynchronous Programming Model (APM).
-	/// There is a number of operation state accessors that can be used exactly like corresponding
-	/// properties of <c>Task</c>.
+	/// There are operation state accessors that can be used exactly like corresponding properties of <c>Task</c>.
 	/// </para>
 	/// <para>The class implements <see cref="IDisposable"/> interface. So strictly speaking <see cref="Dispose()"/>
 	/// should be called when the operation is no longed in use. In practice that is only required
@@ -36,6 +34,7 @@ namespace UnityFx.Async
 	/// to this class if Unity/net35 compatibility is a concern.
 	/// </para>
 	/// </remarks>
+	/// <seealso href="http://www.what-could-possibly-go-wrong.com/promises-for-game-development/">Promises for game development</seealso>
 	/// <seealso href="https://blogs.msdn.microsoft.com/nikos/2011/03/14/how-to-implement-the-iasyncresult-design-pattern/">How to implement the IAsyncResult design pattern</seealso>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming">Task-based Asynchronous Pattern (TAP)</seealso>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/asynchronous-programming-model-apm">Asynchronous Programming Model (APM)</seealso>
@@ -45,33 +44,47 @@ namespace UnityFx.Async
 	/// <seealso cref="AsyncResult{T}"/>
 	/// <seealso cref="IAsyncResult"/>
 	[DebuggerDisplay("{DebuggerDisplay,nq}")]
-	public class AsyncResult : IAsyncOperation, IEnumerator
+	public partial class AsyncResult : IAsyncOperation, IEnumerator
 	{
 		#region data
 
-		private const int _flagCompletionReserved = 0x00100000;
-		private const int _flagCompleted = 0x00200000;
-		private const int _flagSynchronous = 0x00400000;
+		private const int _flagCompletionReserved = 0x00010000;
+		private const int _flagCompleted = 0x00020000;
+		private const int _flagSynchronous = 0x00040000;
 		private const int _flagCompletedSynchronously = _flagCompleted | _flagCompletionReserved | _flagSynchronous;
-		private const int _flagDisposed = 0x01000000;
-		private const int _flagDoNotDispose = 0x10000000;
-		private const int _statusMask = 0x0000000f;
-		private const int _resetMask = 0x70000000;
+		private const int _flagCancellationRequested = 0x00100000;
+		private const int _flagDisposed = 0x00200000;
 
-		private static readonly object _continuationCompletionSentinel = new object();
-		private static AsyncResult _completedOperation;
+		private const int _flagDoNotDispose = OptionDoNotDispose << _optionsOffset;
+		private const int _flagRunContinuationsAsynchronously = OptionRunContinuationsAsynchronously << _optionsOffset;
+
+		private const int _statusMask = 0x0000000f;
+		private const int _optionsMask = 0x70000000;
+		private const int _optionsOffset = 28;
 
 		private readonly object _asyncState;
-
-		private EventWaitHandle _waitHandle;
 		private AggregateException _exception;
 
-		private volatile object _continuation;
+#if UNITYFX_NOT_THREAD_SAFE
+
+		private int _flags;
+
+#else
+
+		private EventWaitHandle _waitHandle;
 		private volatile int _flags;
+
+#endif
 
 		#endregion
 
 		#region interface
+
+		/// <summary>
+		/// Gets the <see cref="AsyncCreationOptions"/> used to create this operation.
+		/// </summary>
+		/// <value>The operation creation options.</value>
+		public AsyncCreationOptions CreationOptions => (AsyncCreationOptions)(_flags >> _optionsOffset);
 
 		/// <summary>
 		/// Gets a value indicating whether the operation instance is disposed.
@@ -80,9 +93,24 @@ namespace UnityFx.Async
 		protected bool IsDisposed => (_flags & _flagDisposed) != 0;
 
 		/// <summary>
+		/// Gets a value indicating whether the operation cancellation was requested.
+		/// </summary>
+		/// <value>The cancellation request flag.</value>
+		protected bool IsCancellationRequested => (_flags & _flagCancellationRequested) != 0;
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
 		/// </summary>
 		public AsyncResult()
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class with the specified <see cref="CreationOptions"/>.
+		/// </summary>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncResult(AsyncCreationOptions options)
+			: this((int)options << _optionsOffset)
 		{
 		}
 
@@ -98,11 +126,34 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class.
+		/// </summary>
+		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncResult(AsyncCallback asyncCallback, object asyncState, AsyncCreationOptions options)
+			: this((int)options << _optionsOffset)
+		{
+			_asyncState = asyncState;
+			_continuation = asyncCallback;
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class with the specified <see cref="Status"/>.
 		/// </summary>
 		/// <param name="status">Initial value of the <see cref="Status"/> property.</param>
 		public AsyncResult(AsyncOperationStatus status)
 			: this((int)status)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class with the specified <see cref="Status"/> and <see cref="CreationOptions"/>.
+		/// </summary>
+		/// <param name="status">Initial value of the <see cref="Status"/> property.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncResult(AsyncOperationStatus status, AsyncCreationOptions options)
+			: this((int)status | ((int)options << _optionsOffset))
 		{
 		}
 
@@ -118,6 +169,18 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class with the specified <see cref="Status"/> and <see cref="CreationOptions"/>.
+		/// </summary>
+		/// <param name="status">Initial value of the <see cref="Status"/> property.</param>
+		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncResult(AsyncOperationStatus status, object asyncState, AsyncCreationOptions options)
+			: this((int)status | ((int)options << _optionsOffset))
+		{
+			_asyncState = asyncState;
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class with the specified <see cref="Status"/>.
 		/// </summary>
 		/// <param name="status">Initial value of the <see cref="Status"/> property.</param>
@@ -125,6 +188,20 @@ namespace UnityFx.Async
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
 		public AsyncResult(AsyncOperationStatus status, AsyncCallback asyncCallback, object asyncState)
 			: this((int)status)
+		{
+			_asyncState = asyncState;
+			_continuation = asyncCallback;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class with the specified <see cref="Status"/> and <see cref="CreationOptions"/>.
+		/// </summary>
+		/// <param name="status">Initial value of the <see cref="Status"/> property.</param>
+		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncResult(AsyncOperationStatus status, AsyncCallback asyncCallback, object asyncState, AsyncCreationOptions options)
+			: this((int)status | ((int)options << _optionsOffset))
 		{
 			_asyncState = asyncState;
 			_continuation = asyncCallback;
@@ -152,8 +229,16 @@ namespace UnityFx.Async
 				_exception = new AggregateException(exception);
 			}
 
+			if (_exception.InnerException is OperationCanceledException)
+			{
+				_flags = StatusCanceled | _flagCompletedSynchronously;
+			}
+			else
+			{
+				_flags = StatusFaulted | _flagCompletedSynchronously;
+			}
+
 			_continuation = _continuationCompletionSentinel;
-			_flags = StatusFaulted | _flagCompletedSynchronously;
 			_asyncState = asyncState;
 		}
 
@@ -171,8 +256,17 @@ namespace UnityFx.Async
 			}
 
 			_exception = new AggregateException(exceptions);
+
+			if (_exception.InnerException is OperationCanceledException)
+			{
+				_flags = StatusCanceled | _flagCompletedSynchronously;
+			}
+			else
+			{
+				_flags = StatusFaulted | _flagCompletedSynchronously;
+			}
+
 			_continuation = _continuationCompletionSentinel;
-			_flags = StatusFaulted | _flagCompletedSynchronously;
 			_asyncState = asyncState;
 		}
 
@@ -196,6 +290,7 @@ namespace UnityFx.Async
 		/// Attempts to transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
 		/// </summary>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the operation status was changed to <see cref="AsyncOperationStatus.Running"/>; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="Start"/>
 		/// <seealso cref="TrySetRunning"/>
 		/// <seealso cref="OnStarted"/>
@@ -299,7 +394,14 @@ namespace UnityFx.Async
 						_exception = new AggregateException(exception);
 					}
 
-					SetCompleted(StatusFaulted, completedSynchronously);
+					if (_exception.InnerException is OperationCanceledException)
+					{
+						SetCompleted(StatusCanceled, completedSynchronously);
+					}
+					else
+					{
+						SetCompleted(StatusFaulted, completedSynchronously);
+					}
 				}
 
 				return true;
@@ -350,7 +452,16 @@ namespace UnityFx.Async
 			if (TryReserveCompletion())
 			{
 				_exception = new AggregateException(list);
-				SetCompleted(StatusFaulted, completedSynchronously);
+
+				if (_exception.InnerException is OperationCanceledException)
+				{
+					SetCompleted(StatusCanceled, completedSynchronously);
+				}
+				else
+				{
+					SetCompleted(StatusFaulted, completedSynchronously);
+				}
+
 				return true;
 			}
 			else if (!IsCompleted)
@@ -479,6 +590,15 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Called when the operation cancellation has been requested. Default implementation throws <see cref="NotSupportedException"/>.
+		/// </summary>
+		/// <seealso cref="Cancel"/>
+		protected virtual void OnCancel()
+		{
+			throw new NotSupportedException();
+		}
+
+		/// <summary>
 		/// Called when the operation is completed. Default implementation invokes completion handlers registered.
 		/// </summary>
 		/// <seealso cref="OnStarted"/>
@@ -489,32 +609,22 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetExceptions(IEnumerable{System.Exception}, bool)"/>
 		protected virtual void OnCompleted()
 		{
+#if UNITYFX_NOT_THREAD_SAFE
+
+			InvokeContinuations();
+
+#else
+
 			try
 			{
-				var continuation = Interlocked.Exchange(ref _continuation, _continuationCompletionSentinel);
-
-				if (continuation != null)
-				{
-					if (continuation is IEnumerable continuationList)
-					{
-						lock (continuationList)
-						{
-							foreach (var item in continuationList)
-							{
-								AsyncContinuation.Invoke(this, item);
-							}
-						}
-					}
-					else
-					{
-						AsyncContinuation.Invoke(this, continuation);
-					}
-				}
+				InvokeContinuations();
 			}
 			finally
 			{
 				_waitHandle?.Set();
 			}
+
+#endif
 		}
 
 		/// <summary>
@@ -532,6 +642,8 @@ namespace UnityFx.Async
 			{
 				_flags |= _flagDisposed;
 
+#if !UNITYFX_NOT_THREAD_SAFE
+
 				if (_waitHandle != null)
 				{
 #if NET35
@@ -541,615 +653,10 @@ namespace UnityFx.Async
 #endif
 					_waitHandle = null;
 				}
+
+#endif
 			}
 		}
-
-		#endregion
-
-		#region static interface
-
-		/// <summary>
-		/// Gets an operation that's already been completed successfully.
-		/// </summary>
-		/// <remarks>
-		/// Note that <see cref="Dispose()"/> call have no effect on operations returned with the property. May not always return the same instance.
-		/// </remarks>
-		/// <value>Completed <see cref="IAsyncOperation"/> instance.</value>
-		public static AsyncResult CompletedOperation
-		{
-			get
-			{
-				if (_completedOperation == null)
-				{
-					_completedOperation = new AsyncResult(_flagDoNotDispose | _flagCompletedSynchronously | StatusRanToCompletion);
-				}
-
-				return _completedOperation;
-			}
-		}
-
-		#region From*
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation"/> that is canceled.
-		/// </summary>
-		/// <returns>A canceled operation.</returns>
-		/// <seealso cref="FromCanceled(object)"/>
-		/// <seealso cref="FromException(Exception)"/>
-		/// <seealso cref="FromExceptions(IEnumerable{System.Exception})"/>
-		/// <seealso cref="FromResult{T}(T)"/>
-		public static AsyncResult FromCanceled()
-		{
-			return new AsyncResult(AsyncOperationStatus.Canceled);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation"/> that is canceled.
-		/// </summary>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
-		/// <returns>A canceled operation.</returns>
-		/// <seealso cref="FromCanceled()"/>
-		/// <seealso cref="FromException(Exception)"/>
-		/// <seealso cref="FromExceptions(IEnumerable{System.Exception})"/>
-		/// <seealso cref="FromResult{T}(T, object)"/>
-		public static AsyncResult FromCanceled(object asyncState)
-		{
-			return new AsyncResult(AsyncOperationStatus.Canceled, asyncState);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> that is canceled.
-		/// </summary>
-		/// <returns>A canceled operation.</returns>
-		/// <seealso cref="FromCanceled{T}(object)"/>
-		/// <seealso cref="FromException{T}(Exception)"/>
-		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception})"/>
-		/// <seealso cref="FromResult{T}(T)"/>
-		public static AsyncResult<T> FromCanceled<T>()
-		{
-			return new AsyncResult<T>(AsyncOperationStatus.Canceled);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> that is canceled.
-		/// </summary>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
-		/// <returns>A canceled operation.</returns>
-		/// <seealso cref="FromCanceled{T}()"/>
-		/// <seealso cref="FromException{T}(Exception)"/>
-		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception})"/>
-		/// <seealso cref="FromResult{T}(T, object)"/>
-		public static AsyncResult<T> FromCanceled<T>(object asyncState)
-		{
-			return new AsyncResult<T>(AsyncOperationStatus.Canceled, asyncState);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation"/> that has completed with a specified exception.
-		/// </summary>
-		/// <param name="exception">The exception to complete the operation with.</param>
-		/// <returns>A faulted operation.</returns>
-		/// <seealso cref="FromException(System.Exception, object)"/>
-		/// <seealso cref="FromExceptions(IEnumerable{System.Exception})"/>
-		/// <seealso cref="FromCanceled()"/>
-		/// <seealso cref="FromResult{T}(T)"/>
-		public static AsyncResult FromException(Exception exception)
-		{
-			return new AsyncResult(exception, null);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation"/> that has completed with a specified exception.
-		/// </summary>
-		/// <param name="exception">The exception to complete the operation with.</param>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
-		/// <returns>A faulted operation.</returns>
-		/// <seealso cref="FromException(System.Exception)"/>
-		/// <seealso cref="FromExceptions(IEnumerable{System.Exception}, object)"/>
-		/// <seealso cref="FromCanceled(object)"/>
-		/// <seealso cref="FromResult{T}(T, object)"/>
-		public static AsyncResult FromException(Exception exception, object asyncState)
-		{
-			return new AsyncResult(exception, asyncState);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation"/> that has completed with specified exceptions.
-		/// </summary>
-		/// <param name="exceptions">Exceptions to complete the operation with.</param>
-		/// <returns>A faulted operation.</returns>
-		/// <seealso cref="FromExceptions(IEnumerable{Exception}, object)"/>
-		/// <seealso cref="FromException(System.Exception)"/>
-		/// <seealso cref="FromCanceled()"/>
-		/// <seealso cref="FromResult{T}(T)"/>
-		public static AsyncResult FromExceptions(IEnumerable<Exception> exceptions)
-		{
-			return new AsyncResult(exceptions, null);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation"/> that has completed with specified exceptions.
-		/// </summary>
-		/// <param name="exceptions">Exceptions to complete the operation with.</param>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
-		/// <returns>A faulted operation.</returns>
-		/// <seealso cref="FromExceptions(IEnumerable{Exception})"/>
-		/// <seealso cref="FromException(System.Exception, object)"/>
-		/// <seealso cref="FromCanceled(object)"/>
-		/// <seealso cref="FromResult{T}(T, object)"/>
-		public static AsyncResult FromExceptions(IEnumerable<Exception> exceptions, object asyncState)
-		{
-			return new AsyncResult(exceptions, asyncState);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with a specified exception.
-		/// </summary>
-		/// <param name="exception">The exception to complete the operation with.</param>
-		/// <returns>A faulted operation.</returns>
-		/// <seealso cref="FromException{T}(System.Exception, object)"/>
-		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception})"/>
-		/// <seealso cref="FromCanceled{T}()"/>
-		/// <seealso cref="FromResult{T}(T)"/>
-		public static AsyncResult<T> FromException<T>(Exception exception)
-		{
-			return new AsyncResult<T>(exception, null);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with a specified exception.
-		/// </summary>
-		/// <param name="exception">The exception to complete the operation with.</param>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
-		/// <returns>A faulted operation.</returns>
-		/// <seealso cref="FromException{T}(System.Exception)"/>
-		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception}, object)"/>
-		/// <seealso cref="FromCanceled{T}(object)"/>
-		/// <seealso cref="FromResult{T}(T, object)"/>
-		public static AsyncResult<T> FromException<T>(Exception exception, object asyncState)
-		{
-			return new AsyncResult<T>(exception, asyncState);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with specified exceptions.
-		/// </summary>
-		/// <param name="exceptions">Exceptions to complete the operation with.</param>
-		/// <returns>A faulted operation.</returns>
-		/// <seealso cref="FromExceptions{T}(IEnumerable{Exception}, object)"/>
-		/// <seealso cref="FromException{T}(System.Exception)"/>
-		/// <seealso cref="FromCanceled{T}()"/>
-		/// <seealso cref="FromResult{T}(T)"/>
-		public static AsyncResult<T> FromExceptions<T>(IEnumerable<Exception> exceptions)
-		{
-			return new AsyncResult<T>(exceptions, null);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with specified exceptions.
-		/// </summary>
-		/// <param name="exceptions">Exceptions to complete the operation with.</param>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
-		/// <returns>A faulted operation.</returns>
-		/// <seealso cref="FromExceptions{T}(IEnumerable{Exception})"/>
-		/// <seealso cref="FromException{T}(System.Exception, object)"/>
-		/// <seealso cref="FromCanceled{T}(object)"/>
-		/// <seealso cref="FromResult{T}(T, object)"/>
-		public static AsyncResult<T> FromExceptions<T>(IEnumerable<Exception> exceptions, object asyncState)
-		{
-			return new AsyncResult<T>(exceptions, asyncState);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with a specified result.
-		/// </summary>
-		/// <param name="result">The result value with which to complete the operation.</param>
-		/// <returns>A completed operation with the specified result value.</returns>
-		/// <seealso cref="FromResult{T}(T, object)"/>
-		/// <seealso cref="FromCanceled{T}()"/>
-		/// <seealso cref="FromException{T}(Exception)"/>
-		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception})"/>
-		public static AsyncResult<T> FromResult<T>(T result)
-		{
-			return new AsyncResult<T>(result, null);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{T}"/> that has completed with a specified result.
-		/// </summary>
-		/// <param name="result">The result value with which to complete the operation.</param>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
-		/// <returns>A completed operation with the specified result value.</returns>
-		/// <seealso cref="FromResult{T}(T)"/>
-		/// <seealso cref="FromCanceled{T}(object)"/>
-		/// <seealso cref="FromException{T}(Exception)"/>
-		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception})"/>
-		public static AsyncResult<T> FromResult<T>(T result, object asyncState)
-		{
-			return new AsyncResult<T>(result, asyncState);
-		}
-
-		#endregion
-
-		#region Delay
-
-		/// <summary>
-		/// Creates an operation that completes after a time delay.
-		/// </summary>
-		/// <param name="millisecondsDelay">The number of milliseconds to wait before completing the returned operation, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
-		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="millisecondsDelay"/> is less than -1.</exception>
-		/// <returns>An operation that represents the time delay.</returns>
-		/// <seealso cref="Delay(TimeSpan)"/>
-		public static AsyncResult Delay(int millisecondsDelay)
-		{
-			if (millisecondsDelay < Timeout.Infinite)
-			{
-				throw new ArgumentOutOfRangeException(nameof(millisecondsDelay), millisecondsDelay, Constants.ErrorValueIsLessThanZero);
-			}
-
-			if (millisecondsDelay == 0)
-			{
-				return CompletedOperation;
-			}
-
-			if (millisecondsDelay == Timeout.Infinite)
-			{
-				return new AsyncResult();
-			}
-
-			return new DelayResult(millisecondsDelay);
-		}
-
-		/// <summary>
-		/// Creates an operation that completes after a specified time interval.
-		/// </summary>
-		/// <param name="delay">The time span to wait before completing the returned operation, or <c>TimeSpan.FromMilliseconds(-1)</c> to wait indefinitely.</param>
-		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="delay"/> represents a negative time interval other than <c>TimeSpan.FromMillseconds(-1)</c>.</exception>
-		/// <returns>An operation that represents the time delay.</returns>
-		/// <seealso cref="Delay(int)"/>
-		public static AsyncResult Delay(TimeSpan delay)
-		{
-			var millisecondsDelay = (long)delay.TotalMilliseconds;
-
-			if (millisecondsDelay > int.MaxValue)
-			{
-				throw new ArgumentOutOfRangeException(nameof(delay));
-			}
-
-			return Delay((int)millisecondsDelay);
-		}
-
-		#endregion
-
-		#region Retry
-
-		/// <summary>
-		/// Creates an operation that completes when the source operation is completed successfully or maximum number of retries exceeded.
-		/// </summary>
-		/// <param name="opFactory">A delegate that initiates the source operation.</param>
-		/// <param name="millisecondsRetryDelay">The number of milliseconds to wait after a failed try before starting a new operation.</param>
-		/// <param name="maxRetryCount">Maximum number of retries. Zero means no limits.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="opFactory"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="millisecondsRetryDelay"/> or <paramref name="maxRetryCount"/> is less than zero.</exception>
-		/// <returns>An operation that represents the retry process.</returns>
-		/// <seealso cref="Retry(Func{IAsyncOperation}, TimeSpan, int)"/>
-		public static AsyncResult Retry(Func<IAsyncOperation> opFactory, int millisecondsRetryDelay, int maxRetryCount = 0)
-		{
-			if (opFactory == null)
-			{
-				throw new ArgumentNullException(nameof(opFactory));
-			}
-
-			if (millisecondsRetryDelay < 0)
-			{
-				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay), millisecondsRetryDelay, Constants.ErrorValueIsLessThanZero);
-			}
-
-			if (maxRetryCount < 0)
-			{
-				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, Constants.ErrorValueIsLessThanZero);
-			}
-
-			return new RetryResult<object>(opFactory, millisecondsRetryDelay, maxRetryCount);
-		}
-
-		/// <summary>
-		/// Creates an operation that completes when the source operation is completed successfully or maximum number of retries exceeded.
-		/// </summary>
-		/// <param name="opFactory">A delegate that initiates the source operation.</param>
-		/// <param name="retryDelay">The time to wait after a failed try before starting a new operation.</param>
-		/// <param name="maxRetryCount">Maximum number of retries. Zero means no limits.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="opFactory"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="retryDelay"/> or <paramref name="maxRetryCount"/> is less than zero.</exception>
-		/// <returns>An operation that represents the retry process.</returns>
-		/// <seealso cref="Retry(Func{IAsyncOperation}, int, int)"/>
-		public static AsyncResult Retry(Func<IAsyncOperation> opFactory, TimeSpan retryDelay, int maxRetryCount = 0)
-		{
-			var millisecondsDelay = (long)retryDelay.TotalMilliseconds;
-
-			if (millisecondsDelay > int.MaxValue)
-			{
-				throw new ArgumentOutOfRangeException(nameof(retryDelay));
-			}
-
-			return Retry(opFactory, (int)millisecondsDelay, maxRetryCount);
-		}
-
-		/// <summary>
-		/// Creates an operation that completes when the source operation is completed successfully or maximum number of retries exceeded.
-		/// </summary>
-		/// <param name="opFactory">A delegate that initiates the source operation.</param>
-		/// <param name="millisecondsRetryDelay">The number of milliseconds to wait after a failed try before starting a new operation.</param>
-		/// <param name="maxRetryCount">Maximum number of retries. Zero means no limits.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="opFactory"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="millisecondsRetryDelay"/> or <paramref name="maxRetryCount"/> is less than zero.</exception>
-		/// <returns>An operation that represents the retry process.</returns>
-		/// <seealso cref="Retry{T}(Func{IAsyncOperation{T}}, TimeSpan, int)"/>
-		public static AsyncResult<T> Retry<T>(Func<IAsyncOperation<T>> opFactory, int millisecondsRetryDelay, int maxRetryCount = 0)
-		{
-			if (opFactory == null)
-			{
-				throw new ArgumentNullException(nameof(opFactory));
-			}
-
-			if (millisecondsRetryDelay < 0)
-			{
-				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay), millisecondsRetryDelay, Constants.ErrorValueIsLessThanZero);
-			}
-
-			if (maxRetryCount < 0)
-			{
-				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, Constants.ErrorValueIsLessThanZero);
-			}
-
-			return new RetryResult<T>(opFactory, millisecondsRetryDelay, maxRetryCount);
-		}
-
-		/// <summary>
-		/// Creates an operation that completes when the source operation is completed successfully or maximum number of retries exceeded.
-		/// </summary>
-		/// <param name="opFactory">A delegate that initiates the source operation.</param>
-		/// <param name="retryDelay">The time to wait after a failed try before starting a new operation.</param>
-		/// <param name="maxRetryCount">Maximum number of retries. Zero means no limits.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="opFactory"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="retryDelay"/> or <paramref name="maxRetryCount"/> is less than zero.</exception>
-		/// <returns>An operation that represents the retry process.</returns>
-		/// <seealso cref="Retry{T}(Func{IAsyncOperation{T}}, int, int)"/>
-		public static AsyncResult<T> Retry<T>(Func<IAsyncOperation<T>> opFactory, TimeSpan retryDelay, int maxRetryCount = 0)
-		{
-			var millisecondsDelay = (long)retryDelay.TotalMilliseconds;
-
-			if (millisecondsDelay > int.MaxValue)
-			{
-				throw new ArgumentOutOfRangeException(nameof(retryDelay));
-			}
-
-			return Retry(opFactory, (int)millisecondsDelay, maxRetryCount);
-		}
-
-		#endregion
-
-		#region WhenAll
-
-		/// <summary>
-		/// Creates an operation that will complete when all of the specified objects in an enumerable collection have completed.
-		/// </summary>
-		/// <param name="ops">The operations to wait on for completion.</param>
-		/// <returns>An operation that represents the completion of all of the supplied operations.</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation..</exception>
-		/// <seealso cref="WhenAll{T}(IEnumerable{IAsyncOperation{T}})"/>
-		/// <seealso cref="WhenAll(IAsyncOperation[])"/>
-		public static AsyncResult WhenAll(IEnumerable<IAsyncOperation> ops)
-		{
-			if (ops == null)
-			{
-				throw new ArgumentNullException(nameof(ops));
-			}
-
-			var opList = new List<IAsyncOperation>();
-
-			foreach (var op in ops)
-			{
-				if (op == null)
-				{
-					throw new ArgumentException(Constants.ErrorListElementIsNull, nameof(ops));
-				}
-
-				opList.Add(op);
-			}
-
-			if (opList.Count == 0)
-			{
-				return CompletedOperation;
-			}
-
-			return new WhenAllResult<VoidResult>(opList.ToArray());
-		}
-
-		/// <summary>
-		/// Creates an operation that will complete when all of the specified objects in an enumerable collection have completed.
-		/// </summary>
-		/// <param name="ops">The operations to wait on for completion.</param>
-		/// <returns>An operation that represents the completion of all of the supplied operations.</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation..</exception>
-		/// <seealso cref="WhenAll(IEnumerable{IAsyncOperation})"/>
-		/// <seealso cref="WhenAll{T}(IAsyncOperation{T}[])"/>
-		public static AsyncResult<T[]> WhenAll<T>(IEnumerable<IAsyncOperation<T>> ops)
-		{
-			if (ops == null)
-			{
-				throw new ArgumentNullException(nameof(ops));
-			}
-
-			var opList = new List<IAsyncOperation<T>>();
-
-			foreach (var op in ops)
-			{
-				if (op == null)
-				{
-					throw new ArgumentException(Constants.ErrorListElementIsNull, nameof(ops));
-				}
-
-				opList.Add(op);
-			}
-
-			if (opList.Count == 0)
-			{
-				return FromResult(new T[0]);
-			}
-
-			return new WhenAllResult<T>(opList.ToArray());
-		}
-
-		/// <summary>
-		/// Creates an operation that will complete when all of the specified objects in an array have completed.
-		/// </summary>
-		/// <param name="ops">The operations to wait on for completion.</param>
-		/// <returns>An operation that represents the completion of all of the supplied operations.</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation..</exception>
-		/// <seealso cref="WhenAll{T}(IAsyncOperation{T}[])"/>
-		/// <seealso cref="WhenAll(IEnumerable{IAsyncOperation})"/>
-		public static AsyncResult WhenAll(params IAsyncOperation[] ops)
-		{
-			if (ops == null)
-			{
-				throw new ArgumentNullException(nameof(ops));
-			}
-
-			if (ops.Length == 0)
-			{
-				return CompletedOperation;
-			}
-
-			var opArray = new IAsyncOperation[ops.Length];
-
-			for (var i = 0; i < ops.Length; i++)
-			{
-				if (ops[i] == null)
-				{
-					throw new ArgumentException(Constants.ErrorListElementIsNull, nameof(ops));
-				}
-
-				opArray[i] = ops[i];
-			}
-
-			return new WhenAllResult<VoidResult>(opArray);
-		}
-
-		/// <summary>
-		/// Creates an operation that will complete when all of the specified objects in an array have completed.
-		/// </summary>
-		/// <param name="ops">The operations to wait on for completion.</param>
-		/// <returns>An operation that represents the completion of all of the supplied operations.</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation..</exception>
-		/// <seealso cref="WhenAll(IAsyncOperation[])"/>
-		/// <seealso cref="WhenAll{T}(IEnumerable{IAsyncOperation{T}})"/>
-		public static AsyncResult<T[]> WhenAll<T>(params IAsyncOperation<T>[] ops)
-		{
-			if (ops == null)
-			{
-				throw new ArgumentNullException(nameof(ops));
-			}
-
-			if (ops.Length == 0)
-			{
-				return FromResult(new T[0]);
-			}
-
-			var opArray = new IAsyncOperation<T>[ops.Length];
-
-			for (var i = 0; i < ops.Length; i++)
-			{
-				if (ops[i] == null)
-				{
-					throw new ArgumentException(Constants.ErrorListElementIsNull, nameof(ops));
-				}
-
-				opArray[i] = ops[i];
-			}
-
-			return new WhenAllResult<T>(opArray);
-		}
-
-		#endregion
-
-		#region WhenAny
-
-		/// <summary>
-		/// Creates an operation that will complete when any of the specified objects in an enumerable collection have completed.
-		/// </summary>
-		/// <param name="ops">The operations to wait on for completion.</param>
-		/// <returns>An operation that represents the completion of any of the supplied operations.</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation..</exception>
-		/// <seealso cref="WhenAny{T}(T[])"/>
-		public static AsyncResult<T> WhenAny<T>(IEnumerable<T> ops) where T : IAsyncOperation
-		{
-			if (ops == null)
-			{
-				throw new ArgumentNullException(nameof(ops));
-			}
-
-			var opList = new List<T>();
-
-			foreach (var op in ops)
-			{
-				if (op == null)
-				{
-					throw new ArgumentException(Constants.ErrorListElementIsNull, nameof(ops));
-				}
-
-				opList.Add(op);
-			}
-
-			if (opList.Count == 0)
-			{
-				throw new ArgumentException(Constants.ErrorListIsEmpty, nameof(ops));
-			}
-
-			return new WhenAnyResult<T>(opList.ToArray());
-		}
-
-		/// <summary>
-		/// Creates an operation that will complete when any of the specified objects in an array have completed.
-		/// </summary>
-		/// <param name="ops">The operations to wait on for completion.</param>
-		/// <returns>An operation that represents the completion of any of the supplied operations.</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation..</exception>
-		/// <seealso cref="WhenAny{T}(IEnumerable{T})"/>
-		public static AsyncResult<T> WhenAny<T>(params T[] ops) where T : IAsyncOperation
-		{
-			if (ops == null)
-			{
-				throw new ArgumentNullException(nameof(ops));
-			}
-
-			if (ops.Length == 0)
-			{
-				throw new ArgumentException(Constants.ErrorListIsEmpty, nameof(ops));
-			}
-
-			var opArray = new T[ops.Length];
-
-			for (var i = 0; i < ops.Length; i++)
-			{
-				if (ops[i] == null)
-				{
-					throw new ArgumentException(Constants.ErrorListElementIsNull, nameof(ops));
-				}
-
-				opArray[i] = ops[i];
-			}
-
-			return new WhenAnyResult<T>(opArray);
-		}
-
-		#endregion
 
 		#endregion
 
@@ -1162,12 +669,37 @@ namespace UnityFx.Async
 		internal const int StatusCanceled = 4;
 		internal const int StatusFaulted = 5;
 
+		internal const int OptionDoNotDispose = 1;
+		internal const int OptionRunContinuationsAsynchronously = 2;
+
 		/// <summary>
 		/// Special status setter for <see cref="AsyncOperationStatus.Scheduled"/> and <see cref="AsyncOperationStatus.Running"/>.
 		/// </summary>
 		internal bool TrySetStatus(int newStatus)
 		{
 			Debug.Assert(newStatus < StatusRanToCompletion);
+
+#if UNITYFX_NOT_THREAD_SAFE
+
+			var flags = _flags;
+
+			if ((flags & (_flagCompleted | _flagCompletionReserved)) != 0)
+			{
+				return false;
+			}
+
+			var status = flags & _statusMask;
+
+			if (status >= newStatus)
+			{
+				return false;
+			}
+
+			_flags = (flags & ~_statusMask) | newStatus;
+			OnStatusChanged((AsyncOperationStatus)newStatus);
+			return true;
+
+#else
 
 			do
 			{
@@ -1194,6 +726,8 @@ namespace UnityFx.Async
 				}
 			}
 			while (true);
+
+#endif
 		}
 
 		/// <summary>
@@ -1210,6 +744,22 @@ namespace UnityFx.Async
 			{
 				status |= _flagSynchronous;
 			}
+
+#if UNITYFX_NOT_THREAD_SAFE
+
+			var flags = _flags;
+
+			if ((flags & (_flagCompletionReserved | _flagCompleted)) != 0)
+			{
+				return false;
+			}
+
+			_flags = (flags & ~_statusMask) | status;
+			OnStatusChanged((AsyncOperationStatus)status);
+			OnCompleted();
+			return true;
+
+#else
 
 			do
 			{
@@ -1230,6 +780,8 @@ namespace UnityFx.Async
 				}
 			}
 			while (true);
+
+#endif
 		}
 
 		/// <summary>
@@ -1237,6 +789,19 @@ namespace UnityFx.Async
 		/// </summary>
 		internal bool TryReserveCompletion()
 		{
+#if UNITYFX_NOT_THREAD_SAFE
+
+			var flags = _flags;
+
+			if ((flags & (_flagCompletionReserved | _flagCompleted)) != 0)
+			{
+				return false;
+			}
+
+			_flags = flags | _flagCompletionReserved;
+			return true;
+#else
+
 			do
 			{
 				var flags = _flags;
@@ -1252,6 +817,45 @@ namespace UnityFx.Async
 				}
 			}
 			while (true);
+
+#endif
+		}
+
+		/// <summary>
+		/// Attempts to add a new flag value.
+		/// </summary>
+		internal bool TrySetFlag(int newFlag)
+		{
+#if UNITYFX_NOT_THREAD_SAFE
+
+			var flags = _flags;
+
+			if ((flags & (newFlag | _flagCompletionReserved | _flagCompleted)) != 0)
+			{
+				return false;
+			}
+
+			_flags = flags | newFlag;
+			return true;
+#else
+
+			do
+			{
+				var flags = _flags;
+
+				if ((flags & (newFlag | _flagCompletionReserved | _flagCompleted)) != 0)
+				{
+					return false;
+				}
+
+				if (Interlocked.CompareExchange(ref _flags, flags | newFlag, flags) == flags)
+				{
+					return true;
+				}
+			}
+			while (true);
+
+#endif
 		}
 
 		/// <summary>
@@ -1272,8 +876,12 @@ namespace UnityFx.Async
 				newFlags |= _flagSynchronous;
 			}
 
-			// Set completed status. After this call IsCompleted will return true.
+			// Set completed status. After this line IsCompleted will return true.
+#if UNITYFX_NOT_THREAD_SAFE
+			_flags = oldFlags | newFlags;
+#else
 			Interlocked.Exchange(ref _flags, oldFlags | newFlags);
+#endif
 
 			// Invoke completion callbacks.
 			OnStatusChanged((AsyncOperationStatus)status);
@@ -1281,16 +889,31 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Special continuation for the awaiter.
+		/// Copies state of the specified operation.
 		/// </summary>
-		internal void SetContinuationForAwait(Action action, SynchronizationContext syncContext)
+		internal void CopyCompletionState(IAsyncOperation patternOp, bool completedSynchronously)
 		{
-			ThrowIfDisposed();
-
-			if (!TryAddContinuation(action, syncContext))
+			if (!TryCopyCompletionState(patternOp, completedSynchronously))
 			{
-				action();
+				throw new InvalidOperationException();
 			}
+		}
+
+		/// <summary>
+		/// Attemts to copy state of the specified operation.
+		/// </summary>
+		internal bool TryCopyCompletionState(IAsyncOperation patternOp, bool completedSynchronously)
+		{
+			if (patternOp.IsCompletedSuccessfully)
+			{
+				return TrySetCompleted(completedSynchronously);
+			}
+			else if (patternOp.IsFaulted || patternOp.IsCanceled)
+			{
+				return TrySetException(patternOp.Exception, completedSynchronously);
+			}
+
+			return false;
 		}
 
 		/// <summary>
@@ -1313,102 +936,13 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region async/await
-
-#if UNITYFX_SUPPORT_TAP
-
-		/// <summary>
-		/// Provides an object that waits for the completion of <see cref="AsyncResult"/>. This type and its members are intended for compiler use only.
-		/// </summary>
-		public struct AsyncAwaiter : INotifyCompletion
-		{
-			private readonly AsyncResult _op;
-			private readonly bool _continueOnCapturedContext;
-
-			/// <summary>
-			/// Initializes a new instance of the <see cref="AsyncAwaiter"/> struct.
-			/// </summary>
-			public AsyncAwaiter(AsyncResult op, bool continueOnCapturedContext)
-			{
-				_op = op;
-				_continueOnCapturedContext = continueOnCapturedContext;
-			}
-
-			/// <summary>
-			/// Gets a value indicating whether the underlying operation is completed.
-			/// </summary>
-			/// <value>The operation completion flag.</value>
-			public bool IsCompleted => _op.IsCompleted;
-
-			/// <summary>
-			/// Returns the source result value.
-			/// </summary>
-			public void GetResult()
-			{
-				_op.ThrowIfNonSuccess(false);
-			}
-
-			/// <inheritdoc/>
-			public void OnCompleted(Action continuation)
-			{
-				var syncContext = _continueOnCapturedContext ? SynchronizationContext.Current : null;
-				_op.SetContinuationForAwait(continuation, syncContext);
-			}
-		}
-
-		/// <summary>
-		/// Provides an awaitable object that allows for configured awaits on <see cref="AsyncResult"/>. This type is intended for compiler use only.
-		/// </summary>
-		public struct ConfiguredAsyncAwaitable
-		{
-			private readonly AsyncAwaiter _awaiter;
-
-			/// <summary>
-			/// Initializes a new instance of the <see cref="ConfiguredAsyncAwaitable"/> struct.
-			/// </summary>
-			public ConfiguredAsyncAwaitable(AsyncResult op, bool continueOnCapturedContext)
-			{
-				_awaiter = new AsyncAwaiter(op, continueOnCapturedContext);
-			}
-
-			/// <summary>
-			/// Returns the awaiter.
-			/// </summary>
-			public AsyncAwaiter GetAwaiter()
-			{
-				return _awaiter;
-			}
-		}
-
-		/// <summary>
-		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
-		/// </summary>
-		public AsyncAwaiter GetAwaiter()
-		{
-			return new AsyncAwaiter(this, true);
-		}
-
-		/// <summary>
-		/// Configures an awaiter used to await this operation.
-		/// </summary>
-		/// <param name="continueOnCapturedContext">If <see langword="true"/> attempts to marshal the continuation back to the original context captured.</param>
-		/// <returns>An object used to await the operation.</returns>
-		public ConfiguredAsyncAwaitable ConfigureAwait(bool continueOnCapturedContext)
-		{
-			return new ConfiguredAsyncAwaitable(this, continueOnCapturedContext);
-		}
-
-#endif
-
-		#endregion
-
 		#region IAsyncOperation
 
 		/// <inheritdoc/>
 		public AsyncOperationStatus Status => (AsyncOperationStatus)(_flags & _statusMask);
 
 		/// <inheritdoc/>
-		public AggregateException Exception => (_flags & _statusMask) == StatusFaulted ? _exception : null;
+		public AggregateException Exception => (_flags & _flagCompleted) != 0 ? _exception : null;
 
 		/// <inheritdoc/>
 		public bool IsCompletedSuccessfully => (_flags & _statusMask) == StatusRanToCompletion;
@@ -1421,60 +955,17 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region IAsyncOperationEvents
+		#region IAsyncCancellable
 
 		/// <inheritdoc/>
-		public event AsyncOperationCallback Completed
-		{
-			add
-			{
-				ThrowIfDisposed();
-
-				if (value == null)
-				{
-					throw new ArgumentNullException(nameof(value));
-				}
-
-				if (!TryAddContinuation(value, SynchronizationContext.Current))
-				{
-					value(this);
-				}
-			}
-			remove
-			{
-				ThrowIfDisposed();
-
-				if (value != null)
-				{
-					TryRemoveContinuation(value);
-				}
-			}
-		}
-
-		/// <inheritdoc/>
-		public bool TryAddCompletionCallback(AsyncOperationCallback action, SynchronizationContext syncContext)
+		public void Cancel()
 		{
 			ThrowIfDisposed();
 
-			if (action == null)
+			if (TrySetFlag(_flagCancellationRequested))
 			{
-				throw new ArgumentNullException(nameof(action));
+				OnCancel();
 			}
-
-			return TryAddContinuation(action, syncContext);
-		}
-
-		/// <inheritdoc/>
-		public bool RemoveCompletionCallback(AsyncOperationCallback action)
-		{
-			ThrowIfDisposed();
-
-			if (action != null)
-			{
-				return TryRemoveContinuation(action);
-			}
-
-			return false;
 		}
 
 		#endregion
@@ -1486,6 +977,12 @@ namespace UnityFx.Async
 		{
 			get
 			{
+#if UNITYFX_NOT_THREAD_SAFE
+
+				throw new NotSupportedException();
+
+#else
+
 				ThrowIfDisposed();
 
 				if (_waitHandle == null)
@@ -1511,6 +1008,8 @@ namespace UnityFx.Async
 				}
 
 				return _waitHandle;
+
+#endif
 			}
 		}
 
@@ -1619,6 +1118,10 @@ namespace UnityFx.Async
 			{
 				_exception = new AggregateException();
 			}
+			else if (flags == StatusCanceled)
+			{
+				_exception = new AggregateException(new OperationCanceledException());
+			}
 
 			if (flags > StatusRunning)
 			{
@@ -1629,134 +1132,6 @@ namespace UnityFx.Async
 			{
 				_flags = flags;
 			}
-		}
-
-		/// <summary>
-		/// Attempts to register a continuation object. For internal use only.
-		/// </summary>
-		/// <param name="continuation">The continuation object to add.</param>
-		/// <param name="syncContext">A <see cref="SynchronizationContext"/> instance to execute continuation on.</param>
-		/// <returns>Returns <see langword="true"/> if the continuation was added; <see langword="false"/> otherwise.</returns>
-		private bool TryAddContinuation(object continuation, SynchronizationContext syncContext)
-		{
-			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
-			{
-				continuation = new AsyncContinuation(this, syncContext, continuation);
-			}
-
-			return TryAddContinuation(continuation);
-		}
-
-		/// <summary>
-		/// Attempts to register a continuation object. For internal use only.
-		/// </summary>
-		/// <param name="valueToAdd">The continuation object to add.</param>
-		/// <returns>Returns <see langword="true"/> if the continuation was added; <see langword="false"/> otherwise.</returns>
-		private bool TryAddContinuation(object valueToAdd)
-		{
-			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
-			var oldValue = _continuation;
-
-			// Quick return if the operation is completed.
-			if (oldValue != _continuationCompletionSentinel)
-			{
-				// If no continuation is stored yet, try to store it as _continuation.
-				if (oldValue == null)
-				{
-					oldValue = Interlocked.CompareExchange(ref _continuation, valueToAdd, null);
-
-					// Quick return if exchange succeeded.
-					if (oldValue == null)
-					{
-						return true;
-					}
-				}
-
-				// Logic for the case where we were previously storing a single continuation.
-				if (oldValue != _continuationCompletionSentinel && !(oldValue is IList))
-				{
-					var newList = new List<object>() { oldValue };
-
-					Interlocked.CompareExchange(ref _continuation, newList, oldValue);
-
-					// We might be racing against another thread converting the single into a list,
-					// or we might be racing against operation completion, so resample "list" below.
-				}
-
-				// If list is null, it can only mean that _continuationCompletionSentinel has been exchanged
-				// into _continuation. Thus, the task has completed and we should return false from this method,
-				// as we will not be queuing up the continuation.
-				if (_continuation is IList list)
-				{
-					lock (list)
-					{
-						// It is possible for the operation to complete right after we snap the copy of the list.
-						// If so, then fall through and return false without queuing the continuation.
-						if (_continuation != _continuationCompletionSentinel)
-						{
-							list.Add(valueToAdd);
-							return true;
-						}
-					}
-				}
-			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// Attempts to remove the specified continuation. For internal use only.
-		/// </summary>
-		/// <param name="valueToRemove">The continuation object to remove.</param>
-		/// <returns>Returns <see langword="true"/> if the continuation was removed; <see langword="false"/> otherwise.</returns>
-		private bool TryRemoveContinuation(object valueToRemove)
-		{
-			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
-			var value = _continuation;
-
-			if (value != _continuationCompletionSentinel)
-			{
-				var list = value as IList;
-
-				if (list == null)
-				{
-					// This is not a list. If we have a single object (the one we want to remove) we try to replace it with an empty list.
-					// Note we cannot go back to a null state, since it will mess up the TryAddContinuation logic.
-					if (Interlocked.CompareExchange(ref _continuation, new List<object>(), valueToRemove) == valueToRemove)
-					{
-						return true;
-					}
-					else
-					{
-						// If we fail it means that either TryAddContinuation won the race condition and _continuation is now a List
-						// that contains the element we want to remove. Or it set the _continuationCompletionSentinel.
-						// So we should try to get a list one more time.
-						list = value as IList;
-					}
-				}
-
-				// If list is null it means _continuationCompletionSentinel has been set already and there is nothing else to do.
-				if (list != null)
-				{
-					lock (list)
-					{
-						// There is a small chance that the operation completed since we took a local snapshot into
-						// list. In that case, just return; we don't want to be manipulating the continuation list as it is being processed.
-						if (_continuation != _continuationCompletionSentinel)
-						{
-							var index = list.IndexOf(valueToRemove);
-
-							if (index != -1)
-							{
-								list.RemoveAt(index);
-								return true;
-							}
-						}
-					}
-				}
-			}
-
-			return false;
 		}
 
 		#endregion

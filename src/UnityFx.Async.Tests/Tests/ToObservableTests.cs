@@ -8,10 +8,8 @@ using Xunit;
 
 namespace UnityFx.Async
 {
-	public class AsyncExtensionsTests
+	public class ToObservableTests
 	{
-		#region ToObservable
-
 		[Fact]
 		public void ToObservable_OnNextIsCalled()
 		{
@@ -89,73 +87,5 @@ namespace UnityFx.Async
 			Assert.Equal(1, observer.OnErrorCount);
 			Assert.Equal(e, observer.Exception);
 		}
-
-		#endregion
-
-		#region ContinueWith
-
-		[Fact]
-		public async Task ContinueWith_CompletesWhenBothOperationsComplete()
-		{
-			// Arrange
-			var op = AsyncResult.Delay(10);
-			var op2 = op.ContinueWith((asyncResult, cs) =>
-			{
-				Task.Run(() =>
-				{
-					Thread.Sleep(10);
-					cs.SetCompleted();
-				});
-			});
-
-			// Act
-			await op2;
-
-			// Assert
-			Assert.True(op.IsCompleted);
-			Assert.True(op2.IsCompleted);
-		}
-
-		#endregion
-
-		#region ToTask
-
-		[Fact]
-		public async Task ToTask_CompletesWhenSourceCompletes()
-		{
-			// Arrange
-			var op = AsyncResult.Delay(1);
-			var task = op.ToTask();
-
-			// Act
-			await task;
-
-			// Assert
-			Assert.True(op.IsCompleted);
-		}
-
-		[Fact]
-		public async Task ToTask_FailsWhenSourceFails()
-		{
-			// Arrange
-			var op = AsyncResult.Delay(1).ContinueWith(result => AsyncResult.FromException(new Exception()));
-			var task = op.ToTask();
-
-			// Act/Assert
-			await Assert.ThrowsAsync<Exception>(() => task);
-		}
-
-		[Fact]
-		public async Task ToTask_FailsWhenSourceIsCanceled()
-		{
-			// Arrange
-			var op = AsyncResult.Delay(1).ContinueWith(result => AsyncResult.FromCanceled());
-			var task = op.ToTask();
-
-			// Act/Assert
-			await Assert.ThrowsAsync<TaskCanceledException>(() => task);
-		}
-
-		#endregion
 	}
 }

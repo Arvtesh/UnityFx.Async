@@ -7,15 +7,12 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class WhenAllResult<T> : AsyncResult<T[]>
+	internal class WhenAllResult<T> : AsyncResult<T[]>, IAsyncContinuation
 	{
 		#region data
 
-		private readonly AsyncOperationCallback _completionAction;
 		private readonly IAsyncOperation[] _ops;
-
 		private int _count;
-		private bool _completedSynchronously;
 
 		#endregion
 
@@ -24,32 +21,32 @@ namespace UnityFx.Async
 		public WhenAllResult(IAsyncOperation[] ops)
 			: base(AsyncOperationStatus.Running)
 		{
-			_completionAction = OnOperationCompleted;
 			_ops = ops;
 			_count = ops.Length;
-			_completedSynchronously = true;
 
 			foreach (var op in ops)
 			{
-				if (!op.TryAddCompletionCallback(_completionAction, null))
-				{
-					OnOperationCompleted(op);
-				}
+				op.AddContinuation(this, null);
 			}
-
-			_completedSynchronously = false;
-		}
-
-		public void Cancel()
-		{
-			TrySetCanceled(false);
 		}
 
 		#endregion
 
-		#region implementation
+		#region AsyncResult
 
-		private void OnOperationCompleted(IAsyncOperation asyncOp)
+		protected override void OnCancel()
+		{
+			foreach (var op in _ops)
+			{
+				op.Cancel();
+			}
+		}
+
+		#endregion
+
+		#region IAsyncContinuation
+
+		public void Invoke(IAsyncOperation asyncOp, bool inline)
 		{
 			if (IsCompleted)
 			{
@@ -78,15 +75,15 @@ namespace UnityFx.Async
 
 				if (exceptions != null)
 				{
-					TrySetExceptions(exceptions, _completedSynchronously);
+					TrySetExceptions(exceptions, false);
 				}
 				else if (canceledOp != null)
 				{
-					TrySetCanceled(_completedSynchronously);
+					TrySetCanceled(false);
 				}
 				else if (typeof(T) == typeof(VoidResult))
 				{
-					TrySetCompleted(_completedSynchronously);
+					TrySetCompleted(false);
 				}
 				else
 				{

@@ -14,19 +14,19 @@ namespace UnityFx.Async
 	/// <summary>
 	/// A lightweight net35-compatible asynchronous operation that can return a value.
 	/// </summary>
-	/// <typeparam name="T">Type of the operation result.</typeparam>
+	/// <typeparam name="TResult">Type of the operation result value.</typeparam>
 	/// <seealso cref="AsyncCompletionSource{T}"/>
 	/// <seealso cref="AsyncResult"/>
 	/// <seealso cref="IAsyncResult"/>
 #if NET35
-	public class AsyncResult<T> : AsyncResult, IAsyncOperation<T>
+	public class AsyncResult<TResult> : AsyncResult, IAsyncOperation<TResult>
 #else
-	public class AsyncResult<T> : AsyncResult, IAsyncOperation<T>, IObservable<T>
+	public class AsyncResult<TResult> : AsyncResult, IAsyncOperation<TResult>, IObservable<TResult>
 #endif
 	{
 		#region data
 
-		private T _result;
+		private TResult _result;
 
 		#endregion
 
@@ -36,6 +36,15 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
 		public AsyncResult()
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// </summary>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncResult(AsyncCreationOptions options)
+			: base(options)
 		{
 		}
 
@@ -52,9 +61,30 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
+		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncResult(AsyncCallback asyncCallback, object asyncState, AsyncCreationOptions options)
+			: base(asyncCallback, asyncState, options)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// </summary>
 		/// <param name="status">Status value of the operation.</param>
 		public AsyncResult(AsyncOperationStatus status)
 			: base(status)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// </summary>
+		/// <param name="status">Status value of the operation.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncResult(AsyncOperationStatus status, AsyncCreationOptions options)
+			: base(status, options)
 		{
 		}
 
@@ -72,10 +102,33 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
 		/// <param name="status">Status value of the operation.</param>
+		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncResult(AsyncOperationStatus status, object asyncState, AsyncCreationOptions options)
+			: base(status, asyncState, options)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// </summary>
+		/// <param name="status">Status value of the operation.</param>
 		/// <param name="asyncCallback">User-defined completion callback.</param>
 		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
 		public AsyncResult(AsyncOperationStatus status, AsyncCallback asyncCallback, object asyncState)
 			: base(status, asyncCallback, asyncState)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// </summary>
+		/// <param name="status">Status value of the operation.</param>
+		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncResult(AsyncOperationStatus status, AsyncCallback asyncCallback, object asyncState, AsyncCreationOptions options)
+			: base(status, asyncCallback, asyncState, options)
 		{
 		}
 
@@ -104,7 +157,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="result">Result value.</param>
 		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
-		internal AsyncResult(T result, object asyncState)
+		internal AsyncResult(TResult result, object asyncState)
 			: base(AsyncOperationStatus.RanToCompletion, asyncState)
 		{
 			_result = result;
@@ -117,7 +170,7 @@ namespace UnityFx.Async
 		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		protected internal bool TrySetResult(T result, bool completedSynchronously)
+		protected internal bool TrySetResult(TResult result, bool completedSynchronously)
 		{
 			ThrowIfDisposed();
 
@@ -131,102 +184,75 @@ namespace UnityFx.Async
 			return false;
 		}
 
-		#endregion
-
-		#region async/await
-
-#if UNITYFX_SUPPORT_TAP
-
 		/// <summary>
-		/// Provides an object that waits for the completion of <see cref="AsyncResult"/>. This type and its members are intended for compiler use only.
+		/// Copies state of the specified operation.
 		/// </summary>
-		public new struct AsyncAwaiter : INotifyCompletion
+		internal new void CopyCompletionState(IAsyncOperation patternOp, bool completedSynchronously)
 		{
-			private readonly AsyncResult<T> _op;
-			private readonly bool _continueOnCapturedContext;
-
-			/// <summary>
-			/// Initializes a new instance of the <see cref="AsyncAwaiter"/> struct.
-			/// </summary>
-			public AsyncAwaiter(AsyncResult<T> op, bool continueOnCapturedContext)
+			if (!TryCopyCompletionState(patternOp, completedSynchronously))
 			{
-				_op = op;
-				_continueOnCapturedContext = continueOnCapturedContext;
-			}
-
-			/// <summary>
-			/// Gets a value indicating whether the underlying operation is completed.
-			/// </summary>
-			/// <value>The operation completion flag.</value>
-			public bool IsCompleted => _op.IsCompleted;
-
-			/// <summary>
-			/// Returns the source result value.
-			/// </summary>
-			public T GetResult()
-			{
-				_op.ThrowIfNonSuccess(false);
-				return _op.Result;
-			}
-
-			/// <inheritdoc/>
-			public void OnCompleted(Action continuation)
-			{
-				var syncContext = _continueOnCapturedContext ? SynchronizationContext.Current : null;
-				_op.SetContinuationForAwait(continuation, syncContext);
+				throw new InvalidOperationException();
 			}
 		}
 
 		/// <summary>
-		/// Provides an awaitable object that allows for configured awaits on <see cref="AsyncResult{T}"/>. This type is intended for compiler use only.
+		/// Copies state of the specified operation.
 		/// </summary>
-		public new struct ConfiguredAsyncAwaitable
+		internal void CopyCompletionState(IAsyncOperation<TResult> patternOp, bool completedSynchronously)
 		{
-			private readonly AsyncAwaiter _awaiter;
-
-			/// <summary>
-			/// Initializes a new instance of the <see cref="ConfiguredAsyncAwaitable"/> struct.
-			/// </summary>
-			public ConfiguredAsyncAwaitable(AsyncResult<T> op, bool continueOnCapturedContext)
+			if (!TryCopyCompletionState(patternOp, completedSynchronously))
 			{
-				_awaiter = new AsyncAwaiter(op, continueOnCapturedContext);
-			}
-
-			/// <summary>
-			/// Returns the awaiter.
-			/// </summary>
-			public AsyncAwaiter GetAwaiter()
-			{
-				return _awaiter;
+				throw new InvalidOperationException();
 			}
 		}
 
 		/// <summary>
-		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
+		/// Attemts to copy state of the specified operation.
 		/// </summary>
-		public new AsyncAwaiter GetAwaiter()
+		internal new bool TryCopyCompletionState(IAsyncOperation patternOp, bool completedSynchronously)
 		{
-			return new AsyncAwaiter(this, true);
+			if (patternOp.IsCompletedSuccessfully)
+			{
+				if (patternOp is IAsyncOperation<TResult> op)
+				{
+					return TrySetResult(op.Result, completedSynchronously);
+				}
+				else
+				{
+					return TrySetCompleted(completedSynchronously);
+				}
+			}
+			else if (patternOp.IsFaulted || patternOp.IsCanceled)
+			{
+				return TrySetException(patternOp.Exception, completedSynchronously);
+			}
+
+			return false;
 		}
 
 		/// <summary>
-		/// Configures an awaiter used to await this operation.
+		/// Attemts to copy state of the specified operation.
 		/// </summary>
-		/// <param name="continueOnCapturedContext">If <see langword="true"/> attempts to marshal the continuation back to the original context captured.</param>
-		/// <returns>An object used to await the operation.</returns>
-		public new ConfiguredAsyncAwaitable ConfigureAwait(bool continueOnCapturedContext)
+		internal bool TryCopyCompletionState(IAsyncOperation<TResult> patternOp, bool completedSynchronously)
 		{
-			return new ConfiguredAsyncAwaitable(this, continueOnCapturedContext);
-		}
+			if (patternOp.IsCompletedSuccessfully)
+			{
+				return TrySetResult(patternOp.Result, completedSynchronously);
+			}
+			else if (patternOp.IsFaulted || patternOp.IsCanceled)
+			{
+				return TrySetException(patternOp.Exception, completedSynchronously);
+			}
 
-#endif
+			return false;
+		}
 
 		#endregion
 
 		#region IAsyncOperation
 
 		/// <inheritdoc/>
-		public T Result
+		public TResult Result
 		{
 			get
 			{
@@ -247,7 +273,7 @@ namespace UnityFx.Async
 #if !NET35
 
 		/// <inheritdoc/>
-		public IDisposable Subscribe(IObserver<T> observer)
+		public IDisposable Subscribe(IObserver<TResult> observer)
 		{
 			ThrowIfDisposed();
 

@@ -46,6 +46,14 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Returns an instance of an <see cref="IAsyncUpdateSource"/>.
+		/// </summary>
+		public static IAsyncUpdateSource GetDefaultUpdateSource()
+		{
+			return GetCoroutineRunner();
+		}
+
+		/// <summary>
 		/// Starts a coroutine.
 		/// </summary>
 		/// <param name="enumerator">The coroutine to run.</param>
@@ -209,11 +217,21 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		private class CoroutineRunner : MonoBehaviour
+		private class CoroutineRunner : MonoBehaviour, IAsyncUpdateSource
 		{
+			#region data
+
 			private Dictionary<object, Action> _ops;
 			private List<object> _opsToRemove;
 			private List<Action> _updateCallbacks;
+			private List<Action> _updateCallbacksToRemove;
+			private List<IAsyncUpdatable> _updatables;
+			private List<IAsyncUpdatable> _updatablesToRemove;
+			private bool _updating;
+
+			#endregion
+
+			#region interface
 
 			public void AddCompletionCallback(object op, Action cb)
 			{
@@ -231,6 +249,7 @@ namespace UnityFx.Async
 				if (_updateCallbacks == null)
 				{
 					_updateCallbacks = new List<Action>();
+					_updateCallbacksToRemove = new List<Action>();
 				}
 
 				_updateCallbacks.Add(updateCallback);
@@ -238,65 +257,149 @@ namespace UnityFx.Async
 
 			public void RemoveUpdateCallback(Action updateCallback)
 			{
-				_updateCallbacks.Remove(updateCallback);
+				if (_updating)
+				{
+					if (updateCallback != null)
+					{
+						_updateCallbacksToRemove.Add(updateCallback);
+					}
+				}
+				else
+				{
+					_updateCallbacks.Remove(updateCallback);
+				}
 			}
+
+			#endregion
+
+			#region MonoBehavoiur
 
 			private void Update()
 			{
-				if (_ops != null && _ops.Count > 0)
+				try
 				{
-					foreach (var item in _ops)
-					{
-						if (item.Key is AsyncOperation)
-						{
-							var asyncOp = item.Key as AsyncOperation;
+					_updating = true;
 
-							if (asyncOp.isDone)
+					if (_ops != null && _ops.Count > 0)
+					{
+						foreach (var item in _ops)
+						{
+							if (item.Key is AsyncOperation)
 							{
-								item.Value();
-								_opsToRemove.Add(asyncOp);
+								var asyncOp = item.Key as AsyncOperation;
+
+								if (asyncOp.isDone)
+								{
+									item.Value();
+									_opsToRemove.Add(asyncOp);
+								}
 							}
-						}
 #if UNITY_5_2_OR_NEWER || UNITY_5_3_OR_NEWER || UNITY_2017 || UNITY_2018
-						else if (item.Key is UnityWebRequest)
-						{
-							var asyncOp = item.Key as UnityWebRequest;
-
-							if (asyncOp.isDone)
+							else if (item.Key is UnityWebRequest)
 							{
-								item.Value();
-								_opsToRemove.Add(asyncOp);
+								var asyncOp = item.Key as UnityWebRequest;
+
+								if (asyncOp.isDone)
+								{
+									item.Value();
+									_opsToRemove.Add(asyncOp);
+								}
 							}
-						}
 #endif
-						else if (item.Key is WWW)
-						{
-							var asyncOp = item.Key as WWW;
-
-							if (asyncOp.isDone)
+							else if (item.Key is WWW)
 							{
-								item.Value();
-								_opsToRemove.Add(asyncOp);
+								var asyncOp = item.Key as WWW;
+
+								if (asyncOp.isDone)
+								{
+									item.Value();
+									_opsToRemove.Add(asyncOp);
+								}
 							}
 						}
+
+						foreach (var item in _opsToRemove)
+						{
+							_ops.Remove(item);
+						}
+
+						_opsToRemove.Clear();
 					}
 
-					foreach (var item in _opsToRemove)
+					if (_updateCallbacks != null)
 					{
-						_ops.Remove(item);
+						foreach (var callback in _updateCallbacks)
+						{
+							callback();
+						}
+
+						foreach (var callback in _updateCallbacksToRemove)
+						{
+							_updateCallbacksToRemove.Remove(callback);
+						}
+
+						_updateCallbacksToRemove.Clear();
 					}
 
-					_opsToRemove.Clear();
+					if (_updatables != null)
+					{
+						var frameTime = Time.deltaTime;
+
+						foreach (var item in _updatables)
+						{
+							item.Update(frameTime);
+						}
+
+						foreach (var item in _updatablesToRemove)
+						{
+							_updatablesToRemove.Remove(item);
+						}
+
+						_updatablesToRemove.Clear();
+					}
 				}
-
-				if (_updateCallbacks != null)
+				finally
 				{
-					foreach (var callback in _updateCallbacks)
-					{
-						callback();
-					}
+					_updating = false;
 				}
 			}
+
+			#endregion
+
+			#region IAsyncUpdateSource
+
+			public void AddListener(IAsyncUpdatable updatable)
+			{
+				if (updatable == null)
+				{
+					throw new ArgumentNullException("updatable");
+				}
+
+				if (_updatables == null)
+				{
+					_updatables = new List<IAsyncUpdatable>();
+					_updatablesToRemove = new List<IAsyncUpdatable>();
+				}
+
+				_updatables.Add(updatable);
+			}
+
+			public void RemoveListener(IAsyncUpdatable updatable)
+			{
+				if (_updating)
+				{
+					if (updatable != null)
+					{
+						_updatablesToRemove.Add(updatable);
+					}
+				}
+				else
+				{
+					_updatables.Remove(updatable);
+				}
+			}
+
+			#endregion
 		}
 
 		private static CoroutineRunner GetCoroutineRunner()

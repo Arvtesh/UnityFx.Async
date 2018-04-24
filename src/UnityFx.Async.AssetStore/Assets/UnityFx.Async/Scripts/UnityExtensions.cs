@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 #if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
 using UnityEngine.Networking;
@@ -49,7 +50,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the Unity <see cref="AsyncOperation"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the Unity <see cref="AsyncOperation"/>.
 		/// </summary>
 		/// <param name="op">The source operation.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this ResourceRequest op) where T : UnityEngine.Object
@@ -78,7 +79,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the Unity <see cref="AsyncOperation"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the Unity <see cref="AsyncOperation"/>.
 		/// </summary>
 		/// <param name="op">The source operation.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this AssetBundleRequest op) where T : UnityEngine.Object
@@ -106,6 +107,63 @@ namespace UnityFx.Async
 			}
 		}
 
+#if NET_4_6 || NETFX_CORE
+
+		/// <summary>
+		/// Provides an object that waits for the completion of an <see cref="AsyncOperation"/>. This type and its members are intended for compiler use only.
+		/// </summary>
+		public struct AsyncOperationAwaiter : INotifyCompletion
+		{
+			private readonly AsyncOperation _op;
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="AsyncOperationAwaiter"/> struct.
+			/// </summary>
+			public AsyncOperationAwaiter(AsyncOperation op)
+			{
+				_op = op;
+			}
+
+			/// <summary>
+			/// Gets a value indicating whether the underlying operation is completed.
+			/// </summary>
+			/// <value>The operation completion flag.</value>
+			public bool IsCompleted => _op.isDone;
+
+			/// <summary>
+			/// Returns the source result value.
+			/// </summary>
+			public void GetResult()
+			{
+			}
+
+			/// <inheritdoc/>
+			public void OnCompleted(Action continuation)
+			{
+#if UNITY_2017_2_OR_NEWER
+
+				// Starting with Unity 2017.2 there is AsyncOperation.completed event
+				op.completed += o => continuation();
+
+#else
+
+				AsyncUtility.AddCompletionCallback(_op, continuation);
+
+#endif
+			}
+		}
+
+		/// <summary>
+		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
+		/// </summary>
+		/// <param name="op">The operation to await.</param>
+		public static AsyncOperationAwaiter GetAwaiter(this AsyncOperation op)
+		{
+			return new AsyncOperationAwaiter(op);
+		}
+
+#endif
+
 		#endregion
 
 		#region UnityWebRequest
@@ -122,7 +180,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<T> ToAsync<T>(this UnityWebRequest request) where T : class
@@ -131,7 +189,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<AssetBundle> ToAsyncAssetBundle(this UnityWebRequest request)
@@ -140,7 +198,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<Texture2D> ToAsyncTexture(this UnityWebRequest request)
@@ -149,7 +207,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<AudioClip> ToAsyncAudioClip(this UnityWebRequest request)
@@ -158,7 +216,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<MovieTexture> ToAsyncMovieTexture(this UnityWebRequest request)
@@ -167,7 +225,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<byte[]> ToAsyncByteArray(this UnityWebRequest request)
@@ -176,14 +234,62 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
-		/// <returns>Returns a <see cref="IAsyncOperation{T}"/> instance that will complete when the source operation have completed.</returns>
+		/// <returns>Returns a <see cref="IAsyncOperation{TResult}"/> instance that will complete when the source operation have completed.</returns>
 		public static WebRequestResult<string> ToAsyncString(this UnityWebRequest request)
 		{
 			return WebRequestResult<string>.FromUnityWebRequest(request);
 		}
+
+#if NET_4_6 || NETFX_CORE
+
+		/// <summary>
+		/// Provides an object that waits for the completion of an <see cref="WWW"/>. This type and its members are intended for compiler use only.
+		/// </summary>
+		public struct UnityWebRequestAwaiter : INotifyCompletion
+		{
+			private readonly UnityWebRequest _op;
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="UnityWebRequestAwaiter"/> struct.
+			/// </summary>
+			public UnityWebRequestAwaiter(UnityWebRequest op)
+			{
+				_op = op;
+			}
+
+			/// <summary>
+			/// Gets a value indicating whether the underlying operation is completed.
+			/// </summary>
+			/// <value>The operation completion flag.</value>
+			public bool IsCompleted => _op.isDone;
+
+			/// <summary>
+			/// Returns the source result value.
+			/// </summary>
+			public void GetResult()
+			{
+			}
+
+			/// <inheritdoc/>
+			public void OnCompleted(Action continuation)
+			{
+				AsyncUtility.AddCompletionCallback(_op, continuation);
+			}
+		}
+
+		/// <summary>
+		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
+		/// </summary>
+		/// <param name="op">The operation to await.</param>
+		public static UnityWebRequestAwaiter GetAwaiter(this UnityWebRequest op)
+		{
+			return new UnityWebRequestAwaiter(op);
+		}
+
+#endif
 
 #endif
 
@@ -201,7 +307,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="WWW"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<T> ToAsync<T>(this WWW request) where T : class
@@ -210,7 +316,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="WWW"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<AssetBundle> ToAsyncAssetBundle(this WWW request)
@@ -219,7 +325,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="WWW"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<Texture2D> ToAsyncTexture(this WWW request)
@@ -228,7 +334,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="WWW"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<AudioClip> ToAsyncAudioClip(this WWW request)
@@ -237,7 +343,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="WWW"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<MovieTexture> ToAsyncMovieTexture(this WWW request)
@@ -246,7 +352,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="WWW"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<byte[]> ToAsyncByteArray(this WWW request)
@@ -255,13 +361,61 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{T}"/> wrapper for the specified <see cref="WWW"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<string> ToAsyncString(this WWW request)
 		{
 			return WwwResult<string>.FromWWW(request);
 		}
+
+#if NET_4_6 || NETFX_CORE
+
+		/// <summary>
+		/// Provides an object that waits for the completion of an <see cref="WWW"/>. This type and its members are intended for compiler use only.
+		/// </summary>
+		public struct WwwAwaiter : INotifyCompletion
+		{
+			private readonly WWW _op;
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="WwwAwaiter"/> struct.
+			/// </summary>
+			public WwwAwaiter(WWW op)
+			{
+				_op = op;
+			}
+
+			/// <summary>
+			/// Gets a value indicating whether the underlying operation is completed.
+			/// </summary>
+			/// <value>The operation completion flag.</value>
+			public bool IsCompleted => _op.isDone;
+
+			/// <summary>
+			/// Returns the source result value.
+			/// </summary>
+			public void GetResult()
+			{
+			}
+
+			/// <inheritdoc/>
+			public void OnCompleted(Action continuation)
+			{
+				AsyncUtility.AddCompletionCallback(_op, continuation);
+			}
+		}
+
+		/// <summary>
+		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
+		/// </summary>
+		/// <param name="op">The operation to await.</param>
+		public static WwwAwaiter GetAwaiter(this WWW op)
+		{
+			return new WwwAwaiter(op);
+		}
+
+#endif
 
 		#endregion
 
