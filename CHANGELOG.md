@@ -7,24 +7,30 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ## [0.9.0] - Unreleased
 
 ### Added
-- Added `AsyncContinuationOptions` support.
-- Added `Promise`-like extensions `Then`, `ThenAll`, `ThenAny`, `Rebind`, `Catch` and `Finally`.
+- Added `AsyncContinuationOptions`.
+- Added `AsyncCreationOptions`.
+- Added `Promise`-like extensions `Then`, `ThenAll`, `ThenAny`, `Rebind`, `Catch`, `Finally` and `Done`.
 - Added `Unwrap` extension methods.
 - Added `FromTask`/`FromObservable` helpers.
+- Added `FromAction` helpers.
 - Added `ToAsync` extension method for `IObservable` interface.
 - Added `TryAddContinuation`/`RemoveContinuation` methods to `IAsyncOperationEvents` for non-delegate continuations.
 - Added `IAsyncUpdatable` and `IAsyncUpdateSource` interfaces.
-- Added `Delay` overload that uses `IAsyncUpdateSource`-based service for time management.
+- Added `Delay`/`Retry` overload that uses `IAsyncUpdateSource`-based service for time management.
+- Added cancellation support (`IAsyncCancellable` interface, `WithCancellation` extension method and many implementation changes).
+- Added `Wait`/`Join` overloads with `CancellationToken` argument.
 
 ### Changed
 - Changed `ContinueWith` extension signatures to match corresponding `Task` methods.
 - Changed `IAsyncOperation.Exception` to always return an exception instance if completed with non-success.
+- Changed `AddCompletionCallback`/`AddContinuation` to instance methods (instead of extensions).
 
 ### Fixed
 - Fixed exception not initialized properly for canceled operations sometimes.
 
 ### Removed
 - Removed `GetAwaiter`/`ConfigureAwait` instance methods from `AsyncResult` to avoid code duplication (extension methods should be used).
+- Removed all `AsyncCompletionSource` methods having `completedSynchronously` argument.
 
 -----------------------
 ## [0.8.2] - 2018-03-28

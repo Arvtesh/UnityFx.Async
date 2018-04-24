@@ -22,26 +22,29 @@ namespace UnityFx.Async
 
 			foreach (var op in ops)
 			{
-				if (!op.TryAddContinuation(this))
-				{
-					TrySetResult(op, true);
-					break;
-				}
+				op.AddContinuation(this, null);
 			}
 		}
 
-		public void Cancel()
+		#endregion
+
+		#region AsyncResult
+
+		protected override void OnCancel()
 		{
-			TrySetCanceled(false);
+			foreach (var op in _ops)
+			{
+				op.Cancel();
+			}
 		}
 
 		#endregion
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op)
+		public void Invoke(IAsyncOperation op, bool inline)
 		{
-			TrySetResult((T)op, false);
+			TrySetResult((T)op, inline);
 		}
 
 		#endregion

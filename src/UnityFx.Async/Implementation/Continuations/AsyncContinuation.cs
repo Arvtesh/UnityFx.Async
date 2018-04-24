@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Diagnostics;
 using System.Threading;
 #if UNITYFX_SUPPORT_TAP
 using System.Threading.Tasks;
@@ -9,24 +10,64 @@ using System.Threading.Tasks;
 
 namespace UnityFx.Async
 {
-	internal class AsyncContinuation : IAsyncContinuation
+	internal class AsyncContinuation
 	{
 		#region data
 
+		private static WaitCallback _waitCallback;
 		private static SendOrPostCallback _postCallback;
 
-		private readonly SynchronizationContext _syncContext;
-		private readonly object _continuation;
 		private IAsyncOperation _op;
+		private SynchronizationContext _syncContext;
+		private object _continuation;
 
 		#endregion
 
 		#region interface
 
-		internal AsyncContinuation(SynchronizationContext syncContext, object continuation)
+		internal AsyncContinuation(IAsyncOperation op, SynchronizationContext syncContext, object continuation)
 		{
+			_op = op;
 			_syncContext = syncContext;
 			_continuation = continuation;
+		}
+
+		internal void InvokeAsync()
+		{
+			if (_syncContext != null)
+			{
+				InvokeOnSyncContext(_syncContext);
+			}
+			else
+			{
+				var syncContext = SynchronizationContext.Current;
+
+				if (syncContext != null)
+				{
+					InvokeOnSyncContext(syncContext);
+				}
+				else
+				{
+					if (_waitCallback == null)
+					{
+						_waitCallback = PostCallback;
+					}
+
+					ThreadPool.QueueUserWorkItem(_waitCallback, this);
+				}
+			}
+		}
+
+		internal void Invoke()
+		{
+			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
+			{
+				InvokeInline(_op, _continuation, false);
+			}
+			else
+			{
+				InvokeOnSyncContext(_syncContext);
+			}
 		}
 
 		internal static bool CanInvoke(IAsyncOperation op, AsyncContinuationOptions options)
@@ -44,10 +85,19 @@ namespace UnityFx.Async
 			return (options & AsyncContinuationOptions.NotOnCanceled) == 0;
 		}
 
-		internal static void InvokeDelegate(IAsyncOperation op, object continuation)
+		internal static bool CanInvokeInline(IAsyncOperation op, SynchronizationContext syncContext)
+		{
+			return syncContext == null || syncContext == SynchronizationContext.Current;
+		}
+
+		internal static void InvokeInline(IAsyncOperation op, object continuation, bool inline)
 		{
 			switch (continuation)
 			{
+				case IAsyncContinuation c:
+					c.Invoke(op, inline);
+					break;
+
 				case AsyncOperationCallback aoc:
 					aoc.Invoke(op);
 					break;
@@ -108,33 +158,6 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region IAsyncContinuation
-
-		public void Invoke(IAsyncOperation op)
-		{
-			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
-			{
-				InvokeDelegate(op, _continuation);
-			}
-			else
-			{
-				_op = op;
-
-				if (_postCallback == null)
-				{
-					_postCallback = args =>
-					{
-						var c = args as AsyncContinuation;
-						InvokeDelegate(c._op, c._continuation);
-					};
-				}
-
-				_syncContext.Post(_postCallback, this);
-			}
-		}
-
-		#endregion
-
 		#region Object
 
 		public override bool Equals(object obj)
@@ -155,6 +178,25 @@ namespace UnityFx.Async
 		#endregion
 
 		#region implementation
+
+		private void InvokeOnSyncContext(SynchronizationContext syncContext)
+		{
+			Debug.Assert(_syncContext != null);
+
+			if (_postCallback == null)
+			{
+				_postCallback = PostCallback;
+			}
+
+			syncContext.Post(_postCallback, this);
+		}
+
+		private static void PostCallback(object args)
+		{
+			var c = args as AsyncContinuation;
+			InvokeInline(c._op, c._continuation, false);
+		}
+
 		#endregion
 	}
 }

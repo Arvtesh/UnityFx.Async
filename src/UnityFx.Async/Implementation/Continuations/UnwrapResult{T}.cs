@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class UnwrapResult<T> : AsyncResult<T>, IAsyncContinuation
+	internal sealed class UnwrapResult<T> : AsyncResult<T>, IAsyncContinuation
 	{
 		#region data
 
@@ -33,7 +33,7 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op)
+		public void Invoke(IAsyncOperation op, bool inline)
 		{
 			if (_state == State.WaitingForOuterOperation)
 			{
@@ -44,21 +44,21 @@ namespace UnityFx.Async
 					switch (op)
 					{
 						case IAsyncOperation<IAsyncOperation<T>> innerOp1:
-							ProcessInnerOperation(innerOp1.Result, false);
+							ProcessInnerOperation(innerOp1.Result, inline);
 							break;
 
 						case IAsyncOperation<IAsyncOperation> innerOp2:
-							ProcessInnerOperation(innerOp2.Result, false);
+							ProcessInnerOperation(innerOp2.Result, inline);
 							break;
 
 						default:
-							ProcessInnerOperation(null, false);
+							ProcessInnerOperation(null, inline);
 							break;
 					}
 				}
 				else
 				{
-					TrySetException(op.Exception, false);
+					TrySetException(op.Exception, inline);
 				}
 			}
 			else if (_state == State.WaitingForInnerOperation)

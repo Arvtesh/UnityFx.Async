@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Promises
 {
 	public class CatchTests
 	{
@@ -94,7 +94,7 @@ namespace UnityFx.Async
 			{
 				await op;
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				exceptionThrown = true;
 			}

@@ -6,12 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Promises
 {
 	public class ThenAnyTests
 	{
 		[Fact]
-		public async Task ThenAll_CompletesWhenAllOperationsComplete()
+		public async Task ThenAny_CompletesWhenAllOperationsComplete()
 		{
 			// Arrange
 			var op1 = AsyncResult.Delay(1);
@@ -24,6 +24,32 @@ namespace UnityFx.Async
 			// Assert
 			Assert.True(op1.IsCompleted);
 			Assert.True(op2.IsCompleted);
+		}
+
+		[Fact]
+		public async Task ThenAny_CompletesWhenCanceled()
+		{
+			// Arrange
+			var cs = new CancellationTokenSource();
+			cs.Cancel();
+
+			var op1 = new AsyncCompletionSource();
+			var op2 = new AsyncCompletionSource();
+			var op = AsyncResult.CompletedOperation.ThenAny(() => new IAsyncOperation[] { op2, op1 }).WithCancellation(cs.Token);
+
+			// Act
+			try
+			{
+				await op;
+			}
+			catch (OperationCanceledException)
+			{
+			}
+
+			// Assert
+			Assert.True(op.IsCanceled);
+			Assert.True(op1.IsCanceled);
+			Assert.True(op2.IsCanceled);
 		}
 	}
 }

@@ -228,7 +228,7 @@ namespace UnityFx.Async
 			}
 			else if (status == AsyncOperationStatus.Canceled)
 			{
-				return Task.FromCanceled(CancellationToken.None);
+				return Task.FromCanceled(new CancellationToken(true));
 			}
 			else
 			{
@@ -262,7 +262,7 @@ namespace UnityFx.Async
 			}
 			else if (status == AsyncOperationStatus.Canceled)
 			{
-				return Task.FromCanceled<TResult>(CancellationToken.None);
+				return Task.FromCanceled<TResult>(new CancellationToken(true));
 			}
 			else
 			{

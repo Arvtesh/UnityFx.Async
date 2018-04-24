@@ -5,13 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Promises
 {
-	internal class ThenAnyResult<T, U> : ThenResult<T, U>
+	internal sealed class ThenAnyResult<T, U> : ThenResult<T, U>
 	{
 		#region data
 
-		private IAsyncOperation _op2;
+		private WhenAnyResult<IAsyncOperation> _op2;
 
 		#endregion
 
@@ -24,7 +24,7 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region ThenAnyResult
+		#region ThenResult
 
 		protected override void InvokeSuccessCallback(IAsyncOperation op, bool completedSynchronously, object continuation)
 		{
@@ -52,7 +52,11 @@ namespace UnityFx.Async
 				_op2.AddCompletionCallback(
 					op2 =>
 					{
-						if (op2.IsCompletedSuccessfully)
+						if (IsCancellationRequested)
+						{
+							TrySetCanceled(false);
+						}
+						else if (op2.IsCompletedSuccessfully)
 						{
 							var op3 = (op2 as IAsyncOperation<IAsyncOperation>).Result;
 
@@ -76,6 +80,16 @@ namespace UnityFx.Async
 			{
 				TrySetCanceled(completedSynchronously);
 			}
+		}
+
+		#endregion
+
+		#region AsyncResult
+
+		protected override void OnCancel()
+		{
+			base.OnCancel();
+			_op2?.Cancel();
 		}
 
 		#endregion

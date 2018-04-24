@@ -8,73 +8,6 @@ namespace UnityFx.Async
 {
 	partial class AsyncExtensions
 	{
-		#region AddCompletionCallback/AddContinuation
-
-		/// <summary>
-		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed the <paramref name="continuation"/> is invoked synchronously.
-		/// </summary>
-		/// <param name="op">The target operation.</param>
-		/// <param name="continuation">The callback to be executed when the operation has completed.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="continuation"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="IAsyncOperationEvents"/>
-		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback)"/>
-		public static void AddContinuation(this IAsyncOperation op, IAsyncContinuation continuation)
-		{
-			if (!op.TryAddContinuation(continuation))
-			{
-				continuation.Invoke(op);
-			}
-		}
-
-		/// <summary>
-		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed the <paramref name="action"/> is invoked synchronously.
-		/// </summary>
-		/// <param name="op">The target operation.</param>
-		/// <param name="action">The callback to be executed when the operation has completed.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="IAsyncOperationEvents"/>
-		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback, SynchronizationContext)"/>
-		/// <seealso cref="AddContinuation(IAsyncOperation, IAsyncContinuation)"/>
-		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action)
-		{
-			if (!op.TryAddCompletionCallback(action))
-			{
-				action(op);
-			}
-		}
-
-		/// <summary>
-		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed the <paramref name="action"/> is invoked
-		/// on the <paramref name="syncContext"/> specified.
-		/// </summary>
-		/// <param name="op">The target operation.</param>
-		/// <param name="action">The callback to be executed when the operation has completed.</param>
-		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
-		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
-		/// </param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="IAsyncOperationEvents"/>
-		/// <seealso cref="AddCompletionCallback(IAsyncOperation, AsyncOperationCallback)"/>
-		public static void AddCompletionCallback(this IAsyncOperation op, AsyncOperationCallback action, SynchronizationContext syncContext)
-		{
-			if (!op.TryAddCompletionCallback(action, syncContext))
-			{
-				if (syncContext == null || syncContext.GetType() == typeof(SynchronizationContext) || syncContext == SynchronizationContext.Current)
-				{
-					action(op);
-				}
-				else
-				{
-					syncContext.Post(args => action(args as IAsyncOperation), op);
-				}
-			}
-		}
-
-		#endregion
-
 		#region ContinueWith
 
 		/// <summary>
@@ -84,6 +17,7 @@ namespace UnityFx.Async
 		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith(IAsyncOperation, Action{IAsyncOperation}, AsyncContinuationOptions)"/>
 		public static IAsyncOperation ContinueWith(this IAsyncOperation op, Action<IAsyncOperation> action)
 		{
 			return ContinueWith(op, action, AsyncContinuationOptions.None);
@@ -97,6 +31,7 @@ namespace UnityFx.Async
 		/// <param name="options">Options for when the <paramref name="action"/> is executed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith(IAsyncOperation, Action{IAsyncOperation})"/>
 		public static IAsyncOperation ContinueWith(this IAsyncOperation op, Action<IAsyncOperation> action, AsyncContinuationOptions options)
 		{
 			if (action == null)
@@ -104,7 +39,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return new ContinueWithResult<VoidResult>(op, options, action, null);
+			return new ContinueWithResult<VoidResult, VoidResult>(op, options, action, null);
 		}
 
 		/// <summary>
@@ -115,6 +50,7 @@ namespace UnityFx.Async
 		/// <param name="userState">A user-defined state object that is passed as second argument to <paramref name="action"/>.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith(IAsyncOperation, Action{IAsyncOperation, object}, object, AsyncContinuationOptions)"/>
 		public static IAsyncOperation ContinueWith(this IAsyncOperation op, Action<IAsyncOperation, object> action, object userState)
 		{
 			return ContinueWith(op, action, userState, AsyncContinuationOptions.None);
@@ -129,6 +65,7 @@ namespace UnityFx.Async
 		/// <param name="options">Options for when the <paramref name="action"/> is executed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith(IAsyncOperation, Action{IAsyncOperation, object}, object)"/>
 		public static IAsyncOperation ContinueWith(this IAsyncOperation op, Action<IAsyncOperation, object> action, object userState, AsyncContinuationOptions options)
 		{
 			if (action == null)
@@ -136,7 +73,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return new ContinueWithResult<VoidResult>(op, options, action, userState);
+			return new ContinueWithResult<VoidResult, VoidResult>(op, options, action, userState);
 		}
 
 		/// <summary>
@@ -146,6 +83,7 @@ namespace UnityFx.Async
 		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{TResult}(IAsyncOperation, Func{IAsyncOperation, TResult}, AsyncContinuationOptions)"/>
 		public static IAsyncOperation<TResult> ContinueWith<TResult>(this IAsyncOperation op, Func<IAsyncOperation, TResult> action)
 		{
 			return ContinueWith(op, action, AsyncContinuationOptions.None);
@@ -159,6 +97,7 @@ namespace UnityFx.Async
 		/// <param name="options">Options for when the <paramref name="action"/> is executed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{TResult}(IAsyncOperation, Func{IAsyncOperation, TResult})"/>
 		public static IAsyncOperation<TResult> ContinueWith<TResult>(this IAsyncOperation op, Func<IAsyncOperation, TResult> action, AsyncContinuationOptions options)
 		{
 			if (action == null)
@@ -166,7 +105,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return new ContinueWithResult<TResult>(op, options, action, null);
+			return new ContinueWithResult<VoidResult, TResult>(op, options, action, null);
 		}
 
 		/// <summary>
@@ -177,6 +116,7 @@ namespace UnityFx.Async
 		/// <param name="userState">A user-defined state object that is passed as second argument to <paramref name="action"/>.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{TResult}(IAsyncOperation, Func{IAsyncOperation, object, TResult}, object, AsyncContinuationOptions)"/>
 		public static IAsyncOperation<TResult> ContinueWith<TResult>(this IAsyncOperation op, Func<IAsyncOperation, object, TResult> action, object userState)
 		{
 			return ContinueWith(op, action, userState, AsyncContinuationOptions.None);
@@ -191,6 +131,7 @@ namespace UnityFx.Async
 		/// <param name="options">Options for when the <paramref name="action"/> is executed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{TResult}(IAsyncOperation, Func{IAsyncOperation, object, TResult}, object)"/>
 		public static IAsyncOperation<TResult> ContinueWith<TResult>(this IAsyncOperation op, Func<IAsyncOperation, object, TResult> action, object userState, AsyncContinuationOptions options)
 		{
 			if (action == null)
@@ -198,7 +139,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return new ContinueWithResult<TResult>(op, options, action, userState);
+			return new ContinueWithResult<VoidResult, TResult>(op, options, action, userState);
 		}
 
 		/// <summary>
@@ -208,6 +149,7 @@ namespace UnityFx.Async
 		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{TResult}(IAsyncOperation{TResult}, Action{IAsyncOperation{TResult}}, AsyncContinuationOptions)"/>
 		public static IAsyncOperation ContinueWith<TResult>(this IAsyncOperation<TResult> op, Action<IAsyncOperation<TResult>> action)
 		{
 			return ContinueWith(op, action, AsyncContinuationOptions.None);
@@ -221,6 +163,7 @@ namespace UnityFx.Async
 		/// <param name="options">Options for when the <paramref name="action"/> is executed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{TResult}(IAsyncOperation{TResult}, Action{IAsyncOperation{TResult}})"/>
 		public static IAsyncOperation ContinueWith<TResult>(this IAsyncOperation<TResult> op, Action<IAsyncOperation<TResult>> action, AsyncContinuationOptions options)
 		{
 			if (action == null)
@@ -239,6 +182,7 @@ namespace UnityFx.Async
 		/// <param name="userState">A user-defined state object that is passed as second argument to <paramref name="action"/>.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{TResult}(IAsyncOperation{TResult}, Action{IAsyncOperation{TResult}, object}, object, AsyncContinuationOptions)"/>
 		public static IAsyncOperation ContinueWith<TResult>(this IAsyncOperation<TResult> op, Action<IAsyncOperation<TResult>, object> action, object userState)
 		{
 			return ContinueWith(op, action, userState, AsyncContinuationOptions.None);
@@ -253,6 +197,7 @@ namespace UnityFx.Async
 		/// <param name="options">Options for when the <paramref name="action"/> is executed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{TResult}(IAsyncOperation{TResult}, Action{IAsyncOperation{TResult}, object}, object)"/>
 		public static IAsyncOperation ContinueWith<TResult>(this IAsyncOperation<TResult> op, Action<IAsyncOperation<TResult>, object> action, object userState, AsyncContinuationOptions options)
 		{
 			if (action == null)
@@ -270,6 +215,7 @@ namespace UnityFx.Async
 		/// <param name="action">An action to run when the <paramref name="op"/> completes.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{TResult, TNewResult}(IAsyncOperation{TResult}, Func{IAsyncOperation{TResult}, TNewResult}, AsyncContinuationOptions)"/>
 		public static IAsyncOperation<TNewResult> ContinueWith<TResult, TNewResult>(this IAsyncOperation<TResult> op, Func<IAsyncOperation<TResult>, TNewResult> action)
 		{
 			return ContinueWith(op, action, AsyncContinuationOptions.None);
@@ -283,6 +229,7 @@ namespace UnityFx.Async
 		/// <param name="options">Options for when the <paramref name="action"/> is executed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{TResult, TNewResult}(IAsyncOperation{TResult}, Func{IAsyncOperation{TResult}, TNewResult})"/>
 		public static IAsyncOperation<TNewResult> ContinueWith<TResult, TNewResult>(this IAsyncOperation<TResult> op, Func<IAsyncOperation<TResult>, TNewResult> action, AsyncContinuationOptions options)
 		{
 			if (action == null)
@@ -301,6 +248,7 @@ namespace UnityFx.Async
 		/// <param name="userState">A user-defined state object that is passed as second argument to <paramref name="action"/>.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{TResult, TNewResult}(IAsyncOperation{TResult}, Func{IAsyncOperation{TResult}, object, TNewResult}, object, AsyncContinuationOptions)"/>
 		public static IAsyncOperation<TNewResult> ContinueWith<TResult, TNewResult>(this IAsyncOperation<TResult> op, Func<IAsyncOperation<TResult>, object, TNewResult> action, object userState)
 		{
 			return ContinueWith(op, action, userState, AsyncContinuationOptions.None);
@@ -315,6 +263,7 @@ namespace UnityFx.Async
 		/// <param name="options">Options for when the <paramref name="action"/> is executed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>An operation that is executed after <paramref name="op"/> completes.</returns>
+		/// <seealso cref="ContinueWith{TResult, TNewResult}(IAsyncOperation{TResult}, Func{IAsyncOperation{TResult}, object, TNewResult}, object)"/>
 		public static IAsyncOperation<TNewResult> ContinueWith<TResult, TNewResult>(this IAsyncOperation<TResult> op, Func<IAsyncOperation<TResult>, object, TNewResult> action, object userState, AsyncContinuationOptions options)
 		{
 			if (action == null)
@@ -334,6 +283,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="op">The source operation.</param>
 		/// <returns>The unwrapped operation.</returns>
+		/// <seealso cref="Unwrap{TResult}(IAsyncOperation{IAsyncOperation{TResult}})"/>
 		public static IAsyncOperation Unwrap(this IAsyncOperation<IAsyncOperation> op)
 		{
 			return new UnwrapResult<VoidResult>(op);
@@ -344,6 +294,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="op">The source operation.</param>
 		/// <returns>The unwrapped operation.</returns>
+		/// <seealso cref="Unwrap(IAsyncOperation{IAsyncOperation})"/>
 		public static IAsyncOperation<TResult> Unwrap<TResult>(this IAsyncOperation<IAsyncOperation<TResult>> op)
 		{
 			return new UnwrapResult<TResult>(op);

@@ -9,7 +9,7 @@ Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io
 
 ## Synopsis
 
-*UnityFx.Async* is a set of of classes and interfaces that extend [Unity3d](https://unity3d.com) asynchronous operations and can be used very much like [Task-based Asynchronous Pattern (TAP)](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming) in .NET or [Promises](https://developers.google.com/web/fundamentals/primers/promises) in Javascript. The library at its core defines a container ([AsyncResult](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncResult.html)) for state and result value of an asynchronous operation (aka `promise` or `future`). In many aspects it mimics [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) (for example, it can be used with `async`/`await` operators, supports continuations and synchronization context capturing).
+*UnityFx.Async* is a set of classes and interfaces that extend [Unity3d](https://unity3d.com) asynchronous operations and can be used very much like [Task-based Asynchronous Pattern (TAP)](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming) in .NET or [Promises](https://developers.google.com/web/fundamentals/primers/promises) in Javascript. The library at its core defines a container ([AsyncResult](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncResult.html)) for state and result value of an asynchronous operation (aka `promise` or `future`). In many aspects it mimics [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) (for example, it can be used with `async`/`await` operators, supports continuations and synchronization context capturing).
 
 Library is designed as a lightweight [Unity3d](https://unity3d.com)-compatible [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) alternative (not a replacement though). Main design goals are:
 - Minimum object size and number of allocations.
@@ -29,6 +29,7 @@ The table below summarizes differences berween *UnityFx.Async* and other popular
 | Supports Unity coroutines | ️️✔️ | - | - |
 | Supports `async` / `await` | ✔️ | - | ✔️ |
 | Supports `promise`-like continuations | ✔️ | ✔️ | - |
+| Supports cancellation | ✔️ | -️ | ✔️ |
 | Supports child operations | - | - | ✔️ |
 | Minimum operation data size for 32-bit systems (in bytes) | 28+ | 36+ | 40+ |
 | Minimum number of allocations per continuation | 1+ | 5+ | 2+ |
@@ -97,9 +98,9 @@ Doesn't look that simple now, right? And that's just the async method calls with
 Coroutines are another popular approach of programming asynchronous operations available for Unity users by default. While it allows convenient way of operation chaining there are quite a lot of drawbacks that make it not suited well for large projects:
 * Coroutines cannot return result values (since the return type must be `IEnumerator`).
 * Coroutines can't handle exceptions, because `yield return` statements cannot be surrounded with a `try`-`catch` construction. This makes error handling a pain.
-* Coroutine require a `MonoBehaviour` to run.
+* Coroutine requires a `MonoBehaviour` to run.
 * There is no way to wait for a coroutine other than yield.
-* There is no way to get coroutine state information.
+* There is no way to get coroutine status information.
 
 That said, here is the previous example rewrited using coroutines:
 ```csharp
@@ -115,10 +116,10 @@ yield return InitiateAsyncOperation3(result2, result3);
 /// ...
 /// No way to handle exceptions here
 ```
-As you can see we had to wrap result values into custom classes (which resulted in quire unobvious code) and no error handling can be done at this level (have to rely on the methods been called).
+As you can see we had to wrap result values into custom classes (which resulted in quite unobvious code) and no error handling can be done at this level.
 
 ### Promises to the rescue
-Promises are a design pattern to structure asynchronous code as a sequence of chained (not nested!) operations. This concept was introduces for JS and has even become a [standard](https://promisesaplus.com/) since then. At low level a promise is an object containing a state (Running, Resolved or Rejected), a result value and (optionally) success/error callbacks. At high level the point of promises is to give us functional composition and error handling is the async world.
+Promises are a design pattern to structure asynchronous code as a sequence of chained (not nested!) operations. This concept was introduces for JS and has even become a [standard](https://promisesaplus.com/) since then. At low level a promise is an object containing a state (Running, Resolved or Rejected), a result value and (optionally) success/error callbacks. At high level the point of promises is to provide functional composition and error handling is the async world.
 
 Let's rewrite the last callback hell sample using promises:
 ```csharp
@@ -130,10 +131,13 @@ InitiateSomeAsyncOperation()
 ```
 This does exaclty the same job as the callbacks sample, but it's much more readable.
 
-That said promises are still not an ideal solution (at least for C#). They require quite a lot of filler code and rely heavily on delegate usage.
+That said promises are still not an ideal solution (at least for C#). They require quite much filler code and rely heavily on delegates usage.
+
+### Observables and reactive programming
+Observable event streams as defined in [reactive programming](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754) provide a convenient way of managing push-based event notifications (opposed to pull-based nature of `IEnumerable`). One of the core differences is multiple result values for observables versus single promise result. While observables may represent an asynchronous operation it is not always the case (and it is generally not recommended to use them in this way). That is why the concept is out of the scope covered by this document.
 
 ### Asynchronous programming with async and await
-C# 5.0/.NET 4.5 introduced a new appoach to asynchronous programming. By using `async` and `await` one can write an asynchronous methods almost as synchronous methods. The following example shows implementation of the callback hell method with this technique:
+C# 5.0/.NET 4.5 introduced a new appoach to asynchronous programming. By using `async` and `await` one can write asynchronous methods almost as synchronous methods. The following example shows implementation of the callback hell method with this technique:
 ```csharp
 try
 {
@@ -147,12 +151,15 @@ catch (Exception e)
     // Error handling code
 }
 ```
-In fact the only notable difference from synchronous implementation is usage of the mentioned `async` and `await` keywords. It's worth mentioning that there is lots of hidden work done by both the C# compliter and asynchronous operation to allow this.
+In fact the only notable difference from synchronous implementation is usage of the mentioned `async` and `await` keywords. It's worth mentioning that a lot of hidden work is done by both the C# compliter and asynchronous operation to allow this.
+
+*UnityFx.Async* supports all of the asynchronous programming approaches described.
 
 ## Using the library
 Reference the DLL and import the namespace:
 ```csharp
 using UnityFx.Async;
+using UnityFx.Async.Promises;   // For promises-specific stuff.
 ```
 Create an operation instance like this:
 ```csharp
@@ -224,7 +231,7 @@ else if (op.IsCanceled)
     Debug.LogWarning("The operation was canceled.");
 }
 ```
-With Unity 2017+ and .NET 4.6 it can be used just like a [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task). The await continuation is scheduled on a captured [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) (if any):
+With Unity 2017+ and .NET 4.6 it can be used just like a [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task). An await continuation is scheduled on a captured [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) (if any):
 ```csharp
 try
 {
@@ -257,7 +264,7 @@ catch (Exception e)
 ```
 
 ### Chaining asynchronous operations
-Multiple asynchronous operations can be chained one after other using `Then` / `Rebind` / `ContinueWith` / `Catch` / `Finally`:
+Multiple asynchronous operations can be chained one after other using `Then` / `Rebind` / `ContinueWith` / `Catch` / `Finally` / `Done`:
 ```csharp
 DownloadTextAsync("http://www.google.com")
     .Then(text => ExtractFirstParagraph(text))
@@ -267,7 +274,7 @@ DownloadTextAsync("http://www.google.com")
 ```
 The chain of processing ends as soon as an exception occurs. In this case when an error occurs the `Catch` handler would be called.
 
-`Then` continuations get executed only if previous operation in the chain completed successfully. Otherwise they are skipped. Also note that `Then` expects the handler return value to be another operation.
+`Then` continuations get executed only if previous operation in the chain completed successfully. Otherwise, they are skipped. Note that `Then` expects the handler return value to be another operation.
 
 `Rebind` is a special kind of continuation for transforming operation result to a different type:
 ```csharp
@@ -275,13 +282,20 @@ DownloadTextAsync("http://www.google.com")
     .Then(text => ExtractFirstUrl(text))
     .Rebind(url => new Url(url));
 ```
-`ContinueWith` and `Finally` delegates get called independently of the antecedent operation result. `ContinueWith` also define overloads accepting `AsyncContinuationOptions` argument that allows to customize its behaviour:
+`ContinueWith` and `Finally` delegates get called independently of the antecedent operation result. `ContinueWith` also define overloads accepting `AsyncContinuationOptions` argument that allows to customize its behaviour. Note that `ContinueWith` is analog to the corresponding [Task method](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.continuewith) and not a part of the JS promise pattern:
 ```csharp
 DownloadTextAsync("http://www.google.com")
     .ContinueWith(op => Debug.Log("1"))
     .ContinueWith(op => Debug.Log("2"), AsyncContinuationOptions.NotOnCanceled)
     .ContinueWith(op => Debug.Log("3"), AsyncContinuationOptions.OnlyOnFaulted);
 ```
+`Done` acts like a combination of `Catch` and `Finally`. It should always be the last element of the chain:
+```csharp
+DownloadTextAsync("http://www.google.com")
+    .Then(text => ExtractFirstUrl(text))
+    .Done(url => Debug.Log("Done"), e => Debug.LogException(e));
+```
+
 That said with .NET 4.6 the recommented approach is using `async` / `await`:
 ```csharp
 try
@@ -300,6 +314,19 @@ finally
 }
 ```
 
+### Cancellation
+All library operations can be cancelled using `Cancel` method:
+```csharp
+    op.Cancel();
+```
+Or with `WithCancellation` extension:
+DownloadTextAsync("http://www.google.com")
+    .Then(text => ExtractFirstParagraph(text))
+    .WithCancellation(cancellationToken);
+```csharp
+```
+If the [token](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken) passed to `WithCancellation` is cancelled the target operation is cancelled as well (and that means cancelling all chained operations) as soon as possible. Cancellation might not be instant (depends on specific operation implementation). Also, please note that not all operations might support cancellation; in this case `Cancel` will throw `NotSupportedException`.
+
 ### Synchronization context capturing
 The default behaviour of all library methods is to capture current [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) and try to schedule continuations on it. If there is no synchronization context attached to current thread, continuations are executed on a thread that initiated an operation completion. The same behaviour applies to `async` / `await` implementation unless explicitly overriden with `ConfigureAwait`:
 ```csharp
@@ -311,19 +338,19 @@ await DownloadTextAsync("http://www.yahoo.com").ConfigureAwait(false);
 ```
 
 ### Completion callbacks
-All operations defined in the library support adding of completion callbacks that are executed when an operation completes:
+Completion callbacks are basicly low-level continuations. Just like continuations they are executed when parent operation completes:
 ```csharp
 var op = DownloadTextAsync("http://www.google.com");
 op.Completed += o => Debug.Log("1");
 op.AddCompletionCallback(o => Debug.Log("2"));
 ```
-Unlike `ContinueWith`-like stuff completion callbacks cannot be chained and do not handle exceptions automatically. Throwing an exception from a completion callback results in unspecified behavior.
+That said, unlike `ContinueWith`-like stuff completion callbacks cannot be chained and do not handle exceptions automatically. Throwing an exception from a completion callback results in unspecified behavior.
 
-There is also a low-level continuation interface (`IAsyncContinuation`):
+There are also non-delegate completion callbacks (`IAsyncContinuation`):
 ```csharp
 class MyContinuation : IAsyncContinuation
 {
-    public void Invoke(IAsyncOperation op) => Debug.Log("Done");
+    public void Invoke(IAsyncOperation op, bool inline) => Debug.Log("Done");
 }
 
 // ...
@@ -341,13 +368,14 @@ Please note that `Dispose` implementation is NOT thread-safe and can only be cal
 There are a number of helper methods for creating completed operations:
 ```csharp
 var op1 = AsyncResult.CompletedOperation;
-var op2 = AsyncResult.FromResult(10);
-var op3 = AsyncResult.FromException(new Exception());
-var op4 = AsyncResult.FromCanceled();
+var op2 = AsyncResult.CanceledOperation;
+var op3 = AsyncResult.FromResult(10);
+var op4 = AsyncResult.FromException(new Exception());
+var op5 = AsyncResult.FromCanceled();
 ```
 
 ### Convertions
-Library defines convertion methods between `IAsyncOperation` and `Task`, `IObservable`, `UnityWebRequest`, `AsyncOperation`, `WWW`:
+Library defines convertion methods between `IAsyncOperation` and `Task`, `IObservable`, `UnityWebRequest`, `AsyncOperation`, `WWW` with corresponding extension methods:
 ```csharp
 var task = op.ToTask();
 var observable = op.ToObservable();
@@ -361,8 +389,8 @@ var op5 = unityWWW.ToAsync();
 
 ### Creating own asynchronous operations
 Most common way of creating own asynchronous operation is instantiating `AsyncCompletionSource` instance and call `SetResult` / `SetException` / `SetCanceled` when done. Still there are cases when more control is required. For this purpose the library provides two public extendable implementations for asynchronous operations:
-* `AsyncResult`: an operation without a result value.
-* `AsyncResult<TResult>`: an asynchronous operation with a generic result value.
+* `AsyncResult`: a generic asynchronous operation without a result value.
+* `AsyncResult<TResult>`: an asynchronous operation with a result value.
 
 The sample code below demostrates creating a delay operation:
 ```csharp
@@ -373,13 +401,22 @@ public class TimerDelayResult : AsyncResult
     public TimerDelayResult(int millisecondsDelay)
         : base(AsyncOperationStatus.Running)
     {
-        _timer = new Timer(TimerCompletionCallback, this, millisecondsDelay, Timeout.Infinite);
+        _timer = new Timer(
+            state => (state as TimerDelayResult).TrySetCompleted(false),
+            this,
+            millisecondsDelay,
+            Timeout.Infinite);
     }
 
     protected override void OnCompleted()
     {
         _timer.Dispose();
         base.OnCompleted();
+    }
+
+    protected override void OnCancel()
+    {
+        _timer.Dispose();
     }
 
     protected override void Dispose(bool disposing)
@@ -390,11 +427,6 @@ public class TimerDelayResult : AsyncResult
         }
 
         base.Dispose(disposing);
-    }
-
-    private static void TimerCompletionCallback(object state)
-    {
-        (state as TimerDelayResult).TrySetCompleted(false);
     }
 }
 ```
@@ -407,23 +439,21 @@ TPL | UnityFx.Async | Notes
 [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) | [AsyncResult](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncResult.html), [IAsyncOperation](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.IAsyncOperation.html) | Represents an asynchronous operation.
 [Task&lt;TResult&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1) | [AsyncResult&lt;TResult&gt;](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncResult-1.html), [IAsyncOperation&lt;TResult&gt;](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.IAsyncOperation-1.html) | Represents an asynchronous operation that can return a value.
 [TaskStatus](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskstatus) | [AsyncOperationStatus](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncOperationStatus.html) | Represents the current stage in the lifecycle of an asynchronous operation.
-[TaskCreationOptions](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskcreationoptions) | - | Specifies flags that control optional behavior for the creation and execution of asynchronous operations.
+[TaskCreationOptions](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskcreationoptions) | [AsyncCreationOptions](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncCreationOptions.html) | Specifies flags that control optional behavior for the creation and execution of asynchronous operations.
 [TaskContinuationOptions](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskcontinuationoptions) | [AsyncContinuationOptions](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncContinuationOptions.html) | Specifies the behavior for an asynchronous operation that is created by using continuation methods (`ContinueWith`).
 [TaskCanceledException](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskcanceledexception) | - | Represents an exception used to communicate an asynchronous operation cancellation.
 [TaskCompletionSource&lt;TResult&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskcompletionsource-1) | [AsyncCompletionSource](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncCompletionSource.html), [IAsyncCompletionSource](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource.html), [AsyncCompletionSource&lt;TResult&gt;](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncCompletionSource-1.html), [IAsyncCompletionSource&lt;TResult&gt;](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.IAsyncCompletionSource-1.html) | Represents the producer side of an asyncronous operation unbound to a delegate.
 [TaskScheduler](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskscheduler) | - | Represents an object that handles the low-level work of queuing asynchronous operations onto threads.
 [TaskFactory](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskfactory), [TaskFactory&lt;TResult&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskfactory-1) | - | Provides support for creating and scheduling asynchronous operations.
+&#45; | [IAsyncCancellable](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.IAsyncCancellable.html) | A cancellable operation.
+&#45; | [IAsyncContinuation](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.IAsyncContinuation.html) | A generic non-delegate operation continuation.
+&#45; | [IAsyncUpdatable](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.IAsyncUpdatable.html), [IAsyncUpdateSource](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.IAsyncUpdateSource.html) | A consumer and provider sides for frame update notifications.
 &#45; | [AsyncResultQueue&lt;T&gt;](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html) | A FIFO queue of asynchronous operations executed sequentially.
 
 Please note that the library is NOT a replacement for [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) or [TPL](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-parallel-library-tpl). As a general rule it is recommended to use [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) and only switch to *UnityFx.Async* if one of the following applies:
 - .NET 3.5/[Unity3d](https://unity3d.com) compatibility is required.
 - Memory usage is a concern ([Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) tend to do quite a lot of allocations).
 - An extendable [IAsyncResult](https://docs.microsoft.com/en-us/dotnet/api/system.iasyncresult) implementation is needed.
-
-## Future work
-* Implementation of noalloc completion callbacks.
-* Progress reporting (via [IProgress](https://docs.microsoft.com/en-us/dotnet/api/system.iprogress-1)).
-* Cancellation support (via [CancellationToken](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken)).
 
 ## Motivation
 The project was initially created to help author with his [Unity3d](https://unity3d.com) projects. Unity's [AsyncOperation](https://docs.unity3d.com/ScriptReference/AsyncOperation.html) and the like can only be used in coroutines, cannot be extended and mostly do not return result or error information, .NET 3.5 does not provide much help either and even with .NET 4.6 support compatibility requirements often do not allow using [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task). When I caught myself writing the same asynchronous operation wrappers in each project I decided to share my experience for the best of human kind.
@@ -439,6 +469,7 @@ Please see the links below for extended information on the product:
 - [Task-based Asynchronous Pattern (TAP)](https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/task-based-asynchronous-pattern-tap).
 - [Asynchronous programming with async and await (C#)](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/).
 - [.NET Task reference source](https://referencesource.microsoft.com/#mscorlib/System/threading/Tasks/Task.cs).
+- [Introduction to Reactive Programming](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754).
 - [Promise pattern](https://en.wikipedia.org/wiki/Futures_and_promises).
 - [Promises for Game Development](http://www.what-could-possibly-go-wrong.com/promises-for-game-development/).
 - [Promises/A+ Spec](https://promisesaplus.com/).

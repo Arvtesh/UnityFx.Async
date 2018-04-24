@@ -74,21 +74,6 @@ namespace UnityFx.Async
 			Assert.True(op.OnStatusChangedCalled);
 		}
 
-		[Theory]
-		[InlineData(true)]
-		[InlineData(false)]
-		public void TrySetCanceled_SetsCompletedSynchronously(bool completedSynchronously)
-		{
-			// Arrange
-			var op = new AsyncCompletionSource();
-
-			// Act
-			op.TrySetCanceled(completedSynchronously);
-
-			// Assert
-			Assert.Equal(completedSynchronously, op.CompletedSynchronously);
-		}
-
 		[Fact]
 		public void TrySetCanceled_FailsIfOperationIsCompleted()
 		{
@@ -206,22 +191,6 @@ namespace UnityFx.Async
 			Assert.True(op.OnStatusChangedCalled);
 		}
 
-		[Theory]
-		[InlineData(true)]
-		[InlineData(false)]
-		public void TrySetException_SetsCompletedSynchronously(bool completedSynchronously)
-		{
-			// Arrange
-			var e = new Exception();
-			var op = new AsyncCompletionSource();
-
-			// Act
-			op.TrySetException(e, completedSynchronously);
-
-			// Assert
-			Assert.Equal(completedSynchronously, op.CompletedSynchronously);
-		}
-
 		[Fact]
 		public void TrySetException_FailsIfOperationIsCompleted()
 		{
@@ -325,21 +294,6 @@ namespace UnityFx.Async
 			Assert.True(op.OnStatusChangedCalled);
 		}
 
-		[Theory]
-		[InlineData(true)]
-		[InlineData(false)]
-		public void TrySetCompleted_SetsCompletedSynchronously(bool completedSynchronously)
-		{
-			// Arrange
-			var op = new AsyncCompletionSource();
-
-			// Act
-			op.TrySetCompleted(completedSynchronously);
-
-			// Assert
-			Assert.Equal(completedSynchronously, op.CompletedSynchronously);
-		}
-
 		[Fact]
 		public void TrySetCompleted_FailsIfOperationIsCompleted()
 		{
@@ -432,22 +386,6 @@ namespace UnityFx.Async
 			// Assert
 			Assert.True(op.OnCompletedCalled);
 			Assert.True(op.OnStatusChangedCalled);
-		}
-
-		[Theory]
-		[InlineData(true)]
-		[InlineData(false)]
-		public void TrySetResult_SetsCompletedSynchronously(bool completedSynchronously)
-		{
-			// Arrange
-			var result = new object();
-			var op = new AsyncCompletionSource<object>();
-
-			// Act
-			op.TrySetResult(result, completedSynchronously);
-
-			// Assert
-			Assert.Equal(completedSynchronously, op.CompletedSynchronously);
 		}
 
 		[Fact]
