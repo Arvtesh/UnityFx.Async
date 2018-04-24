@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ### Added
 - Added `AsyncContinuationOptions`.
 - Added `AsyncCreationOptions`.
-- Added `Promise`-like extensions `Then`, `ThenAll`, `ThenAny`, `Rebind`, `Catch` and `Finally`.
+- Added `Promise`-like extensions `Then`, `ThenAll`, `ThenAny`, `Rebind`, `Catch`, `Finally` and `Done`.
 - Added `Unwrap` extension methods.
 - Added `FromTask`/`FromObservable` helpers.
 - Added `FromAction` helpers.
