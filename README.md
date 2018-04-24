@@ -264,7 +264,7 @@ catch (Exception e)
 ```
 
 ### Chaining asynchronous operations
-Multiple asynchronous operations can be chained one after other using `Then` / `Rebind` / `ContinueWith` / `Catch` / `Finally`:
+Multiple asynchronous operations can be chained one after other using `Then` / `Rebind` / `ContinueWith` / `Catch` / `Finally` / `Done`:
 ```csharp
 DownloadTextAsync("http://www.google.com")
     .Then(text => ExtractFirstParagraph(text))
@@ -282,13 +282,20 @@ DownloadTextAsync("http://www.google.com")
     .Then(text => ExtractFirstUrl(text))
     .Rebind(url => new Url(url));
 ```
-`ContinueWith` and `Finally` delegates get called independently of the antecedent operation result. `ContinueWith` also define overloads accepting `AsyncContinuationOptions` argument that allows to customize its behaviour:
+`ContinueWith` and `Finally` delegates get called independently of the antecedent operation result. `ContinueWith` also define overloads accepting `AsyncContinuationOptions` argument that allows to customize its behaviour. Note that `ContinueWith` is analog to the corresponding [Task method](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.continuewith) and not a part of the JS promise pattern:
 ```csharp
 DownloadTextAsync("http://www.google.com")
     .ContinueWith(op => Debug.Log("1"))
     .ContinueWith(op => Debug.Log("2"), AsyncContinuationOptions.NotOnCanceled)
     .ContinueWith(op => Debug.Log("3"), AsyncContinuationOptions.OnlyOnFaulted);
 ```
+`Done` acts like a combination of `Catch` and `Finally`. It should always be the last element of the chain:
+```csharp
+DownloadTextAsync("http://www.google.com")
+    .Then(text => ExtractFirstUrl(text))
+    .Done(url => Debug.Log("Done"), e => Debug.LogException(e));
+```
+
 That said with .NET 4.6 the recommented approach is using `async` / `await`:
 ```csharp
 try
