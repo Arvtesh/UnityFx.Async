@@ -1,5 +1,5 @@
 $scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
-$solutionPath = Join-Path $scriptPath "UnityFx.sln"
+$solutionPath = Join-Path $scriptPath "UnityFx.Async.sln"
 $configuration = $args[0]
 $packagesPath = Join-Path $scriptPath "..\temp\BuildTools"
 $binPath = Join-Path $scriptPath "..\bin"
