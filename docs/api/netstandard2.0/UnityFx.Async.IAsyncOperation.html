@@ -73,7 +73,8 @@
   
   <h1 id="UnityFx_Async_IAsyncOperation" data-uid="UnityFx.Async.IAsyncOperation" class="text-break">Interface IAsyncOperation
   </h1>
-  <div class="markdown level0 summary"><p>A disposable <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iasyncresult">IAsyncResult</a> with status information.</p>
+  <div class="markdown level0 summary"><p>Represents the consumer side of an asynchronous operation. A disposable <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iasyncresult">IAsyncResult</a>
+with status information.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritedMembers">
@@ -82,13 +83,37 @@
       <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_Completed">IAsyncOperationEvents.Completed</a>
     </div>
     <div>
-      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_System_Action_">IAsyncOperationEvents.AddCompletionCallback(Action)</a>
+      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_AsyncOperationCallback_">IAsyncOperationEvents.AddCompletionCallback(AsyncOperationCallback)</a>
     </div>
     <div>
-      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddOrInvokeCompletionCallback_System_Action_">IAsyncOperationEvents.AddOrInvokeCompletionCallback(Action)</a>
+      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback_">IAsyncOperationEvents.TryAddCompletionCallback(AsyncOperationCallback)</a>
     </div>
     <div>
-      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_System_Action_">IAsyncOperationEvents.RemoveCompletionCallback(Action)</a>
+      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext_">IAsyncOperationEvents.AddCompletionCallback(AsyncOperationCallback, SynchronizationContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddCompletionCallback_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext_">IAsyncOperationEvents.TryAddCompletionCallback(AsyncOperationCallback, SynchronizationContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_UnityFx_Async_AsyncOperationCallback_">IAsyncOperationEvents.RemoveCompletionCallback(AsyncOperationCallback)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddContinuation_UnityFx_Async_IAsyncContinuation_">IAsyncOperationEvents.AddContinuation(IAsyncContinuation)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddContinuation_UnityFx_Async_IAsyncContinuation_">IAsyncOperationEvents.TryAddContinuation(IAsyncContinuation)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddContinuation_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_">IAsyncOperationEvents.AddContinuation(IAsyncContinuation, SynchronizationContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_TryAddContinuation_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_">IAsyncOperationEvents.TryAddContinuation(IAsyncContinuation, SynchronizationContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveContinuation_UnityFx_Async_IAsyncContinuation_">IAsyncOperationEvents.RemoveContinuation(IAsyncContinuation)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.IAsyncCancellable.html#UnityFx_Async_IAsyncCancellable_Cancel">IAsyncCancellable.Cancel()</a>
     </div>
     <div>
       <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iasyncresult.asyncstate#System_IAsyncResult_AsyncState">IAsyncResult.AsyncState</a>
@@ -110,30 +135,26 @@
   <h6><strong>Assembly</strong>: UnityFx.Async.dll</h6>
   <h5 id="UnityFx_Async_IAsyncOperation_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IAsyncOperation : IAsyncOperationEvents, IAsyncResult, IDisposable</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IAsyncOperation : IAsyncOperationEvents, IAsyncCancellable, IAsyncResult, IDisposable</code></pre>
   </div>
-  <h5 id="UnityFx_Async_IAsyncOperation_remarks"><strong>Remarks</strong></h5>
-  <div class="markdown level0 remarks"><p>The interface is designed to be as close to the TLP Task as possible. All interface methods are expected to be thread-safe.
-The only exception to this rule is <span class="xref">System.IDisposable.Dispose()</span>.</p>
-</div>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/release/0.7.0/apiSpec/new?filename=UnityFx_Async_IAsyncOperation_Exception.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperation.Exception%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperation_Exception.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperation.Exception%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/release/0.7.0/src/UnityFx.Async/Api/IAsyncOperation.cs/#L72">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperation.cs/#L71">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncOperation_Exception_" data-uid="UnityFx.Async.IAsyncOperation.Exception*"></a>
   <h4 id="UnityFx_Async_IAsyncOperation_Exception" data-uid="UnityFx.Async.IAsyncOperation.Exception">Exception</h4>
-  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a> that caused the operation to end prematurely. If the operation completed successfully
+  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.aggregateexception">AggregateException</a> that caused the operation to end prematurely. If the operation completed successfully
 or has not yet thrown any exceptions, this will return <span class="xref">null</span>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Exception Exception { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">AggregateException Exception { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -145,7 +166,7 @@ or has not yet thrown any exceptions, this will return <span class="xref">null</
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.aggregateexception">AggregateException</a></td>
         <td><p>An exception that caused the operation to end prematurely.</p>
 </td>
       </tr>
@@ -158,14 +179,14 @@ or has not yet thrown any exceptions, this will return <span class="xref">null</
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/release/0.7.0/apiSpec/new?filename=UnityFx_Async_IAsyncOperation_IsCanceled.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperation.IsCanceled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperation_IsCanceled.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperation.IsCanceled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/release/0.7.0/src/UnityFx.Async/Api/IAsyncOperation.cs/#L104">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperation.cs/#L107">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncOperation_IsCanceled_" data-uid="UnityFx.Async.IAsyncOperation.IsCanceled*"></a>
   <h4 id="UnityFx_Async_IAsyncOperation_IsCanceled" data-uid="UnityFx.Async.IAsyncOperation.IsCanceled">IsCanceled</h4>
-  <div class="markdown level1 summary"><p>Gets whether the operation completed due to being canceled (i.e. with <a class="xref" href="UnityFx.Async.AsyncOperationStatus.html#UnityFx_Async_AsyncOperationStatus_Canceled">Canceled</a> status).</p>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether the operation completed due to being canceled (i.e. with <a class="xref" href="UnityFx.Async.AsyncOperationStatus.html#UnityFx_Async_AsyncOperationStatus_Canceled">Canceled</a> status).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -188,6 +209,10 @@ or has not yet thrown any exceptions, this will return <span class="xref">null</
       </tr>
     </tbody>
   </table>
+  <h5 id="UnityFx_Async_IAsyncOperation_IsCanceled_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If <a class="xref" href="UnityFx.Async.IAsyncOperation.html#UnityFx_Async_IAsyncOperation_IsCanceled">IsCanceled</a> is <span class="xref">true</span>, the operation&apos;s <a class="xref" href="UnityFx.Async.IAsyncOperation.html#UnityFx_Async_IAsyncOperation_Status">Status</a> will be equal to
+<a class="xref" href="UnityFx.Async.AsyncOperationStatus.html#UnityFx_Async_AsyncOperationStatus_Canceled">Canceled</a>, and its <a class="xref" href="UnityFx.Async.IAsyncOperation.html#UnityFx_Async_IAsyncOperation_Exception">Exception</a> property will be non-<span class="xref">null</span>.</p>
+</div>
   <h5 id="UnityFx_Async_IAsyncOperation_IsCanceled_seealso">See Also</h5>
   <div class="seealso">
       <div><a class="xref" href="UnityFx.Async.IAsyncOperation.html#UnityFx_Async_IAsyncOperation_IsCompletedSuccessfully">IsCompletedSuccessfully</a></div>
@@ -196,14 +221,14 @@ or has not yet thrown any exceptions, this will return <span class="xref">null</
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/release/0.7.0/apiSpec/new?filename=UnityFx_Async_IAsyncOperation_IsCompletedSuccessfully.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperation.IsCompletedSuccessfully%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperation_IsCompletedSuccessfully.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperation.IsCompletedSuccessfully%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/release/0.7.0/src/UnityFx.Async/Api/IAsyncOperation.cs/#L81">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperation.cs/#L80">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncOperation_IsCompletedSuccessfully_" data-uid="UnityFx.Async.IAsyncOperation.IsCompletedSuccessfully*"></a>
   <h4 id="UnityFx_Async_IAsyncOperation_IsCompletedSuccessfully" data-uid="UnityFx.Async.IAsyncOperation.IsCompletedSuccessfully">IsCompletedSuccessfully</h4>
-  <div class="markdown level1 summary"><p>Gets whether the operation completed with successfully (i.e. with <a class="xref" href="UnityFx.Async.AsyncOperationStatus.html#UnityFx_Async_AsyncOperationStatus_RanToCompletion">RanToCompletion</a> status).</p>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether the operation completed successfully (i.e. with <a class="xref" href="UnityFx.Async.AsyncOperationStatus.html#UnityFx_Async_AsyncOperationStatus_RanToCompletion">RanToCompletion</a> status).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -221,7 +246,7 @@ or has not yet thrown any exceptions, this will return <span class="xref">null</
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
-        <td><p>A value indicating whether the operation has finished successfully.</p>
+        <td><p>A value indicating whether the operation completed successfully.</p>
 </td>
       </tr>
     </tbody>
@@ -234,14 +259,14 @@ or has not yet thrown any exceptions, this will return <span class="xref">null</
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/release/0.7.0/apiSpec/new?filename=UnityFx_Async_IAsyncOperation_IsFaulted.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperation.IsFaulted%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperation_IsFaulted.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperation.IsFaulted%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/release/0.7.0/src/UnityFx.Async/Api/IAsyncOperation.cs/#L95">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperation.cs/#L94">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncOperation_IsFaulted_" data-uid="UnityFx.Async.IAsyncOperation.IsFaulted*"></a>
   <h4 id="UnityFx_Async_IAsyncOperation_IsFaulted" data-uid="UnityFx.Async.IAsyncOperation.IsFaulted">IsFaulted</h4>
-  <div class="markdown level1 summary"><p>Gets whether the operation completed due to an unhandled exception (i.e. with <a class="xref" href="UnityFx.Async.AsyncOperationStatus.html#UnityFx_Async_AsyncOperationStatus_Faulted">Faulted</a> status).</p>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether the operation completed due to an unhandled exception (i.e. with <a class="xref" href="UnityFx.Async.AsyncOperationStatus.html#UnityFx_Async_AsyncOperationStatus_Faulted">Faulted</a> status).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -277,10 +302,10 @@ or has not yet thrown any exceptions, this will return <span class="xref">null</
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/release/0.7.0/apiSpec/new?filename=UnityFx_Async_IAsyncOperation_Status.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperation.Status%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperation_Status.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperation.Status%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/release/0.7.0/src/UnityFx.Async/Api/IAsyncOperation.cs/#L63">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperation.cs/#L62">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncOperation_Status_" data-uid="UnityFx.Async.IAsyncOperation.Status*"></a>
   <h4 id="UnityFx_Async_IAsyncOperation_Status" data-uid="UnityFx.Async.IAsyncOperation.Status">Status</h4>
@@ -315,39 +340,145 @@ or has not yet thrown any exceptions, this will return <span class="xref">null</
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
-      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Wait_UnityFx_Async_IAsyncOperation_">AsyncExtensions.Wait(IAsyncOperation)</a>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith_UnityFx_Async_IAsyncOperation_System_Action_UnityFx_Async_IAsyncOperation__">AsyncExtensions.ContinueWith(IAsyncOperation, Action&lt;IAsyncOperation&gt;)</a>
   </div>
   <div>
-      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Join_UnityFx_Async_IAsyncOperation_">AsyncExtensions.Join(IAsyncOperation)</a>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith_UnityFx_Async_IAsyncOperation_System_Action_UnityFx_Async_IAsyncOperation__UnityFx_Async_AsyncContinuationOptions_">AsyncExtensions.ContinueWith(IAsyncOperation, Action&lt;IAsyncOperation&gt;, AsyncContinuationOptions)</a>
   </div>
   <div>
-      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ThrowIfFaulted_UnityFx_Async_IAsyncOperation_">AsyncExtensions.ThrowIfFaulted(IAsyncOperation)</a>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith_UnityFx_Async_IAsyncOperation_System_Action_UnityFx_Async_IAsyncOperation_System_Object__System_Object_">AsyncExtensions.ContinueWith(IAsyncOperation, Action&lt;IAsyncOperation, Object&gt;, Object)</a>
   </div>
   <div>
-      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith__1___0_System_Action___0_UnityFx_Async_IAsyncCompletionSource__">AsyncExtensions.ContinueWith&lt;T&gt;(T, Action&lt;T, IAsyncCompletionSource&gt;)</a>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith_UnityFx_Async_IAsyncOperation_System_Action_UnityFx_Async_IAsyncOperation_System_Object__System_Object_UnityFx_Async_AsyncContinuationOptions_">AsyncExtensions.ContinueWith(IAsyncOperation, Action&lt;IAsyncOperation, Object&gt;, Object, AsyncContinuationOptions)</a>
   </div>
   <div>
-      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith__1___0_System_Action___0_UnityFx_Async_IAsyncCompletionSource_System_Object__System_Object_">AsyncExtensions.ContinueWith&lt;T&gt;(T, Action&lt;T, IAsyncCompletionSource, Object&gt;, Object)</a>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith__1_UnityFx_Async_IAsyncOperation_System_Func_UnityFx_Async_IAsyncOperation___0__">AsyncExtensions.ContinueWith&lt;TResult&gt;(IAsyncOperation, Func&lt;IAsyncOperation, TResult&gt;)</a>
   </div>
   <div>
-      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith__2___0_System_Action___0_UnityFx_Async_IAsyncCompletionSource___1___">AsyncExtensions.ContinueWith&lt;T, U&gt;(T, Action&lt;T, IAsyncCompletionSource&lt;U&gt;&gt;)</a>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith__1_UnityFx_Async_IAsyncOperation_System_Func_UnityFx_Async_IAsyncOperation___0__UnityFx_Async_AsyncContinuationOptions_">AsyncExtensions.ContinueWith&lt;TResult&gt;(IAsyncOperation, Func&lt;IAsyncOperation, TResult&gt;, AsyncContinuationOptions)</a>
   </div>
   <div>
-      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith__2___0_System_Action___0_UnityFx_Async_IAsyncCompletionSource___1__System_Object__System_Object_">AsyncExtensions.ContinueWith&lt;T, U&gt;(T, Action&lt;T, IAsyncCompletionSource&lt;U&gt;, Object&gt;, Object)</a>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith__1_UnityFx_Async_IAsyncOperation_System_Func_UnityFx_Async_IAsyncOperation_System_Object___0__System_Object_">AsyncExtensions.ContinueWith&lt;TResult&gt;(IAsyncOperation, Func&lt;IAsyncOperation, Object, TResult&gt;, Object)</a>
   </div>
   <div>
-      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_TransformWith__2___0_System_Func___0___1__">AsyncExtensions.TransformWith&lt;T, U&gt;(T, Func&lt;T, U&gt;)</a>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith__1_UnityFx_Async_IAsyncOperation_System_Func_UnityFx_Async_IAsyncOperation_System_Object___0__System_Object_UnityFx_Async_AsyncContinuationOptions_">AsyncExtensions.ContinueWith&lt;TResult&gt;(IAsyncOperation, Func&lt;IAsyncOperation, Object, TResult&gt;, Object, AsyncContinuationOptions)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SpinUntilCompleted_System_IAsyncResult_">AsyncExtensions.SpinUntilCompleted(IAsyncResult)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SpinUntilCompleted_System_IAsyncResult_System_Int32_">AsyncExtensions.SpinUntilCompleted(IAsyncResult, Int32)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SpinUntilCompleted_System_IAsyncResult_System_TimeSpan_">AsyncExtensions.SpinUntilCompleted(IAsyncResult, TimeSpan)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SpinUntilCompleted_System_IAsyncResult_System_Threading_CancellationToken_">AsyncExtensions.SpinUntilCompleted(IAsyncResult, CancellationToken)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SpinUntilCompleted_System_IAsyncResult_System_Int32_System_Threading_CancellationToken_">AsyncExtensions.SpinUntilCompleted(IAsyncResult, Int32, CancellationToken)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SpinUntilCompleted_System_IAsyncResult_System_TimeSpan_System_Threading_CancellationToken_">AsyncExtensions.SpinUntilCompleted(IAsyncResult, TimeSpan, CancellationToken)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_WithCancellation_UnityFx_Async_IAsyncOperation_System_Threading_CancellationToken_">AsyncExtensions.WithCancellation(IAsyncOperation, CancellationToken)</a>
   </div>
   <div>
       <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_GetAwaiter_UnityFx_Async_IAsyncOperation_">AsyncExtensions.GetAwaiter(IAsyncOperation)</a>
   </div>
   <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ConfigureAwait_UnityFx_Async_IAsyncOperation_System_Boolean_">AsyncExtensions.ConfigureAwait(IAsyncOperation, Boolean)</a>
+  </div>
+  <div>
       <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ToTask_UnityFx_Async_IAsyncOperation_">AsyncExtensions.ToTask(IAsyncOperation)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Wait_UnityFx_Async_IAsyncOperation_">AsyncExtensions.Wait(IAsyncOperation)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Wait_UnityFx_Async_IAsyncOperation_System_Int32_">AsyncExtensions.Wait(IAsyncOperation, Int32)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Wait_UnityFx_Async_IAsyncOperation_System_TimeSpan_">AsyncExtensions.Wait(IAsyncOperation, TimeSpan)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Wait_UnityFx_Async_IAsyncOperation_System_Threading_CancellationToken_">AsyncExtensions.Wait(IAsyncOperation, CancellationToken)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Wait_UnityFx_Async_IAsyncOperation_System_Int32_System_Threading_CancellationToken_">AsyncExtensions.Wait(IAsyncOperation, Int32, CancellationToken)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Wait_UnityFx_Async_IAsyncOperation_System_TimeSpan_System_Threading_CancellationToken_">AsyncExtensions.Wait(IAsyncOperation, TimeSpan, CancellationToken)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Join_UnityFx_Async_IAsyncOperation_">AsyncExtensions.Join(IAsyncOperation)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Join_UnityFx_Async_IAsyncOperation_System_Int32_">AsyncExtensions.Join(IAsyncOperation, Int32)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Join_UnityFx_Async_IAsyncOperation_System_TimeSpan_">AsyncExtensions.Join(IAsyncOperation, TimeSpan)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Join_UnityFx_Async_IAsyncOperation_System_Threading_CancellationToken_">AsyncExtensions.Join(IAsyncOperation, CancellationToken)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Join_UnityFx_Async_IAsyncOperation_System_Int32_System_Threading_CancellationToken_">AsyncExtensions.Join(IAsyncOperation, Int32, CancellationToken)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_Join_UnityFx_Async_IAsyncOperation_System_TimeSpan_System_Threading_CancellationToken_">AsyncExtensions.Join(IAsyncOperation, TimeSpan, CancellationToken)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.Promises.AsyncExtensions.html#UnityFx_Async_Promises_AsyncExtensions_Then_UnityFx_Async_IAsyncOperation_System_Action_">AsyncExtensions.Then(IAsyncOperation, Action)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.Promises.AsyncExtensions.html#UnityFx_Async_Promises_AsyncExtensions_Then_UnityFx_Async_IAsyncOperation_System_Func_UnityFx_Async_IAsyncOperation__">AsyncExtensions.Then(IAsyncOperation, Func&lt;IAsyncOperation&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.Promises.AsyncExtensions.html#UnityFx_Async_Promises_AsyncExtensions_Then__1_UnityFx_Async_IAsyncOperation_System_Func_UnityFx_Async_IAsyncOperation___0___">AsyncExtensions.Then&lt;TResult&gt;(IAsyncOperation, Func&lt;IAsyncOperation&lt;TResult&gt;&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.Promises.AsyncExtensions.html#UnityFx_Async_Promises_AsyncExtensions_Then_UnityFx_Async_IAsyncOperation_System_Action_System_Action_System_Exception__">AsyncExtensions.Then(IAsyncOperation, Action, Action&lt;Exception&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.Promises.AsyncExtensions.html#UnityFx_Async_Promises_AsyncExtensions_Then_UnityFx_Async_IAsyncOperation_System_Func_UnityFx_Async_IAsyncOperation__System_Action_System_Exception__">AsyncExtensions.Then(IAsyncOperation, Func&lt;IAsyncOperation&gt;, Action&lt;Exception&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.Promises.AsyncExtensions.html#UnityFx_Async_Promises_AsyncExtensions_ThenAll_UnityFx_Async_IAsyncOperation_System_Func_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation___">AsyncExtensions.ThenAll(IAsyncOperation, Func&lt;IEnumerable&lt;IAsyncOperation&gt;&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.Promises.AsyncExtensions.html#UnityFx_Async_Promises_AsyncExtensions_ThenAll__1_UnityFx_Async_IAsyncOperation_System_Func_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation___0____">AsyncExtensions.ThenAll&lt;T&gt;(IAsyncOperation, Func&lt;IEnumerable&lt;IAsyncOperation&lt;T&gt;&gt;&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.Promises.AsyncExtensions.html#UnityFx_Async_Promises_AsyncExtensions_ThenAny_UnityFx_Async_IAsyncOperation_System_Func_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation___">AsyncExtensions.ThenAny(IAsyncOperation, Func&lt;IEnumerable&lt;IAsyncOperation&gt;&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.Promises.AsyncExtensions.html#UnityFx_Async_Promises_AsyncExtensions_ThenAny__1_UnityFx_Async_IAsyncOperation_System_Func_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation___0____">AsyncExtensions.ThenAny&lt;TResult&gt;(IAsyncOperation, Func&lt;IEnumerable&lt;IAsyncOperation&lt;TResult&gt;&gt;&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.Promises.AsyncExtensions.html#UnityFx_Async_Promises_AsyncExtensions_Rebind__1_UnityFx_Async_IAsyncOperation_System_Func___0__">AsyncExtensions.Rebind&lt;TResult&gt;(IAsyncOperation, Func&lt;TResult&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.Promises.AsyncExtensions.html#UnityFx_Async_Promises_AsyncExtensions_Catch_UnityFx_Async_IAsyncOperation_System_Action_System_Exception__">AsyncExtensions.Catch(IAsyncOperation, Action&lt;Exception&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.Promises.AsyncExtensions.html#UnityFx_Async_Promises_AsyncExtensions_Catch__1_UnityFx_Async_IAsyncOperation_System_Action___0__">AsyncExtensions.Catch&lt;TException&gt;(IAsyncOperation, Action&lt;TException&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.Promises.AsyncExtensions.html#UnityFx_Async_Promises_AsyncExtensions_Finally_UnityFx_Async_IAsyncOperation_System_Action_">AsyncExtensions.Finally(IAsyncOperation, Action)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.Promises.AsyncExtensions.html#UnityFx_Async_Promises_AsyncExtensions_Done_UnityFx_Async_IAsyncOperation_System_Action_">AsyncExtensions.Done(IAsyncOperation, Action)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.Promises.AsyncExtensions.html#UnityFx_Async_Promises_AsyncExtensions_Done_UnityFx_Async_IAsyncOperation_System_Action_System_Action_System_Exception__">AsyncExtensions.Done(IAsyncOperation, Action, Action&lt;Exception&gt;)</a>
   </div>
   <h3 id="seealso">See Also</h3>
   <div class="seealso">
+      <div><span><a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</a></span></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation</a>&lt;TResult&gt;</div>
       <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iasyncresult">IAsyncResult</a></div>
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation</a>&lt;T&gt;</div>
   </div>
 </article>
           </div>
@@ -357,10 +488,10 @@ or has not yet thrown any exceptions, this will return <span class="xref">null</
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/release/0.7.0/apiSpec/new?filename=UnityFx_Async_IAsyncOperation.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncOperation.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/release/0.7.0/src/UnityFx.Async/Api/IAsyncOperation.cs/#L54" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperation.cs/#L53" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -73,7 +73,7 @@
   
   <h1 id="UnityFx_Async_IAsyncCompletionSource" data-uid="UnityFx.Async.IAsyncCompletionSource" class="text-break">Interface IAsyncCompletionSource
   </h1>
-  <div class="markdown level0 summary"><p>Controls completion of a <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a> instance.</p>
+  <div class="markdown level0 summary"><p>Represents the producer side of an asynchronous operation unbound to a delegate, providing access to the consumer side through the <a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_Operation">Operation</a> property.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="UnityFx.Async.html">UnityFx.Async</a></h6>
@@ -82,160 +82,48 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public interface IAsyncCompletionSource</code></pre>
   </div>
-  <h3 id="methods">Methods
+  <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/release/0.7.0/apiSpec/new?filename=UnityFx_Async_IAsyncCompletionSource_SetCanceled.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncCompletionSource.SetCanceled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncCompletionSource_Operation.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncCompletionSource.Operation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/release/0.7.0/src/UnityFx.Async/Api/IAsyncCompletionSource.cs/#L20">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncCompletionSource.cs/#L19">View Source</a>
   </span>
-  <a id="UnityFx_Async_IAsyncCompletionSource_SetCanceled_" data-uid="UnityFx.Async.IAsyncCompletionSource.SetCanceled*"></a>
-  <h4 id="UnityFx_Async_IAsyncCompletionSource_SetCanceled" data-uid="UnityFx.Async.IAsyncCompletionSource.SetCanceled">SetCanceled()</h4>
-  <div class="markdown level1 summary"><p>Transitions the underlying <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a> into the <a class="xref" href="UnityFx.Async.AsyncOperationStatus.html#UnityFx_Async_AsyncOperationStatus_Canceled">Canceled</a> state.</p>
+  <a id="UnityFx_Async_IAsyncCompletionSource_Operation_" data-uid="UnityFx.Async.IAsyncCompletionSource.Operation*"></a>
+  <h4 id="UnityFx_Async_IAsyncCompletionSource_Operation" data-uid="UnityFx.Async.IAsyncCompletionSource.Operation">Operation</h4>
+  <div class="markdown level1 summary"><p>Gets the operation being controller by the source.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void SetCanceled()</code></pre>
+    <pre><code class="lang-csharp hljs">IAsyncOperation Operation { get; }</code></pre>
   </div>
-  <h5 class="exceptions">Exceptions</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
         <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
-        <td><p>Thrown if the transition fails.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
-        <td><p>Thrown is the operation is disposed.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="UnityFx_Async_IAsyncCompletionSource_SetCanceled_seealso">See Also</h5>
-  <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetCanceled">TrySetCanceled()</a></div>
-  </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/release/0.7.0/apiSpec/new?filename=UnityFx_Async_IAsyncCompletionSource_SetCompleted.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncCompletionSource.SetCompleted%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/release/0.7.0/src/UnityFx.Async/Api/IAsyncCompletionSource.cs/#L56">View Source</a>
-  </span>
-  <a id="UnityFx_Async_IAsyncCompletionSource_SetCompleted_" data-uid="UnityFx.Async.IAsyncCompletionSource.SetCompleted*"></a>
-  <h4 id="UnityFx_Async_IAsyncCompletionSource_SetCompleted" data-uid="UnityFx.Async.IAsyncCompletionSource.SetCompleted">SetCompleted()</h4>
-  <div class="markdown level1 summary"><p>Transitions the underlying <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a> into the <a class="xref" href="UnityFx.Async.AsyncOperationStatus.html#UnityFx_Async_AsyncOperationStatus_RanToCompletion">RanToCompletion</a> state.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void SetCompleted()</code></pre>
-  </div>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
-        <td><p>Thrown if the transition fails.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
-        <td><p>Thrown is the operation is disposed.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="UnityFx_Async_IAsyncCompletionSource_SetCompleted_seealso">See Also</h5>
-  <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetCompleted">TrySetCompleted()</a></div>
-  </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/release/0.7.0/apiSpec/new?filename=UnityFx_Async_IAsyncCompletionSource_SetException_System_Exception_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncCompletionSource.SetException(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/release/0.7.0/src/UnityFx.Async/Api/IAsyncCompletionSource.cs/#L38">View Source</a>
-  </span>
-  <a id="UnityFx_Async_IAsyncCompletionSource_SetException_" data-uid="UnityFx.Async.IAsyncCompletionSource.SetException*"></a>
-  <h4 id="UnityFx_Async_IAsyncCompletionSource_SetException_System_Exception_" data-uid="UnityFx.Async.IAsyncCompletionSource.SetException(System.Exception)">SetException(Exception)</h4>
-  <div class="markdown level1 summary"><p>Transitions the underlying <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a> into the <a class="xref" href="UnityFx.Async.AsyncOperationStatus.html#UnityFx_Async_AsyncOperationStatus_Faulted">Faulted</a> state.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void SetException(Exception e)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a></td>
-        <td><span class="parametername">e</span></td>
-        <td><p>An exception that caused the operation to end prematurely.</p>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><p>The underlying operation instance.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
-        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">e</code> is <span class="xref">null</span>.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
-        <td><p>Thrown if the transition fails.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
-        <td><p>Thrown is the operation is disposed.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="UnityFx_Async_IAsyncCompletionSource_SetException_System_Exception__seealso">See Also</h5>
-  <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetException_System_Exception_">TrySetException(Exception)</a></div>
-  </div>
+  <h3 id="methods">Methods
+  </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/release/0.7.0/apiSpec/new?filename=UnityFx_Async_IAsyncCompletionSource_TrySetCanceled.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncCompletionSource.TrySetCanceled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncCompletionSource_TrySetCanceled.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncCompletionSource.TrySetCanceled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/release/0.7.0/src/UnityFx.Async/Api/IAsyncCompletionSource.cs/#L28">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncCompletionSource.cs/#L29">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncCompletionSource_TrySetCanceled_" data-uid="UnityFx.Async.IAsyncCompletionSource.TrySetCanceled*"></a>
   <h4 id="UnityFx_Async_IAsyncCompletionSource_TrySetCanceled" data-uid="UnityFx.Async.IAsyncCompletionSource.TrySetCanceled">TrySetCanceled()</h4>
@@ -280,14 +168,16 @@
   </table>
   <h5 id="UnityFx_Async_IAsyncCompletionSource_TrySetCanceled_seealso">See Also</h5>
   <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_SetCanceled">SetCanceled()</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetException_System_Exception_">TrySetException(Exception)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__">TrySetExceptions(IEnumerable&lt;Exception&gt;)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetCompleted">TrySetCompleted()</a></div>
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/release/0.7.0/apiSpec/new?filename=UnityFx_Async_IAsyncCompletionSource_TrySetCompleted.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncCompletionSource.TrySetCompleted%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncCompletionSource_TrySetCompleted.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncCompletionSource.TrySetCompleted%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/release/0.7.0/src/UnityFx.Async/Api/IAsyncCompletionSource.cs/#L64">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncCompletionSource.cs/#L63">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncCompletionSource_TrySetCompleted_" data-uid="UnityFx.Async.IAsyncCompletionSource.TrySetCompleted*"></a>
   <h4 id="UnityFx_Async_IAsyncCompletionSource_TrySetCompleted" data-uid="UnityFx.Async.IAsyncCompletionSource.TrySetCompleted">TrySetCompleted()</h4>
@@ -332,14 +222,16 @@
   </table>
   <h5 id="UnityFx_Async_IAsyncCompletionSource_TrySetCompleted_seealso">See Also</h5>
   <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_SetCompleted">SetCompleted()</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetCanceled">TrySetCanceled()</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetException_System_Exception_">TrySetException(Exception)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__">TrySetExceptions(IEnumerable&lt;Exception&gt;)</a></div>
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/release/0.7.0/apiSpec/new?filename=UnityFx_Async_IAsyncCompletionSource_TrySetException_System_Exception_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncCompletionSource.TrySetException(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncCompletionSource_TrySetException_System_Exception_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncCompletionSource.TrySetException(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/release/0.7.0/src/UnityFx.Async/Api/IAsyncCompletionSource.cs/#L48">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncCompletionSource.cs/#L41">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncCompletionSource_TrySetException_" data-uid="UnityFx.Async.IAsyncCompletionSource.TrySetException*"></a>
   <h4 id="UnityFx_Async_IAsyncCompletionSource_TrySetException_System_Exception_" data-uid="UnityFx.Async.IAsyncCompletionSource.TrySetException(System.Exception)">TrySetException(Exception)</h4>
@@ -348,7 +240,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">bool TrySetException(Exception e)</code></pre>
+    <pre><code class="lang-csharp hljs">bool TrySetException(Exception exception)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -362,7 +254,7 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a></td>
-        <td><span class="parametername">e</span></td>
+        <td><span class="parametername">exception</span></td>
         <td><p>An exception that caused the operation to end prematurely.</p>
 </td>
       </tr>
@@ -395,7 +287,7 @@
     <tbody>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
-        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">e</code> is <span class="xref">null</span>.</p>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">exception</code> is <span class="xref">null</span>.</p>
 </td>
       </tr>
       <tr>
@@ -407,7 +299,99 @@
   </table>
   <h5 id="UnityFx_Async_IAsyncCompletionSource_TrySetException_System_Exception__seealso">See Also</h5>
   <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_SetException_System_Exception_">SetException(Exception)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__">TrySetExceptions(IEnumerable&lt;Exception&gt;)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetCanceled">TrySetCanceled()</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetCompleted">TrySetCompleted()</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncCompletionSource.TrySetExceptions(System.Collections.Generic.IEnumerable%7BSystem.Exception%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncCompletionSource.cs/#L53">View Source</a>
+  </span>
+  <a id="UnityFx_Async_IAsyncCompletionSource_TrySetExceptions_" data-uid="UnityFx.Async.IAsyncCompletionSource.TrySetExceptions*"></a>
+  <h4 id="UnityFx_Async_IAsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__" data-uid="UnityFx.Async.IAsyncCompletionSource.TrySetExceptions(System.Collections.Generic.IEnumerable{System.Exception})">TrySetExceptions(IEnumerable&lt;Exception&gt;)</h4>
+  <div class="markdown level1 summary"><p>Attempts to transition the underlying <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a> into the <a class="xref" href="UnityFx.Async.AsyncOperationStatus.html#UnityFx_Async_AsyncOperationStatus_Faulted">Faulted</a> state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool TrySetExceptions(IEnumerable&lt;Exception&gt; exceptions)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a>&gt;</td>
+        <td><span class="parametername">exceptions</span></td>
+        <td><p>Exceptions that caused the operation to end prematurely.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p>Returns <span class="xref">true</span> if the attemp was successfull; <span class="xref">false</span> otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">exceptions</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>Thrown is the operation is disposed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception___seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetException_System_Exception_">TrySetException(Exception)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetCanceled">TrySetCanceled()</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetCompleted">TrySetCompleted()</a></div>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetCanceled_UnityFx_Async_IAsyncCompletionSource_">AsyncExtensions.SetCanceled(IAsyncCompletionSource)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetException_UnityFx_Async_IAsyncCompletionSource_System_Exception_">AsyncExtensions.SetException(IAsyncCompletionSource, Exception)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetExceptions_UnityFx_Async_IAsyncCompletionSource_System_Collections_Generic_IEnumerable_System_Exception__">AsyncExtensions.SetExceptions(IAsyncCompletionSource, IEnumerable&lt;Exception&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SetCompleted_UnityFx_Async_IAsyncCompletionSource_">AsyncExtensions.SetCompleted(IAsyncCompletionSource)</a>
   </div>
   <h3 id="seealso">See Also</h3>
   <div class="seealso">
@@ -421,10 +405,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/release/0.7.0/apiSpec/new?filename=UnityFx_Async_IAsyncCompletionSource.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncCompletionSource%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncCompletionSource.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncCompletionSource%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/release/0.7.0/src/UnityFx.Async/Api/IAsyncCompletionSource.cs/#L12" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncCompletionSource.cs/#L13" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

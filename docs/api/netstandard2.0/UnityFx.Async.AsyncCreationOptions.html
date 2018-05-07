@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Enum AsyncOperationStatus
+    <title>Enum AsyncCreationOptions
    | Asynchronous Operations for Unity </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Enum AsyncOperationStatus
+    <meta name="title" content="Enum AsyncCreationOptions
    | Asynchronous Operations for Unity ">
     <meta name="generator" content="docfx 2.31.0.0">
     
@@ -68,19 +68,20 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="UnityFx.Async.AsyncOperationStatus">
+            <article class="content wrap" id="_content" data-uid="UnityFx.Async.AsyncCreationOptions">
   
   
-  <h1 id="UnityFx_Async_AsyncOperationStatus" data-uid="UnityFx.Async.AsyncOperationStatus" class="text-break">Enum AsyncOperationStatus
+  <h1 id="UnityFx_Async_AsyncCreationOptions" data-uid="UnityFx.Async.AsyncCreationOptions" class="text-break">Enum AsyncCreationOptions
   </h1>
-  <div class="markdown level0 summary"><p>Enumerates possible status values for <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>.</p>
+  <div class="markdown level0 summary"><p>Specifies flags that control optional behavior for the creation and execution of operations.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="UnityFx.Async.html">UnityFx.Async</a></h6>
   <h6><strong>Assembly</strong>: UnityFx.Async.dll</h6>
-  <h5 id="UnityFx_Async_AsyncOperationStatus_syntax">Syntax</h5>
+  <h5 id="UnityFx_Async_AsyncCreationOptions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public enum AsyncOperationStatus</code></pre>
+    <pre><code class="lang-csharp hljs">[Flags]
+public enum AsyncCreationOptions</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -93,41 +94,20 @@
     <thead>
     <tbody>
       <tr>
-        <td id="UnityFx_Async_AsyncOperationStatus_Canceled">Canceled</td>
-        <td><p>The operation has been canceled.</p>
+        <td id="UnityFx_Async_AsyncCreationOptions_None">None</td>
+        <td><p>Specifies that the default behavior should be used.</p>
 </td>
       </tr>
       <tr>
-        <td id="UnityFx_Async_AsyncOperationStatus_Created">Created</td>
-        <td><p>The operation is initialized but has not yet been scheduled for execution.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="UnityFx_Async_AsyncOperationStatus_Faulted">Faulted</td>
-        <td><p>The operation completed due to an unhandled exception.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="UnityFx_Async_AsyncOperationStatus_RanToCompletion">RanToCompletion</td>
-        <td><p>The operation completed execution successfully.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="UnityFx_Async_AsyncOperationStatus_Running">Running</td>
-        <td><p>The operation is running but has not yet completed.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="UnityFx_Async_AsyncOperationStatus_Scheduled">Scheduled</td>
-        <td><p>The operation has been scheduled for execution but has not yet begun executing.</p>
+        <td id="UnityFx_Async_AsyncCreationOptions_RunContinuationsAsynchronously">RunContinuationsAsynchronously</td>
+        <td><p>Forces continuations added to the current operation to be executed asynchronously.</p>
 </td>
       </tr>
     </tbody>
   </thead></thead></table>
-  <h5 id="UnityFx_Async_AsyncOperationStatus_seealso">See Also</h5>
+  <h5 id="UnityFx_Async_AsyncCreationOptions_seealso">See Also</h5>
   <div class="seealso">
-      <div><span><a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskstatus">TaskStatus</a></span></div>
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></div>
+      <div><a class="xref" href="UnityFx.Async.AsyncResult.html">AsyncResult</a></div>
   </div>
 </article>
           </div>
@@ -137,10 +117,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_AsyncOperationStatus.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncOperationStatus%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_AsyncCreationOptions.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncCreationOptions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperation.cs/#L13" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Core/AsyncCreationOptions.cs/#L12" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

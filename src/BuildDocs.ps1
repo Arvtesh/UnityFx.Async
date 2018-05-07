@@ -5,10 +5,6 @@ $docfxPath = Join-Path $packagesPath "docfx.console\tools\docfx.exe"
 $docfxConfigPath = Join-Path $scriptPath "DocFx"
 $docfxPublishTarget = Join-Path $scriptPath "..\docs\*"
 
-# docfx workaround
-$env:VisualStudioVersion = "15.0"
-$env:VSINSTALLDIR = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\"
-
 # download nuget.exe if not present
 if (!(Test-Path $nugetPath))
 {
@@ -30,5 +26,5 @@ if (Test-Path $docfxPublishTarget)
 
 Push-Location $docfxConfigPath
 & $docfxPath
-Pop-Location 
+Pop-Location
 

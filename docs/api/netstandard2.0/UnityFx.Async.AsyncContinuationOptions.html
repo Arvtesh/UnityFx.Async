@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Enum AsyncOperationStatus
+    <title>Enum AsyncContinuationOptions
    | Asynchronous Operations for Unity </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Enum AsyncOperationStatus
+    <meta name="title" content="Enum AsyncContinuationOptions
    | Asynchronous Operations for Unity ">
     <meta name="generator" content="docfx 2.31.0.0">
     
@@ -68,19 +68,20 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="UnityFx.Async.AsyncOperationStatus">
+            <article class="content wrap" id="_content" data-uid="UnityFx.Async.AsyncContinuationOptions">
   
   
-  <h1 id="UnityFx_Async_AsyncOperationStatus" data-uid="UnityFx.Async.AsyncOperationStatus" class="text-break">Enum AsyncOperationStatus
+  <h1 id="UnityFx_Async_AsyncContinuationOptions" data-uid="UnityFx.Async.AsyncContinuationOptions" class="text-break">Enum AsyncContinuationOptions
   </h1>
-  <div class="markdown level0 summary"><p>Enumerates possible status values for <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>.</p>
+  <div class="markdown level0 summary"><p>Specifies behavior of an asynchronous opration continuation.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="UnityFx.Async.html">UnityFx.Async</a></h6>
   <h6><strong>Assembly</strong>: UnityFx.Async.dll</h6>
-  <h5 id="UnityFx_Async_AsyncOperationStatus_syntax">Syntax</h5>
+  <h5 id="UnityFx_Async_AsyncContinuationOptions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public enum AsyncOperationStatus</code></pre>
+    <pre><code class="lang-csharp hljs">[Flags]
+public enum AsyncContinuationOptions</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -93,41 +94,52 @@
     <thead>
     <tbody>
       <tr>
-        <td id="UnityFx_Async_AsyncOperationStatus_Canceled">Canceled</td>
-        <td><p>The operation has been canceled.</p>
+        <td id="UnityFx_Async_AsyncContinuationOptions_ExecuteSynchronously">ExecuteSynchronously</td>
+        <td><p>Specifies that the continuation should be executed synchronously. With this option specified, the continuation runs on
+the same thread that causes the antecedent operation to transition into its final state.</p>
 </td>
       </tr>
       <tr>
-        <td id="UnityFx_Async_AsyncOperationStatus_Created">Created</td>
-        <td><p>The operation is initialized but has not yet been scheduled for execution.</p>
+        <td id="UnityFx_Async_AsyncContinuationOptions_None">None</td>
+        <td><p>When no continuation options are specified, specifies that default behavior should be used when executing a continuation.
+I.e. continuation is scheduled оn the same <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a> that was active when the continuation was created.</p>
 </td>
       </tr>
       <tr>
-        <td id="UnityFx_Async_AsyncOperationStatus_Faulted">Faulted</td>
-        <td><p>The operation completed due to an unhandled exception.</p>
+        <td id="UnityFx_Async_AsyncContinuationOptions_NotOnCanceled">NotOnCanceled</td>
+        <td><p>Specifies that the continuation should not be scheduled if its antecedent was canceled.</p>
 </td>
       </tr>
       <tr>
-        <td id="UnityFx_Async_AsyncOperationStatus_RanToCompletion">RanToCompletion</td>
-        <td><p>The operation completed execution successfully.</p>
+        <td id="UnityFx_Async_AsyncContinuationOptions_NotOnFaulted">NotOnFaulted</td>
+        <td><p>Specifies that the continuation should not be scheduled if its antecedent threw an unhandled exception.</p>
 </td>
       </tr>
       <tr>
-        <td id="UnityFx_Async_AsyncOperationStatus_Running">Running</td>
-        <td><p>The operation is running but has not yet completed.</p>
+        <td id="UnityFx_Async_AsyncContinuationOptions_NotOnRanToCompletion">NotOnRanToCompletion</td>
+        <td><p>Specifies that the continuation should not be scheduled if its antecedent ran to completion.</p>
 </td>
       </tr>
       <tr>
-        <td id="UnityFx_Async_AsyncOperationStatus_Scheduled">Scheduled</td>
-        <td><p>The operation has been scheduled for execution but has not yet begun executing.</p>
+        <td id="UnityFx_Async_AsyncContinuationOptions_OnlyOnCanceled">OnlyOnCanceled</td>
+        <td><p>Specifies that the continuation should be scheduled only if its antecedent was canceled.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="UnityFx_Async_AsyncContinuationOptions_OnlyOnFaulted">OnlyOnFaulted</td>
+        <td><p>Specifies that the continuation should be scheduled only if its antecedent threw an unhandled exception.</p>
+</td>
+      </tr>
+      <tr>
+        <td id="UnityFx_Async_AsyncContinuationOptions_OnlyOnRanToCompletion">OnlyOnRanToCompletion</td>
+        <td><p>Specifies that the continuation should be scheduled only if its antecedent ran to completion.</p>
 </td>
       </tr>
     </tbody>
   </thead></thead></table>
-  <h5 id="UnityFx_Async_AsyncOperationStatus_seealso">See Also</h5>
+  <h5 id="UnityFx_Async_AsyncContinuationOptions_seealso">See Also</h5>
   <div class="seealso">
-      <div><span><a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskstatus">TaskStatus</a></span></div>
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncContinuation.html">IAsyncContinuation</a></div>
   </div>
 </article>
           </div>
@@ -137,10 +149,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_AsyncOperationStatus.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncOperationStatus%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_AsyncContinuationOptions.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncContinuationOptions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncOperation.cs/#L13" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Core/AsyncContinuationOptions.cs/#L13" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
