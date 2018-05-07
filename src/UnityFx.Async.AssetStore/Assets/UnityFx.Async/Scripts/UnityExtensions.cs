@@ -143,7 +143,7 @@ namespace UnityFx.Async
 #if UNITY_2017_2_OR_NEWER
 
 				// Starting with Unity 2017.2 there is AsyncOperation.completed event
-				op.completed += o => continuation();
+				_op.completed += o => continuation();
 
 #else
 
