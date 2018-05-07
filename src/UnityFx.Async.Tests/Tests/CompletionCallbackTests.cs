@@ -60,6 +60,7 @@ namespace UnityFx.Async
 			// Arrange
 			var op = new AsyncCompletionSource();
 			var counter = 0;
+			var d = new AsyncOperationCallback(CompletionCallback);
 
 			void CompletionCallback(IAsyncOperation o)
 			{
@@ -70,14 +71,25 @@ namespace UnityFx.Async
 			{
 				for (var i = 0; i < 10000; ++i)
 				{
-					op.TryAddCompletionCallback(CompletionCallback);
+					op.TryAddCompletionCallback(d);
 				}
 			}
+
+			void TestMethod2()
+			{
+				for (var i = 0; i < 10000; ++i)
+				{
+					op.RemoveCompletionCallback(d);
+				}
+			}
+
+			TestMethod();
 
 			// Act
 			await Task.WhenAll(
 				Task.Run(new Action(TestMethod)),
 				Task.Run(new Action(TestMethod)),
+				Task.Run(new Action(TestMethod2)),
 				Task.Run(new Action(TestMethod)));
 
 			// Assert
