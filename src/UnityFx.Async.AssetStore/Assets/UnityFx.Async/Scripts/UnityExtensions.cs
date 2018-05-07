@@ -34,7 +34,7 @@ namespace UnityFx.Async
 			{
 				var result = new AsyncCompletionSource(AsyncOperationStatus.Running, op);
 
-#if UNITY_2017_2_OR_NEWER
+#if UNITY_2017_2_OR_NEWER || UNITY_2018
 
 				// Starting with Unity 2017.2 there is AsyncOperation.completed event
 				op.completed += o => result.TrySetCompleted();
@@ -63,7 +63,7 @@ namespace UnityFx.Async
 			{
 				var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running, op);
 
-#if UNITY_2017_2_OR_NEWER
+#if UNITY_2017_2_OR_NEWER || UNITY_2018
 
 				// Starting with Unity 2017.2 there is AsyncOperation.completed event
 				op.completed += o => result.TrySetResult(op.asset as T);
@@ -92,7 +92,7 @@ namespace UnityFx.Async
 			{
 				var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running, op);
 
-#if UNITY_2017_2_OR_NEWER
+#if UNITY_2017_2_OR_NEWER || UNITY_2018
 
 				// Starting with Unity 2017.2 there is AsyncOperation.completed event
 				op.completed += o => result.TrySetResult(op.asset as T);
@@ -107,7 +107,7 @@ namespace UnityFx.Async
 			}
 		}
 
-#if NET_4_6 || NETFX_CORE
+#if NET_4_6 || NET_STANDARD_2_0
 
 		/// <summary>
 		/// Provides an object that waits for the completion of an <see cref="AsyncOperation"/>. This type and its members are intended for compiler use only.
@@ -140,7 +140,7 @@ namespace UnityFx.Async
 			/// <inheritdoc/>
 			public void OnCompleted(Action continuation)
 			{
-#if UNITY_2017_2_OR_NEWER
+#if UNITY_2017_2_OR_NEWER || UNITY_2018
 
 				// Starting with Unity 2017.2 there is AsyncOperation.completed event
 				_op.completed += o => continuation();
@@ -243,7 +243,7 @@ namespace UnityFx.Async
 			return WebRequestResult<string>.FromUnityWebRequest(request);
 		}
 
-#if NET_4_6 || NETFX_CORE
+#if NET_4_6 || NET_STANDARD_2_0
 
 		/// <summary>
 		/// Provides an object that waits for the completion of an <see cref="WWW"/>. This type and its members are intended for compiler use only.
@@ -369,7 +369,7 @@ namespace UnityFx.Async
 			return WwwResult<string>.FromWWW(request);
 		}
 
-#if NET_4_6 || NETFX_CORE
+#if NET_4_6 || NET_STANDARD_2_0
 
 		/// <summary>
 		/// Provides an object that waits for the completion of an <see cref="WWW"/>. This type and its members are intended for compiler use only.
