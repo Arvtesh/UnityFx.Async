@@ -464,6 +464,7 @@ Please see the links below for extended information on the product:
 - [Documentation](https://arvtesh.github.io/UnityFx.Async/articles/intro.html).
 - [API Reference](https://arvtesh.github.io/UnityFx.Async/api/index.html).
 - [CHANGELOG](CHANGELOG.md).
+- [SUPPORT](.github/SUPPORT.md).
 
 ## Useful links
 - [Task-based Asynchronous Pattern (TAP)](https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/task-based-asynchronous-pattern-tap).
