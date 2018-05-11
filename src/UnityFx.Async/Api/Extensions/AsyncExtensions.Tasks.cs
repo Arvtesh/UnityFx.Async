@@ -4,13 +4,13 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
-#if UNITYFX_SUPPORT_TAP
+#if !NET35
 using System.Threading.Tasks;
 #endif
 
 namespace UnityFx.Async
 {
-#if UNITYFX_SUPPORT_TAP
+#if !NET35
 
 	partial class AsyncExtensions
 	{

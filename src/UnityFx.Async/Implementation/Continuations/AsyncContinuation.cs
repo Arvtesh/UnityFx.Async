@@ -4,7 +4,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
-#if UNITYFX_SUPPORT_TAP
+#if !NET35
 using System.Threading.Tasks;
 #endif
 
@@ -116,7 +116,7 @@ namespace UnityFx.Async
 			}
 		}
 
-#if UNITYFX_SUPPORT_TAP
+#if !NET35
 
 		internal static void InvokeTaskContinuation(IAsyncOperation op, TaskCompletionSource<VoidResult> tcs)
 		{
