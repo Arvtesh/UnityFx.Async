@@ -50,11 +50,11 @@ namespace UnityFx.Async.Promises
 						break;
 
 					case Func<IAsyncOperation<T>> f1:
-						f1().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+						f1().AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
 						break;
 
 					case Func<IAsyncOperation> f2:
-						f2().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
+						f2().AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
 						break;
 
 					default:

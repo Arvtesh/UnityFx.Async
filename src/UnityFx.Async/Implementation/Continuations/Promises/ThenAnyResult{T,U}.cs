@@ -49,7 +49,7 @@ namespace UnityFx.Async.Promises
 
 			if (_op2 != null)
 			{
-				_op2.AddCompletionCallback(
+				_op2.AddContinuation(
 					op2 =>
 					{
 						if (IsCancellationRequested)

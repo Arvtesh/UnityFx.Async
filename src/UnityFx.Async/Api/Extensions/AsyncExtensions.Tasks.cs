@@ -234,7 +234,7 @@ namespace UnityFx.Async
 			{
 				var result = new TaskCompletionSource<VoidResult>();
 
-				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp, result), null))
+				if (!op.TryAddContinuation(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp, result), null))
 				{
 					AsyncContinuation.InvokeTaskContinuation(op, result);
 				}
@@ -268,7 +268,7 @@ namespace UnityFx.Async
 			{
 				var result = new TaskCompletionSource<TResult>();
 
-				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp as IAsyncOperation<TResult>, result), null))
+				if (!op.TryAddContinuation(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp as IAsyncOperation<TResult>, result), null))
 				{
 					AsyncContinuation.InvokeTaskContinuation(op, result);
 				}
@@ -313,7 +313,7 @@ namespace UnityFx.Async
 			{
 				ar.SetContinuationForAwait(continuation, syncContext);
 			}
-			else if (!op.TryAddCompletionCallback(asyncOp => continuation(), syncContext))
+			else if (!op.TryAddContinuation(asyncOp => continuation(), syncContext))
 			{
 				continuation();
 			}
