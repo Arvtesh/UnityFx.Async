@@ -342,7 +342,7 @@ Completion callbacks are basicly low-level continuations. Just like continuation
 ```csharp
 var op = DownloadTextAsync("http://www.google.com");
 op.Completed += o => Debug.Log("1");
-op.AddCompletionCallback(o => Debug.Log("2"));
+op.AddContinuation(o => Debug.Log("2"));
 ```
 That said, unlike `ContinueWith`-like stuff completion callbacks cannot be chained and do not handle exceptions automatically. Throwing an exception from a completion callback results in unspecified behavior.
 
