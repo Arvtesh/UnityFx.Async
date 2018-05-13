@@ -1,1 +1,2 @@
-powershell .\BuildDocs.ps1
+powershell .\src\Build.ps1 Release
+powershell .\src\BuildDocs.ps1
