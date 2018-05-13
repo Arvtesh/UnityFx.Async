@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 -----------------------
 ## [0.9.2] - Unreleased
 
+### Changed
+- Renamed `(Try)AddCompletionCallback`/`RemoveCompletionCallback` methods to `(Try)AddContinuation`/`RemoveContinuation`.
+
 -----------------------
 ## [0.9.1] - 2018.05.07
 
