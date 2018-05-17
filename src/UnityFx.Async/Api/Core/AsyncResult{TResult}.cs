@@ -261,7 +261,7 @@ namespace UnityFx.Async
 					throw new InvalidOperationException(Constants.ErrorResultNotAvailable);
 				}
 
-				ThrowIfNonSuccess(true);
+				ThrowIfNonSuccess();
 				return _result;
 			}
 		}
@@ -291,7 +291,7 @@ namespace UnityFx.Async
 				}
 				else if (IsFaulted)
 				{
-					observer.OnError(Exception.InnerException);
+					observer.OnError(Exception);
 				}
 				else
 				{

@@ -35,7 +35,7 @@ namespace UnityFx.Async.Promises
 			}
 			else
 			{
-				_errorCallback?.Invoke(op.Exception.InnerException);
+				_errorCallback?.Invoke(op.Exception);
 			}
 		}
 	}

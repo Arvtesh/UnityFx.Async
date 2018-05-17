@@ -43,7 +43,7 @@ namespace UnityFx.Async
 				}
 				else if (op.IsFaulted)
 				{
-					observer.OnError(op.Exception.InnerException);
+					observer.OnError(op.Exception);
 				}
 				else
 				{

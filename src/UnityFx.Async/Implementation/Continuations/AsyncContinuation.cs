@@ -128,7 +128,7 @@ namespace UnityFx.Async
 			}
 			else if (status == AsyncOperationStatus.Faulted)
 			{
-				tcs.TrySetException(op.Exception.InnerExceptions);
+				tcs.TrySetException(op.Exception);
 			}
 			else if (status == AsyncOperationStatus.Canceled)
 			{
@@ -146,7 +146,7 @@ namespace UnityFx.Async
 			}
 			else if (status == AsyncOperationStatus.Faulted)
 			{
-				tcs.TrySetException(op.Exception.InnerExceptions);
+				tcs.TrySetException(op.Exception);
 			}
 			else if (status == AsyncOperationStatus.Canceled)
 			{

@@ -134,7 +134,7 @@ namespace UnityFx.Async
 
 			// Assert
 			Assert.True(op.IsFaulted);
-			Assert.Equal(e, op.Exception.InnerException);
+			Assert.Equal(e, op.Exception);
 			Assert.True(result);
 		}
 
@@ -154,7 +154,7 @@ namespace UnityFx.Async
 			// Assert
 			Assert.True(op.IsCanceled);
 			Assert.True(result);
-			Assert.Equal(e, op.Exception.InnerException);
+			Assert.Equal(e, op.Exception);
 		}
 
 		[Fact]

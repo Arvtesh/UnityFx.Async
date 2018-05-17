@@ -224,7 +224,7 @@ namespace UnityFx.Async
 			}
 			else if (status == AsyncOperationStatus.Faulted)
 			{
-				return Task.FromException(op.Exception.InnerException);
+				return Task.FromException(op.Exception);
 			}
 			else if (status == AsyncOperationStatus.Canceled)
 			{
@@ -258,7 +258,7 @@ namespace UnityFx.Async
 			}
 			else if (status == AsyncOperationStatus.Faulted)
 			{
-				return Task.FromException<TResult>(op.Exception.InnerException);
+				return Task.FromException<TResult>(op.Exception);
 			}
 			else if (status == AsyncOperationStatus.Canceled)
 			{

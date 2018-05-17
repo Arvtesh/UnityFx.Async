@@ -20,12 +20,12 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <remarks>
 		/// Once the result of an operation is available, it is stored and is returned immediately on subsequent calls to the <see cref="Result"/> property.
+		/// Unlike Tasks accessing the property does not block the calling thread (<see cref="InvalidOperationException"/> is throws instead).
 		/// Note that, if an exception occurred during the operation, or if the operation has been cancelled, the <see cref="Result"/> property does not return a value.
 		/// Instead, attempting to access the property value throws an exception.
 		/// </remarks>
 		/// <value>Result of the operation.</value>
-		/// <exception cref="InvalidOperationException">Thrown either if the property is accessed before operation is completed.</exception>
-		/// <exception cref="AggregateException">Thrown if the operation is in <see cref="AsyncOperationStatus.Faulted"/> or <see cref="AsyncOperationStatus.Canceled"/> state.</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the property is accessed before operation is completed.</exception>
 		TResult Result { get; }
 	}
 }

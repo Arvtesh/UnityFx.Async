@@ -63,7 +63,7 @@ namespace UnityFx.Async
 		private const int _optionsOffset = 28;
 
 		private readonly object _asyncState;
-		private AggregateException _exception;
+		private Exception _exception;
 
 #if UNITYFX_NOT_THREAD_SAFE
 
@@ -215,21 +215,9 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
 		internal AsyncResult(Exception exception, object asyncState)
 		{
-			if (exception == null)
-			{
-				throw new ArgumentNullException(nameof(exception));
-			}
+			_exception = exception ?? throw new ArgumentNullException(nameof(exception));
 
-			if (exception is AggregateException ae)
-			{
-				_exception = ae;
-			}
-			else
-			{
-				_exception = new AggregateException(exception);
-			}
-
-			if (_exception.InnerException is OperationCanceledException)
+			if (_exception is OperationCanceledException)
 			{
 				_flags = StatusCanceled | _flagCompletedSynchronously;
 			}
@@ -346,7 +334,7 @@ namespace UnityFx.Async
 
 			if (TryReserveCompletion())
 			{
-				_exception = new AggregateException(new OperationCanceledException());
+				_exception = new OperationCanceledException();
 				SetCompleted(StatusCanceled, completedSynchronously);
 				return true;
 			}
@@ -380,21 +368,14 @@ namespace UnityFx.Async
 			{
 				if (exception is OperationCanceledException)
 				{
-					_exception = new AggregateException(exception);
+					_exception = exception;
 					SetCompleted(StatusCanceled, completedSynchronously);
 				}
 				else
 				{
-					if (exception is AggregateException ae)
-					{
-						_exception = ae;
-					}
-					else
-					{
-						_exception = new AggregateException(exception);
-					}
+					_exception = exception;
 
-					if (_exception.InnerException is OperationCanceledException)
+					if (exception is AggregateException && _exception.InnerException is OperationCanceledException)
 					{
 						SetCompleted(StatusCanceled, completedSynchronously);
 					}
@@ -497,31 +478,52 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Throws exception if the operation has failed or canceled.
 		/// </summary>
-		protected internal void ThrowIfNonSuccess(bool throwAggregate)
+		protected internal void ThrowIfNonSuccess()
 		{
 			var status = _flags & _statusMask;
 
+			if (status == StatusFaulted)
+			{
+				if (!TryThrowException(_exception))
+				{
+					// Should never get here. Exception should never be null in faulted state.
+					throw new Exception();
+				}
+			}
+			else if (status == StatusCanceled)
+			{
+				if (!TryThrowException(_exception))
+				{
+					throw new OperationCanceledException();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Throws exception if the operation has failed or canceled.
+		/// </summary>
+		protected internal void ThrowIfNonSuccess(bool throwAggregate)
+		{
 			if (throwAggregate)
 			{
-				if (status == StatusFaulted)
+				if (_exception is AggregateException)
 				{
-					if (_exception != null)
-					{
-						throw _exception;
-					}
-					else
+					ThrowIfNonSuccess();
+				}
+				else if (_exception != null)
+				{
+					throw new AggregateException(_exception);
+				}
+				else
+				{
+					var status = _flags & _statusMask;
+
+					if (status == StatusFaulted)
 					{
 						// Should never get here. Exception should never be null in faulted state.
 						throw new AggregateException();
 					}
-				}
-				else if (status == StatusCanceled)
-				{
-					if (_exception != null)
-					{
-						throw _exception;
-					}
-					else
+					else if (status == StatusCanceled)
 					{
 						throw new AggregateException(new OperationCanceledException());
 					}
@@ -529,21 +531,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				if (status == StatusFaulted)
-				{
-					if (!TryThrowException(_exception))
-					{
-						// Should never get here. Exception should never be null in faulted state.
-						throw new Exception();
-					}
-				}
-				else if (status == StatusCanceled)
-				{
-					if (!TryThrowException(_exception))
-					{
-						throw new OperationCanceledException();
-					}
-				}
+				ThrowIfNonSuccess();
 			}
 		}
 
@@ -919,15 +907,14 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Rethrows the specified <see cref="AggregateException"/>.
 		/// </summary>
-		internal static bool TryThrowException(AggregateException e)
+		internal static bool TryThrowException(Exception e)
 		{
 			if (e != null)
 			{
-				var inner = e.InnerException ?? e;
-#if !NET35
-				ExceptionDispatchInfo.Capture(inner).Throw();
+#if NET35
+				throw e;
 #else
-				throw inner;
+				ExceptionDispatchInfo.Capture(e).Throw();
 #endif
 			}
 
@@ -942,7 +929,7 @@ namespace UnityFx.Async
 		public AsyncOperationStatus Status => (AsyncOperationStatus)(_flags & _statusMask);
 
 		/// <inheritdoc/>
-		public AggregateException Exception => (_flags & _flagCompleted) != 0 ? _exception : null;
+		public Exception Exception => (_flags & _flagCompleted) != 0 ? _exception : null;
 
 		/// <inheritdoc/>
 		public bool IsCompletedSuccessfully => (_flags & _statusMask) == StatusRanToCompletion;
@@ -1087,14 +1074,7 @@ namespace UnityFx.Async
 
 				if (IsFaulted && _exception != null)
 				{
-					if (_exception.InnerException != null)
-					{
-						state += " (" + _exception.InnerException.GetType().Name + ')';
-					}
-					else
-					{
-						state += " (" + _exception.GetType().Name + ')';
-					}
+					state += " (" + _exception.GetType().Name + ')';
 				}
 
 				result += ", Status = ";
@@ -1116,11 +1096,11 @@ namespace UnityFx.Async
 		{
 			if (flags == StatusFaulted)
 			{
-				_exception = new AggregateException();
+				_exception = new Exception();
 			}
 			else if (flags == StatusCanceled)
 			{
-				_exception = new AggregateException(new OperationCanceledException());
+				_exception = new OperationCanceledException();
 			}
 
 			if (flags > StatusRunning)

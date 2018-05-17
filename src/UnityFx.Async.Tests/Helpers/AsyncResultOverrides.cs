@@ -26,7 +26,7 @@ namespace UnityFx.Async
 
 		protected override void OnCompleted()
 		{
-			OnCompletedException = Exception?.InnerException;
+			OnCompletedException = Exception;
 			OnCompletedCalled = true;
 
 			base.OnCompleted();
