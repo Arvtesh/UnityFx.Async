@@ -33,7 +33,7 @@ namespace UnityFx.Async
 
 #endif
 
-			ThrowIfNonSuccess(op, true);
+			AsyncResult.ThrowIfNonSuccess(op);
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace UnityFx.Async
 
 			if (result)
 			{
-				ThrowIfNonSuccess(op, true);
+				AsyncResult.ThrowIfNonSuccess(op);
 			}
 
 			return result;
@@ -102,7 +102,7 @@ namespace UnityFx.Async
 
 			if (result)
 			{
-				ThrowIfNonSuccess(op, true);
+				AsyncResult.ThrowIfNonSuccess(op);
 			}
 
 			return result;
@@ -122,7 +122,7 @@ namespace UnityFx.Async
 		public static void Wait(this IAsyncOperation op, CancellationToken cancellationToken)
 		{
 			WaitInternal(op, cancellationToken);
-			ThrowIfNonSuccess(op, true);
+			AsyncResult.ThrowIfNonSuccess(op);
 		}
 
 		/// <summary>
@@ -142,7 +142,7 @@ namespace UnityFx.Async
 		{
 			if (WaitInternal(op, millisecondsTimeout, cancellationToken))
 			{
-				ThrowIfNonSuccess(op, true);
+				AsyncResult.ThrowIfNonSuccess(op);
 				return true;
 			}
 
@@ -166,7 +166,7 @@ namespace UnityFx.Async
 		{
 			if (WaitInternal(op, timeout, cancellationToken))
 			{
-				ThrowIfNonSuccess(op, true);
+				AsyncResult.ThrowIfNonSuccess(op);
 				return true;
 			}
 
@@ -202,7 +202,7 @@ namespace UnityFx.Async
 
 #endif
 
-			ThrowIfNonSuccess(op, false);
+			AsyncResult.ThrowIfNonSuccess(op);
 		}
 
 		/// <summary>
@@ -235,7 +235,7 @@ namespace UnityFx.Async
 
 			if (result)
 			{
-				ThrowIfNonSuccess(op, false);
+				AsyncResult.ThrowIfNonSuccess(op);
 			}
 			else
 			{
@@ -273,7 +273,7 @@ namespace UnityFx.Async
 
 			if (result)
 			{
-				ThrowIfNonSuccess(op, false);
+				AsyncResult.ThrowIfNonSuccess(op);
 			}
 			else
 			{
@@ -396,7 +396,7 @@ namespace UnityFx.Async
 		public static void Join(this IAsyncOperation op, CancellationToken cancellationToken)
 		{
 			WaitInternal(op, cancellationToken);
-			ThrowIfNonSuccess(op, false);
+			AsyncResult.ThrowIfNonSuccess(op);
 		}
 
 		/// <summary>
@@ -415,7 +415,7 @@ namespace UnityFx.Async
 		{
 			if (WaitInternal(op, millisecondsTimeout, cancellationToken))
 			{
-				ThrowIfNonSuccess(op, false);
+				AsyncResult.ThrowIfNonSuccess(op);
 			}
 			else
 			{
@@ -439,7 +439,7 @@ namespace UnityFx.Async
 		{
 			if (WaitInternal(op, timeout, cancellationToken))
 			{
-				ThrowIfNonSuccess(op, false);
+				AsyncResult.ThrowIfNonSuccess(op);
 			}
 			else
 			{

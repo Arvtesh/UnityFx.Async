@@ -47,7 +47,7 @@ namespace UnityFx.Async
 			{
 				if (!_op.IsCompletedSuccessfully)
 				{
-					ThrowIfNonSuccess(_op, false);
+					AsyncResult.ThrowIfNonSuccess(_op);
 				}
 			}
 
@@ -90,7 +90,7 @@ namespace UnityFx.Async
 			{
 				if (!_op.IsCompletedSuccessfully)
 				{
-					ThrowIfNonSuccess(_op, false);
+					AsyncResult.ThrowIfNonSuccess(_op);
 				}
 
 				return _op.Result;

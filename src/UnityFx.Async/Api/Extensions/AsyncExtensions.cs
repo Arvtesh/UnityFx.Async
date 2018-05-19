@@ -75,45 +75,6 @@ namespace UnityFx.Async
 			throw new NotImplementedException();
 		}
 
-		/// <summary>
-		/// Throws exception if the operation has failed or canceled.
-		/// </summary>
-		internal static void ThrowIfNonSuccess(IAsyncOperation op, bool throwAggregate)
-		{
-			if (op is AsyncResult ar)
-			{
-				ar.ThrowIfNonSuccess(throwAggregate);
-			}
-			else
-			{
-				var status = op.Status;
-
-				if (status == AsyncOperationStatus.Faulted)
-				{
-					if (throwAggregate)
-					{
-						throw op.Exception;
-					}
-					else if (!AsyncResult.TryThrowException(op.Exception))
-					{
-						// Should never get here. If faulted state excpetion should not be null.
-						throw new Exception();
-					}
-				}
-				else if (status == AsyncOperationStatus.Canceled)
-				{
-					if (throwAggregate)
-					{
-						throw op.Exception;
-					}
-					else if (!AsyncResult.TryThrowException(op.Exception))
-					{
-						throw new OperationCanceledException();
-					}
-				}
-			}
-		}
-
 #if !NET35
 
 		/// <summary>

@@ -500,42 +500,6 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Throws exception if the operation has failed or canceled.
-		/// </summary>
-		protected internal void ThrowIfNonSuccess(bool throwAggregate)
-		{
-			if (throwAggregate)
-			{
-				if (_exception is AggregateException)
-				{
-					ThrowIfNonSuccess();
-				}
-				else if (_exception != null)
-				{
-					throw new AggregateException(_exception);
-				}
-				else
-				{
-					var status = _flags & _statusMask;
-
-					if (status == StatusFaulted)
-					{
-						// Should never get here. Exception should never be null in faulted state.
-						throw new AggregateException();
-					}
-					else if (status == StatusCanceled)
-					{
-						throw new AggregateException(new OperationCanceledException());
-					}
-				}
-			}
-			else
-			{
-				ThrowIfNonSuccess();
-			}
-		}
-
-		/// <summary>
 		/// Throws <see cref="ObjectDisposedException"/> if this operation has been disposed.
 		/// </summary>
 		protected internal void ThrowIfDisposed()
@@ -905,7 +869,31 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Rethrows the specified <see cref="AggregateException"/>.
+		/// Throws if the specified operation is faulted/canceled.
+		/// </summary>
+		internal static void ThrowIfNonSuccess(IAsyncOperation op)
+		{
+			var status = op.Status;
+
+			if (status == AsyncOperationStatus.Faulted)
+			{
+				if (!TryThrowException(op.Exception))
+				{
+					// Should never get here. Exception should never be null in faulted state.
+					throw new Exception();
+				}
+			}
+			else if (status == AsyncOperationStatus.Canceled)
+			{
+				if (!TryThrowException(op.Exception))
+				{
+					throw new OperationCanceledException();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Rethrows the specified exception.
 		/// </summary>
 		internal static bool TryThrowException(Exception e)
 		{
