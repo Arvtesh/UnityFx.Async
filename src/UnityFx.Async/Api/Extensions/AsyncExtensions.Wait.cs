@@ -305,7 +305,6 @@ namespace UnityFx.Async
 
 #endif
 
-			ThrowIfNonSuccess(op, false);
 			return op.Result;
 		}
 
@@ -338,11 +337,7 @@ namespace UnityFx.Async
 
 #endif
 
-			if (result)
-			{
-				ThrowIfNonSuccess(op, false);
-			}
-			else
+			if (!result)
 			{
 				throw new TimeoutException();
 			}
@@ -379,11 +374,7 @@ namespace UnityFx.Async
 
 #endif
 
-			if (result)
-			{
-				ThrowIfNonSuccess(op, false);
-			}
-			else
+			if (!result)
 			{
 				throw new TimeoutException();
 			}
@@ -469,7 +460,6 @@ namespace UnityFx.Async
 		public static TResult Join<TResult>(this IAsyncOperation<TResult> op, CancellationToken cancellationToken)
 		{
 			WaitInternal(op, cancellationToken);
-			ThrowIfNonSuccess(op, false);
 			return op.Result;
 		}
 
@@ -488,11 +478,7 @@ namespace UnityFx.Async
 		/// <seealso cref="Join{TResult}(IAsyncOperation{TResult}, int)"/>
 		public static TResult Join<TResult>(this IAsyncOperation<TResult> op, int millisecondsTimeout, CancellationToken cancellationToken)
 		{
-			if (WaitInternal(op, millisecondsTimeout, cancellationToken))
-			{
-				ThrowIfNonSuccess(op, false);
-			}
-			else
+			if (!WaitInternal(op, millisecondsTimeout, cancellationToken))
 			{
 				throw new TimeoutException();
 			}
@@ -515,11 +501,7 @@ namespace UnityFx.Async
 		/// <seealso cref="Join{TResult}(IAsyncOperation{TResult}, TimeSpan)"/>
 		public static TResult Join<TResult>(this IAsyncOperation<TResult> op, TimeSpan timeout, CancellationToken cancellationToken)
 		{
-			if (WaitInternal(op, timeout, cancellationToken))
-			{
-				ThrowIfNonSuccess(op, false);
-			}
-			else
+			if (!WaitInternal(op, timeout, cancellationToken))
 			{
 				throw new TimeoutException();
 			}
