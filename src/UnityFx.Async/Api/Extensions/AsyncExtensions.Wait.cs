@@ -11,10 +11,9 @@ namespace UnityFx.Async
 		#region Wait
 
 		/// <summary>
-		/// Waits for the <see cref="IAsyncOperation"/> to complete execution.
+		/// Waits for the <see cref="IAsyncOperation"/> to complete execution. After that rethrows the operation exception (if any).
 		/// </summary>
 		/// <param name="op">The operation to wait for.</param>
-		/// <exception cref="AggregateException">Thrown if the operation was canceled or faulted.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="Wait(IAsyncOperation, int)"/>
 		/// <seealso cref="Wait(IAsyncOperation, TimeSpan)"/>
@@ -37,13 +36,12 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Waits for the <see cref="IAsyncOperation"/> to complete execution within a specified number of milliseconds.
+		/// Waits for the <see cref="IAsyncOperation"/> to complete execution within a specified number of milliseconds. After that rethrows the operation exception (if any).
 		/// </summary>
 		/// <param name="op">The operation to wait for.</param>
 		/// <param name="millisecondsTimeout">The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
 		/// <returns><see langword="true"/> if the operation completed execution within the allotted time; otherwise, <see langword="false"/>.</returns>
 		/// <exception cref="ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is a negative number other than -1.</exception>
-		/// <exception cref="AggregateException">Thrown if the operation was canceled or faulted.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="Wait(IAsyncOperation)"/>
 		/// <seealso cref="Wait(IAsyncOperation, TimeSpan)"/>
@@ -73,13 +71,12 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Waits for the <see cref="IAsyncOperation"/> to complete execution within a specified time interval.
+		/// Waits for the <see cref="IAsyncOperation"/> to complete execution within a specified time interval. After that rethrows the operation exception (if any).
 		/// </summary>
 		/// <param name="op">The operation to wait for.</param>
 		/// <param name="timeout">A <see cref="TimeSpan"/> that represents the number of milliseconds to wait, or a <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.</param>
 		/// <returns><see langword="true"/> if the operation completed execution within the allotted time; otherwise, <see langword="false"/>.</returns>
 		/// <exception cref="ArgumentOutOfRangeException"><paramref name="timeout"/> is a negative number other than -1 milliseconds, or <paramref name="timeout"/> is greater than <see cref="int.MaxValue"/>.</exception>
-		/// <exception cref="AggregateException">Thrown if the operation was canceled or faulted.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="Wait(IAsyncOperation)"/>
 		/// <seealso cref="Wait(IAsyncOperation, int)"/>
@@ -111,11 +108,11 @@ namespace UnityFx.Async
 #if !NET35
 
 		/// <summary>
-		/// Waits for the <see cref="IAsyncOperation"/> to complete execution. The wait terminates if a cancellation token is canceled before the operation completes.
+		/// Waits for the <see cref="IAsyncOperation"/> to complete execution. After that rethrows the operation exception (if any).
+		/// The wait terminates if a cancellation token is canceled before the operation completes.
 		/// </summary>
 		/// <param name="op">The operation to wait for.</param>
 		/// <param name="cancellationToken">A cancellation token to observe while waiting for the operation to complete.</param>
-		/// <exception cref="AggregateException">Thrown if the operation was canceled or faulted.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <exception cref="OperationCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
 		/// <seealso cref="Wait(IAsyncOperation)"/>
@@ -126,15 +123,15 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Waits for the <see cref="IAsyncOperation"/> to complete execution within a specified number of milliseconds. The wait terminates
-		/// if a timeout interval elapses or a cancellation token is canceled before the operation completes.
+		/// Waits for the <see cref="IAsyncOperation"/> to complete execution within a specified number of milliseconds. After that
+		/// rethrows the operation exception (if any). The wait terminates if a timeout interval elapses or a cancellation token is
+		/// canceled before the operation completes.
 		/// </summary>
 		/// <param name="op">The operation to wait for.</param>
 		/// <param name="millisecondsTimeout">The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
 		/// <param name="cancellationToken">A cancellation token to observe while waiting for the operation to complete.</param>
 		/// <returns><see langword="true"/> if the operation completed execution within the allotted time; otherwise, <see langword="false"/>.</returns>
 		/// <exception cref="ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is a negative number other than -1.</exception>
-		/// <exception cref="AggregateException">Thrown if the operation was canceled or faulted.</exception>
 		/// <exception cref="OperationCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="Wait(IAsyncOperation, int)"/>
@@ -150,15 +147,15 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Waits for the <see cref="IAsyncOperation"/> to complete execution within a specified time interval. The wait terminates
-		/// if a timeout interval elapses or a cancellation token is canceled before the operation completes.
+		/// Waits for the <see cref="IAsyncOperation"/> to complete execution within a specified time interval. After that rethrows
+		/// the operation exception (if any). The wait terminates if a timeout interval elapses or a cancellation token is canceled
+		/// before the operation completes.
 		/// </summary>
 		/// <param name="op">The operation to wait for.</param>
 		/// <param name="timeout">A <see cref="TimeSpan"/> that represents the number of milliseconds to wait, or a <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.</param>
 		/// <param name="cancellationToken">A cancellation token to observe while waiting for the operation to complete.</param>
 		/// <returns><see langword="true"/> if the operation completed execution within the allotted time; otherwise, <see langword="false"/>.</returns>
 		/// <exception cref="ArgumentOutOfRangeException"><paramref name="timeout"/> is a negative number other than -1 milliseconds, or <paramref name="timeout"/> is greater than <see cref="int.MaxValue"/>.</exception>
-		/// <exception cref="AggregateException">Thrown if the operation was canceled or faulted.</exception>
 		/// <exception cref="OperationCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="Wait(IAsyncOperation, TimeSpan)"/>
