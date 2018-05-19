@@ -10,5 +10,6 @@ namespace UnityFx.Async
 		public const string ErrorValueIsLessThanZero = "The valus cannot be less than zero.";
 		public const string ErrorOperationIsNotCompleted = "The operation should be completed.";
 		public const string ErrorResultNotAvailable = "The operation result is not available.";
+		public const string ErrorInvalidTimeout = "The timeout value specified is not valid.";
 	}
 }
