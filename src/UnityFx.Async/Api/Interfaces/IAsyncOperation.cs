@@ -44,12 +44,12 @@ namespace UnityFx.Async
 	}
 
 	/// <summary>
-	/// Represents the consumer side of an asynchronous operation. A disposable <see cref="IAsyncResult"/>
-	/// with status information.
+	/// Represents the consumer side of an asynchronous operation. It is basically a disposable/hookable <see cref="IAsyncResult"/> with status information.
 	/// </summary>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</seealso>
+	/// <seealso cref="IAsyncCompletionSource"/>
 	/// <seealso cref="IAsyncOperation{TResult}"/>
-	/// <seealso cref="IAsyncResult"/>
+	/// <seealso cref="AsyncResult"/>
 	public interface IAsyncOperation : IAsyncOperationEvents, IAsyncCancellable, IAsyncResult, IDisposable
 	{
 		/// <summary>

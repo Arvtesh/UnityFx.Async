@@ -11,8 +11,9 @@ namespace UnityFx.Async
 	/// </summary>
 	/// <typeparam name="TResult">Type of th operation result value.</typeparam>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task</seealso>
+	/// <seealso cref="IAsyncCompletionSource{TResult}"/>
 	/// <seealso cref="IAsyncOperation"/>
-	/// <seealso cref="IAsyncResult"/>
+	/// <seealso cref="AsyncResult{TResult}"/>
 	public interface IAsyncOperation<out TResult> : IAsyncOperation
 	{
 		/// <summary>
