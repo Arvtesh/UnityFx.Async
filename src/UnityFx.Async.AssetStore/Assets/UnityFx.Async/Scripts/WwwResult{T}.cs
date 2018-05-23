@@ -123,6 +123,12 @@ namespace UnityFx.Async
 		#region AsyncResult
 
 		/// <inheritdoc/>
+		protected override float GetProgress()
+		{
+			return _www.progress;
+		}
+
+		/// <inheritdoc/>
 		protected override void OnStarted()
 		{
 			base.OnStarted();

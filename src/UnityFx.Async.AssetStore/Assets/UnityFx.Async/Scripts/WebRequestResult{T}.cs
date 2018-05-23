@@ -23,6 +23,7 @@ namespace UnityFx.Async
 		#region data
 
 		private readonly UnityWebRequest _request;
+		private AsyncOperation _op;
 
 		#endregion
 
@@ -124,18 +125,30 @@ namespace UnityFx.Async
 		#region AsyncResult
 
 		/// <inheritdoc/>
+		protected override float GetProgress()
+		{
+			if (_op != null)
+			{
+				return _op.progress;
+			}
+
+			return base.GetProgress();
+		}
+
+		/// <inheritdoc/>
 		protected override void OnStarted()
 		{
 			base.OnStarted();
 
-#if UNITY_2017_2_OR_NEWER
+#if UNITY_2017_2_OR_NEWER || UNITY_2018
 
 			// Starting with Unity 2017.2 there is AsyncOperation.completed event
-			_request.SendWebRequest().completed += op => SetCompleted(false);
+			_op = _request.SendWebRequest();
+			_op.completed += op => SetCompleted(false);
 
 #else
 
-			_request.Send();
+			_op = _request.Send();
 			AsyncUtility.AddCompletionCallback(_request, () => SetCompleted(false));
 
 #endif
