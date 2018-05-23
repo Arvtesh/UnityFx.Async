@@ -62,6 +62,13 @@ namespace UnityFx.Async
 		AsyncOperationStatus Status { get; }
 
 		/// <summary>
+		/// Gets the operation progress [0, 1].
+		/// </summary>
+		/// <value>Progress of the operation in range [0, 1].</value>
+		/// <seealso cref="Status"/>
+		float Progress { get; }
+
+		/// <summary>
 		/// Gets an exception that caused the operation to end prematurely. If the operation completed successfully
 		/// or has not yet thrown any exceptions, this will return <see langword="null"/>.
 		/// </summary>

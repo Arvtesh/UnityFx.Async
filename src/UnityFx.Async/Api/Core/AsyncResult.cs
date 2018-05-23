@@ -515,6 +515,18 @@ namespace UnityFx.Async
 		#region virtual interface
 
 		/// <summary>
+		/// Called when the progress is requested. Default implementation returns 0.
+		/// </summary>
+		/// <remarks>
+		/// Make sure that each method call returns a value greater or equal to the previous. It is important for
+		/// progress reporting consistency.
+		/// </remarks>
+		protected virtual float GetProgress()
+		{
+			return 0;
+		}
+
+		/// <summary>
 		/// Called when the operation state has changed. Default implementation does nothing.
 		/// </summary>
 		/// <param name="status">The new status value.</param>
@@ -912,6 +924,26 @@ namespace UnityFx.Async
 		#endregion
 
 		#region IAsyncOperation
+
+		/// <inheritdoc/>
+		public float Progress
+		{
+			get
+			{
+				var status = _flags & _statusMask;
+
+				if (status == StatusRanToCompletion)
+				{
+					return 1;
+				}
+				else if (status < StatusRunning)
+				{
+					return 0;
+				}
+
+				return GetProgress();
+			}
+		}
 
 		/// <inheritdoc/>
 		public AsyncOperationStatus Status => (AsyncOperationStatus)(_flags & _statusMask);
