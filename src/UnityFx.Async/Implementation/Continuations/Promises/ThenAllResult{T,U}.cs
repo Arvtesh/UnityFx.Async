@@ -10,9 +10,6 @@ namespace UnityFx.Async.Promises
 	internal sealed class ThenAllResult<T, U> : ThenResult<T, U[]>
 	{
 		#region data
-
-		private WhenAllResult<U> _op2;
-
 		#endregion
 
 		#region interface
@@ -26,45 +23,39 @@ namespace UnityFx.Async.Promises
 
 		#region ThenResult
 
-		protected override void InvokeSuccessCallback(IAsyncOperation op, bool completedSynchronously, object continuation)
+		protected override IAsyncOperation InvokeSuccessCallback(IAsyncOperation op, bool completedSynchronously, object continuation)
 		{
+			IAsyncOperation result = null;
+
 			switch (continuation)
 			{
 				case Func<IEnumerable<IAsyncOperation<U>>> f1:
-					_op2 = new WhenAllResult<U>(f1().ToArray());
+					result = new WhenAllResult<U>(f1().ToArray());
 					break;
 
 				case Func<IEnumerable<IAsyncOperation>> f2:
-					_op2 = new WhenAllResult<U>(f2().ToArray());
+					result = new WhenAllResult<U>(f2().ToArray());
 					break;
 
 				case Func<T, IEnumerable<IAsyncOperation<U>>> f3:
-					_op2 = new WhenAllResult<U>(f3((op as IAsyncOperation<T>).Result).ToArray());
+					result = new WhenAllResult<U>(f3((op as IAsyncOperation<T>).Result).ToArray());
 					break;
 
 				case Func<T, IEnumerable<IAsyncOperation>> f4:
-					_op2 = new WhenAllResult<U>(f4((op as IAsyncOperation<T>).Result).ToArray());
+					result = new WhenAllResult<U>(f4((op as IAsyncOperation<T>).Result).ToArray());
 					break;
 			}
 
-			if (_op2 != null)
+			if (result != null)
 			{
-				_op2.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+				result.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
 			}
 			else
 			{
 				TrySetCanceled(completedSynchronously);
 			}
-		}
 
-		#endregion
-
-		#region AsyncResult
-
-		protected override void OnCancel()
-		{
-			base.OnCancel();
-			_op2?.Cancel();
+			return result;
 		}
 
 		#endregion
