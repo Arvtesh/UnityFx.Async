@@ -492,7 +492,7 @@ namespace UnityFx.Async
 				}
 				else
 				{
-					AsyncContinuation.InvokeInline(this, continuation, false);
+					InvokeContinuationInline(continuation, false);
 				}
 			}
 		}
@@ -505,11 +505,11 @@ namespace UnityFx.Async
 			}
 			else if (syncContext == null || syncContext == SynchronizationContext.Current)
 			{
-				AsyncContinuation.InvokeInline(this, continuation, true);
+				InvokeContinuationInline(continuation, true);
 			}
 			else
 			{
-				syncContext.Post(args => AsyncContinuation.InvokeInline(this, args, true), continuation);
+				syncContext.Post(args => InvokeContinuationInline(args, true), continuation);
 			}
 		}
 
@@ -517,12 +517,17 @@ namespace UnityFx.Async
 		{
 			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
 			{
-				syncContext.Post(args => AsyncContinuation.InvokeInline(this, args, inline), continuation);
+				syncContext.Post(args => InvokeContinuationInline(args, inline), continuation);
 			}
 			else
 			{
-				ThreadPool.QueueUserWorkItem(args => AsyncContinuation.InvokeInline(this, args, inline), continuation);
+				ThreadPool.QueueUserWorkItem(args => InvokeContinuationInline(args, inline), continuation);
 			}
+		}
+
+		private void InvokeContinuationInline(object continuation, bool inline)
+		{
+			AsyncContinuation.InvokeInline(this, continuation, inline);
 		}
 
 #endif
