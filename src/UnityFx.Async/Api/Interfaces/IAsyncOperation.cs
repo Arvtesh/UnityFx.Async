@@ -77,8 +77,8 @@ namespace UnityFx.Async
 		/// or has not yet thrown any exceptions, this will return <see langword="null"/>.
 		/// </summary>
 		/// <remarks>
-		/// Task uses <see cref="AggregateException"/> for providing generic error information. The library does not allow
-		/// child operations by design and this fact makes usage of <see cref="AggregateException"/> a very rare case. This is
+		/// Task uses a special aggregate exception for providing generic error information. The library does not allow
+		/// child operations by design and this fact makes usage of aggregate exceptions a very rare case. This is
 		/// why we use <see cref="System.Exception"/> here.
 		/// </remarks>
 		/// <value>An exception that caused the operation to end prematurely.</value>
