@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 
@@ -47,7 +48,7 @@ namespace UnityFx.Async
 		#region IAsyncOperationEvents
 
 		/// <inheritdoc/>
-		public event AsyncOperationCallback Completed
+		public event AsyncCompletedEventHandler Completed
 		{
 			add
 			{

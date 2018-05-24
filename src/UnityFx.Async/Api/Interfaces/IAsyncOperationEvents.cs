@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.ComponentModel;
 using System.Threading;
 
 namespace UnityFx.Async
@@ -34,7 +35,7 @@ namespace UnityFx.Async
 		/// <seealso cref="TryAddContinuation(AsyncOperationCallback)"/>
 		/// <seealso cref="TryAddContinuation(AsyncOperationCallback, SynchronizationContext)"/>
 		/// <seealso cref="RemoveContinuation(AsyncOperationCallback)"/>
-		event AsyncOperationCallback Completed;
+		event AsyncCompletedEventHandler Completed;
 
 		/// <summary>
 		/// Adds a completion callback to be executed after the operation has completed. If the operation is already completed the <paramref name="action"/> is called synchronously.
