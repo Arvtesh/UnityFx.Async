@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ### Changed
 - Renamed `(Try)AddCompletionCallback`/`RemoveCompletionCallback` methods to `(Try)AddContinuation`/`RemoveContinuation`.
 - Changed `IAsyncOperation.Exception` type to `Exception`.
+- Changed `IAsyncOperationEvents.Completed` type to `AsyncCompletedEventHandler`.
 
 -----------------------
 ## [0.9.1] - 2018.05.07
