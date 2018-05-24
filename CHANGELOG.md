@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 -----------------------
 ## [0.9.2] - Unreleased
 
+### Added
+- Added pull-based progress support (`IAsyncOperation.Progress`).
+
 ### Changed
 - Renamed `(Try)AddCompletionCallback`/`RemoveCompletionCallback` methods to `(Try)AddContinuation`/`RemoveContinuation`.
 - Changed `IAsyncOperation.Exception` type to `Exception`.
