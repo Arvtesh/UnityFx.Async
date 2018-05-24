@@ -30,6 +30,7 @@ The table below summarizes differences berween *UnityFx.Async* and other popular
 | Supports `async` / `await` | ✔️ | - | ✔️ |
 | Supports `promise`-like continuations | ✔️ | ✔️ | - |
 | Supports cancellation | ✔️ | -️ | ✔️ |
+| Supports progress reporting | ✔️ | ✔️ | ✔️ |
 | Supports child operations | - | - | ✔️ |
 | Minimum operation data size for 32-bit systems (in bytes) | 28+ | 36+ | 40+ |
 | Minimum number of allocations per continuation | 1+ | 5+ | 2+ |
@@ -167,6 +168,11 @@ var op = new AsyncCompletionSource<string>();
 ```
 The type of the operation should reflect its result type. In this case we have created a special kind of operation - a completion source that incapsulated both producer and consumer interfaces (consumer side is represented via `IAsyncOperation` / `IAsyncOperation<TResult>` interfaces and producer side is `IAsyncCompletionSource` / `IAsyncCompletionSource<TResult>`, `AsyncCompletionSource` implements both of the interfaces).
 
+While operation is running its progress can be set as:
+```csharp
+op.SetProgress(progressValue);
+```
+
 Upon completion of an asynchronous operation transition it to one of the final states (`RanToCompletion`, `Faulted` or `Canceled`):
 ```csharp
 op.SetResult(resultValue);
@@ -272,24 +278,24 @@ DownloadTextAsync("http://www.google.com")
     .Catch(e => Debug.LogException(e))
     .Finally(() => Debug.Log("Done"));
 ```
-The chain of processing ends as soon as an exception occurs. In this case when an error occurs the `Catch` handler would be called.
+The chain of processing ends as soon as an exception occurs. In this case when an error occurs the `Catch()` handler would be called.
 
-`Then` continuations get executed only if previous operation in the chain completed successfully. Otherwise, they are skipped. Note that `Then` expects the handler return value to be another operation.
+`Then()` continuations get executed only if previous operation in the chain completed successfully. Otherwise, they are skipped. Note that `Then()` expects the handler return value to be another operation.
 
-`Rebind` is a special kind of continuation for transforming operation result to a different type:
+`Rebind()` is a special kind of continuation for transforming operation result to a different type:
 ```csharp
 DownloadTextAsync("http://www.google.com")
     .Then(text => ExtractFirstUrl(text))
     .Rebind(url => new Url(url));
 ```
-`ContinueWith` and `Finally` delegates get called independently of the antecedent operation result. `ContinueWith` also define overloads accepting `AsyncContinuationOptions` argument that allows to customize its behaviour. Note that `ContinueWith` is analog to the corresponding [Task method](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.continuewith) and not a part of the JS promise pattern:
+`ContinueWith()` and `Finally()` delegates get called independently of the antecedent operation result. `ContinueWith()` also define overloads accepting `AsyncContinuationOptions` argument that allows to customize its behaviour. Note that `ContinueWith()` is analog to the corresponding [Task method](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.continuewith) and not a part of the JS promise pattern:
 ```csharp
 DownloadTextAsync("http://www.google.com")
     .ContinueWith(op => Debug.Log("1"))
     .ContinueWith(op => Debug.Log("2"), AsyncContinuationOptions.NotOnCanceled)
     .ContinueWith(op => Debug.Log("3"), AsyncContinuationOptions.OnlyOnFaulted);
 ```
-`Done` acts like a combination of `Catch` and `Finally`. It should always be the last element of the chain:
+`Done()` acts like a combination of `Catch()` and `Finally()`. It should always be the last element of the chain:
 ```csharp
 DownloadTextAsync("http://www.google.com")
     .Then(text => ExtractFirstUrl(text))
@@ -315,20 +321,27 @@ finally
 ```
 
 ### Cancellation
-All library operations can be cancelled using `Cancel` method:
+All library operations can be cancelled using `Cancel()` method:
 ```csharp
-op.Cancel();
+op.Cancel();    // attempts to cancel an operation
 ```
-Or with `WithCancellation` extension:
+Or with `WithCancellation()` extension:
 ```csharp
 DownloadTextAsync("http://www.google.com")
     .Then(text => ExtractFirstParagraph(text))
     .WithCancellation(cancellationToken);
 ```
-If the [token](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken) passed to `WithCancellation` is cancelled the target operation is cancelled as well (and that means cancelling all chained operations) as soon as possible. Cancellation might not be instant (depends on specific operation implementation). Also, please note that not all operations might support cancellation; in this case `Cancel` will throw `NotSupportedException`.
+If the [token](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken) passed to `WithCancellation()` is cancelled the target operation is cancelled as well (and that means cancelling all chained operations) as soon as possible. Cancellation might not be instant (depends on specific operation implementation). Also, please note that not all operations might support cancellation; in this case `Cancel()` will throw `NotSupportedException`.
+
+### Progress reporting
+Library operations support progress reporting via `IAsyncOperation.Progress` property:
+```csharp
+var progress = op.Progess;  // gets an operation progress as a float value in range [0, 1]
+```
+There is `AsyncResult.GetProgress()` virtual method that is called when a progress values is requested. Finally there are producer-side methods like `AsyncCompletionSource.TrySetProgress()` that can set the progress value.
 
 ### Synchronization context capturing
-The default behaviour of all library methods is to capture current [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) and try to schedule continuations on it. If there is no synchronization context attached to current thread, continuations are executed on a thread that initiated an operation completion. The same behaviour applies to `async` / `await` implementation unless explicitly overriden with `ConfigureAwait`:
+The default behaviour of all library methods is to capture current [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) and try to schedule continuations on it. If there is no synchronization context attached to current thread, continuations are executed on a thread that initiated an operation completion. The same behaviour applies to `async` / `await` implementation unless explicitly overriden with `ConfigureAwait()`:
 ```csharp
 // thread1
 await DownloadTextAsync("http://www.google.com");
@@ -344,7 +357,7 @@ var op = DownloadTextAsync("http://www.google.com");
 op.Completed += o => Debug.Log("1");
 op.AddContinuation(o => Debug.Log("2"));
 ```
-That said, unlike `ContinueWith`-like stuff completion callbacks cannot be chained and do not handle exceptions automatically. Throwing an exception from a completion callback results in unspecified behavior.
+That said, unlike `ContinueWith()`-like stuff completion callbacks cannot be chained and do not handle exceptions automatically. Throwing an exception from a completion callback results in unspecified behavior.
 
 There are also non-delegate completion callbacks (`IAsyncContinuation`):
 ```csharp
@@ -360,9 +373,9 @@ op.AddContinuation(new MyContinuation());
 ```
 
 ### Disposing of operations
-All operations implement [IDisposable](https://docs.microsoft.com/en-us/dotnet/api/system.idisposable) interface. So strictly speaking users should call `Dispose` when an operation is not in use. That said library implementation only requires this if `AsyncWaitHandle` was accessed (just like [tasks](https://blogs.msdn.microsoft.com/pfxteam/2012/03/25/do-i-need-to-dispose-of-tasks/)).
+All operations implement [IDisposable](https://docs.microsoft.com/en-us/dotnet/api/system.idisposable) interface. So strictly speaking users should call `Dispose()` when an operation is not in use. That said library implementation only requires this if `AsyncWaitHandle` was accessed (just like [tasks](https://blogs.msdn.microsoft.com/pfxteam/2012/03/25/do-i-need-to-dispose-of-tasks/)).
 
-Please note that `Dispose` implementation is NOT thread-safe and can only be called after an operation has completed (the same restrictions apply to [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)).
+Please note that `Dispose()` implementation is NOT thread-safe and can only be called after an operation has completed (the same restrictions apply to [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)).
 
 ### Completed asynchronous operations
 There are a number of helper methods for creating completed operations:
@@ -388,7 +401,7 @@ var op5 = unityWWW.ToAsync();
 ```
 
 ### Creating own asynchronous operations
-Most common way of creating own asynchronous operation is instantiating `AsyncCompletionSource` instance and call `SetResult` / `SetException` / `SetCanceled` when done. Still there are cases when more control is required. For this purpose the library provides two public extendable implementations for asynchronous operations:
+Most common way of creating own asynchronous operation is instantiating `AsyncCompletionSource` instance and call `SetResult()` / `SetException()` / `SetCanceled()` when done. Still there are cases when more control is required. For this purpose the library provides two public extendable implementations for asynchronous operations:
 * `AsyncResult`: a generic asynchronous operation without a result value.
 * `AsyncResult<TResult>`: an asynchronous operation with a result value.
 
