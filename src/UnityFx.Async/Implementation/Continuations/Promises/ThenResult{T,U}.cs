@@ -77,18 +77,6 @@ namespace UnityFx.Async.Promises
 
 		#region AsyncResult
 
-		protected override float GetProgress()
-		{
-			var result = _op.Progress * 0.5f;
-
-			if (_continuation != null)
-			{
-				result += _continuation.Progress * 0.5f;
-			}
-
-			return result;
-		}
-
 		protected override void OnCancel()
 		{
 			_op.Cancel();

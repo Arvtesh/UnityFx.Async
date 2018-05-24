@@ -53,6 +53,13 @@ namespace UnityFx.Async
 	public interface IAsyncOperation : IAsyncOperationEvents, IAsyncCancellable, IAsyncResult, IDisposable
 	{
 		/// <summary>
+		/// Gets the operation progress [0, 1].
+		/// </summary>
+		/// <value>Progress of the operation in range [0, 1].</value>
+		/// <seealso cref="Status"/>
+		float Progress { get; }
+
+		/// <summary>
 		/// Gets the operation status identifier.
 		/// </summary>
 		/// <value>Identifier of the operation status.</value>
@@ -60,13 +67,6 @@ namespace UnityFx.Async
 		/// <seealso cref="IsFaulted"/>
 		/// <seealso cref="IsCanceled"/>
 		AsyncOperationStatus Status { get; }
-
-		/// <summary>
-		/// Gets the operation progress [0, 1].
-		/// </summary>
-		/// <value>Progress of the operation in range [0, 1].</value>
-		/// <seealso cref="Status"/>
-		float Progress { get; }
 
 		/// <summary>
 		/// Gets an exception that caused the operation to end prematurely. If the operation completed successfully
