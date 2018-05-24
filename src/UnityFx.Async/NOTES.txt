@@ -1,7 +1,5 @@
 ﻿TODO:
 1) IProgress support:
-	- add support for automatic progress reporting to operatino chains;
-	- the progress reporting implementation should be overridable/extendable;
 	- progress reporting should support standard IProgress interface;
 2) Optimize number of allocations needed for adding continuations:
 	- most common case is a 1-2 continuations per operation;

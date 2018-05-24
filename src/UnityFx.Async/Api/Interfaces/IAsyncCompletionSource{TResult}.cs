@@ -20,6 +20,16 @@ namespace UnityFx.Async
 		IAsyncOperation<TResult> Operation { get; }
 
 		/// <summary>
+		/// Attempts to set the operation progress value in range [0, 1].
+		/// </summary>
+		/// <param name="progress">The operation progress in range [0, 1].</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="progress"/> is not in range [0, 1].</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetResult(TResult)"/>
+		bool TrySetProgress(float progress);
+
+		/// <summary>
 		/// Attempts to transition the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.Canceled"/> state.
 		/// </summary>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>

@@ -207,6 +207,40 @@ namespace UnityFx.Async
 		#region IAsyncCompletionSource
 
 		/// <summary>
+		/// Sets the operation progress value in range [0, 1].
+		/// </summary>
+		/// <param name="completionSource">The completion source instance.</param>
+		/// <param name="progress">The operation progress in range [0, 1].</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="progress"/> is not in range [0, 1].</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the progress value cannot be set.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetCompleted(IAsyncCompletionSource)"/>
+		public static void SetProgress(this IAsyncCompletionSource completionSource, float progress)
+		{
+			if (!completionSource.TrySetProgress(progress))
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Sets the operation progress value in range [0, 1].
+		/// </summary>
+		/// <param name="completionSource">The completion source instance.</param>
+		/// <param name="progress">The operation progress in range [0, 1].</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="progress"/> is not in range [0, 1].</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the progress value cannot be set.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetResult{TResult}(IAsyncCompletionSource{TResult}, TResult)"/>
+		public static void SetProgress<TResult>(this IAsyncCompletionSource<TResult> completionSource, float progress)
+		{
+			if (!completionSource.TrySetProgress(progress))
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
 		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Canceled"/> state.
 		/// </summary>
 		/// <param name="completionSource">The completion source instance.</param>

@@ -55,6 +55,10 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Gets the operation progress [0, 1].
 		/// </summary>
+		/// <remarks>
+		/// Different operation implementations might provide different progress resolution. Users of this
+		/// interface can expect 0 value until the operation is started and 1 when it is completed as minimum.
+		/// </remarks>
 		/// <value>Progress of the operation in range [0, 1].</value>
 		/// <seealso cref="Status"/>
 		float Progress { get; }

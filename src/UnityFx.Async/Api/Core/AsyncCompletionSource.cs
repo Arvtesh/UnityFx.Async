@@ -187,48 +187,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetScheduled"/>
 		public new bool TrySetRunning() => base.TrySetRunning();
 
-		/// <summary>
-		/// Sets the operation progress value in range [0, 1].
-		/// </summary>
-		/// <param name="progress">The operation progress in range [0, 1].</param>
-		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="progress"/> is not in range [0, 1].</exception>
-		/// <exception cref="InvalidOperationException">Thrown if the progress value cannot be set.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="TrySetProgress(float)"/>
-		public void SetProgress(float progress)
-		{
-			if (!TrySetProgress(progress))
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <summary>
-		/// Attempts to set the operation progress value in range [0, 1].
-		/// </summary>
-		/// <param name="progress">The operation progress in range [0, 1].</param>
-		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="progress"/> is not in range [0, 1].</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="SetProgress(float)"/>
-		public bool TrySetProgress(float progress)
-		{
-			if (progress < 0 || progress > 1)
-			{
-				throw new ArgumentOutOfRangeException(nameof(progress), progress, Constants.ErrorInvalidProgress);
-			}
-
-			ThrowIfDisposed();
-
-			if (Status == AsyncOperationStatus.Running)
-			{
-				_progress = progress;
-				return true;
-			}
-
-			return false;
-		}
-
 		#endregion
 
 		#region AsyncResult
@@ -251,6 +209,25 @@ namespace UnityFx.Async
 
 		/// <inheritdoc/>
 		public IAsyncOperation Operation => this;
+
+		/// <inheritdoc/>
+		public bool TrySetProgress(float progress)
+		{
+			if (progress < 0 || progress > 1)
+			{
+				throw new ArgumentOutOfRangeException(nameof(progress), progress, Constants.ErrorInvalidProgress);
+			}
+
+			ThrowIfDisposed();
+
+			if (Status == AsyncOperationStatus.Running)
+			{
+				_progress = progress;
+				return true;
+			}
+
+			return false;
+		}
 
 		/// <inheritdoc/>
 		public bool TrySetCanceled() => TrySetCanceled(false);
