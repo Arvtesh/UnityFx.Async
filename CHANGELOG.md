@@ -8,11 +8,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 
 ### Added
 - Added pull-based progress support (`IAsyncOperation.Progress`).
+- Added new methods to `IAsyncUpdateSource`.
+- Added `AsyncUpdateBehaviour` as default `IAsyncUpdateSource` implementation.
+- `IAsyncOperation<T>` now inherits `IObservable<T>`.
 
 ### Changed
 - Renamed `(Try)AddCompletionCallback`/`RemoveCompletionCallback` methods to `(Try)AddContinuation`/`RemoveContinuation`.
 - Changed `IAsyncOperation.Exception` type to `Exception`.
 - Changed `IAsyncOperationEvents.Completed` type to `AsyncCompletedEventHandler`.
+
+### Removed
+- Removed `ToObservable` extension of `IAsyncOperation`.
 
 -----------------------
 ## [0.9.1] - 2018.05.07
