@@ -36,7 +36,7 @@ namespace UnityFx.Async.Promises
 			await op;
 
 			// Assert
-			Assert.Equal(op0.Exception.InnerException, exception);
+			Assert.Equal(op0.Exception, exception);
 		}
 
 		[Fact]

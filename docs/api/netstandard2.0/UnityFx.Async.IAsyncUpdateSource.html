@@ -76,20 +76,76 @@
   <div class="markdown level0 summary"><p>A provider of update notifications.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.IObservable&lt;System.Single&gt;.Subscribe(System.IObserver&lt;System.Single&gt;)</span>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="UnityFx.Async.html">UnityFx.Async</a></h6>
   <h6><strong>Assembly</strong>: UnityFx.Async.dll</h6>
   <h5 id="UnityFx_Async_IAsyncUpdateSource_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IAsyncUpdateSource</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IAsyncUpdateSource : IObservable&lt;float&gt;</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncUpdateSource_AddListener_UnityFx_Async_IAsyncUpdatable_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncUpdateSource.AddListener(UnityFx.Async.IAsyncUpdatable)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncUpdateSource_AddListener_System_Action_System_Single__.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncUpdateSource.AddListener(System.Action%7BSystem.Single%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncUpdateSource.cs/#L19">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncUpdateSource.cs/#L23">View Source</a>
+  </span>
+  <a id="UnityFx_Async_IAsyncUpdateSource_AddListener_" data-uid="UnityFx.Async.IAsyncUpdateSource.AddListener*"></a>
+  <h4 id="UnityFx_Async_IAsyncUpdateSource_AddListener_System_Action_System_Single__" data-uid="UnityFx.Async.IAsyncUpdateSource.AddListener(System.Action{System.Single})">AddListener(Action&lt;Single&gt;)</h4>
+  <div class="markdown level1 summary"><p>Adds a new update listener.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void AddListener(Action&lt;float&gt; updateCallback)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a>&gt;</td>
+        <td><span class="parametername">updateCallback</span></td>
+        <td><p>An update callback.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown is <code data-dev-comment-type="paramref" class="paramref">updateCallback</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncUpdateSource_AddListener_UnityFx_Async_IAsyncUpdatable_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncUpdateSource.AddListener(UnityFx.Async.IAsyncUpdatable)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncUpdateSource.cs/#L36">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncUpdateSource_AddListener_" data-uid="UnityFx.Async.IAsyncUpdateSource.AddListener*"></a>
   <h4 id="UnityFx_Async_IAsyncUpdateSource_AddListener_UnityFx_Async_IAsyncUpdatable_" data-uid="UnityFx.Async.IAsyncUpdateSource.AddListener(UnityFx.Async.IAsyncUpdatable)">AddListener(IAsyncUpdatable)</h4>
@@ -136,10 +192,44 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncUpdateSource_RemoveListener_UnityFx_Async_IAsyncUpdatable_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncUpdateSource.RemoveListener(UnityFx.Async.IAsyncUpdatable)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncUpdateSource_RemoveListener_System_Action_System_Single__.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncUpdateSource.RemoveListener(System.Action%7BSystem.Single%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncUpdateSource.cs/#L25">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncUpdateSource.cs/#L29">View Source</a>
+  </span>
+  <a id="UnityFx_Async_IAsyncUpdateSource_RemoveListener_" data-uid="UnityFx.Async.IAsyncUpdateSource.RemoveListener*"></a>
+  <h4 id="UnityFx_Async_IAsyncUpdateSource_RemoveListener_System_Action_System_Single__" data-uid="UnityFx.Async.IAsyncUpdateSource.RemoveListener(System.Action{System.Single})">RemoveListener(Action&lt;Single&gt;)</h4>
+  <div class="markdown level1 summary"><p>Removes an existing listener.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void RemoveListener(Action&lt;float&gt; updateCallback)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a>&gt;</td>
+        <td><span class="parametername">updateCallback</span></td>
+        <td><p>An update listener. Can be <span class="xref">null</span>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncUpdateSource_RemoveListener_UnityFx_Async_IAsyncUpdatable_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncUpdateSource.RemoveListener(UnityFx.Async.IAsyncUpdatable)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncUpdateSource.cs/#L42">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncUpdateSource_RemoveListener_" data-uid="UnityFx.Async.IAsyncUpdateSource.RemoveListener*"></a>
   <h4 id="UnityFx_Async_IAsyncUpdateSource_RemoveListener_UnityFx_Async_IAsyncUpdatable_" data-uid="UnityFx.Async.IAsyncUpdateSource.RemoveListener(UnityFx.Async.IAsyncUpdatable)">RemoveListener(IAsyncUpdatable)</h4>
@@ -168,6 +258,10 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ToAsync__1_System_IObservable___0__">AsyncExtensions.ToAsync&lt;T&gt;(IObservable&lt;T&gt;)</a>
+  </div>
   <h3 id="seealso">See Also</h3>
   <div class="seealso">
       <div><a class="xref" href="UnityFx.Async.IAsyncUpdatable.html">IAsyncUpdatable</a></div>
@@ -180,10 +274,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/develop/apiSpec/new?filename=UnityFx_Async_IAsyncUpdateSource.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncUpdateSource%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncUpdateSource.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncUpdateSource%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/develop/src/UnityFx.Async/Api/Interfaces/IAsyncUpdateSource.cs/#L12" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncUpdateSource.cs/#L15" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

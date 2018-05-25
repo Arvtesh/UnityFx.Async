@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-#if UNITYFX_SUPPORT_TAP
+#if !NET35
 using System.Threading.Tasks;
 #endif
 
@@ -314,7 +314,7 @@ namespace UnityFx.Async
 			}
 		}
 
-#if UNITYFX_SUPPORT_TAP
+#if !NET35
 
 		/// <summary>
 		/// Creates an <see cref="IAsyncOperation"/> instance that completes when the specified <paramref name="task"/> completes.
@@ -389,10 +389,6 @@ namespace UnityFx.Async
 
 			return result;
 		}
-
-#endif
-
-#if !NET35
 
 		/// <summary>
 		/// Creates a completed <see cref="IAsyncOperation"/> that represents result of the <paramref name="action"/> specified.

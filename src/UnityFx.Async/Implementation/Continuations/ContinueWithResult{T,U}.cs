@@ -15,7 +15,6 @@ namespace UnityFx.Async
 		private readonly AsyncContinuationOptions _options;
 		private readonly object _continuation;
 		private readonly object _userState;
-		private readonly SynchronizationContext _syncContext;
 
 		#endregion
 
@@ -42,6 +41,11 @@ namespace UnityFx.Async
 		#endregion
 
 		#region AsyncResult
+
+		protected override float GetProgress()
+		{
+			return _op.Progress;
+		}
 
 		protected override void OnCancel()
 		{

@@ -4,13 +4,13 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
-#if UNITYFX_SUPPORT_TAP
+#if !NET35
 using System.Threading.Tasks;
 #endif
 
 namespace UnityFx.Async
 {
-#if UNITYFX_SUPPORT_TAP
+#if !NET35
 
 	partial class AsyncExtensions
 	{
@@ -47,7 +47,7 @@ namespace UnityFx.Async
 			{
 				if (!_op.IsCompletedSuccessfully)
 				{
-					ThrowIfNonSuccess(_op, false);
+					AsyncResult.ThrowIfNonSuccess(_op);
 				}
 			}
 
@@ -90,7 +90,7 @@ namespace UnityFx.Async
 			{
 				if (!_op.IsCompletedSuccessfully)
 				{
-					ThrowIfNonSuccess(_op, false);
+					AsyncResult.ThrowIfNonSuccess(_op);
 				}
 
 				return _op.Result;
@@ -224,7 +224,7 @@ namespace UnityFx.Async
 			}
 			else if (status == AsyncOperationStatus.Faulted)
 			{
-				return Task.FromException(op.Exception.InnerException);
+				return Task.FromException(op.Exception);
 			}
 			else if (status == AsyncOperationStatus.Canceled)
 			{
@@ -234,7 +234,7 @@ namespace UnityFx.Async
 			{
 				var result = new TaskCompletionSource<VoidResult>();
 
-				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp, result), null))
+				if (!op.TryAddContinuation(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp, result), null))
 				{
 					AsyncContinuation.InvokeTaskContinuation(op, result);
 				}
@@ -258,7 +258,7 @@ namespace UnityFx.Async
 			}
 			else if (status == AsyncOperationStatus.Faulted)
 			{
-				return Task.FromException<TResult>(op.Exception.InnerException);
+				return Task.FromException<TResult>(op.Exception);
 			}
 			else if (status == AsyncOperationStatus.Canceled)
 			{
@@ -268,7 +268,7 @@ namespace UnityFx.Async
 			{
 				var result = new TaskCompletionSource<TResult>();
 
-				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp as IAsyncOperation<TResult>, result), null))
+				if (!op.TryAddContinuation(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp as IAsyncOperation<TResult>, result), null))
 				{
 					AsyncContinuation.InvokeTaskContinuation(op, result);
 				}
@@ -313,7 +313,7 @@ namespace UnityFx.Async
 			{
 				ar.SetContinuationForAwait(continuation, syncContext);
 			}
-			else if (!op.TryAddCompletionCallback(asyncOp => continuation(), syncContext))
+			else if (!op.TryAddContinuation(asyncOp => continuation(), syncContext))
 			{
 				continuation();
 			}

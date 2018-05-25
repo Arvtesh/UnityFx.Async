@@ -16,7 +16,7 @@ namespace UnityFx.Async
 			// Arrange
 			var op = new AsyncCompletionSource<int>();
 			var observer = new Observer<int>();
-			var observable = op.ToObservable().Subscribe(observer);
+			var observable = op.Subscribe(observer);
 
 			// Act
 			op.SetResult(10);
@@ -32,7 +32,7 @@ namespace UnityFx.Async
 			// Arrange
 			var op = new AsyncCompletionSource<int>();
 			var observer = new Observer<int>();
-			var observable = op.ToObservable().Subscribe(observer);
+			var observable = op.Subscribe(observer);
 
 			// Act
 			op.SetResult(10);
@@ -47,13 +47,13 @@ namespace UnityFx.Async
 			// Arrange
 			var op = new AsyncCompletionSource<int>();
 			var observer = new Observer<int>();
-			var observable = op.ToObservable().Subscribe(observer);
+			var observable = op.Subscribe(observer);
 
 			// Act
 			op.SetCanceled();
 
 			// Assert
-			Assert.Equal(1, observer.OnCompletedCount);
+			Assert.Equal(1, observer.OnErrorCount);
 		}
 
 		[Fact]
@@ -62,7 +62,7 @@ namespace UnityFx.Async
 			// Arrange
 			var op = new AsyncCompletionSource<int>();
 			var observer = new Observer<int>();
-			var observable = op.ToObservable().Subscribe(observer);
+			var observable = op.Subscribe(observer);
 
 			// Act
 			op.SetException(new Exception());
@@ -78,7 +78,7 @@ namespace UnityFx.Async
 			var e = new Exception();
 			var op = new AsyncCompletionSource<int>();
 			var observer = new Observer<int>();
-			var observable = op.ToObservable().Subscribe(observer);
+			var observable = op.Subscribe(observer);
 
 			// Act
 			op.SetException(e);

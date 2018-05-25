@@ -1,4 +1,4 @@
-# Introduction
+# Contributing guide
 
 First off, thank you for considering contributing to UnityFx. It's people like you that make UnityFx such a great tool. Feel welcome and read the following sections in order to know what and how to work on something. If you get stuck at any point you can create a [ticket on GitHub](https://github.com/Arvtesh/UnityFx.Async/issues).
 

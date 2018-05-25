@@ -514,7 +514,7 @@ namespace UnityFx.Async
 		private void AssertCanceled(IAsyncOperation op, OperationCanceledException e)
 		{
 			Assert.Equal(AsyncOperationStatus.Canceled, op.Status);
-			Assert.Equal(e, op.Exception.InnerException);
+			Assert.Equal(e, op.Exception);
 			Assert.True(op.IsCompleted);
 			Assert.True(op.IsCanceled);
 			Assert.False(op.IsCompletedSuccessfully);
@@ -533,7 +533,7 @@ namespace UnityFx.Async
 		private void AssertFaulted(IAsyncOperation op, Exception e)
 		{
 			Assert.Equal(AsyncOperationStatus.Faulted, op.Status);
-			Assert.Equal(e, op.Exception.InnerException);
+			Assert.Equal(e, op.Exception);
 			Assert.True(op.IsCompleted);
 			Assert.True(op.IsFaulted);
 			Assert.False(op.IsCompletedSuccessfully);

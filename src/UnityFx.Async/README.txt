@@ -1,10 +1,11 @@
 SUMMARY
-The package provides lightweight Task-like asynchronous operations for Unity3d.
+The package provides lightweight Task-like asynchronous operations (promises) for Unity3d.
 
 LICENSE
 https://github.com/Arvtesh/UnityFx.Async/blob/master/LICENSE.md
 
 DOCUMENTATION
+https://github.com/Arvtesh/UnityFx.Async
 https://arvtesh.github.io/UnityFx.Async
 
 SUPPORT

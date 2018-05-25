@@ -60,7 +60,18 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if the operation was completed within the specified time interfval; <see langword="false"/> otherwise.</returns>
 		public static bool SpinUntilCompleted(this IAsyncResult op, int millisecondsTimeout)
 		{
-			throw new NotImplementedException();
+			if (millisecondsTimeout < -1)
+			{
+				throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout), millisecondsTimeout, Constants.ErrorInvalidTimeout);
+			}
+
+			if (millisecondsTimeout == Timeout.Infinite)
+			{
+				SpinUntilCompleted(op);
+				return true;
+			}
+
+			return SpinUntilCompletedInternal(op, TimeSpan.FromMilliseconds(millisecondsTimeout));
 		}
 
 		/// <summary>
@@ -72,46 +83,20 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if the operation was completed within the specified time interfval; <see langword="false"/> otherwise.</returns>
 		public static bool SpinUntilCompleted(this IAsyncResult op, TimeSpan timeout)
 		{
-			throw new NotImplementedException();
-		}
+			var totalMilliseconds = (long)timeout.TotalMilliseconds;
 
-		/// <summary>
-		/// Throws exception if the operation has failed or canceled.
-		/// </summary>
-		internal static void ThrowIfNonSuccess(IAsyncOperation op, bool throwAggregate)
-		{
-			if (op is AsyncResult ar)
+			if (totalMilliseconds < -1 || totalMilliseconds > int.MaxValue)
 			{
-				ar.ThrowIfNonSuccess(throwAggregate);
+				throw new ArgumentOutOfRangeException(nameof(timeout), timeout, Constants.ErrorInvalidTimeout);
 			}
-			else
-			{
-				var status = op.Status;
 
-				if (status == AsyncOperationStatus.Faulted)
-				{
-					if (throwAggregate)
-					{
-						throw op.Exception;
-					}
-					else if (!AsyncResult.TryThrowException(op.Exception))
-					{
-						// Should never get here. If faulted state excpetion should not be null.
-						throw new Exception();
-					}
-				}
-				else if (status == AsyncOperationStatus.Canceled)
-				{
-					if (throwAggregate)
-					{
-						throw op.Exception;
-					}
-					else if (!AsyncResult.TryThrowException(op.Exception))
-					{
-						throw new OperationCanceledException();
-					}
-				}
+			if (totalMilliseconds == Timeout.Infinite)
+			{
+				SpinUntilCompleted(op);
+				return true;
 			}
+
+			return SpinUntilCompletedInternal(op, timeout);
 		}
 
 #if !NET35
@@ -121,26 +106,16 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="op">The operation to wait for.</param>
 		/// <param name="cancellationToken">A cancellation token that can be used to cancel wait operation.</param>
-		/// <exception cref="OperationCanceledException">The cancellationToken was canceled.</exception>
+		/// <exception cref="OperationCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
 		/// <seealso cref="SpinUntilCompleted(IAsyncResult)"/>
 		public static void SpinUntilCompleted(this IAsyncResult op, CancellationToken cancellationToken)
 		{
 			var sw = new SpinWait();
 
-			if (cancellationToken.CanBeCanceled)
+			while (!op.IsCompleted)
 			{
-				while (!op.IsCompleted)
-				{
-					cancellationToken.ThrowIfCancellationRequested();
-					sw.SpinOnce();
-				}
-			}
-			else
-			{
-				while (!op.IsCompleted)
-				{
-					sw.SpinOnce();
-				}
+				cancellationToken.ThrowIfCancellationRequested();
+				sw.SpinOnce();
 			}
 		}
 
@@ -151,10 +126,22 @@ namespace UnityFx.Async
 		/// <param name="millisecondsTimeout">The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
 		/// <param name="cancellationToken">A cancellation token that can be used to cancel wait operation.</param>
 		/// <exception cref="ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is a negative number other than -1.</exception>
+		/// <exception cref="OperationCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
 		/// <returns>Returns <see langword="true"/> if the operation was completed within the specified time interfval; <see langword="false"/> otherwise.</returns>
 		public static bool SpinUntilCompleted(this IAsyncResult op, int millisecondsTimeout, CancellationToken cancellationToken)
 		{
-			throw new NotImplementedException();
+			if (millisecondsTimeout < -1)
+			{
+				throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout), millisecondsTimeout, Constants.ErrorInvalidTimeout);
+			}
+
+			if (millisecondsTimeout == Timeout.Infinite)
+			{
+				SpinUntilCompleted(op, cancellationToken);
+				return true;
+			}
+
+			return SpinUntilCompletedInternal(op, TimeSpan.FromMilliseconds(millisecondsTimeout), cancellationToken);
 		}
 
 		/// <summary>
@@ -164,10 +151,24 @@ namespace UnityFx.Async
 		/// <param name="timeout">A <see cref="TimeSpan"/> that represents the number of milliseconds to wait, or a <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.</param>
 		/// <param name="cancellationToken">A cancellation token that can be used to cancel wait operation.</param>
 		/// <exception cref="ArgumentOutOfRangeException"><paramref name="timeout"/> is a negative number other than -1 milliseconds, or <paramref name="timeout"/> is greater than <see cref="int.MaxValue"/>.</exception>
+		/// <exception cref="OperationCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
 		/// <returns>Returns <see langword="true"/> if the operation was completed within the specified time interfval; <see langword="false"/> otherwise.</returns>
 		public static bool SpinUntilCompleted(this IAsyncResult op, TimeSpan timeout, CancellationToken cancellationToken)
 		{
-			throw new NotImplementedException();
+			var totalMilliseconds = (long)timeout.TotalMilliseconds;
+
+			if (totalMilliseconds < -1 || totalMilliseconds > int.MaxValue)
+			{
+				throw new ArgumentOutOfRangeException(nameof(timeout), timeout, Constants.ErrorInvalidTimeout);
+			}
+
+			if (totalMilliseconds == Timeout.Infinite)
+			{
+				SpinUntilCompleted(op, cancellationToken);
+				return true;
+			}
+
+			return SpinUntilCompletedInternal(op, timeout, cancellationToken);
 		}
 
 		/// <summary>
@@ -204,6 +205,40 @@ namespace UnityFx.Async
 		#endregion
 
 		#region IAsyncCompletionSource
+
+		/// <summary>
+		/// Sets the operation progress value in range [0, 1].
+		/// </summary>
+		/// <param name="completionSource">The completion source instance.</param>
+		/// <param name="progress">The operation progress in range [0, 1].</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="progress"/> is not in range [0, 1].</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the progress value cannot be set.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetCompleted(IAsyncCompletionSource)"/>
+		public static void SetProgress(this IAsyncCompletionSource completionSource, float progress)
+		{
+			if (!completionSource.TrySetProgress(progress))
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Sets the operation progress value in range [0, 1].
+		/// </summary>
+		/// <param name="completionSource">The completion source instance.</param>
+		/// <param name="progress">The operation progress in range [0, 1].</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="progress"/> is not in range [0, 1].</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the progress value cannot be set.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetResult{TResult}(IAsyncCompletionSource{TResult}, TResult)"/>
+		public static void SetProgress<TResult>(this IAsyncCompletionSource<TResult> completionSource, float progress)
+		{
+			if (!completionSource.TrySetProgress(progress))
+			{
+				throw new InvalidOperationException();
+			}
+		}
 
 		/// <summary>
 		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Canceled"/> state.
@@ -348,6 +383,68 @@ namespace UnityFx.Async
 			{
 				throw new InvalidOperationException();
 			}
+		}
+
+		#endregion
+
+		#region implementation
+
+#if !NET35
+
+		private static bool SpinUntilCompletedInternal(IAsyncResult op, TimeSpan timeout, CancellationToken cancellationToken)
+		{
+			var endTime = DateTime.Now + timeout;
+			var sw = new SpinWait();
+
+			while (!op.IsCompleted)
+			{
+				if (DateTime.Now > endTime)
+				{
+					return false;
+				}
+
+				cancellationToken.ThrowIfCancellationRequested();
+				sw.SpinOnce();
+			}
+
+			return true;
+		}
+
+#endif
+
+		private static bool SpinUntilCompletedInternal(IAsyncResult op, TimeSpan timeout)
+		{
+			var endTime = DateTime.Now + timeout;
+
+#if NET35
+
+			while (!op.IsCompleted)
+			{
+				if (DateTime.Now > endTime)
+				{
+					return false;
+				}
+
+				Thread.SpinWait(1);
+			}
+
+#else
+
+			var sw = new SpinWait();
+
+			while (!op.IsCompleted)
+			{
+				if (DateTime.Now > endTime)
+				{
+					return false;
+				}
+
+				sw.SpinOnce();
+			}
+
+#endif
+
+			return true;
 		}
 
 		#endregion

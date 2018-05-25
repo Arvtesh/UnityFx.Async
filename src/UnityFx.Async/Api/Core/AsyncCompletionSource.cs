@@ -12,6 +12,12 @@ namespace UnityFx.Async
 	/// <seealso cref="AsyncCompletionSource{T}"/>
 	public sealed class AsyncCompletionSource : AsyncResult, IAsyncCompletionSource
 	{
+		#region data
+
+		private float _progress;
+
+		#endregion
+
 		#region interface
 
 		/// <summary>
@@ -186,6 +192,12 @@ namespace UnityFx.Async
 		#region AsyncResult
 
 		/// <inheritdoc/>
+		protected override float GetProgress()
+		{
+			return _progress;
+		}
+
+		/// <inheritdoc/>
 		protected override void OnCancel()
 		{
 			TrySetCanceled(false);
@@ -197,6 +209,25 @@ namespace UnityFx.Async
 
 		/// <inheritdoc/>
 		public IAsyncOperation Operation => this;
+
+		/// <inheritdoc/>
+		public bool TrySetProgress(float progress)
+		{
+			if (progress < 0 || progress > 1)
+			{
+				throw new ArgumentOutOfRangeException(nameof(progress), progress, Constants.ErrorInvalidProgress);
+			}
+
+			ThrowIfDisposed();
+
+			if (Status == AsyncOperationStatus.Running)
+			{
+				_progress = progress;
+				return true;
+			}
+
+			return false;
+		}
 
 		/// <inheritdoc/>
 		public bool TrySetCanceled() => TrySetCanceled(false);
