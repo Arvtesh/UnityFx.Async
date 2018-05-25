@@ -240,7 +240,6 @@ namespace UnityFx.Async
 
 			private Dictionary<object, Action> _ops;
 			private List<object> _opsToRemove;
-			private bool _updating;
 
 			#endregion
 
@@ -263,59 +262,50 @@ namespace UnityFx.Async
 
 			private void Update()
 			{
-				try
+				if (_ops != null && _ops.Count > 0)
 				{
-					_updating = true;
-
-					if (_ops != null && _ops.Count > 0)
+					foreach (var item in _ops)
 					{
-						foreach (var item in _ops)
+						if (item.Key is AsyncOperation)
 						{
-							if (item.Key is AsyncOperation)
-							{
-								var asyncOp = item.Key as AsyncOperation;
+							var asyncOp = item.Key as AsyncOperation;
 
-								if (asyncOp.isDone)
-								{
-									item.Value();
-									_opsToRemove.Add(asyncOp);
-								}
+							if (asyncOp.isDone)
+							{
+								item.Value();
+								_opsToRemove.Add(asyncOp);
 							}
+						}
 #if UNITY_5_2_OR_NEWER || UNITY_5_3_OR_NEWER || UNITY_2017 || UNITY_2018
-							else if (item.Key is UnityWebRequest)
-							{
-								var asyncOp = item.Key as UnityWebRequest;
-
-								if (asyncOp.isDone)
-								{
-									item.Value();
-									_opsToRemove.Add(asyncOp);
-								}
-							}
-#endif
-							else if (item.Key is WWW)
-							{
-								var asyncOp = item.Key as WWW;
-
-								if (asyncOp.isDone)
-								{
-									item.Value();
-									_opsToRemove.Add(asyncOp);
-								}
-							}
-						}
-
-						foreach (var item in _opsToRemove)
+						else if (item.Key is UnityWebRequest)
 						{
-							_ops.Remove(item);
-						}
+							var asyncOp = item.Key as UnityWebRequest;
 
-						_opsToRemove.Clear();
+							if (asyncOp.isDone)
+							{
+								item.Value();
+								_opsToRemove.Add(asyncOp);
+							}
+						}
+#endif
+						else if (item.Key is WWW)
+						{
+							var asyncOp = item.Key as WWW;
+
+							if (asyncOp.isDone)
+							{
+								item.Value();
+								_opsToRemove.Add(asyncOp);
+							}
+						}
 					}
-				}
-				finally
-				{
-					_updating = false;
+
+					foreach (var item in _opsToRemove)
+					{
+						_ops.Remove(item);
+					}
+
+					_opsToRemove.Clear();
 				}
 			}
 

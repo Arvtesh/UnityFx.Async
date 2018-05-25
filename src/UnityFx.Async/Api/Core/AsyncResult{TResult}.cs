@@ -18,11 +18,7 @@ namespace UnityFx.Async
 	/// <seealso cref="AsyncCompletionSource{T}"/>
 	/// <seealso cref="AsyncResult"/>
 	/// <seealso cref="IAsyncResult"/>
-#if NET35
 	public class AsyncResult<TResult> : AsyncResult, IAsyncOperation<TResult>
-#else
-	public class AsyncResult<TResult> : AsyncResult, IAsyncOperation<TResult>, IObservable<TResult>
-#endif
 	{
 		#region data
 
@@ -282,32 +278,9 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(observer));
 			}
 
-			AsyncOperationCallback completionCallback = op =>
-			{
-				if (IsCompletedSuccessfully)
-				{
-					observer.OnNext(_result);
-					observer.OnCompleted();
-				}
-				else if (IsFaulted)
-				{
-					observer.OnError(Exception);
-				}
-				else
-				{
-					observer.OnCompleted();
-				}
-			};
-
-			if (TryAddContinuation(completionCallback, null))
-			{
-				return new AsyncObservableSubscription(this, completionCallback);
-			}
-			else
-			{
-				completionCallback(this);
-				return Disposable.Empty;
-			}
+			var result = new AsyncObservableSubscription<TResult>(this, observer);
+			AddContinuation(result, null);
+			return result;
 		}
 
 #endif

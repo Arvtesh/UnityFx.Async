@@ -256,6 +256,7 @@ namespace UnityFx.Async
 			public ObservableSubscription(AsyncUpdateBehaviour parent, IObserver<float> observer)
 			{
 				_parent = parent;
+				_observer = observer;
 				_parent._observers.Add(observer);
 			}
 

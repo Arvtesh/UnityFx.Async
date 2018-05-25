@@ -14,7 +14,11 @@ namespace UnityFx.Async
 	/// <seealso cref="IAsyncCompletionSource{TResult}"/>
 	/// <seealso cref="IAsyncOperation"/>
 	/// <seealso cref="AsyncResult{TResult}"/>
+#if NET35
 	public interface IAsyncOperation<out TResult> : IAsyncOperation
+#else
+	public interface IAsyncOperation<out TResult> : IAsyncOperation, IObservable<TResult>
+#endif
 	{
 		/// <summary>
 		/// Gets the operation result value.
