@@ -199,7 +199,7 @@ namespace UnityFx.Async
 
 					foreach (var callback in _updateCallbacksToRemove)
 					{
-						_updateCallbacksToRemove.Remove(callback);
+						_updateCallbacks.Remove(callback);
 					}
 
 					_updateCallbacksToRemove.Clear();
@@ -214,7 +214,7 @@ namespace UnityFx.Async
 
 					foreach (var item in _updatablesToRemove)
 					{
-						_updatablesToRemove.Remove(item);
+						_updatables.Remove(item);
 					}
 
 					_updatablesToRemove.Clear();
@@ -231,7 +231,7 @@ namespace UnityFx.Async
 
 					foreach (var item in _observersToRemove)
 					{
-						_observersToRemove.Remove(item);
+						_observers.Remove(item);
 					}
 
 					_observersToRemove.Clear();
