@@ -334,7 +334,7 @@ DownloadTextAsync("http://www.google.com")
 If the [token](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken) passed to `WithCancellation()` is cancelled the target operation is cancelled as well (and that means cancelling all chained operations) as soon as possible. Cancellation might not be instant (depends on specific operation implementation). Also, please note that not all operations might support cancellation; in this case `Cancel()` will throw `NotSupportedException`.
 
 ### Progress reporting
-Library operations support progress reporting via `IAsyncOperation.Progress` property:
+Library operations support progress reporting via exposing `IAsyncOperation.Progress` property:
 ```csharp
 var progress = op.Progess;  // gets an operation progress as a float value in range [0, 1]
 ```
@@ -388,7 +388,7 @@ var op5 = AsyncResult.FromCanceled();
 ```
 
 ### Reactive programming support
-`IAsyncOperation<T>` inherits `IObservable<T>` and which makes it usable just like any other data stream.
+`IAsyncOperation<T>` inherits `IObservable<T>` which makes it usable just like any other data stream.
 
 ### Convertions
 Library defines convertion methods between `IAsyncOperation` and `Task`, `IObservable`, `UnityWebRequest`, `AsyncOperation`, `WWW` with corresponding extension methods:
