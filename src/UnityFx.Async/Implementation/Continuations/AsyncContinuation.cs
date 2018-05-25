@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 #if !NET35
@@ -110,8 +111,8 @@ namespace UnityFx.Async
 					ac.Invoke(op);
 					break;
 
-				case EventHandler eh:
-					eh.Invoke(op, EventArgs.Empty);
+				case AsyncCompletedEventHandler eh:
+					eh.Invoke(op, new AsyncCompletedEventArgs(op.Exception, op.IsCanceled, op.AsyncState));
 					break;
 			}
 		}
@@ -128,7 +129,7 @@ namespace UnityFx.Async
 			}
 			else if (status == AsyncOperationStatus.Faulted)
 			{
-				tcs.TrySetException(op.Exception.InnerExceptions);
+				tcs.TrySetException(op.Exception);
 			}
 			else if (status == AsyncOperationStatus.Canceled)
 			{
@@ -146,7 +147,7 @@ namespace UnityFx.Async
 			}
 			else if (status == AsyncOperationStatus.Faulted)
 			{
-				tcs.TrySetException(op.Exception.InnerExceptions);
+				tcs.TrySetException(op.Exception);
 			}
 			else if (status == AsyncOperationStatus.Canceled)
 			{

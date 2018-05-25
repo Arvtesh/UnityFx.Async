@@ -29,8 +29,10 @@ namespace UnityFx.Async.Promises
 			op.AddContinuation(this);
 		}
 
-		protected virtual void InvokeSuccessCallback(IAsyncOperation op, bool completedSynchronously, object continuation)
+		protected virtual IAsyncOperation InvokeSuccessCallback(IAsyncOperation op, bool completedSynchronously, object continuation)
 		{
+			IAsyncOperation result = null;
+
 			switch (continuation)
 			{
 				case Action a:
@@ -44,29 +46,31 @@ namespace UnityFx.Async.Promises
 					break;
 
 				case Func<IAsyncOperation<U>> f3:
-					_continuation = f3();
-					_continuation.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+					result = f3();
+					result.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				case Func<IAsyncOperation> f1:
-					_continuation = f1();
-					_continuation.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+					result = f1();
+					result.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				case Func<T, IAsyncOperation<U>> f4:
-					_continuation = f4((op as IAsyncOperation<T>).Result);
-					_continuation.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+					result = f4((op as IAsyncOperation<T>).Result);
+					result.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				case Func<T, IAsyncOperation> f2:
-					_continuation = f2((op as IAsyncOperation<T>).Result);
-					_continuation.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+					result = f2((op as IAsyncOperation<T>).Result);
+					result.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				default:
 					TrySetCanceled(completedSynchronously);
 					break;
 			}
+
+			return result;
 		}
 
 		#endregion
@@ -95,12 +99,12 @@ namespace UnityFx.Async.Promises
 					}
 					else
 					{
-						InvokeSuccessCallback(op, inline, _successCallback);
+						_continuation = InvokeSuccessCallback(op, inline, _successCallback);
 					}
 				}
 				else
 				{
-					_errorCallback?.Invoke(op.Exception.InnerException);
+					_errorCallback?.Invoke(op.Exception);
 					TrySetException(op.Exception, inline);
 				}
 			}

@@ -10,6 +10,7 @@ namespace UnityFx.Async
 		#region data
 
 		private readonly IAsyncUpdateSource _updateService;
+		private float _timeToWait;
 		private float _timer;
 
 		#endregion
@@ -18,7 +19,8 @@ namespace UnityFx.Async
 
 		public UpdatableDelayResult(int millisecondsDelay, IAsyncUpdateSource updateSource)
 		{
-			_timer = millisecondsDelay;
+			_timeToWait = millisecondsDelay / 1000f;
+			_timer = _timeToWait;
 			_updateService = updateSource;
 			_updateService.AddListener(this);
 		}
@@ -26,6 +28,11 @@ namespace UnityFx.Async
 		#endregion
 
 		#region AsyncResult
+
+		protected override float GetProgress()
+		{
+			return (_timeToWait - _timer) / _timeToWait;
+		}
 
 		protected override void OnCancel()
 		{

@@ -42,6 +42,11 @@ namespace UnityFx.Async
 
 		#region AsyncResult
 
+		protected override float GetProgress()
+		{
+			return _op.Progress;
+		}
+
 		protected override void OnCancel()
 		{
 			_op.Cancel();
