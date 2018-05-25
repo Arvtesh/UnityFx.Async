@@ -50,7 +50,7 @@ namespace UnityFx.Async
 		/// </summary>
 		public static IAsyncUpdateSource GetDefaultUpdateSource()
 		{
-			return GetUpdater();
+			return GetCoroutineRunner().UpdateSource;
 		}
 
 		/// <summary>
@@ -118,35 +118,9 @@ namespace UnityFx.Async
 		/// Adds a new delegate that is called once per update cycle.
 		/// </summary>
 		/// <param name="updateCallback">The update callback to add.</param>
-		public static void AddUpdateCallback(Action updateCallback)
-		{
-			GetUpdater().AddListener(updateCallback);
-		}
-
-		/// <summary>
-		/// Removes an existing update callback.
-		/// </summary>
-		/// <param name="updateCallback">The update callback to remove.</param>
-		public static void RemoveUpdateCallback(Action updateCallback)
-		{
-			if (updateCallback != null)
-			{
-				var runner = TryGetUpdater();
-
-				if (runner)
-				{
-					runner.RemoveListener(updateCallback);
-				}
-			}
-		}
-
-		/// <summary>
-		/// Adds a new delegate that is called once per update cycle.
-		/// </summary>
-		/// <param name="updateCallback">The update callback to add.</param>
 		public static void AddUpdateCallback(Action<float> updateCallback)
 		{
-			GetUpdater().AddListener(updateCallback);
+			GetCoroutineRunner().UpdateSource.AddListener(updateCallback);
 		}
 
 		/// <summary>
@@ -157,11 +131,11 @@ namespace UnityFx.Async
 		{
 			if (updateCallback != null)
 			{
-				var runner = TryGetUpdater();
+				var runner = TryGetCoroutineRunner();
 
 				if (runner)
 				{
-					runner.RemoveListener(updateCallback);
+					runner.UpdateSource.RemoveListener(updateCallback);
 				}
 			}
 		}
@@ -240,10 +214,24 @@ namespace UnityFx.Async
 
 			private Dictionary<object, Action> _ops;
 			private List<object> _opsToRemove;
+			private AsyncUpdateSource _updateSource;
 
 			#endregion
 
 			#region interface
+
+			public IAsyncUpdateSource UpdateSource
+			{
+				get
+				{
+					if (_updateSource == null)
+					{
+						_updateSource = new AsyncUpdateSource();
+					}
+
+					return _updateSource;
+				}
+			}
 
 			public void AddCompletionCallback(object op, Action cb)
 			{
@@ -307,6 +295,20 @@ namespace UnityFx.Async
 
 					_opsToRemove.Clear();
 				}
+
+				if (_updateSource != null)
+				{
+					_updateSource.OnNext(Time.deltaTime);
+				}
+			}
+
+			private void OnDestroy()
+			{
+				if (_updateSource != null)
+				{
+					_updateSource.Dispose();
+					_updateSource = null;
+				}
 			}
 
 			#endregion
@@ -340,36 +342,6 @@ namespace UnityFx.Async
 			}
 
 			return runner;
-		}
-
-		private static AsyncUpdateBehaviour TryGetUpdater()
-		{
-			var go = GetRootGo();
-
-			if (go)
-			{
-				var updater = go.GetComponent<AsyncUpdateBehaviour>();
-
-				if (updater)
-				{
-					return updater;
-				}
-			}
-
-			return null;
-		}
-
-		private static AsyncUpdateBehaviour GetUpdater()
-		{
-			var go = GetRootGo();
-			var updater = go.GetComponent<AsyncUpdateBehaviour>();
-
-			if (!updater)
-			{
-				updater = go.AddComponent<AsyncUpdateBehaviour>();
-			}
-
-			return updater;
 		}
 
 		#endregion

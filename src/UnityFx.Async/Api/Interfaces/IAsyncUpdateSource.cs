@@ -20,19 +20,6 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="updateCallback">An update callback.</param>
 		/// <exception cref="ArgumentNullException">Thrown is <paramref name="updateCallback"/> is <see langword="null"/>.</exception>
-		void AddListener(Action updateCallback);
-
-		/// <summary>
-		/// Removes an existing listener.
-		/// </summary>
-		/// <param name="updateCallback">An update listener. Can be <see langword="null"/>.</param>
-		void RemoveListener(Action updateCallback);
-
-		/// <summary>
-		/// Adds a new update listener.
-		/// </summary>
-		/// <param name="updateCallback">An update callback.</param>
-		/// <exception cref="ArgumentNullException">Thrown is <paramref name="updateCallback"/> is <see langword="null"/>.</exception>
 		void AddListener(Action<float> updateCallback);
 
 		/// <summary>
