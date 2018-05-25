@@ -44,14 +44,25 @@ namespace UnityFx.Async
 	}
 
 	/// <summary>
-	/// Represents the consumer side of an asynchronous operation. A disposable <see cref="IAsyncResult"/>
-	/// with status information.
+	/// Represents the consumer side of an asynchronous operation. It is basically a disposable/hookable <see cref="IAsyncResult"/> with status information.
 	/// </summary>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</seealso>
+	/// <seealso cref="IAsyncCompletionSource"/>
 	/// <seealso cref="IAsyncOperation{TResult}"/>
-	/// <seealso cref="IAsyncResult"/>
+	/// <seealso cref="AsyncResult"/>
 	public interface IAsyncOperation : IAsyncOperationEvents, IAsyncCancellable, IAsyncResult, IDisposable
 	{
+		/// <summary>
+		/// Gets the operation progress [0, 1].
+		/// </summary>
+		/// <remarks>
+		/// Different operation implementations might provide different progress resolution. Users of this
+		/// interface can expect 0 value until the operation is started and 1 when it is completed as minimum.
+		/// </remarks>
+		/// <value>Progress of the operation in range [0, 1].</value>
+		/// <seealso cref="Status"/>
+		float Progress { get; }
+
 		/// <summary>
 		/// Gets the operation status identifier.
 		/// </summary>
@@ -62,13 +73,18 @@ namespace UnityFx.Async
 		AsyncOperationStatus Status { get; }
 
 		/// <summary>
-		/// Gets an <see cref="AggregateException"/> that caused the operation to end prematurely. If the operation completed successfully
+		/// Gets an exception that caused the operation to end prematurely. If the operation completed successfully
 		/// or has not yet thrown any exceptions, this will return <see langword="null"/>.
 		/// </summary>
+		/// <remarks>
+		/// Task uses a special aggregate exception for providing generic error information. The library does not allow
+		/// child operations by design and this fact makes usage of aggregate exceptions a very rare case. This is
+		/// why we use <see cref="System.Exception"/> here.
+		/// </remarks>
 		/// <value>An exception that caused the operation to end prematurely.</value>
 		/// <seealso cref="IsFaulted"/>
 		/// <seealso cref="Status"/>
-		AggregateException Exception { get; }
+		Exception Exception { get; }
 
 		/// <summary>
 		/// Gets a value indicating whether the operation completed successfully (i.e. with <see cref="AsyncOperationStatus.RanToCompletion"/> status).

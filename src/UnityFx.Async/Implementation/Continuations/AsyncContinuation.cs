@@ -2,9 +2,10 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
-#if UNITYFX_SUPPORT_TAP
+#if !NET35
 using System.Threading.Tasks;
 #endif
 
@@ -110,13 +111,13 @@ namespace UnityFx.Async
 					ac.Invoke(op);
 					break;
 
-				case EventHandler eh:
-					eh.Invoke(op, EventArgs.Empty);
+				case AsyncCompletedEventHandler eh:
+					eh.Invoke(op, new AsyncCompletedEventArgs(op.Exception, op.IsCanceled, op.AsyncState));
 					break;
 			}
 		}
 
-#if UNITYFX_SUPPORT_TAP
+#if !NET35
 
 		internal static void InvokeTaskContinuation(IAsyncOperation op, TaskCompletionSource<VoidResult> tcs)
 		{
@@ -128,7 +129,7 @@ namespace UnityFx.Async
 			}
 			else if (status == AsyncOperationStatus.Faulted)
 			{
-				tcs.TrySetException(op.Exception.InnerExceptions);
+				tcs.TrySetException(op.Exception);
 			}
 			else if (status == AsyncOperationStatus.Canceled)
 			{
@@ -146,7 +147,7 @@ namespace UnityFx.Async
 			}
 			else if (status == AsyncOperationStatus.Faulted)
 			{
-				tcs.TrySetException(op.Exception.InnerExceptions);
+				tcs.TrySetException(op.Exception);
 			}
 			else if (status == AsyncOperationStatus.Canceled)
 			{

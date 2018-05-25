@@ -23,10 +23,6 @@
 		<CodeAnalysisRuleSet>../CodingConventions/Cs/CsharpRules.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)' != 'net35'">
-		<DefineConstants>UNITYFX_SUPPORT_TAP</DefineConstants>
-	</PropertyGroup>
-
 	<ItemGroup>
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta006" PrivateAssets="All" />
 	</ItemGroup>

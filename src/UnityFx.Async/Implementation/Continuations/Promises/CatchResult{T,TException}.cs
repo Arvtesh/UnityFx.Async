@@ -29,6 +29,11 @@ namespace UnityFx.Async.Promises
 
 		#region AsyncResult
 
+		protected override float GetProgress()
+		{
+			return _op.Progress;
+		}
+
 		protected override void OnCancel()
 		{
 			_op.Cancel();
@@ -44,7 +49,7 @@ namespace UnityFx.Async.Promises
 			{
 				TrySetCompleted(inline);
 			}
-			else if (!(op.Exception.InnerException is TException))
+			else if (!(op.Exception is TException))
 			{
 				TrySetException(op.Exception, inline);
 			}
@@ -52,7 +57,7 @@ namespace UnityFx.Async.Promises
 			{
 				try
 				{
-					_errorCallback.Invoke(op.Exception.InnerException as TException);
+					_errorCallback.Invoke(op.Exception as TException);
 					TrySetCompleted(inline);
 				}
 				catch (Exception e)

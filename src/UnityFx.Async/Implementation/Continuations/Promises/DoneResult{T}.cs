@@ -14,11 +14,17 @@ namespace UnityFx.Async.Promises
 
 		#endregion
 
+		#region interface
+
 		public DoneResult(object successCallback, Action<Exception> errorCallback)
 		{
 			_successCallback = successCallback;
 			_errorCallback = errorCallback;
 		}
+
+		#endregion
+
+		#region IAsyncContinuation
 
 		public void Invoke(IAsyncOperation op, bool inline)
 		{
@@ -35,8 +41,10 @@ namespace UnityFx.Async.Promises
 			}
 			else
 			{
-				_errorCallback?.Invoke(op.Exception.InnerException);
+				_errorCallback?.Invoke(op.Exception);
 			}
 		}
+
+		#endregion
 	}
 }

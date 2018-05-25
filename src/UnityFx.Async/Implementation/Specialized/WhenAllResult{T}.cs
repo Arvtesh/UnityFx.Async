@@ -34,6 +34,18 @@ namespace UnityFx.Async
 
 		#region AsyncResult
 
+		protected override float GetProgress()
+		{
+			var result = 0f;
+
+			foreach (var op in _ops)
+			{
+				result += op.Progress;
+			}
+
+			return result / _ops.Length;
+		}
+
 		protected override void OnCancel()
 		{
 			foreach (var op in _ops)

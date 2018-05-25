@@ -153,7 +153,7 @@ namespace UnityFx.Async
 				_completionCallback = OnCompletedCallback;
 			}
 
-			if (op.TryAddCompletionCallback(_completionCallback, _syncContext))
+			if (op.TryAddContinuation(_completionCallback, _syncContext))
 			{
 				lock (_ops)
 				{
@@ -181,7 +181,7 @@ namespace UnityFx.Async
 					for (var i = 0; i < result.Length; ++i)
 					{
 						var op = _ops[i];
-						op.RemoveCompletionCallback(_completionCallback);
+						op.RemoveContinuation(_completionCallback);
 						result[i] = op;
 					}
 
@@ -251,7 +251,7 @@ namespace UnityFx.Async
 			{
 				if (_ops.Remove(op))
 				{
-					op.RemoveCompletionCallback(_completionCallback);
+					op.RemoveContinuation(_completionCallback);
 					TryStart(null);
 					return true;
 				}
@@ -285,7 +285,7 @@ namespace UnityFx.Async
 			{
 				foreach (var op in _ops)
 				{
-					op.RemoveCompletionCallback(_completionCallback);
+					op.RemoveContinuation(_completionCallback);
 				}
 
 				_ops.Clear();

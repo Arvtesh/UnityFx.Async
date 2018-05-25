@@ -17,6 +17,7 @@ namespace UnityFx.Async
 			Done
 		}
 
+		private IAsyncOperation _op;
 		private State _state;
 
 		#endregion
@@ -27,6 +28,25 @@ namespace UnityFx.Async
 			: base(AsyncOperationStatus.Running)
 		{
 			outerOp.AddContinuation(this);
+			_op = outerOp;
+		}
+
+		#endregion
+
+		#region AsyncResult
+
+		protected override float GetProgress()
+		{
+			if (_state == State.WaitingForOuterOperation)
+			{
+				return _op.Progress * 0.5f;
+			}
+			else if (_state == State.WaitingForInnerOperation)
+			{
+				return 0.5f + _op.Progress * 0.5f;
+			}
+
+			return 1;
 		}
 
 		#endregion
@@ -100,6 +120,7 @@ namespace UnityFx.Async
 			else
 			{
 				innerOp.AddContinuation(this);
+				_op = innerOp;
 			}
 		}
 
