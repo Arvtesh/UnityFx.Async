@@ -75,8 +75,7 @@ namespace UnityFx.Async
 		{
 			if (coroutine != null)
 			{
-				var go = GetRootGo();
-				var runner = go.GetComponent<CoroutineRunner>();
+				var runner = TryGetCoroutineRunner();
 
 				if (runner)
 				{
@@ -93,8 +92,7 @@ namespace UnityFx.Async
 		{
 			if (enumerator != null)
 			{
-				var go = GetRootGo();
-				var runner = go.GetComponent<CoroutineRunner>();
+				var runner = TryGetCoroutineRunner();
 
 				if (runner)
 				{
@@ -108,8 +106,7 @@ namespace UnityFx.Async
 		/// </summary>
 		public static void StopAllCoroutines()
 		{
-			var go = GetRootGo();
-			var runner = go.GetComponent<CoroutineRunner>();
+			var runner = TryGetCoroutineRunner();
 
 			if (runner)
 			{
@@ -134,8 +131,7 @@ namespace UnityFx.Async
 		{
 			if (updateCallback != null)
 			{
-				var go = GetRootGo();
-				var runner = go.GetComponent<CoroutineRunner>();
+				var runner = TryGetCoroutineRunner();
 
 				if (runner)
 				{
@@ -161,8 +157,7 @@ namespace UnityFx.Async
 		{
 			if (updateCallback != null)
 			{
-				var go = GetRootGo();
-				var runner = go.GetComponent<CoroutineRunner>();
+				var runner = TryGetCoroutineRunner();
 
 				if (runner)
 				{
@@ -575,6 +570,23 @@ namespace UnityFx.Async
 #endif
 
 			#endregion
+		}
+
+		private static CoroutineRunner TryGetCoroutineRunner()
+		{
+			var go = GetRootGo();
+
+			if (go)
+			{
+				var runner = go.GetComponent<CoroutineRunner>();
+
+				if (runner)
+				{
+					return runner;
+				}
+			}
+
+			return null;
 		}
 
 		private static CoroutineRunner GetCoroutineRunner()
