@@ -17,7 +17,7 @@ namespace UnityFx.Async
 	public delegate void AsyncOperationCallback(IAsyncOperation op);
 
 	/// <summary>
-	/// A controller for <see cref="IAsyncOperation"/> completion callbacks.
+	/// Manages events and callbacks of <see cref="IAsyncOperation"/>.
 	/// </summary>
 	/// <seealso cref="IAsyncOperation"/>
 	public interface IAsyncOperationEvents
@@ -115,7 +115,7 @@ namespace UnityFx.Async
 		bool RemoveContinuation(AsyncOperationCallback action);
 
 		/// <summary>
-		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed <paramref name="continuation"/> is invoked synchronously.
+		/// Adds a continuation to be executed after the operation has completed. If the operation is completed <paramref name="continuation"/> is invoked synchronously.
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="continuation"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
@@ -130,7 +130,7 @@ namespace UnityFx.Async
 		void AddContinuation(IAsyncContinuation continuation);
 
 		/// <summary>
-		/// Attempts to add a completion callback to be executed after the operation has finished. If the operation is already completed
+		/// Attempts to add a continuation to be executed after the operation has finished. If the operation is already completed
 		/// the method does nothing and just returns <see langword="false"/>.
 		/// </summary>
 		/// <remarks>
@@ -147,7 +147,7 @@ namespace UnityFx.Async
 		bool TryAddContinuation(IAsyncContinuation continuation);
 
 		/// <summary>
-		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed <paramref name="continuation"/> is invoked synchronously.
+		/// Adds a continuation to be executed after the operation has completed. If the operation is completed <paramref name="continuation"/> is invoked synchronously.
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="continuation"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
@@ -164,7 +164,7 @@ namespace UnityFx.Async
 		void AddContinuation(IAsyncContinuation continuation, SynchronizationContext syncContext);
 
 		/// <summary>
-		/// Attempts to add a completion callback to be executed after the operation has finished. If the operation is already completed
+		/// Attempts to add a continuation to be executed after the operation has finished. If the operation is already completed
 		/// the method does nothing and just returns <see langword="false"/>.
 		/// </summary>
 		/// <remarks>
@@ -183,7 +183,7 @@ namespace UnityFx.Async
 		bool TryAddContinuation(IAsyncContinuation continuation, SynchronizationContext syncContext);
 
 		/// <summary>
-		/// Removes an existing completion callback.
+		/// Removes an existing continuation.
 		/// </summary>
 		/// <param name="continuation">The continuation to remove. Can be <see langword="null"/>.</param>
 		/// <returns>Returns <see langword="true"/> if <paramref name="continuation"/> was removed; <see langword="false"/> otherwise.</returns>
