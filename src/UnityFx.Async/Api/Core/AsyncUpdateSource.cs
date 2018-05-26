@@ -257,12 +257,21 @@ namespace UnityFx.Async
 
 			if (_observers != null)
 			{
-				foreach (var item in _observers)
-				{
-					item.OnCompleted();
-				}
+				_updating = true;
 
-				_observers.Clear();
+				try
+				{
+					foreach (var item in _observers)
+					{
+						item.OnCompleted();
+					}
+				}
+				finally
+				{
+					_observersToRemove.Clear();
+					_observers.Clear();
+					_updating = false;
+				}
 			}
 
 #endif
@@ -280,12 +289,21 @@ namespace UnityFx.Async
 
 			if (_observers != null)
 			{
-				foreach (var item in _observers)
-				{
-					item.OnError(e);
-				}
+				_updating = true;
 
-				_observers.Clear();
+				try
+				{
+					foreach (var item in _observers)
+					{
+						item.OnError(e);
+					}
+				}
+				finally
+				{
+					_observersToRemove.Clear();
+					_observers.Clear();
+					_updating = false;
+				}
 			}
 
 #endif
@@ -309,12 +327,21 @@ namespace UnityFx.Async
 
 				if (_observers != null)
 				{
-					foreach (var item in _observers)
-					{
-						item.OnCompleted();
-					}
+					_updating = true;
 
-					_observers = null;
+					try
+					{
+						foreach (var item in _observers)
+						{
+							item.OnCompleted();
+						}
+					}
+					finally
+					{
+						_observersToRemove = null;
+						_observers = null;
+						_updating = false;
+					}
 				}
 
 #endif
