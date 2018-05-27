@@ -5,6 +5,7 @@ LICENSE
 https://github.com/Arvtesh/UnityFx.Async/blob/master/LICENSE.md
 
 DOCUMENTATION
+https://github.com/Arvtesh/UnityFx.Async
 https://arvtesh.github.io/UnityFx.Async
 
 SUPPORT
