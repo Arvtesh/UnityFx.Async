@@ -287,7 +287,7 @@ namespace UnityFx.Async
 
 #if !NET35
 
-			if (_observers != null && _observers.Count > 0))
+			if (_observers != null && _observers.Count > 0)
 			{
 				_updating = true;
 
