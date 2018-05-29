@@ -77,8 +77,6 @@ namespace UnityFx.Async
 			}
 			remove
 			{
-				ThrowIfDisposed();
-
 				if (value != null)
 				{
 					TryRemoveContinuationInternal(value);
@@ -141,8 +139,6 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		public bool RemoveContinuation(AsyncOperationCallback action)
 		{
-			ThrowIfDisposed();
-
 			if (action != null)
 			{
 				return TryRemoveContinuationInternal(action);
@@ -214,8 +210,6 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		public bool RemoveContinuation(IAsyncContinuation continuation)
 		{
-			ThrowIfDisposed();
-
 			if (continuation != null)
 			{
 				return TryRemoveContinuationInternal(continuation);

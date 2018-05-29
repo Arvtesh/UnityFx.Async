@@ -109,7 +109,6 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="action">The callback to remove. Can be <see langword="null"/>.</param>
 		/// <returns>Returns <see langword="true"/> if <paramref name="action"/> was removed; <see langword="false"/> otherwise.</returns>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="AddContinuation(AsyncOperationCallback)"/>
 		/// <seealso cref="TryAddContinuation(AsyncOperationCallback)"/>
 		bool RemoveContinuation(AsyncOperationCallback action);
@@ -187,7 +186,6 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="continuation">The continuation to remove. Can be <see langword="null"/>.</param>
 		/// <returns>Returns <see langword="true"/> if <paramref name="continuation"/> was removed; <see langword="false"/> otherwise.</returns>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="TryAddContinuation(IAsyncContinuation)"/>
 		bool RemoveContinuation(IAsyncContinuation continuation);
 	}
