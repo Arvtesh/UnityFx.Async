@@ -27,17 +27,22 @@ namespace UnityFx.Async
 		#region interface
 
 		/// <summary>
+		/// Name of a <see cref="GameObject"/> used by the library tools.
+		/// </summary>
+		public const string RootGoName = "UnityFx.Async";
+
+		/// <summary>
 		/// Returns a <see cref="GameObject"/> used by the library tools.
 		/// </summary>
 		public static GameObject GetRootGo()
 		{
-			if (!_go)
+			if (ReferenceEquals(_go, null))
 			{
-				_go = GameObject.Find("UnityFx.Async");
+				_go = GameObject.Find(RootGoName);
 
-				if (!_go)
+				if (ReferenceEquals(_go, null))
 				{
-					_go = new GameObject("UnityFx.Async");
+					_go = new GameObject(RootGoName);
 					GameObject.DontDestroyOnLoad(_go);
 				}
 			}
@@ -75,6 +80,28 @@ namespace UnityFx.Async
 		public static IAsyncUpdateSource GetEndOfFrameUpdateSource()
 		{
 			return GetCoroutineRunner().EofUpdateSource;
+		}
+
+		/// <summary>
+		/// Creates an operation that completes after a time delay.
+		/// </summary>
+		/// <param name="millisecondsDelay">The number of milliseconds to wait before completing the returned operation, or -1 to wait indefinitely.</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="millisecondsDelay"/> is less than -1.</exception>
+		/// <returns>An operation that represents the time delay.</returns>
+		public static IAsyncOperation Delay(int millisecondsDelay)
+		{
+			return AsyncResult.Delay(millisecondsDelay, GetCoroutineRunner().UpdateSource);
+		}
+
+		/// <summary>
+		/// Creates an operation that completes after a time delay.
+		/// </summary>
+		/// <param name="delay">The time span to wait before completing the returned operation, or <c>TimeSpan.FromMilliseconds(-1)</c> to wait indefinitely.</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="delay"/> represents a negative time interval other than <c>TimeSpan.FromMillseconds(-1)</c>.</exception>
+		/// <returns>An operation that represents the time delay.</returns>
+		public static IAsyncOperation Delay(TimeSpan delay)
+		{
+			return AsyncResult.Delay(delay, GetCoroutineRunner().UpdateSource);
 		}
 
 		/// <summary>
@@ -425,14 +452,22 @@ namespace UnityFx.Async
 		private static CoroutineRunner GetCoroutineRunner()
 		{
 			var go = GetRootGo();
-			var runner = go.GetComponent<CoroutineRunner>();
 
-			if (!runner)
+			if (go)
 			{
-				runner = go.AddComponent<CoroutineRunner>();
-			}
+				var runner = go.GetComponent<CoroutineRunner>();
 
-			return runner;
+				if (!runner)
+				{
+					runner = go.AddComponent<CoroutineRunner>();
+				}
+
+				return runner;
+			}
+			else
+			{
+				throw new ObjectDisposedException(RootGoName);
+			}
 		}
 
 		#endregion
