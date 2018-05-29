@@ -190,7 +190,7 @@ namespace UnityFx.Async
 			{
 				_updating = true;
 
-				if (_updateCallbacks != null)
+				if (_updateCallbacks != null && _updateCallbacks.Count > 0)
 				{
 					foreach (var callback in _updateCallbacks)
 					{
@@ -205,7 +205,7 @@ namespace UnityFx.Async
 					_updateCallbacksToRemove.Clear();
 				}
 
-				if (_updatables != null)
+				if (_updatables != null && _updatables.Count > 0)
 				{
 					foreach (var item in _updatables)
 					{
@@ -222,7 +222,7 @@ namespace UnityFx.Async
 
 #if !NET35
 
-				if (_observers != null)
+				if (_observers != null && _observers.Count > 0)
 				{
 					foreach (var item in _observers)
 					{
@@ -255,7 +255,7 @@ namespace UnityFx.Async
 
 #if !NET35
 
-			if (_observers != null)
+			if (_observers != null && _observers.Count > 0)
 			{
 				_updating = true;
 
@@ -287,7 +287,7 @@ namespace UnityFx.Async
 
 #if !NET35
 
-			if (_observers != null)
+			if (_observers != null && _observers.Count > 0))
 			{
 				_updating = true;
 
@@ -325,7 +325,7 @@ namespace UnityFx.Async
 
 #if !NET35
 
-				if (_observers != null)
+				if (_observers != null && _observers.Count > 0)
 				{
 					_updating = true;
 
