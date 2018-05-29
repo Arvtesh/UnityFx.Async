@@ -11,64 +11,13 @@ using System.Threading.Tasks;
 
 namespace UnityFx.Async
 {
-	internal class AsyncContinuation
+	internal class AsyncContinuation : AsyncInvokable
 	{
-		#region data
-
-		private static WaitCallback _waitCallback;
-		private static SendOrPostCallback _postCallback;
-
-		private IAsyncOperation _op;
-		private SynchronizationContext _syncContext;
-		private object _continuation;
-
-		#endregion
-
 		#region interface
 
 		internal AsyncContinuation(IAsyncOperation op, SynchronizationContext syncContext, object continuation)
+			: base(op, syncContext, continuation)
 		{
-			_op = op;
-			_syncContext = syncContext;
-			_continuation = continuation;
-		}
-
-		internal void InvokeAsync()
-		{
-			if (_syncContext != null)
-			{
-				InvokeOnSyncContext(_syncContext);
-			}
-			else
-			{
-				var syncContext = SynchronizationContext.Current;
-
-				if (syncContext != null)
-				{
-					InvokeOnSyncContext(syncContext);
-				}
-				else
-				{
-					if (_waitCallback == null)
-					{
-						_waitCallback = PostCallback;
-					}
-
-					ThreadPool.QueueUserWorkItem(_waitCallback, this);
-				}
-			}
-		}
-
-		internal void Invoke()
-		{
-			if (_syncContext == null || _syncContext == SynchronizationContext.Current)
-			{
-				InvokeInline(_op, _continuation, false);
-			}
-			else
-			{
-				InvokeOnSyncContext(_syncContext);
-			}
 		}
 
 		internal static bool CanInvoke(IAsyncOperation op, AsyncContinuationOptions options)
@@ -86,15 +35,16 @@ namespace UnityFx.Async
 			return (options & AsyncContinuationOptions.NotOnCanceled) == 0;
 		}
 
-		internal static bool CanInvokeInline(IAsyncOperation op, SynchronizationContext syncContext)
-		{
-			return syncContext == null || syncContext == SynchronizationContext.Current;
-		}
-
 		internal static void InvokeInline(IAsyncOperation op, object continuation, bool inline)
 		{
 			switch (continuation)
 			{
+#if !NET35
+				case IProgress<float> p:
+					p.Report(op.Progress);
+					break;
+#endif
+
 				case IAsyncContinuation c:
 					c.Invoke(op, inline);
 					break;
@@ -113,6 +63,10 @@ namespace UnityFx.Async
 
 				case AsyncCompletedEventHandler eh:
 					eh.Invoke(op, new AsyncCompletedEventArgs(op.Exception, op.IsCanceled, op.AsyncState));
+					break;
+
+				case ProgressChangedEventHandler ph:
+					ph.Invoke(op, new ProgressChangedEventArgs((int)(op.Progress * 100), op.AsyncState));
 					break;
 			}
 		}
@@ -159,43 +113,11 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region Object
+		#region AsyncInvokable
 
-		public override bool Equals(object obj)
+		protected override void Invoke(IAsyncOperation op, object continuation)
 		{
-			if (ReferenceEquals(obj, _continuation))
-			{
-				return true;
-			}
-
-			return base.Equals(obj);
-		}
-
-		public override int GetHashCode()
-		{
-			return _continuation.GetHashCode();
-		}
-
-		#endregion
-
-		#region implementation
-
-		private void InvokeOnSyncContext(SynchronizationContext syncContext)
-		{
-			Debug.Assert(_syncContext != null);
-
-			if (_postCallback == null)
-			{
-				_postCallback = PostCallback;
-			}
-
-			syncContext.Post(_postCallback, this);
-		}
-
-		private static void PostCallback(object args)
-		{
-			var c = args as AsyncContinuation;
-			InvokeInline(c._op, c._continuation, false);
+			InvokeInline(op, continuation, false);
 		}
 
 		#endregion

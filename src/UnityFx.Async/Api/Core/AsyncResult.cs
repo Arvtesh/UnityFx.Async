@@ -521,9 +521,24 @@ namespace UnityFx.Async
 		/// Make sure that each method call returns a value greater or equal to the previous. It is important for
 		/// progress reporting consistency.
 		/// </remarks>
+		/// <seealso cref="Progress"/>
+		/// <seealso cref="OnProgressChanged"/>
 		protected virtual float GetProgress()
 		{
 			return 0;
+		}
+
+		/// <summary>
+		/// Called when the progress value has changed. Default implementation calls progress changed handlers.
+		/// </summary>
+		/// <remarks>
+		/// It is user responsibility to call this method when the operation progress value changes.
+		/// </remarks>
+		/// <seealso cref="Progress"/>
+		/// <seealso cref="GetProgress"/>
+		protected virtual void OnProgressChanged()
+		{
+			InvokeProgressChanged();
 		}
 
 		/// <summary>

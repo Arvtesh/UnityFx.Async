@@ -223,7 +223,12 @@ namespace UnityFx.Async
 
 			if (Status == AsyncOperationStatus.Running)
 			{
-				_progress = progress;
+				if (_progress != progress)
+				{
+					_progress = progress;
+					OnProgressChanged();
+				}
+
 				return true;
 			}
 
