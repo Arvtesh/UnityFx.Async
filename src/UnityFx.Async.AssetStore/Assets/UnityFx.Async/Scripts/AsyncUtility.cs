@@ -46,11 +46,35 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Returns an instance of an <see cref="IAsyncUpdateSource"/>.
+		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for Update.
 		/// </summary>
-		public static IAsyncUpdateSource GetDefaultUpdateSource()
+		public static IAsyncUpdateSource GetUpdateSource()
 		{
 			return GetCoroutineRunner().UpdateSource;
+		}
+
+		/// <summary>
+		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for LateUpdate.
+		/// </summary>
+		public static IAsyncUpdateSource GetLateUpdateSource()
+		{
+			return GetCoroutineRunner().LateUpdateSource;
+		}
+
+		/// <summary>
+		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for FixedUpdate.
+		/// </summary>
+		public static IAsyncUpdateSource GetFixedUpdateSource()
+		{
+			return GetCoroutineRunner().FixedUpdateSource;
+		}
+
+		/// <summary>
+		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for end of frame.
+		/// </summary>
+		public static IAsyncUpdateSource GetEndOfFrameUpdateSource()
+		{
+			return GetCoroutineRunner().EofUpdateSource;
 		}
 
 		/// <summary>
@@ -111,32 +135,6 @@ namespace UnityFx.Async
 			if (runner)
 			{
 				runner.StopAllCoroutines();
-			}
-		}
-
-		/// <summary>
-		/// Adds a new delegate that is called once per update cycle.
-		/// </summary>
-		/// <param name="updateCallback">The update callback to add.</param>
-		public static void AddUpdateCallback(Action<float> updateCallback)
-		{
-			GetCoroutineRunner().UpdateSource.AddListener(updateCallback);
-		}
-
-		/// <summary>
-		/// Removes an existing update callback.
-		/// </summary>
-		/// <param name="updateCallback">The update callback to remove.</param>
-		public static void RemoveUpdateCallback(Action<float> updateCallback)
-		{
-			if (updateCallback != null)
-			{
-				var runner = TryGetCoroutineRunner();
-
-				if (runner)
-				{
-					runner.UpdateSource.RemoveListener(updateCallback);
-				}
 			}
 		}
 
@@ -215,6 +213,10 @@ namespace UnityFx.Async
 			private Dictionary<object, Action> _ops;
 			private List<object> _opsToRemove;
 			private AsyncUpdateSource _updateSource;
+			private AsyncUpdateSource _lateUpdateSource;
+			private AsyncUpdateSource _fixedUpdateSource;
+			private AsyncUpdateSource _eofUpdateSource;
+			private WaitForEndOfFrame _eof;
 
 			#endregion
 
@@ -230,6 +232,47 @@ namespace UnityFx.Async
 					}
 
 					return _updateSource;
+				}
+			}
+
+			public IAsyncUpdateSource LateUpdateSource
+			{
+				get
+				{
+					if (_lateUpdateSource == null)
+					{
+						_lateUpdateSource = new AsyncUpdateSource();
+					}
+
+					return _lateUpdateSource;
+				}
+			}
+
+			public IAsyncUpdateSource FixedUpdateSource
+			{
+				get
+				{
+					if (_fixedUpdateSource == null)
+					{
+						_fixedUpdateSource = new AsyncUpdateSource();
+					}
+
+					return _fixedUpdateSource;
+				}
+			}
+
+			public IAsyncUpdateSource EofUpdateSource
+			{
+				get
+				{
+					if (_eofUpdateSource == null)
+					{
+						_eofUpdateSource = new AsyncUpdateSource();
+						_eof = new WaitForEndOfFrame();
+						StartCoroutine(EofEnumerator());
+					}
+
+					return _eofUpdateSource;
 				}
 			}
 
@@ -302,12 +345,60 @@ namespace UnityFx.Async
 				}
 			}
 
+			private void LateUpdate()
+			{
+				if (_lateUpdateSource != null)
+				{
+					_lateUpdateSource.OnNext(Time.deltaTime);
+				}
+			}
+
+			private void FixedUpdate()
+			{
+				if (_fixedUpdateSource != null)
+				{
+					_fixedUpdateSource.OnNext(Time.fixedDeltaTime);
+				}
+			}
+
 			private void OnDestroy()
 			{
 				if (_updateSource != null)
 				{
 					_updateSource.Dispose();
 					_updateSource = null;
+				}
+
+				if (_lateUpdateSource != null)
+				{
+					_lateUpdateSource.Dispose();
+					_lateUpdateSource = null;
+				}
+
+				if (_fixedUpdateSource != null)
+				{
+					_fixedUpdateSource.Dispose();
+					_fixedUpdateSource = null;
+				}
+
+				if (_eofUpdateSource != null)
+				{
+					_eofUpdateSource.Dispose();
+					_eofUpdateSource = null;
+				}
+			}
+
+			#endregion
+
+			#region implementation
+
+			private IEnumerator EofEnumerator()
+			{
+				yield return _eof;
+
+				if (_eofUpdateSource != null)
+				{
+					_eofUpdateSource.OnNext(Time.deltaTime);
 				}
 			}
 
