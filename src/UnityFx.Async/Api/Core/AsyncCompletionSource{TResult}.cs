@@ -221,15 +221,10 @@ namespace UnityFx.Async
 
 			ThrowIfDisposed();
 
-			if (Status == AsyncOperationStatus.Running)
+			if (_progress != progress)
 			{
-				if (_progress != progress)
-				{
-					_progress = progress;
-					OnProgressChanged();
-				}
-
-				return true;
+				_progress = progress;
+				return TryReportProgress();
 			}
 
 			return false;

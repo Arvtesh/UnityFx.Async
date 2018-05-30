@@ -467,6 +467,24 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Reports changes in operation progress value.
+		/// </summary>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		protected internal bool TryReportProgress()
+		{
+			var status = _flags & _statusMask;
+
+			if (status == StatusRunning)
+			{
+				OnProgressChanged();
+				InvokeProgressChanged();
+				return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>
 		/// Throws exception if the operation has failed or canceled.
 		/// </summary>
 		protected internal void ThrowIfNonSuccess()
@@ -514,22 +532,20 @@ namespace UnityFx.Async
 		/// </remarks>
 		/// <seealso cref="Progress"/>
 		/// <seealso cref="OnProgressChanged"/>
+		/// <seealso cref="TryReportProgress"/>
 		protected virtual float GetProgress()
 		{
 			return 0;
 		}
 
 		/// <summary>
-		/// Called when the progress value has changed. Default implementation calls progress changed handlers.
+		/// Called when the progress value has changed. Default implementation does nothing.
 		/// </summary>
-		/// <remarks>
-		/// It is user responsibility to call this method when the operation progress value changes.
-		/// </remarks>
 		/// <seealso cref="Progress"/>
 		/// <seealso cref="GetProgress"/>
+		/// <seealso cref="TryReportProgress"/>
 		protected virtual void OnProgressChanged()
 		{
-			InvokeProgressChanged();
 		}
 
 		/// <summary>
@@ -569,7 +585,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Called when the operation is completed. Default implementation invokes completion handlers registered.
+		/// Called when the operation is completed. Default implementation does nothing.
 		/// </summary>
 		/// <seealso cref="OnStarted"/>
 		/// <seealso cref="Status"/>
@@ -579,14 +595,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetExceptions(IEnumerable{System.Exception}, bool)"/>
 		protected virtual void OnCompleted()
 		{
-			try
-			{
-				InvokeContinuations();
-			}
-			finally
-			{
-				_waitHandle?.Set();
-			}
 		}
 
 		/// <summary>
@@ -692,8 +700,7 @@ namespace UnityFx.Async
 
 				if (Interlocked.CompareExchange(ref _flags, newFlags, flags) == flags)
 				{
-					OnStatusChanged((AsyncOperationStatus)status);
-					OnCompleted();
+					NotifyCompleted((AsyncOperationStatus)status);
 					return true;
 				}
 			}
@@ -766,8 +773,7 @@ namespace UnityFx.Async
 			Interlocked.Exchange(ref _flags, oldFlags | newFlags);
 
 			// Invoke completion callbacks.
-			OnStatusChanged((AsyncOperationStatus)status);
-			OnCompleted();
+			NotifyCompleted((AsyncOperationStatus)status);
 		}
 
 		/// <summary>
@@ -885,8 +891,6 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		public void Cancel()
 		{
-			ThrowIfDisposed();
-
 			if (TrySetFlag(_flagCancellationRequested))
 			{
 				OnCancel();
@@ -992,9 +996,6 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		/// <summary>
-		/// Gets a string representing the operation state. For debugger only.
-		/// </summary>
 		private string DebuggerDisplay
 		{
 			get
@@ -1019,9 +1020,6 @@ namespace UnityFx.Async
 			}
 		}
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult"/> class. For internal use only.
-		/// </summary>
 		private AsyncResult(int flags)
 		{
 			if (flags == StatusFaulted)
@@ -1041,6 +1039,22 @@ namespace UnityFx.Async
 			else
 			{
 				_flags = flags;
+			}
+		}
+
+		private void NotifyCompleted(AsyncOperationStatus status)
+		{
+			try
+			{
+				OnProgressChanged();
+				OnStatusChanged(status);
+				OnCompleted();
+
+				InvokeContinuations();
+			}
+			finally
+			{
+				_waitHandle?.Set();
 			}
 		}
 

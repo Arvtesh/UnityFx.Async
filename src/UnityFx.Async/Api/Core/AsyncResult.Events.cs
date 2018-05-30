@@ -394,15 +394,15 @@ namespace UnityFx.Async
 
 		private void InvokeProgressChanged()
 		{
-			var continuation = _callback;
+			var callback = _callback;
 
-			if (continuation != null)
+			if (callback != null)
 			{
-				if (continuation is IEnumerable continuationList)
+				if (callback is IEnumerable callbackList)
 				{
-					lock (continuationList)
+					lock (callbackList)
 					{
-						foreach (var item in continuationList)
+						foreach (var item in callbackList)
 						{
 							InvokeProgressChanged(item);
 						}
@@ -410,7 +410,7 @@ namespace UnityFx.Async
 				}
 				else
 				{
-					InvokeProgressChanged(continuation);
+					InvokeProgressChanged(callback);
 				}
 			}
 		}
