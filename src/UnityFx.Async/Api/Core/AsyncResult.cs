@@ -113,7 +113,7 @@ namespace UnityFx.Async
 		public AsyncResult(AsyncCallback asyncCallback, object asyncState)
 		{
 			_asyncState = asyncState;
-			_continuation = asyncCallback;
+			_callback = asyncCallback;
 		}
 
 		/// <summary>
@@ -126,7 +126,7 @@ namespace UnityFx.Async
 			: this((int)options << _optionsOffset)
 		{
 			_asyncState = asyncState;
-			_continuation = asyncCallback;
+			_callback = asyncCallback;
 		}
 
 		/// <summary>
@@ -181,7 +181,7 @@ namespace UnityFx.Async
 			: this((int)status)
 		{
 			_asyncState = asyncState;
-			_continuation = asyncCallback;
+			_callback = asyncCallback;
 		}
 
 		/// <summary>
@@ -195,7 +195,7 @@ namespace UnityFx.Async
 			: this((int)status | ((int)options << _optionsOffset))
 		{
 			_asyncState = asyncState;
-			_continuation = asyncCallback;
+			_callback = asyncCallback;
 		}
 
 		/// <summary>
@@ -217,7 +217,7 @@ namespace UnityFx.Async
 				_flags = StatusFaulted | _flagCompletedSynchronously;
 			}
 
-			_continuation = _continuationCompletionSentinel;
+			_callback = _callbackCompletionSentinel;
 			_asyncState = asyncState;
 		}
 
@@ -245,7 +245,7 @@ namespace UnityFx.Async
 				_flags = StatusFaulted | _flagCompletedSynchronously;
 			}
 
-			_continuation = _continuationCompletionSentinel;
+			_callback = _callbackCompletionSentinel;
 			_asyncState = asyncState;
 		}
 
@@ -1035,7 +1035,7 @@ namespace UnityFx.Async
 
 			if (flags > StatusRunning)
 			{
-				_continuation = _continuationCompletionSentinel;
+				_callback = _callbackCompletionSentinel;
 				_flags = flags | _flagCompletedSynchronously;
 			}
 			else

@@ -14,9 +14,9 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private static readonly object _continuationCompletionSentinel = new object();
+		private static readonly object _callbackCompletionSentinel = new object();
 
-		private volatile object _continuation;
+		private volatile object _callback;
 
 		#endregion
 
@@ -62,7 +62,7 @@ namespace UnityFx.Async
 			{
 				if (value != null)
 				{
-					TryRemoveContinuationInternal(value);
+					TryRemoveCallback(value);
 				}
 			}
 		}
@@ -90,7 +90,7 @@ namespace UnityFx.Async
 			{
 				if (value != null)
 				{
-					TryRemoveContinuationInternal(value);
+					TryRemoveCallback(value);
 				}
 			}
 		}
@@ -144,7 +144,7 @@ namespace UnityFx.Async
 		{
 			if (action != null)
 			{
-				return TryRemoveContinuationInternal(action);
+				return TryRemoveCallback(action);
 			}
 
 			return false;
@@ -199,7 +199,7 @@ namespace UnityFx.Async
 		{
 			if (continuation != null)
 			{
-				return TryRemoveContinuationInternal(continuation);
+				return TryRemoveCallback(continuation);
 			}
 
 			return false;
@@ -256,7 +256,7 @@ namespace UnityFx.Async
 		{
 			if (callback != null)
 			{
-				return TryRemoveContinuationInternal(callback);
+				return TryRemoveCallback(callback);
 			}
 
 			return false;
@@ -277,7 +277,7 @@ namespace UnityFx.Async
 				continuation = new AsyncContinuation(this, syncContext, continuation);
 			}
 
-			return TryAddContinuationInternal(continuation);
+			return TryAddCallback(continuation);
 		}
 
 		private bool TryAddProgressCallbackInternal(object callback, SynchronizationContext syncContext)
@@ -287,21 +287,21 @@ namespace UnityFx.Async
 				callback = new AsyncProgress(this, syncContext, callback);
 			}
 
-			return TryAddContinuationInternal(callback);
+			return TryAddCallback(callback);
 		}
 
-		private bool TryAddContinuationInternal(object valueToAdd)
+		private bool TryAddCallback(object callbackToAdd)
 		{
 			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
-			var oldValue = _continuation;
+			var oldValue = _callback;
 
 			// Quick return if the operation is completed.
-			if (oldValue != _continuationCompletionSentinel)
+			if (oldValue != _callbackCompletionSentinel)
 			{
 				// If no continuation is stored yet, try to store it as _continuation.
 				if (oldValue == null)
 				{
-					oldValue = Interlocked.CompareExchange(ref _continuation, valueToAdd, null);
+					oldValue = Interlocked.CompareExchange(ref _callback, callbackToAdd, null);
 
 					// Quick return if exchange succeeded.
 					if (oldValue == null)
@@ -311,11 +311,11 @@ namespace UnityFx.Async
 				}
 
 				// Logic for the case where we were previously storing a single continuation.
-				if (oldValue != _continuationCompletionSentinel && !(oldValue is IList))
+				if (oldValue != _callbackCompletionSentinel && !(oldValue is IList))
 				{
 					var newList = new List<object>() { oldValue };
 
-					Interlocked.CompareExchange(ref _continuation, newList, oldValue);
+					Interlocked.CompareExchange(ref _callback, newList, oldValue);
 
 					// We might be racing against another thread converting the single into a list,
 					// or we might be racing against operation completion, so resample "list" below.
@@ -324,15 +324,15 @@ namespace UnityFx.Async
 				// If list is null, it can only mean that _continuationCompletionSentinel has been exchanged
 				// into _continuation. Thus, the task has completed and we should return false from this method,
 				// as we will not be queuing up the continuation.
-				if (_continuation is IList list)
+				if (_callback is IList list)
 				{
 					lock (list)
 					{
 						// It is possible for the operation to complete right after we snap the copy of the list.
 						// If so, then fall through and return false without queuing the continuation.
-						if (_continuation != _continuationCompletionSentinel)
+						if (_callback != _callbackCompletionSentinel)
 						{
-							list.Add(valueToAdd);
+							list.Add(callbackToAdd);
 							return true;
 						}
 					}
@@ -342,12 +342,12 @@ namespace UnityFx.Async
 			return false;
 		}
 
-		private bool TryRemoveContinuationInternal(object valueToRemove)
+		private bool TryRemoveCallback(object callbackToRemove)
 		{
 			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
-			var value = _continuation;
+			var value = _callback;
 
-			if (value != _continuationCompletionSentinel)
+			if (value != _callbackCompletionSentinel)
 			{
 				var list = value as IList;
 
@@ -355,7 +355,7 @@ namespace UnityFx.Async
 				{
 					// This is not a list. If we have a single object (the one we want to remove) we try to replace it with an empty list.
 					// Note we cannot go back to a null state, since it will mess up the TryAddContinuation logic.
-					if (Interlocked.CompareExchange(ref _continuation, new List<object>(), valueToRemove) == valueToRemove)
+					if (Interlocked.CompareExchange(ref _callback, new List<object>(), callbackToRemove) == callbackToRemove)
 					{
 						return true;
 					}
@@ -375,9 +375,9 @@ namespace UnityFx.Async
 					{
 						// There is a small chance that the operation completed since we took a local snapshot into
 						// list. In that case, just return; we don't want to be manipulating the continuation list as it is being processed.
-						if (_continuation != _continuationCompletionSentinel)
+						if (_callback != _callbackCompletionSentinel)
 						{
-							var index = list.IndexOf(valueToRemove);
+							var index = list.IndexOf(callbackToRemove);
 
 							if (index != -1)
 							{
@@ -394,7 +394,7 @@ namespace UnityFx.Async
 
 		private void InvokeProgressChanged()
 		{
-			var continuation = _continuation;
+			var continuation = _callback;
 
 			if (continuation != null)
 			{
@@ -441,7 +441,7 @@ namespace UnityFx.Async
 
 		private void InvokeContinuations()
 		{
-			var continuation = Interlocked.Exchange(ref _continuation, _continuationCompletionSentinel);
+			var continuation = Interlocked.Exchange(ref _callback, _callbackCompletionSentinel);
 
 			if (continuation != null)
 			{
