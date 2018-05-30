@@ -205,6 +205,61 @@ namespace UnityFx.Async
 			return false;
 		}
 
+		/// <inheritdoc/>
+		public void AddProgressCallback(AsyncOperationCallback action)
+		{
+			if (!TryAddProgressCallback(action))
+			{
+				InvokeProgressChanged(action, SynchronizationContext.Current);
+			}
+		}
+
+		/// <inheritdoc/>
+		public bool TryAddProgressCallback(AsyncOperationCallback action)
+		{
+			ThrowIfDisposed();
+
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			return TryAddProgressCallbackInternal(action, SynchronizationContext.Current);
+		}
+
+		/// <inheritdoc/>
+		public void AddProgressCallback(AsyncOperationCallback action, SynchronizationContext syncContext)
+		{
+			if (!TryAddProgressCallback(action, syncContext))
+			{
+				InvokeProgressChanged(action, syncContext);
+			}
+		}
+
+		/// <inheritdoc/>
+		public bool TryAddProgressCallback(AsyncOperationCallback action, SynchronizationContext syncContext)
+		{
+			ThrowIfDisposed();
+
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			return TryAddProgressCallbackInternal(action, syncContext);
+		}
+
+		/// <inheritdoc/>
+		public bool RemoveProgressCallback(AsyncOperationCallback action)
+		{
+			if (action != null)
+			{
+				return TryRemoveCallback(action);
+			}
+
+			return false;
+		}
+
 #if !NET35
 
 		/// <inheritdoc/>
@@ -282,7 +337,7 @@ namespace UnityFx.Async
 
 		private bool TryAddProgressCallbackInternal(object callback, SynchronizationContext syncContext)
 		{
-			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
+			if ((syncContext != null && syncContext.GetType() != typeof(SynchronizationContext)) || callback is AsyncOperationCallback)
 			{
 				callback = new AsyncProgress(this, syncContext, callback);
 			}

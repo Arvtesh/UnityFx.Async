@@ -27,6 +27,10 @@ namespace UnityFx.Async
 					break;
 #endif
 
+				case AsyncOperationCallback ac:
+					ac.Invoke(op);
+					break;
+
 				case ProgressChangedEventHandler ph:
 					ph.Invoke(op, new ProgressChangedEventArgs((int)(op.Progress * 100), op.AsyncState));
 					break;
