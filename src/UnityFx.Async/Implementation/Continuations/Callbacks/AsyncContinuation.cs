@@ -39,12 +39,6 @@ namespace UnityFx.Async
 		{
 			switch (continuation)
 			{
-#if !NET35
-				case IProgress<float> p:
-					p.Report(op.Progress);
-					break;
-#endif
-
 				case IAsyncContinuation c:
 					c.Invoke(op, inline);
 					break;
@@ -64,6 +58,12 @@ namespace UnityFx.Async
 				case AsyncCompletedEventHandler eh:
 					eh.Invoke(op, new AsyncCompletedEventArgs(op.Exception, op.IsCanceled, op.AsyncState));
 					break;
+
+#if !NET35
+				case IProgress<float> p:
+					p.Report(op.Progress);
+					break;
+#endif
 
 				case ProgressChangedEventHandler ph:
 					ph.Invoke(op, new ProgressChangedEventArgs((int)(op.Progress * 100), op.AsyncState));

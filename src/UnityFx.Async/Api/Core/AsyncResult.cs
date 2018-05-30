@@ -64,17 +64,8 @@ namespace UnityFx.Async
 
 		private readonly object _asyncState;
 		private Exception _exception;
-
-#if UNITYFX_NOT_THREAD_SAFE
-
-		private int _flags;
-
-#else
-
 		private EventWaitHandle _waitHandle;
 		private volatile int _flags;
-
-#endif
 
 		#endregion
 
@@ -588,12 +579,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetExceptions(IEnumerable{System.Exception}, bool)"/>
 		protected virtual void OnCompleted()
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			InvokeContinuations();
-
-#else
-
 			try
 			{
 				InvokeContinuations();
@@ -602,8 +587,6 @@ namespace UnityFx.Async
 			{
 				_waitHandle?.Set();
 			}
-
-#endif
 		}
 
 		/// <summary>
@@ -621,8 +604,6 @@ namespace UnityFx.Async
 			{
 				_flags |= _flagDisposed;
 
-#if !UNITYFX_NOT_THREAD_SAFE
-
 				if (_waitHandle != null)
 				{
 #if NET35
@@ -632,8 +613,6 @@ namespace UnityFx.Async
 #endif
 					_waitHandle = null;
 				}
-
-#endif
 			}
 		}
 
@@ -657,28 +636,6 @@ namespace UnityFx.Async
 		internal bool TrySetStatus(int newStatus)
 		{
 			Debug.Assert(newStatus < StatusRanToCompletion);
-
-#if UNITYFX_NOT_THREAD_SAFE
-
-			var flags = _flags;
-
-			if ((flags & (_flagCompleted | _flagCompletionReserved)) != 0)
-			{
-				return false;
-			}
-
-			var status = flags & _statusMask;
-
-			if (status >= newStatus)
-			{
-				return false;
-			}
-
-			_flags = (flags & ~_statusMask) | newStatus;
-			OnStatusChanged((AsyncOperationStatus)newStatus);
-			return true;
-
-#else
 
 			do
 			{
@@ -705,8 +662,6 @@ namespace UnityFx.Async
 				}
 			}
 			while (true);
-
-#endif
 		}
 
 		/// <summary>
@@ -723,22 +678,6 @@ namespace UnityFx.Async
 			{
 				status |= _flagSynchronous;
 			}
-
-#if UNITYFX_NOT_THREAD_SAFE
-
-			var flags = _flags;
-
-			if ((flags & (_flagCompletionReserved | _flagCompleted)) != 0)
-			{
-				return false;
-			}
-
-			_flags = (flags & ~_statusMask) | status;
-			OnStatusChanged((AsyncOperationStatus)status);
-			OnCompleted();
-			return true;
-
-#else
 
 			do
 			{
@@ -759,8 +698,6 @@ namespace UnityFx.Async
 				}
 			}
 			while (true);
-
-#endif
 		}
 
 		/// <summary>
@@ -768,19 +705,6 @@ namespace UnityFx.Async
 		/// </summary>
 		internal bool TryReserveCompletion()
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			var flags = _flags;
-
-			if ((flags & (_flagCompletionReserved | _flagCompleted)) != 0)
-			{
-				return false;
-			}
-
-			_flags = flags | _flagCompletionReserved;
-			return true;
-#else
-
 			do
 			{
 				var flags = _flags;
@@ -796,8 +720,6 @@ namespace UnityFx.Async
 				}
 			}
 			while (true);
-
-#endif
 		}
 
 		/// <summary>
@@ -805,19 +727,6 @@ namespace UnityFx.Async
 		/// </summary>
 		internal bool TrySetFlag(int newFlag)
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			var flags = _flags;
-
-			if ((flags & (newFlag | _flagCompletionReserved | _flagCompleted)) != 0)
-			{
-				return false;
-			}
-
-			_flags = flags | newFlag;
-			return true;
-#else
-
 			do
 			{
 				var flags = _flags;
@@ -833,8 +742,6 @@ namespace UnityFx.Async
 				}
 			}
 			while (true);
-
-#endif
 		}
 
 		/// <summary>
@@ -856,11 +763,7 @@ namespace UnityFx.Async
 			}
 
 			// Set completed status. After this line IsCompleted will return true.
-#if UNITYFX_NOT_THREAD_SAFE
-			_flags = oldFlags | newFlags;
-#else
 			Interlocked.Exchange(ref _flags, oldFlags | newFlags);
-#endif
 
 			// Invoke completion callbacks.
 			OnStatusChanged((AsyncOperationStatus)status);
@@ -999,12 +902,6 @@ namespace UnityFx.Async
 		{
 			get
 			{
-#if UNITYFX_NOT_THREAD_SAFE
-
-				throw new NotSupportedException();
-
-#else
-
 				ThrowIfDisposed();
 
 				if (_waitHandle == null)
@@ -1030,8 +927,6 @@ namespace UnityFx.Async
 				}
 
 				return _waitHandle;
-
-#endif
 			}
 		}
 
