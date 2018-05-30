@@ -805,6 +805,15 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Unconditionally reports the operatino progress.
+		/// </summary>
+		internal void ReportProgress()
+		{
+			OnProgressChanged();
+			InvokeProgressChanged();
+		}
+
+		/// <summary>
 		/// Throws if the specified operation is faulted/canceled.
 		/// </summary>
 		internal static void ThrowIfNonSuccess(IAsyncOperation op)
