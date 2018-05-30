@@ -26,7 +26,7 @@ namespace UnityFx.Async.Promises
 			_successCallback = successCallback;
 			_errorCallback = errorCallback;
 
-			op.AddContinuation(this);
+			op.AddCompletionCallback(this);
 		}
 
 		protected virtual IAsyncOperation InvokeSuccessCallback(IAsyncOperation op, bool completedSynchronously, object continuation)
@@ -47,22 +47,22 @@ namespace UnityFx.Async.Promises
 
 				case Func<IAsyncOperation<U>> f3:
 					result = f3();
-					result.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+					result.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				case Func<IAsyncOperation> f1:
 					result = f1();
-					result.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+					result.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				case Func<T, IAsyncOperation<U>> f4:
 					result = f4((op as IAsyncOperation<T>).Result);
-					result.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+					result.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				case Func<T, IAsyncOperation> f2:
 					result = f2((op as IAsyncOperation<T>).Result);
-					result.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+					result.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				default:

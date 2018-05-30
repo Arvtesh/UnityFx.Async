@@ -30,11 +30,11 @@ namespace UnityFx.Async
 
 			if ((options & AsyncContinuationOptions.ExecuteSynchronously) != 0)
 			{
-				op.AddContinuation(this, null);
+				op.AddCompletionCallback(this, null);
 			}
 			else
 			{
-				op.AddContinuation(this);
+				op.AddCompletionCallback(this);
 			}
 		}
 

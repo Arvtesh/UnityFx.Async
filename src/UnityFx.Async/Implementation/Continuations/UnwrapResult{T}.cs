@@ -27,7 +27,7 @@ namespace UnityFx.Async
 		public UnwrapResult(IAsyncOperation outerOp)
 			: base(AsyncOperationStatus.Running)
 		{
-			outerOp.AddContinuation(this);
+			outerOp.AddCompletionCallback(this);
 			_op = outerOp;
 		}
 
@@ -119,7 +119,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				innerOp.AddContinuation(this);
+				innerOp.AddCompletionCallback(this);
 				_op = innerOp;
 			}
 		}

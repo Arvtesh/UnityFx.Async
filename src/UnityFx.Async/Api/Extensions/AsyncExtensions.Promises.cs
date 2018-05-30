@@ -485,7 +485,7 @@ namespace UnityFx.Async.Promises
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			op.AddContinuation(new DoneResult<VoidResult>(successCallback, null));
+			op.AddCompletionCallback(new DoneResult<VoidResult>(successCallback, null));
 		}
 
 		/// <summary>
@@ -508,7 +508,7 @@ namespace UnityFx.Async.Promises
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			op.AddContinuation(new DoneResult<VoidResult>(successCallback, errorCallback));
+			op.AddCompletionCallback(new DoneResult<VoidResult>(successCallback, errorCallback));
 		}
 
 		/// <summary>
@@ -525,7 +525,7 @@ namespace UnityFx.Async.Promises
 				throw new ArgumentNullException(nameof(successCallback));
 			}
 
-			op.AddContinuation(new DoneResult<TResult>(successCallback, null));
+			op.AddCompletionCallback(new DoneResult<TResult>(successCallback, null));
 		}
 
 		/// <summary>
@@ -548,7 +548,7 @@ namespace UnityFx.Async.Promises
 				throw new ArgumentNullException(nameof(errorCallback));
 			}
 
-			op.AddContinuation(new DoneResult<TResult>(successCallback, errorCallback));
+			op.AddCompletionCallback(new DoneResult<TResult>(successCallback, errorCallback));
 		}
 
 		#endregion

@@ -279,7 +279,7 @@ namespace UnityFx.Async
 			}
 
 			var result = new AsyncObservableSubscription<TResult>(this, observer);
-			AddContinuation(result, null);
+			AddCompletionCallback(result, null);
 			return result;
 		}
 

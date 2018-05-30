@@ -48,7 +48,7 @@ namespace UnityFx.Async.Promises
 
 			if (result != null)
 			{
-				result.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+				result.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 			}
 			else
 			{

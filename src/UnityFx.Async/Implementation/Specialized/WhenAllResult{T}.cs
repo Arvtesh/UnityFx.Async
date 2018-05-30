@@ -26,7 +26,7 @@ namespace UnityFx.Async
 
 			foreach (var op in ops)
 			{
-				op.AddContinuation(this, null);
+				op.AddCompletionCallback(this, null);
 			}
 		}
 

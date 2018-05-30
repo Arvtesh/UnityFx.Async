@@ -23,7 +23,7 @@ namespace UnityFx.Async.Promises
 			_op = op;
 			_continuation = action;
 
-			op.AddContinuation(this);
+			op.AddCompletionCallback(this);
 		}
 
 		#endregion
