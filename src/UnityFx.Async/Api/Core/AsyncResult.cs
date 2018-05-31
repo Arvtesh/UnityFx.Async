@@ -477,7 +477,7 @@ namespace UnityFx.Async
 			if (status == StatusRunning)
 			{
 				OnProgressChanged();
-				InvokeProgressChanged();
+				InvokeProgressCallbacks();
 				return true;
 			}
 
@@ -810,7 +810,7 @@ namespace UnityFx.Async
 		internal void ReportProgress()
 		{
 			OnProgressChanged();
-			InvokeProgressChanged();
+			InvokeProgressCallbacks();
 		}
 
 		/// <summary>

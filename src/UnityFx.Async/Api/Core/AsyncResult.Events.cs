@@ -55,7 +55,7 @@ namespace UnityFx.Async
 
 				if (!TryAddCallback(value, syncContext, false))
 				{
-					InvokeProgressChanged(value, syncContext);
+					AsyncCallbackCollection.InvokeProgressCallback(this, value, syncContext);
 				}
 			}
 			remove
@@ -210,7 +210,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(action))
 			{
-				InvokeProgressChanged(action, SynchronizationContext.Current);
+				AsyncCallbackCollection.InvokeProgressCallback(this, action, SynchronizationContext.Current);
 			}
 		}
 
@@ -232,7 +232,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(action, syncContext))
 			{
-				InvokeProgressChanged(action, syncContext);
+				AsyncCallbackCollection.InvokeProgressCallback(this, action, syncContext);
 			}
 		}
 
@@ -267,7 +267,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(callback))
 			{
-				InvokeProgressChanged(callback, SynchronizationContext.Current);
+				AsyncCallbackCollection.InvokeProgressCallback(this, callback, SynchronizationContext.Current);
 			}
 		}
 
@@ -289,7 +289,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(callback, syncContext))
 			{
-				InvokeProgressChanged(callback, syncContext);
+				AsyncCallbackCollection.InvokeProgressCallback(this, callback, syncContext);
 			}
 		}
 
@@ -442,7 +442,7 @@ namespace UnityFx.Async
 			return false;
 		}
 
-		private void InvokeProgressChanged()
+		private void InvokeProgressCallbacks()
 		{
 			var value = _callback;
 
@@ -452,25 +452,13 @@ namespace UnityFx.Async
 				{
 					lock (callbackList)
 					{
-						callbackList.InvokeProgressChanged();
+						callbackList.InvokeProgressCallbacks();
 					}
 				}
 				else
 				{
-					AsyncProgress.InvokeInline(this, value);
+					AsyncCallbackCollection.InvokeProgressCallback(this, value);
 				}
-			}
-		}
-
-		private void InvokeProgressChanged(object callback, SynchronizationContext syncContext)
-		{
-			if (syncContext == null || syncContext == SynchronizationContext.Current)
-			{
-				AsyncProgress.InvokeInline(this, callback);
-			}
-			else
-			{
-				syncContext.Post(args => AsyncProgress.InvokeInline(this, args), callback);
 			}
 		}
 
@@ -557,7 +545,7 @@ namespace UnityFx.Async
 
 		private void InvokeContinuationInline(object continuation, bool inline)
 		{
-			AsyncContinuation.InvokeInline(this, continuation, inline);
+			AsyncCallbackCollection.InvokeCompletionCallback(this, continuation, inline);
 		}
 
 		#endregion

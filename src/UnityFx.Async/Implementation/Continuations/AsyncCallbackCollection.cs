@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 
@@ -162,14 +163,14 @@ namespace UnityFx.Async
 		{
 			if (_progressCallback1.Callback != null)
 			{
-				Invoke(_progressCallback1);
+				InvokeProgressCallback(_progressCallback1);
 			}
 
 			if (_progressCallbacks != null)
 			{
 				foreach (var item in _progressCallbacks)
 				{
-					Invoke(item);
+					InvokeProgressCallback(item);
 				}
 			}
 
@@ -236,19 +237,77 @@ namespace UnityFx.Async
 			}
 		}
 
-		public void InvokeProgressChanged()
+		public void InvokeProgressCallbacks()
 		{
 			if (_progressCallback1.Callback != null)
 			{
-				InvokeProgressChanged(_progressCallback1);
+				InvokeProgressCallback(_progressCallback1);
 			}
 
 			if (_progressCallbacks != null)
 			{
 				foreach (var item in _progressCallbacks)
 				{
-					InvokeProgressChanged(item);
+					InvokeProgressCallback(item);
 				}
+			}
+		}
+
+		public static void InvokeCompletionCallback(IAsyncOperation op, object continuation, bool inline)
+		{
+			switch (continuation)
+			{
+				case IAsyncContinuation c:
+					c.Invoke(op, inline);
+					break;
+
+				case AsyncOperationCallback aoc:
+					aoc.Invoke(op);
+					break;
+
+				case Action a:
+					a.Invoke();
+					break;
+
+				case AsyncCallback ac:
+					ac.Invoke(op);
+					break;
+
+				case AsyncCompletedEventHandler eh:
+					eh.Invoke(op, new AsyncCompletedEventArgs(op.Exception, op.IsCanceled, op.AsyncState));
+					break;
+			}
+		}
+
+		public static void InvokeProgressCallback(IAsyncOperation op, object callback)
+		{
+			switch (callback)
+			{
+#if !NET35
+				case IProgress<float> p:
+					p.Report(op.Progress);
+					break;
+#endif
+
+				case AsyncOperationCallback ac:
+					ac.Invoke(op);
+					break;
+
+				case ProgressChangedEventHandler ph:
+					ph.Invoke(op, new ProgressChangedEventArgs((int)(op.Progress * 100), op.AsyncState));
+					break;
+			}
+		}
+
+		public static void InvokeProgressCallback(IAsyncOperation op, object callback, SynchronizationContext syncContext)
+		{
+			if (syncContext == null || syncContext == SynchronizationContext.Current)
+			{
+				InvokeProgressCallback(op, callback);
+			}
+			else
+			{
+				syncContext.Post(args => InvokeProgressCallback(op, args), callback);
 			}
 		}
 
@@ -293,7 +352,7 @@ namespace UnityFx.Async
 			}
 		}
 
-		private void InvokeProgressChanged(CallbackData callbackData)
+		private void InvokeProgressCallback(CallbackData callbackData)
 		{
 			var syncContext = callbackData.SyncContext;
 
@@ -310,13 +369,13 @@ namespace UnityFx.Async
 		private void InvokeInline(object callback)
 		{
 			Debug.Assert(callback != null);
-			AsyncContinuation.InvokeInline(_op, callback, false);
+			InvokeCompletionCallback(_op, callback, false);
 		}
 
 		private void InvokeProgressChangedInline(object callback)
 		{
 			Debug.Assert(callback != null);
-			AsyncProgress.InvokeInline(_op, callback);
+			InvokeProgressCallback(_op, callback);
 		}
 
 		#endregion
