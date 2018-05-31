@@ -83,7 +83,7 @@ namespace UnityFx.Async
 
 				if (!TryAddContinuationInternal(value, syncContext))
 				{
-					InvokeContinuation(value, syncContext);
+					InvokeCompletionCallback(value, syncContext);
 				}
 			}
 			remove
@@ -100,7 +100,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddCompletionCallback(action))
 			{
-				InvokeContinuation(action, SynchronizationContext.Current);
+				InvokeCompletionCallback(action, SynchronizationContext.Current);
 			}
 		}
 
@@ -122,7 +122,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddCompletionCallback(action, syncContext))
 			{
-				InvokeContinuation(action, syncContext);
+				InvokeCompletionCallback(action, syncContext);
 			}
 		}
 
@@ -155,7 +155,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddCompletionCallback(continuation))
 			{
-				InvokeContinuation(continuation, SynchronizationContext.Current);
+				InvokeCompletionCallback(continuation, SynchronizationContext.Current);
 			}
 		}
 
@@ -177,7 +177,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddCompletionCallback(continuation, syncContext))
 			{
-				InvokeContinuation(continuation, syncContext);
+				InvokeCompletionCallback(continuation, syncContext);
 			}
 		}
 
@@ -325,27 +325,15 @@ namespace UnityFx.Async
 
 		private bool TryAddContinuationInternal(object continuation, SynchronizationContext syncContext)
 		{
-			var runContinuationsAsynchronously = (_flags & _flagRunContinuationsAsynchronously) != 0;
-
-			if ((syncContext != null && syncContext.GetType() != typeof(SynchronizationContext)) || runContinuationsAsynchronously)
-			{
-				continuation = new AsyncContinuation(this, syncContext, continuation);
-			}
-
-			return TryAddCallback(continuation);
+			return TryAddCallback(continuation, syncContext);
 		}
 
 		private bool TryAddProgressCallbackInternal(object callback, SynchronizationContext syncContext)
 		{
-			if ((syncContext != null && syncContext.GetType() != typeof(SynchronizationContext)) || callback is AsyncOperationCallback)
-			{
-				callback = new AsyncProgress(this, syncContext, callback);
-			}
-
-			return TryAddCallback(callback);
+			return TryAddCallback(callback, syncContext);
 		}
 
-		private bool TryAddCallback(object callbackToAdd)
+		private bool TryAddCallback(object callbackToAdd, SynchronizationContext syncContext)
 		{
 			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
 			var oldValue = _callback;
@@ -353,10 +341,18 @@ namespace UnityFx.Async
 			// Quick return if the operation is completed.
 			if (oldValue != _callbackCompletionSentinel)
 			{
-				// If no continuation is stored yet, try to store it as _callback.
+				// If no callback is stored yet, try to store it as _callback.
 				if (oldValue == null)
 				{
-					oldValue = Interlocked.CompareExchange(ref _callback, callbackToAdd, null);
+					if (syncContext == null)
+					{
+						oldValue = Interlocked.CompareExchange(ref _callback, callbackToAdd, null);
+					}
+					else
+					{
+						var newList = new AsyncCallbackCollection(this, callbackToAdd, syncContext);
+						oldValue = Interlocked.CompareExchange(ref _callback, newList, null);
+					}
 
 					// Quick return if exchange succeeded.
 					if (oldValue == null)
@@ -366,20 +362,19 @@ namespace UnityFx.Async
 				}
 
 				// Logic for the case where we were previously storing a single callback.
-				if (oldValue != _callbackCompletionSentinel && !(oldValue is IList))
+				if (oldValue != _callbackCompletionSentinel && !(oldValue is AsyncCallbackCollection))
 				{
-					var newList = new List<object>() { oldValue };
-
+					var newList = new AsyncCallbackCollection(this, oldValue, null);
 					Interlocked.CompareExchange(ref _callback, newList, oldValue);
 
 					// We might be racing against another thread converting the single into a list,
 					// or we might be racing against operation completion, so resample "list" below.
 				}
 
-				// If list is null, it can only mean that _continuationCompletionSentinel has been exchanged
-				// into _continuation. Thus, the task has completed and we should return false from this method,
+				// If list is null, it can only mean that _callbackCompletionSentinel has been exchanged
+				// into _callback. Thus, the task has completed and we should return false from this method,
 				// as we will not be queuing up the callback.
-				if (_callback is IList list)
+				if (_callback is AsyncCallbackCollection list)
 				{
 					lock (list)
 					{
@@ -387,7 +382,7 @@ namespace UnityFx.Async
 						// If so, then fall through and return false without queuing the callback.
 						if (_callback != _callbackCompletionSentinel)
 						{
-							list.Add(callbackToAdd);
+							list.Add(callbackToAdd, syncContext);
 							return true;
 						}
 					}
@@ -404,13 +399,13 @@ namespace UnityFx.Async
 
 			if (value != _callbackCompletionSentinel)
 			{
-				var list = value as IList;
+				var list = value as AsyncCallbackCollection;
 
 				if (list == null)
 				{
 					// This is not a list. If we have a single object (the one we want to remove) we try to replace it with an empty list.
-					// Note we cannot go back to a null state, since it will mess up the TryAddContinuation logic.
-					if (Interlocked.CompareExchange(ref _callback, new List<object>(), callbackToRemove) == callbackToRemove)
+					// Note we cannot go back to a null state, since it will mess up the TryAddCallback() logic.
+					if (Interlocked.CompareExchange(ref _callback, new AsyncCallbackCollection(this), callbackToRemove) == callbackToRemove)
 					{
 						return true;
 					}
@@ -419,7 +414,7 @@ namespace UnityFx.Async
 						// If we fail it means that either TryAddContinuation won the race condition and _callback is now a List
 						// that contains the element we want to remove. Or it set the _callbackCompletionSentinel.
 						// So we should try to get a list one more time.
-						list = value as IList;
+						list = _callback as AsyncCallbackCollection;
 					}
 				}
 
@@ -429,16 +424,10 @@ namespace UnityFx.Async
 					lock (list)
 					{
 						// There is a small chance that the operation completed since we took a local snapshot into
-						// list. In that case, just return; we don't want to be manipulating the continuation list as it is being processed.
+						// list. In that case, just return; we don't want to be manipulating the callback list as it is being processed.
 						if (_callback != _callbackCompletionSentinel)
 						{
-							var index = list.IndexOf(callbackToRemove);
-
-							if (index != -1)
-							{
-								list.RemoveAt(index);
-								return true;
-							}
+							return list.Remove(callbackToRemove);
 						}
 					}
 				}
@@ -453,32 +442,17 @@ namespace UnityFx.Async
 
 			if (value != null)
 			{
-				if (value is IEnumerable callbacks)
+				if (value is AsyncCallbackCollection callbackList)
 				{
-					lock (callbacks)
+					lock (callbackList)
 					{
-						foreach (var item in callbacks)
-						{
-							InvokeProgressChanged(item);
-						}
+						callbackList.InvokeProgressChanged();
 					}
 				}
 				else
 				{
-					InvokeProgressChanged(value);
+					AsyncProgress.InvokeInline(this, value);
 				}
-			}
-		}
-
-		private void InvokeProgressChanged(object callback)
-		{
-			if (callback is AsyncProgress p)
-			{
-				p.Invoke();
-			}
-			else
-			{
-				AsyncProgress.InvokeInline(this, callback);
 			}
 		}
 
@@ -494,63 +468,64 @@ namespace UnityFx.Async
 			}
 		}
 
-		private void InvokeContinuations()
+		private void InvokeCallbacks()
 		{
-			var continuation = Interlocked.Exchange(ref _callback, _callbackCompletionSentinel);
+			var value = Interlocked.Exchange(ref _callback, _callbackCompletionSentinel);
 
-			if (continuation != null)
+			if (value != null)
 			{
-				if (continuation is IEnumerable continuationList)
+				if (value is AsyncCallbackCollection callbackList)
 				{
-					lock (continuationList)
+					lock (callbackList)
 					{
-						foreach (var item in continuationList)
-						{
-							InvokeContinuation(item);
-						}
+						callbackList.Invoke();
 					}
 				}
 				else
 				{
-					InvokeContinuation(continuation);
+					InvokeCallback(value);
 				}
 			}
 		}
 
-		private void InvokeContinuation(object continuation)
+		private void InvokeCallback(object value)
 		{
-			var runContinuationsAsynchronously = (_flags & _flagRunContinuationsAsynchronously) != 0;
-
-			if (runContinuationsAsynchronously)
+			if ((_flags & _flagRunContinuationsAsynchronously) != 0)
 			{
-				if (continuation is AsyncInvokable c)
+				if (value is AsyncCallbackCollection callbackList)
 				{
 					// NOTE: This is more effective than InvokeContinuationAsync().
-					c.InvokeAsync();
+					lock (callbackList)
+					{
+						callbackList.InvokeAsync();
+					}
 				}
 				else
 				{
-					InvokeContinuationAsync(continuation, SynchronizationContext.Current, false);
+					InvokeCallbackAsync(value, SynchronizationContext.Current, false);
 				}
 			}
 			else
 			{
-				if (continuation is AsyncInvokable c)
+				if (value is AsyncCallbackCollection callbackList)
 				{
-					c.Invoke();
+					lock (callbackList)
+					{
+						callbackList.Invoke();
+					}
 				}
 				else
 				{
-					InvokeContinuationInline(continuation, false);
+					InvokeContinuationInline(value, false);
 				}
 			}
 		}
 
-		private void InvokeContinuation(object continuation, SynchronizationContext syncContext)
+		private void InvokeCompletionCallback(object continuation, SynchronizationContext syncContext)
 		{
 			if ((_flags & _flagRunContinuationsAsynchronously) != 0)
 			{
-				InvokeContinuationAsync(continuation, syncContext, true);
+				InvokeCallbackAsync(continuation, syncContext, true);
 			}
 			else if (syncContext == null || syncContext == SynchronizationContext.Current)
 			{
@@ -562,7 +537,7 @@ namespace UnityFx.Async
 			}
 		}
 
-		private void InvokeContinuationAsync(object continuation, SynchronizationContext syncContext, bool inline)
+		private void InvokeCallbackAsync(object continuation, SynchronizationContext syncContext, bool inline)
 		{
 			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
 			{

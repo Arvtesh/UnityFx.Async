@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 
@@ -27,12 +26,12 @@ namespace UnityFx.Async
 
 		private readonly IAsyncOperation _op;
 
-		private List<CallbackData> _callbacks;
-
 		private CallbackData _callback1;
 		private CallbackData _callback2;
 		private CallbackData _callback3;
 		private CallbackData _callback4;
+
+		private List<CallbackData> _callbacks;
 
 		#endregion
 
@@ -51,187 +50,174 @@ namespace UnityFx.Async
 
 		public void Add(object callback, SynchronizationContext syncContext)
 		{
-			lock (this)
+			var newCallback = new CallbackData(callback, syncContext);
+
+			if (_callback1.Callback == null)
 			{
-				var newCallback = new CallbackData(callback, syncContext);
+				_callback1 = newCallback;
+				return;
+			}
 
-				if (_callback1.Callback == null)
-				{
-					_callback1 = newCallback;
-					return;
-				}
+			if (_callback2.Callback == null)
+			{
+				_callback2 = newCallback;
+				return;
+			}
 
-				if (_callback2.Callback == null)
-				{
-					_callback2 = newCallback;
-					return;
-				}
+			if (_callback3.Callback == null)
+			{
+				_callback3 = newCallback;
+				return;
+			}
 
-				if (_callback3.Callback == null)
-				{
-					_callback3 = newCallback;
-					return;
-				}
+			if (_callback4.Callback == null)
+			{
+				_callback4 = newCallback;
+				return;
+			}
 
-				if (_callback4.Callback == null)
-				{
-					_callback4 = newCallback;
-					return;
-				}
-
-				if (_callbacks == null)
-				{
-					_callbacks = new List<CallbackData>() { newCallback };
-				}
-				else
-				{
-					_callbacks.Add(newCallback);
-				}
+			if (_callbacks == null)
+			{
+				_callbacks = new List<CallbackData>() { newCallback };
+			}
+			else
+			{
+				_callbacks.Add(newCallback);
 			}
 		}
 
-		public void Remove(object callback)
+		public bool Remove(object callback)
 		{
-			lock (this)
+			if (_callback1.Callback == callback)
 			{
-				if (_callback1.Callback == callback)
-				{
-					_callback1 = default(CallbackData);
-					return;
-				}
+				_callback1 = default(CallbackData);
+				return true;
+			}
 
-				if (_callback2.Callback == callback)
-				{
-					_callback2 = default(CallbackData);
-					return;
-				}
+			if (_callback2.Callback == callback)
+			{
+				_callback2 = default(CallbackData);
+				return true;
+			}
 
-				if (_callback3.Callback == callback)
-				{
-					_callback3 = default(CallbackData);
-					return;
-				}
+			if (_callback3.Callback == callback)
+			{
+				_callback3 = default(CallbackData);
+				return true;
+			}
 
-				if (_callback4.Callback == callback)
-				{
-					_callback4 = default(CallbackData);
-					return;
-				}
+			if (_callback4.Callback == callback)
+			{
+				_callback4 = default(CallbackData);
+				return true;
+			}
 
-				if (_callbacks != null)
-				{
-					var count = _callbacks.Count;
+			if (_callbacks != null)
+			{
+				var count = _callbacks.Count;
 
-					for (var i = 0; i < count; i++)
+				for (var i = 0; i < count; i++)
+				{
+					if (_callbacks[i].Callback == callback)
 					{
-						if (_callbacks[i].Callback == callback)
-						{
-							_callbacks.RemoveAt(i);
-							return;
-						}
+						_callbacks.RemoveAt(i);
+						return true;
 					}
 				}
 			}
+
+			return false;
 		}
 
 		public void Invoke()
 		{
-			lock (this)
+			if (_callback1.Callback != null)
 			{
-				if (_callback1.Callback != null)
-				{
-					Invoke(_callback1);
-				}
+				Invoke(_callback1);
+			}
 
-				if (_callback2.Callback != null)
-				{
-					Invoke(_callback2);
-				}
+			if (_callback2.Callback != null)
+			{
+				Invoke(_callback2);
+			}
 
-				if (_callback3.Callback != null)
-				{
-					Invoke(_callback3);
-				}
+			if (_callback3.Callback != null)
+			{
+				Invoke(_callback3);
+			}
 
-				if (_callback4.Callback != null)
-				{
-					Invoke(_callback4);
-				}
+			if (_callback4.Callback != null)
+			{
+				Invoke(_callback4);
+			}
 
-				if (_callbacks != null)
+			if (_callbacks != null)
+			{
+				foreach (var item in _callbacks)
 				{
-					foreach (var item in _callbacks)
-					{
-						Invoke(item);
-					}
+					Invoke(item);
 				}
 			}
 		}
 
 		public void InvokeAsync()
 		{
-			lock (this)
+			if (_callback1.Callback != null)
 			{
-				if (_callback1.Callback != null)
-				{
-					InvokeAsync(_callback1);
-				}
+				InvokeAsync(_callback1);
+			}
 
-				if (_callback2.Callback != null)
-				{
-					InvokeAsync(_callback2);
-				}
+			if (_callback2.Callback != null)
+			{
+				InvokeAsync(_callback2);
+			}
 
-				if (_callback3.Callback != null)
-				{
-					InvokeAsync(_callback3);
-				}
+			if (_callback3.Callback != null)
+			{
+				InvokeAsync(_callback3);
+			}
 
-				if (_callback4.Callback != null)
-				{
-					InvokeAsync(_callback4);
-				}
+			if (_callback4.Callback != null)
+			{
+				InvokeAsync(_callback4);
+			}
 
-				if (_callbacks != null)
+			if (_callbacks != null)
+			{
+				foreach (var item in _callbacks)
 				{
-					foreach (var item in _callbacks)
-					{
-						InvokeAsync(item);
-					}
+					InvokeAsync(item);
 				}
 			}
 		}
 
 		public void InvokeProgressChanged()
 		{
-			lock (this)
+			if (_callback1.Callback != null)
 			{
-				if (_callback1.Callback != null)
-				{
-					InvokeProgressChanged(_callback1);
-				}
+				InvokeProgressChanged(_callback1);
+			}
 
-				if (_callback2.Callback != null)
-				{
-					InvokeProgressChanged(_callback2);
-				}
+			if (_callback2.Callback != null)
+			{
+				InvokeProgressChanged(_callback2);
+			}
 
-				if (_callback3.Callback != null)
-				{
-					InvokeProgressChanged(_callback3);
-				}
+			if (_callback3.Callback != null)
+			{
+				InvokeProgressChanged(_callback3);
+			}
 
-				if (_callback4.Callback != null)
-				{
-					InvokeProgressChanged(_callback4);
-				}
+			if (_callback4.Callback != null)
+			{
+				InvokeProgressChanged(_callback4);
+			}
 
-				if (_callbacks != null)
+			if (_callbacks != null)
+			{
+				foreach (var item in _callbacks)
 				{
-					foreach (var item in _callbacks)
-					{
-						InvokeProgressChanged(item);
-					}
+					InvokeProgressChanged(item);
 				}
 			}
 		}

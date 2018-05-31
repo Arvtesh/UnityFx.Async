@@ -1059,7 +1059,7 @@ namespace UnityFx.Async
 				OnStatusChanged(status);
 				OnCompleted();
 
-				InvokeContinuations();
+				InvokeCallbacks();
 			}
 			finally
 			{

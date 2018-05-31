@@ -64,7 +64,7 @@ namespace UnityFx.Async
 
 			void CompletionCallback(IAsyncOperation o)
 			{
-				++counter;
+				Interlocked.Increment(ref counter);
 			}
 
 			void TestMethod()
