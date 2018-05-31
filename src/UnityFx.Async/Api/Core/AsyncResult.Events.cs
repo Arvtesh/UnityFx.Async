@@ -468,49 +468,22 @@ namespace UnityFx.Async
 
 			if (value != null)
 			{
-				if (value is AsyncCallbackCollection callbackList)
-				{
-					lock (callbackList)
-					{
-						callbackList.Invoke();
-					}
-				}
-				else
-				{
-					InvokeCallback(value);
-				}
-			}
-		}
+				var invokeAsync = (_flags & _flagRunContinuationsAsynchronously) != 0;
 
-		private void InvokeCallback(object value)
-		{
-			if ((_flags & _flagRunContinuationsAsynchronously) != 0)
-			{
-				if (value is AsyncCallbackCollection callbackList)
-				{
-					// NOTE: This is more effective than InvokeContinuationAsync().
-					lock (callbackList)
-					{
-						callbackList.InvokeAsync();
-					}
-				}
-				else
-				{
-					InvokeCallbackAsync(value, SynchronizationContext.Current, false);
-				}
-			}
-			else
-			{
 				if (value is AsyncCallbackCollection callbackList)
 				{
 					lock (callbackList)
 					{
-						callbackList.Invoke();
+						callbackList.Invoke(invokeAsync);
 					}
+				}
+				else if (invokeAsync)
+				{
+					AsyncCallbackCollection.InvokeCompletionCallbackAsync(this, value, SynchronizationContext.Current, false);
 				}
 				else
 				{
-					InvokeContinuationInline(value, false);
+					AsyncCallbackCollection.InvokeCompletionCallback(this, value, false);
 				}
 			}
 		}
@@ -519,33 +492,16 @@ namespace UnityFx.Async
 		{
 			if ((_flags & _flagRunContinuationsAsynchronously) != 0)
 			{
-				InvokeCallbackAsync(continuation, syncContext, true);
+				AsyncCallbackCollection.InvokeCompletionCallbackAsync(this, continuation, syncContext, true);
 			}
 			else if (syncContext == null || syncContext == SynchronizationContext.Current)
 			{
-				InvokeContinuationInline(continuation, true);
+				AsyncCallbackCollection.InvokeCompletionCallback(this, continuation, true);
 			}
 			else
 			{
-				syncContext.Post(args => InvokeContinuationInline(args, true), continuation);
+				syncContext.Post(args => AsyncCallbackCollection.InvokeCompletionCallback(this, args, true), continuation);
 			}
-		}
-
-		private void InvokeCallbackAsync(object continuation, SynchronizationContext syncContext, bool inline)
-		{
-			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
-			{
-				syncContext.Post(args => InvokeContinuationInline(args, inline), continuation);
-			}
-			else
-			{
-				ThreadPool.QueueUserWorkItem(args => InvokeContinuationInline(args, inline), continuation);
-			}
-		}
-
-		private void InvokeContinuationInline(object continuation, bool inline)
-		{
-			AsyncCallbackCollection.InvokeCompletionCallback(this, continuation, inline);
 		}
 
 		#endregion
