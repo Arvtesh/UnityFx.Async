@@ -353,7 +353,7 @@ namespace UnityFx.Async
 			// Quick return if the operation is completed.
 			if (oldValue != _callbackCompletionSentinel)
 			{
-				// If no continuation is stored yet, try to store it as _continuation.
+				// If no continuation is stored yet, try to store it as _callback.
 				if (oldValue == null)
 				{
 					oldValue = Interlocked.CompareExchange(ref _callback, callbackToAdd, null);
@@ -365,7 +365,7 @@ namespace UnityFx.Async
 					}
 				}
 
-				// Logic for the case where we were previously storing a single continuation.
+				// Logic for the case where we were previously storing a single callback.
 				if (oldValue != _callbackCompletionSentinel && !(oldValue is IList))
 				{
 					var newList = new List<object>() { oldValue };
@@ -378,13 +378,13 @@ namespace UnityFx.Async
 
 				// If list is null, it can only mean that _continuationCompletionSentinel has been exchanged
 				// into _continuation. Thus, the task has completed and we should return false from this method,
-				// as we will not be queuing up the continuation.
+				// as we will not be queuing up the callback.
 				if (_callback is IList list)
 				{
 					lock (list)
 					{
 						// It is possible for the operation to complete right after we snap the copy of the list.
-						// If so, then fall through and return false without queuing the continuation.
+						// If so, then fall through and return false without queuing the callback.
 						if (_callback != _callbackCompletionSentinel)
 						{
 							list.Add(callbackToAdd);
@@ -416,14 +416,14 @@ namespace UnityFx.Async
 					}
 					else
 					{
-						// If we fail it means that either TryAddContinuation won the race condition and _continuation is now a List
-						// that contains the element we want to remove. Or it set the _continuationCompletionSentinel.
+						// If we fail it means that either TryAddContinuation won the race condition and _callback is now a List
+						// that contains the element we want to remove. Or it set the _callbackCompletionSentinel.
 						// So we should try to get a list one more time.
 						list = value as IList;
 					}
 				}
 
-				// If list is null it means _continuationCompletionSentinel has been set already and there is nothing else to do.
+				// If list is null it means _callbackCompletionSentinel has been set already and there is nothing else to do.
 				if (list != null)
 				{
 					lock (list)
@@ -449,15 +449,15 @@ namespace UnityFx.Async
 
 		private void InvokeProgressChanged()
 		{
-			var callback = _callback;
+			var value = _callback;
 
-			if (callback != null)
+			if (value != null)
 			{
-				if (callback is IEnumerable callbackList)
+				if (value is IEnumerable callbacks)
 				{
-					lock (callbackList)
+					lock (callbacks)
 					{
-						foreach (var item in callbackList)
+						foreach (var item in callbacks)
 						{
 							InvokeProgressChanged(item);
 						}
@@ -465,7 +465,7 @@ namespace UnityFx.Async
 				}
 				else
 				{
-					InvokeProgressChanged(callback);
+					InvokeProgressChanged(value);
 				}
 			}
 		}
