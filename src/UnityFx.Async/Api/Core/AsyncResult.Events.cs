@@ -29,7 +29,7 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 
-			if (!TryAddContinuationInternal(continuation, syncContext))
+			if (!TryAddCallback(continuation, syncContext, true))
 			{
 				continuation();
 			}
@@ -53,7 +53,7 @@ namespace UnityFx.Async
 
 				var syncContext = SynchronizationContext.Current;
 
-				if (!TryAddProgressCallbackInternal(value, syncContext))
+				if (!TryAddCallback(value, syncContext, false))
 				{
 					InvokeProgressChanged(value, syncContext);
 				}
@@ -81,7 +81,7 @@ namespace UnityFx.Async
 
 				var syncContext = SynchronizationContext.Current;
 
-				if (!TryAddContinuationInternal(value, syncContext))
+				if (!TryAddCallback(value, syncContext, true))
 				{
 					InvokeCompletionCallback(value, syncContext);
 				}
@@ -114,7 +114,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return TryAddContinuationInternal(action, SynchronizationContext.Current);
+			return TryAddCallback(action, SynchronizationContext.Current, true);
 		}
 
 		/// <inheritdoc/>
@@ -136,7 +136,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return TryAddContinuationInternal(action, syncContext);
+			return TryAddCallback(action, syncContext, true);
 		}
 
 		/// <inheritdoc/>
@@ -169,7 +169,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(continuation));
 			}
 
-			return TryAddContinuationInternal(continuation, SynchronizationContext.Current);
+			return TryAddCallback(continuation, SynchronizationContext.Current, true);
 		}
 
 		/// <inheritdoc/>
@@ -191,7 +191,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(continuation));
 			}
 
-			return TryAddContinuationInternal(continuation, syncContext);
+			return TryAddCallback(continuation, syncContext, true);
 		}
 
 		/// <inheritdoc/>
@@ -224,7 +224,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return TryAddProgressCallbackInternal(action, SynchronizationContext.Current);
+			return TryAddCallback(action, SynchronizationContext.Current, false);
 		}
 
 		/// <inheritdoc/>
@@ -246,7 +246,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return TryAddProgressCallbackInternal(action, syncContext);
+			return TryAddCallback(action, syncContext, false);
 		}
 
 		/// <inheritdoc/>
@@ -281,7 +281,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(callback));
 			}
 
-			return TryAddProgressCallbackInternal(callback, SynchronizationContext.Current);
+			return TryAddCallback(callback, SynchronizationContext.Current, false);
 		}
 
 		/// <inheritdoc/>
@@ -303,7 +303,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(callback));
 			}
 
-			return TryAddProgressCallbackInternal(callback, syncContext);
+			return TryAddCallback(callback, syncContext, false);
 		}
 
 		/// <inheritdoc/>
@@ -323,17 +323,7 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		private bool TryAddContinuationInternal(object continuation, SynchronizationContext syncContext)
-		{
-			return TryAddCallback(continuation, syncContext);
-		}
-
-		private bool TryAddProgressCallbackInternal(object callback, SynchronizationContext syncContext)
-		{
-			return TryAddCallback(callback, syncContext);
-		}
-
-		private bool TryAddCallback(object callbackToAdd, SynchronizationContext syncContext)
+		private bool TryAddCallback(object callbackToAdd, SynchronizationContext syncContext, bool completionCallback)
 		{
 			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
 			var oldValue = _callback;
@@ -344,15 +334,23 @@ namespace UnityFx.Async
 				// If no callback is stored yet, try to store it as _callback.
 				if (oldValue == null)
 				{
-					if (syncContext == null)
+					var newValue = callbackToAdd;
+
+					if (completionCallback)
 					{
-						oldValue = Interlocked.CompareExchange(ref _callback, callbackToAdd, null);
+						if (syncContext != null)
+						{
+							newValue = new AsyncCallbackCollection(this, callbackToAdd, syncContext);
+						}
 					}
 					else
 					{
-						var newList = new AsyncCallbackCollection(this, callbackToAdd, syncContext);
-						oldValue = Interlocked.CompareExchange(ref _callback, newList, null);
+						var newList = new AsyncCallbackCollection(this);
+						newList.AddProgressCallback(callbackToAdd, syncContext);
+						newValue = newList;
 					}
+
+					oldValue = Interlocked.CompareExchange(ref _callback, newValue, null);
 
 					// Quick return if exchange succeeded.
 					if (oldValue == null)
@@ -382,7 +380,15 @@ namespace UnityFx.Async
 						// If so, then fall through and return false without queuing the callback.
 						if (_callback != _callbackCompletionSentinel)
 						{
-							list.Add(callbackToAdd, syncContext);
+							if (completionCallback)
+							{
+								list.AddCompletionCallback(callbackToAdd, syncContext);
+							}
+							else
+							{
+								list.AddProgressCallback(callbackToAdd, syncContext);
+							}
+
 							return true;
 						}
 					}

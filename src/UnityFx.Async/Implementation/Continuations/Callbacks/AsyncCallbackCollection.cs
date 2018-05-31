@@ -26,12 +26,13 @@ namespace UnityFx.Async
 
 		private readonly IAsyncOperation _op;
 
-		private CallbackData _callback1;
-		private CallbackData _callback2;
-		private CallbackData _callback3;
-		private CallbackData _callback4;
+		private CallbackData _completionCallback1;
+		private CallbackData _completionCallback2;
+		private CallbackData _completionCallback3;
+		private CallbackData _progressCallback1;
 
-		private List<CallbackData> _callbacks;
+		private List<CallbackData> _progressCallbacks;
+		private List<CallbackData> _completionCallbacks;
 
 		#endregion
 
@@ -45,82 +46,110 @@ namespace UnityFx.Async
 		public AsyncCallbackCollection(IAsyncOperation op, object callback, SynchronizationContext syncContext)
 		{
 			_op = op;
-			_callback1 = new CallbackData(callback, syncContext);
+			_completionCallback1 = new CallbackData(callback, syncContext);
 		}
 
-		public void Add(object callback, SynchronizationContext syncContext)
+		public void AddCompletionCallback(object callback, SynchronizationContext syncContext)
 		{
 			var newCallback = new CallbackData(callback, syncContext);
 
-			if (_callback1.Callback == null)
+			if (_completionCallback1.Callback == null)
 			{
-				_callback1 = newCallback;
+				_completionCallback1 = newCallback;
 				return;
 			}
 
-			if (_callback2.Callback == null)
+			if (_completionCallback2.Callback == null)
 			{
-				_callback2 = newCallback;
+				_completionCallback2 = newCallback;
 				return;
 			}
 
-			if (_callback3.Callback == null)
+			if (_completionCallback3.Callback == null)
 			{
-				_callback3 = newCallback;
+				_completionCallback3 = newCallback;
 				return;
 			}
 
-			if (_callback4.Callback == null)
+			if (_completionCallbacks == null)
 			{
-				_callback4 = newCallback;
-				return;
-			}
-
-			if (_callbacks == null)
-			{
-				_callbacks = new List<CallbackData>() { newCallback };
+				_completionCallbacks = new List<CallbackData>() { newCallback };
 			}
 			else
 			{
-				_callbacks.Add(newCallback);
+				_completionCallbacks.Add(newCallback);
+			}
+		}
+
+		public void AddProgressCallback(object callback, SynchronizationContext syncContext)
+		{
+			var newCallback = new CallbackData(callback, syncContext);
+
+			if (_progressCallback1.Callback == null)
+			{
+				_progressCallback1 = newCallback;
+				return;
+			}
+
+			if (_progressCallbacks == null)
+			{
+				_progressCallbacks = new List<CallbackData>() { newCallback };
+			}
+			else
+			{
+				_progressCallbacks.Add(newCallback);
 			}
 		}
 
 		public bool Remove(object callback)
 		{
-			if (_callback1.Callback == callback)
+			if (_completionCallback1.Callback == callback)
 			{
-				_callback1 = default(CallbackData);
+				_completionCallback1 = default(CallbackData);
 				return true;
 			}
 
-			if (_callback2.Callback == callback)
+			if (_completionCallback2.Callback == callback)
 			{
-				_callback2 = default(CallbackData);
+				_completionCallback2 = default(CallbackData);
 				return true;
 			}
 
-			if (_callback3.Callback == callback)
+			if (_completionCallback3.Callback == callback)
 			{
-				_callback3 = default(CallbackData);
+				_completionCallback3 = default(CallbackData);
 				return true;
 			}
 
-			if (_callback4.Callback == callback)
+			if (_progressCallback1.Callback == callback)
 			{
-				_callback4 = default(CallbackData);
+				_progressCallback1 = default(CallbackData);
 				return true;
 			}
 
-			if (_callbacks != null)
+			if (_completionCallbacks != null)
 			{
-				var count = _callbacks.Count;
+				var count = _completionCallbacks.Count;
 
-				for (var i = 0; i < count; i++)
+				for (var i = 0; i < count; ++i)
 				{
-					if (_callbacks[i].Callback == callback)
+					if (_completionCallbacks[i].Callback == callback)
 					{
-						_callbacks.RemoveAt(i);
+						_completionCallbacks.RemoveAt(i);
+						return true;
+					}
+				}
+			}
+
+			if (_progressCallbacks != null)
+			{
+				var count = _progressCallbacks.Count;
+
+				for (var i = 0; i < count; ++i)
+				{
+					if (_progressCallbacks[i].Callback == callback)
+					{
+						_progressCallbacks.RemoveAt(i);
 						return true;
 					}
 				}
@@ -131,29 +160,37 @@ namespace UnityFx.Async
 
 		public void Invoke()
 		{
-			if (_callback1.Callback != null)
+			if (_progressCallback1.Callback != null)
 			{
-				Invoke(_callback1);
+				Invoke(_progressCallback1);
 			}
 
-			if (_callback2.Callback != null)
+			if (_progressCallbacks != null)
 			{
-				Invoke(_callback2);
+				foreach (var item in _progressCallbacks)
+				{
+					Invoke(item);
+				}
 			}
 
-			if (_callback3.Callback != null)
+			if (_completionCallback1.Callback != null)
 			{
-				Invoke(_callback3);
+				Invoke(_completionCallback1);
 			}
 
-			if (_callback4.Callback != null)
+			if (_completionCallback2.Callback != null)
 			{
-				Invoke(_callback4);
+				Invoke(_completionCallback2);
 			}
 
-			if (_callbacks != null)
+			if (_completionCallback3.Callback != null)
 			{
-				foreach (var item in _callbacks)
+				Invoke(_completionCallback3);
+			}
+
+			if (_completionCallbacks != null)
+			{
+				foreach (var item in _completionCallbacks)
 				{
 					Invoke(item);
 				}
@@ -162,29 +199,37 @@ namespace UnityFx.Async
 
 		public void InvokeAsync()
 		{
-			if (_callback1.Callback != null)
+			if (_progressCallback1.Callback != null)
 			{
-				InvokeAsync(_callback1);
+				InvokeAsync(_progressCallback1);
 			}
 
-			if (_callback2.Callback != null)
+			if (_progressCallbacks != null)
 			{
-				InvokeAsync(_callback2);
+				foreach (var item in _progressCallbacks)
+				{
+					InvokeAsync(item);
+				}
 			}
 
-			if (_callback3.Callback != null)
+			if (_completionCallback1.Callback != null)
 			{
-				InvokeAsync(_callback3);
+				InvokeAsync(_completionCallback1);
 			}
 
-			if (_callback4.Callback != null)
+			if (_completionCallback2.Callback != null)
 			{
-				InvokeAsync(_callback4);
+				InvokeAsync(_completionCallback2);
 			}
 
-			if (_callbacks != null)
+			if (_completionCallback3.Callback != null)
 			{
-				foreach (var item in _callbacks)
+				InvokeAsync(_completionCallback3);
+			}
+
+			if (_completionCallbacks != null)
+			{
+				foreach (var item in _completionCallbacks)
 				{
 					InvokeAsync(item);
 				}
@@ -193,29 +238,14 @@ namespace UnityFx.Async
 
 		public void InvokeProgressChanged()
 		{
-			if (_callback1.Callback != null)
+			if (_progressCallback1.Callback != null)
 			{
-				InvokeProgressChanged(_callback1);
+				InvokeProgressChanged(_progressCallback1);
 			}
 
-			if (_callback2.Callback != null)
+			if (_progressCallbacks != null)
 			{
-				InvokeProgressChanged(_callback2);
-			}
-
-			if (_callback3.Callback != null)
-			{
-				InvokeProgressChanged(_callback3);
-			}
-
-			if (_callback4.Callback != null)
-			{
-				InvokeProgressChanged(_callback4);
-			}
-
-			if (_callbacks != null)
-			{
-				foreach (var item in _callbacks)
+				foreach (var item in _progressCallbacks)
 				{
 					InvokeProgressChanged(item);
 				}
