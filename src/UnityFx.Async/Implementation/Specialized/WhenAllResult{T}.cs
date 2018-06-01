@@ -112,6 +112,10 @@ namespace UnityFx.Async
 					TrySetResult(results.ToArray(), false);
 				}
 			}
+			else
+			{
+				ReportProgress();
+			}
 		}
 
 		#endregion

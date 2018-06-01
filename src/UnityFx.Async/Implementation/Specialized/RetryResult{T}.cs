@@ -82,6 +82,7 @@ namespace UnityFx.Async
 				}
 				else if (_millisecondsRetryDelay > 0)
 				{
+					ReportProgress();
 					BeginWait(_millisecondsRetryDelay);
 				}
 				else

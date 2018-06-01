@@ -9,8 +9,12 @@ namespace UnityFx.Async
 	{
 		#region data
 
+		private const float _progressEventTimeout = 0.1f;
+
 		private readonly IAsyncUpdateSource _updateService;
-		private float _timeToWait;
+		private readonly float _timeToWait;
+
+		private float _progressEventTimer;
 		private float _timer;
 
 		#endregion
@@ -56,6 +60,16 @@ namespace UnityFx.Async
 			if (_timer <= 0)
 			{
 				TrySetCompleted(false);
+			}
+			else
+			{
+				_progressEventTimer += frameTime;
+
+				if (_progressEventTimer >= _progressEventTimeout)
+				{
+					_progressEventTimer = 0;
+					ReportProgress();
+				}
 			}
 		}
 
