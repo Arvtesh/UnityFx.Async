@@ -55,7 +55,7 @@ namespace UnityFx.Async
 
 				if (!TryAddCallback(value, syncContext, false))
 				{
-					AsyncCallbackCollection.InvokeProgressCallback(this, value, syncContext);
+					CallbackUtility.InvokeProgressCallback(this, value, syncContext);
 				}
 			}
 			remove
@@ -210,7 +210,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(action))
 			{
-				AsyncCallbackCollection.InvokeProgressCallback(this, action, SynchronizationContext.Current);
+				CallbackUtility.InvokeProgressCallback(this, action, SynchronizationContext.Current);
 			}
 		}
 
@@ -232,7 +232,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(action, syncContext))
 			{
-				AsyncCallbackCollection.InvokeProgressCallback(this, action, syncContext);
+				CallbackUtility.InvokeProgressCallback(this, action, syncContext);
 			}
 		}
 
@@ -267,7 +267,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(callback))
 			{
-				AsyncCallbackCollection.InvokeProgressCallback(this, callback, SynchronizationContext.Current);
+				CallbackUtility.InvokeProgressCallback(this, callback, SynchronizationContext.Current);
 			}
 		}
 
@@ -289,7 +289,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(callback, syncContext))
 			{
-				AsyncCallbackCollection.InvokeProgressCallback(this, callback, syncContext);
+				CallbackUtility.InvokeProgressCallback(this, callback, syncContext);
 			}
 		}
 
@@ -340,12 +340,12 @@ namespace UnityFx.Async
 					{
 						if (syncContext != null)
 						{
-							newValue = new AsyncCallbackCollection(this, callbackToAdd, syncContext);
+							newValue = new CallbackCollection(this, callbackToAdd, syncContext);
 						}
 					}
 					else
 					{
-						var newList = new AsyncCallbackCollection(this);
+						var newList = new CallbackCollection(this);
 						newList.AddProgressCallback(callbackToAdd, syncContext);
 						newValue = newList;
 					}
@@ -360,9 +360,9 @@ namespace UnityFx.Async
 				}
 
 				// Logic for the case where we were previously storing a single callback.
-				if (oldValue != _callbackCompletionSentinel && !(oldValue is AsyncCallbackCollection))
+				if (oldValue != _callbackCompletionSentinel && !(oldValue is CallbackCollection))
 				{
-					var newList = new AsyncCallbackCollection(this, oldValue, null);
+					var newList = new CallbackCollection(this, oldValue, null);
 					Interlocked.CompareExchange(ref _callback, newList, oldValue);
 
 					// We might be racing against another thread converting the single into a list,
@@ -372,7 +372,7 @@ namespace UnityFx.Async
 				// If list is null, it can only mean that _callbackCompletionSentinel has been exchanged
 				// into _callback. Thus, the task has completed and we should return false from this method,
 				// as we will not be queuing up the callback.
-				if (_callback is AsyncCallbackCollection list)
+				if (_callback is CallbackCollection list)
 				{
 					lock (list)
 					{
@@ -405,13 +405,13 @@ namespace UnityFx.Async
 
 			if (value != _callbackCompletionSentinel)
 			{
-				var list = value as AsyncCallbackCollection;
+				var list = value as CallbackCollection;
 
 				if (list == null)
 				{
 					// This is not a list. If we have a single object (the one we want to remove) we try to replace it with an empty list.
 					// Note we cannot go back to a null state, since it will mess up the TryAddCallback() logic.
-					if (Interlocked.CompareExchange(ref _callback, new AsyncCallbackCollection(this), callbackToRemove) == callbackToRemove)
+					if (Interlocked.CompareExchange(ref _callback, new CallbackCollection(this), callbackToRemove) == callbackToRemove)
 					{
 						return true;
 					}
@@ -420,7 +420,7 @@ namespace UnityFx.Async
 						// If we fail it means that either TryAddContinuation won the race condition and _callback is now a List
 						// that contains the element we want to remove. Or it set the _callbackCompletionSentinel.
 						// So we should try to get a list one more time.
-						list = _callback as AsyncCallbackCollection;
+						list = _callback as CallbackCollection;
 					}
 				}
 
@@ -448,7 +448,7 @@ namespace UnityFx.Async
 
 			if (value != null)
 			{
-				if (value is AsyncCallbackCollection callbackList)
+				if (value is CallbackCollection callbackList)
 				{
 					lock (callbackList)
 					{
@@ -457,7 +457,7 @@ namespace UnityFx.Async
 				}
 				else
 				{
-					AsyncCallbackCollection.InvokeProgressCallback(this, value);
+					CallbackUtility.InvokeProgressCallback(this, value);
 				}
 			}
 		}
@@ -470,7 +470,7 @@ namespace UnityFx.Async
 			{
 				var invokeAsync = (_flags & _flagRunContinuationsAsynchronously) != 0;
 
-				if (value is AsyncCallbackCollection callbackList)
+				if (value is CallbackCollection callbackList)
 				{
 					lock (callbackList)
 					{
@@ -479,11 +479,11 @@ namespace UnityFx.Async
 				}
 				else if (invokeAsync)
 				{
-					AsyncCallbackCollection.InvokeCompletionCallbackAsync(this, value, SynchronizationContext.Current, false);
+					CallbackUtility.InvokeCompletionCallbackAsync(this, value, SynchronizationContext.Current, false);
 				}
 				else
 				{
-					AsyncCallbackCollection.InvokeCompletionCallback(this, value, false);
+					CallbackUtility.InvokeCompletionCallback(this, value, false);
 				}
 			}
 		}
@@ -492,15 +492,15 @@ namespace UnityFx.Async
 		{
 			if ((_flags & _flagRunContinuationsAsynchronously) != 0)
 			{
-				AsyncCallbackCollection.InvokeCompletionCallbackAsync(this, continuation, syncContext, true);
+				CallbackUtility.InvokeCompletionCallbackAsync(this, continuation, syncContext, true);
 			}
 			else if (syncContext == null || syncContext == SynchronizationContext.Current)
 			{
-				AsyncCallbackCollection.InvokeCompletionCallback(this, continuation, true);
+				CallbackUtility.InvokeCompletionCallback(this, continuation, true);
 			}
 			else
 			{
-				syncContext.Post(args => AsyncCallbackCollection.InvokeCompletionCallback(this, args, true), continuation);
+				syncContext.Post(args => CallbackUtility.InvokeCompletionCallback(this, args, true), continuation);
 			}
 		}
 
