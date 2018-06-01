@@ -33,7 +33,7 @@ The table below summarizes differences berween *UnityFx.Async* and other popular
 | Supports progress reporting | ✔️ | ✔️ | ✔️ |
 | Supports child operations | - | - | ✔️ |
 | Minimum operation data size for 32-bit systems (in bytes) | 28+ | 36+ | 40+ |
-| Minimum number of allocations per continuation | 1+ | 5+ | 2+ |
+| Minimum number of allocations per continuation | ~1 | 5+ | 2+ |
 
 ## Getting Started
 ### Prerequisites
@@ -166,9 +166,9 @@ Create an operation instance like this:
 ```csharp
 var op = new AsyncCompletionSource<string>();
 ```
-The type of the operation should reflect its result type. In this case we have created a special kind of operation - a completion source that incapsulated both producer and consumer interfaces (consumer side is represented via `IAsyncOperation` / `IAsyncOperation<TResult>` interfaces and producer side is `IAsyncCompletionSource` / `IAsyncCompletionSource<TResult>`, `AsyncCompletionSource` implements both of the interfaces).
+The type of the operation should reflect its result type. In this case we create a special kind of operation - a completion source, that incapsulates both producer and consumer interfaces (consumer side is represented via `IAsyncOperation` / `IAsyncOperation<TResult>` interfaces and producer side is `IAsyncCompletionSource` / `IAsyncCompletionSource<TResult>`, `AsyncCompletionSource` implements both of the interfaces).
 
-While operation is running its progress can be set as:
+While operation is running its progress can be set like this:
 ```csharp
 op.SetProgress(progressValue);
 ```
@@ -334,9 +334,21 @@ DownloadTextAsync("http://www.google.com")
 If the [token](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken) passed to `WithCancellation()` is cancelled the target operation is cancelled as well (and that means cancelling all chained operations) as soon as possible. Cancellation might not be instant (depends on specific operation implementation). Also, please note that not all operations might support cancellation; in this case `Cancel()` will throw `NotSupportedException`.
 
 ### Progress reporting
-Library operations support progress reporting via exposing `IAsyncOperation.Progress` property:
+Library operations support progress reporting via exposing `IAsyncOperation.Progress` property and progress reporting events:
 ```csharp
 var progress = op.Progess;  // gets an operation progress as a float value in range [0, 1]
+
+// subscribe to progress changed event
+op.ProgressChanged += (sender, args) =>
+{
+    Debug.Log("Progress = " + args.ProgressPercentage);
+}
+
+// add progress changed delegate
+op.AddProgressCallback(op =>
+{
+    Debug.Log("Progress = " + op.Progress);
+});
 ```
 There is `AsyncResult.GetProgress()` virtual method that is called when a progress values is requested. Finally there are producer-side methods like `AsyncCompletionSource.TrySetProgress()` that can set the progress value.
 
@@ -355,7 +367,7 @@ Completion callbacks are basicly low-level continuations. Just like continuation
 ```csharp
 var op = DownloadTextAsync("http://www.google.com");
 op.Completed += o => Debug.Log("1");
-op.AddContinuation(o => Debug.Log("2"));
+op.AddCompletionCallback(o => Debug.Log("2"));
 ```
 That said, unlike `ContinueWith()`-like stuff completion callbacks cannot be chained and do not handle exceptions automatically. Throwing an exception from a completion callback results in unspecified behavior.
 
@@ -369,7 +381,7 @@ class MyContinuation : IAsyncContinuation
 // ...
 
 var op = DownloadTextAsync("http://www.google.com");
-op.AddContinuation(new MyContinuation());
+op.AddCompletionCallback(new MyContinuation());
 ```
 
 ### Disposing of operations
