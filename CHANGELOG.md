@@ -10,6 +10,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added push-based progress reporting support.
 - Added update sources for `LateUpdate`, `FixedUpdate` and end-of-frame updates.
 
+### Changed
+- Significantly reduced number of memory allocations when adding continuations (implemention optimizations).
+
 ### Fixed
 - Fixed exception when removing listeners while in `AsyncUpdateSource.OnError` / `AsyncUpdateSource.OnCompleted` / `AsyncUpdateSource.Dispose`.
 
