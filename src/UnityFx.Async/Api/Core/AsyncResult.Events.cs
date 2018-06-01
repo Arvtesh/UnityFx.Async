@@ -29,7 +29,7 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 
-			if (!TryAddContinuationInternal(continuation, syncContext))
+			if (!TryAddCallback(continuation, syncContext, true))
 			{
 				continuation();
 			}
@@ -53,9 +53,9 @@ namespace UnityFx.Async
 
 				var syncContext = SynchronizationContext.Current;
 
-				if (!TryAddProgressCallbackInternal(value, syncContext))
+				if (!TryAddCallback(value, syncContext, false))
 				{
-					InvokeProgressChanged(value, syncContext);
+					InvokeProgressCallback(value, syncContext);
 				}
 			}
 			remove
@@ -81,9 +81,9 @@ namespace UnityFx.Async
 
 				var syncContext = SynchronizationContext.Current;
 
-				if (!TryAddContinuationInternal(value, syncContext))
+				if (!TryAddCallback(value, syncContext, true))
 				{
-					InvokeContinuation(value, syncContext);
+					InvokeCompletionCallback(value, syncContext);
 				}
 			}
 			remove
@@ -100,7 +100,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddCompletionCallback(action))
 			{
-				InvokeContinuation(action, SynchronizationContext.Current);
+				InvokeCompletionCallback(action, SynchronizationContext.Current);
 			}
 		}
 
@@ -114,7 +114,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return TryAddContinuationInternal(action, SynchronizationContext.Current);
+			return TryAddCallback(action, SynchronizationContext.Current, true);
 		}
 
 		/// <inheritdoc/>
@@ -122,7 +122,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddCompletionCallback(action, syncContext))
 			{
-				InvokeContinuation(action, syncContext);
+				InvokeCompletionCallback(action, syncContext);
 			}
 		}
 
@@ -136,7 +136,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return TryAddContinuationInternal(action, syncContext);
+			return TryAddCallback(action, syncContext, true);
 		}
 
 		/// <inheritdoc/>
@@ -155,7 +155,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddCompletionCallback(continuation))
 			{
-				InvokeContinuation(continuation, SynchronizationContext.Current);
+				InvokeCompletionCallback(continuation, SynchronizationContext.Current);
 			}
 		}
 
@@ -169,7 +169,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(continuation));
 			}
 
-			return TryAddContinuationInternal(continuation, SynchronizationContext.Current);
+			return TryAddCallback(continuation, SynchronizationContext.Current, true);
 		}
 
 		/// <inheritdoc/>
@@ -177,7 +177,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddCompletionCallback(continuation, syncContext))
 			{
-				InvokeContinuation(continuation, syncContext);
+				InvokeCompletionCallback(continuation, syncContext);
 			}
 		}
 
@@ -191,7 +191,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(continuation));
 			}
 
-			return TryAddContinuationInternal(continuation, syncContext);
+			return TryAddCallback(continuation, syncContext, true);
 		}
 
 		/// <inheritdoc/>
@@ -210,7 +210,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(action))
 			{
-				InvokeProgressChanged(action, SynchronizationContext.Current);
+				InvokeProgressCallback(action, SynchronizationContext.Current);
 			}
 		}
 
@@ -224,7 +224,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return TryAddProgressCallbackInternal(action, SynchronizationContext.Current);
+			return TryAddCallback(action, SynchronizationContext.Current, false);
 		}
 
 		/// <inheritdoc/>
@@ -232,7 +232,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(action, syncContext))
 			{
-				InvokeProgressChanged(action, syncContext);
+				InvokeProgressCallback(action, syncContext);
 			}
 		}
 
@@ -246,7 +246,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(action));
 			}
 
-			return TryAddProgressCallbackInternal(action, syncContext);
+			return TryAddCallback(action, syncContext, false);
 		}
 
 		/// <inheritdoc/>
@@ -267,7 +267,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(callback))
 			{
-				InvokeProgressChanged(callback, SynchronizationContext.Current);
+				InvokeProgressCallback(callback, SynchronizationContext.Current);
 			}
 		}
 
@@ -281,7 +281,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(callback));
 			}
 
-			return TryAddProgressCallbackInternal(callback, SynchronizationContext.Current);
+			return TryAddCallback(callback, SynchronizationContext.Current, false);
 		}
 
 		/// <inheritdoc/>
@@ -289,7 +289,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(callback, syncContext))
 			{
-				InvokeProgressChanged(callback, syncContext);
+				InvokeProgressCallback(callback, syncContext);
 			}
 		}
 
@@ -303,7 +303,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(callback));
 			}
 
-			return TryAddProgressCallbackInternal(callback, syncContext);
+			return TryAddCallback(callback, syncContext, false);
 		}
 
 		/// <inheritdoc/>
@@ -323,29 +323,7 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		private bool TryAddContinuationInternal(object continuation, SynchronizationContext syncContext)
-		{
-			var runContinuationsAsynchronously = (_flags & _flagRunContinuationsAsynchronously) != 0;
-
-			if ((syncContext != null && syncContext.GetType() != typeof(SynchronizationContext)) || runContinuationsAsynchronously)
-			{
-				continuation = new AsyncContinuation(this, syncContext, continuation);
-			}
-
-			return TryAddCallback(continuation);
-		}
-
-		private bool TryAddProgressCallbackInternal(object callback, SynchronizationContext syncContext)
-		{
-			if ((syncContext != null && syncContext.GetType() != typeof(SynchronizationContext)) || callback is AsyncOperationCallback)
-			{
-				callback = new AsyncProgress(this, syncContext, callback);
-			}
-
-			return TryAddCallback(callback);
-		}
-
-		private bool TryAddCallback(object callbackToAdd)
+		private bool TryAddCallback(object callbackToAdd, SynchronizationContext syncContext, bool completionCallback)
 		{
 			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
 			var oldValue = _callback;
@@ -353,10 +331,26 @@ namespace UnityFx.Async
 			// Quick return if the operation is completed.
 			if (oldValue != _callbackCompletionSentinel)
 			{
-				// If no continuation is stored yet, try to store it as _continuation.
+				// If no callback is stored yet, try to store it as _callback.
 				if (oldValue == null)
 				{
-					oldValue = Interlocked.CompareExchange(ref _callback, callbackToAdd, null);
+					var newValue = callbackToAdd;
+
+					if (completionCallback)
+					{
+						if (syncContext != null)
+						{
+							newValue = new CallbackCollection(this, callbackToAdd, syncContext);
+						}
+					}
+					else
+					{
+						var newList = new CallbackCollection(this);
+						newList.AddProgressCallback(callbackToAdd, syncContext);
+						newValue = newList;
+					}
+
+					oldValue = Interlocked.CompareExchange(ref _callback, newValue, null);
 
 					// Quick return if exchange succeeded.
 					if (oldValue == null)
@@ -365,29 +359,36 @@ namespace UnityFx.Async
 					}
 				}
 
-				// Logic for the case where we were previously storing a single continuation.
-				if (oldValue != _callbackCompletionSentinel && !(oldValue is IList))
+				// Logic for the case where we were previously storing a single callback.
+				if (oldValue != _callbackCompletionSentinel && !(oldValue is CallbackCollection))
 				{
-					var newList = new List<object>() { oldValue };
-
+					var newList = new CallbackCollection(this, oldValue, null);
 					Interlocked.CompareExchange(ref _callback, newList, oldValue);
 
 					// We might be racing against another thread converting the single into a list,
 					// or we might be racing against operation completion, so resample "list" below.
 				}
 
-				// If list is null, it can only mean that _continuationCompletionSentinel has been exchanged
-				// into _continuation. Thus, the task has completed and we should return false from this method,
-				// as we will not be queuing up the continuation.
-				if (_callback is IList list)
+				// If list is null, it can only mean that _callbackCompletionSentinel has been exchanged
+				// into _callback. Thus, the task has completed and we should return false from this method,
+				// as we will not be queuing up the callback.
+				if (_callback is CallbackCollection list)
 				{
 					lock (list)
 					{
 						// It is possible for the operation to complete right after we snap the copy of the list.
-						// If so, then fall through and return false without queuing the continuation.
+						// If so, then fall through and return false without queuing the callback.
 						if (_callback != _callbackCompletionSentinel)
 						{
-							list.Add(callbackToAdd);
+							if (completionCallback)
+							{
+								list.AddCompletionCallback(callbackToAdd, syncContext);
+							}
+							else
+							{
+								list.AddProgressCallback(callbackToAdd, syncContext);
+							}
+
 							return true;
 						}
 					}
@@ -404,41 +405,35 @@ namespace UnityFx.Async
 
 			if (value != _callbackCompletionSentinel)
 			{
-				var list = value as IList;
+				var list = value as CallbackCollection;
 
 				if (list == null)
 				{
 					// This is not a list. If we have a single object (the one we want to remove) we try to replace it with an empty list.
-					// Note we cannot go back to a null state, since it will mess up the TryAddContinuation logic.
-					if (Interlocked.CompareExchange(ref _callback, new List<object>(), callbackToRemove) == callbackToRemove)
+					// Note we cannot go back to a null state, since it will mess up the TryAddCallback() logic.
+					if (Interlocked.CompareExchange(ref _callback, new CallbackCollection(this), callbackToRemove) == callbackToRemove)
 					{
 						return true;
 					}
 					else
 					{
-						// If we fail it means that either TryAddContinuation won the race condition and _continuation is now a List
-						// that contains the element we want to remove. Or it set the _continuationCompletionSentinel.
+						// If we fail it means that either TryAddContinuation won the race condition and _callback is now a List
+						// that contains the element we want to remove. Or it set the _callbackCompletionSentinel.
 						// So we should try to get a list one more time.
-						list = value as IList;
+						list = _callback as CallbackCollection;
 					}
 				}
 
-				// If list is null it means _continuationCompletionSentinel has been set already and there is nothing else to do.
+				// If list is null it means _callbackCompletionSentinel has been set already and there is nothing else to do.
 				if (list != null)
 				{
 					lock (list)
 					{
 						// There is a small chance that the operation completed since we took a local snapshot into
-						// list. In that case, just return; we don't want to be manipulating the continuation list as it is being processed.
+						// list. In that case, just return; we don't want to be manipulating the callback list as it is being processed.
 						if (_callback != _callbackCompletionSentinel)
 						{
-							var index = list.IndexOf(callbackToRemove);
-
-							if (index != -1)
-							{
-								list.RemoveAt(index);
-								return true;
-							}
+							return list.Remove(callbackToRemove);
 						}
 					}
 				}
@@ -447,136 +442,78 @@ namespace UnityFx.Async
 			return false;
 		}
 
-		private void InvokeProgressChanged()
+		private void InvokeProgressCallbacks()
 		{
-			var callback = _callback;
+			var value = _callback;
 
-			if (callback != null)
+			if (value != null)
 			{
-				if (callback is IEnumerable callbackList)
+				if (value is CallbackCollection callbackList)
 				{
 					lock (callbackList)
 					{
-						foreach (var item in callbackList)
-						{
-							InvokeProgressChanged(item);
-						}
+						callbackList.InvokeProgressCallbacks();
 					}
 				}
 				else
 				{
-					InvokeProgressChanged(callback);
+					CallbackUtility.InvokeProgressCallback(this, value);
 				}
 			}
 		}
 
-		private void InvokeProgressChanged(object callback)
+		private void InvokeCallbacks()
 		{
-			if (callback is AsyncProgress p)
+			var value = Interlocked.Exchange(ref _callback, _callbackCompletionSentinel);
+
+			if (value != null)
 			{
-				p.Invoke();
-			}
-			else
-			{
-				AsyncProgress.InvokeInline(this, callback);
+				var invokeAsync = (_flags & _flagRunContinuationsAsynchronously) != 0;
+
+				if (value is CallbackCollection callbackList)
+				{
+					lock (callbackList)
+					{
+						callbackList.Invoke(invokeAsync);
+					}
+				}
+				else if (invokeAsync)
+				{
+					CallbackUtility.InvokeCompletionCallbackAsync(this, value, SynchronizationContext.Current, false);
+				}
+				else
+				{
+					CallbackUtility.InvokeCompletionCallback(this, value, false);
+				}
 			}
 		}
 
-		private void InvokeProgressChanged(object callback, SynchronizationContext syncContext)
+		private void InvokeProgressCallback(object callback, SynchronizationContext syncContext)
 		{
 			if (syncContext == null || syncContext == SynchronizationContext.Current)
 			{
-				AsyncProgress.InvokeInline(this, callback);
+				CallbackUtility.InvokeProgressCallback(this, callback);
 			}
 			else
 			{
-				syncContext.Post(args => AsyncProgress.InvokeInline(this, args), callback);
+				syncContext.Post(args => CallbackUtility.InvokeProgressCallback(this, args), callback);
 			}
 		}
 
-		private void InvokeContinuations()
-		{
-			var continuation = Interlocked.Exchange(ref _callback, _callbackCompletionSentinel);
-
-			if (continuation != null)
-			{
-				if (continuation is IEnumerable continuationList)
-				{
-					lock (continuationList)
-					{
-						foreach (var item in continuationList)
-						{
-							InvokeContinuation(item);
-						}
-					}
-				}
-				else
-				{
-					InvokeContinuation(continuation);
-				}
-			}
-		}
-
-		private void InvokeContinuation(object continuation)
-		{
-			var runContinuationsAsynchronously = (_flags & _flagRunContinuationsAsynchronously) != 0;
-
-			if (runContinuationsAsynchronously)
-			{
-				if (continuation is AsyncInvokable c)
-				{
-					// NOTE: This is more effective than InvokeContinuationAsync().
-					c.InvokeAsync();
-				}
-				else
-				{
-					InvokeContinuationAsync(continuation, SynchronizationContext.Current, false);
-				}
-			}
-			else
-			{
-				if (continuation is AsyncInvokable c)
-				{
-					c.Invoke();
-				}
-				else
-				{
-					InvokeContinuationInline(continuation, false);
-				}
-			}
-		}
-
-		private void InvokeContinuation(object continuation, SynchronizationContext syncContext)
+		private void InvokeCompletionCallback(object continuation, SynchronizationContext syncContext)
 		{
 			if ((_flags & _flagRunContinuationsAsynchronously) != 0)
 			{
-				InvokeContinuationAsync(continuation, syncContext, true);
+				CallbackUtility.InvokeCompletionCallbackAsync(this, continuation, syncContext, true);
 			}
 			else if (syncContext == null || syncContext == SynchronizationContext.Current)
 			{
-				InvokeContinuationInline(continuation, true);
+				CallbackUtility.InvokeCompletionCallback(this, continuation, true);
 			}
 			else
 			{
-				syncContext.Post(args => InvokeContinuationInline(args, true), continuation);
+				syncContext.Post(args => CallbackUtility.InvokeCompletionCallback(this, args, true), continuation);
 			}
-		}
-
-		private void InvokeContinuationAsync(object continuation, SynchronizationContext syncContext, bool inline)
-		{
-			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
-			{
-				syncContext.Post(args => InvokeContinuationInline(args, inline), continuation);
-			}
-			else
-			{
-				ThreadPool.QueueUserWorkItem(args => InvokeContinuationInline(args, inline), continuation);
-			}
-		}
-
-		private void InvokeContinuationInline(object continuation, bool inline)
-		{
-			AsyncContinuation.InvokeInline(this, continuation, inline);
 		}
 
 		#endregion

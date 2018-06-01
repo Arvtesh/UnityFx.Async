@@ -58,7 +58,7 @@ namespace UnityFx.Async
 
 		public void Invoke(IAsyncOperation op, bool inline)
 		{
-			if (AsyncContinuation.CanInvoke(op, _options))
+			if (CanInvoke())
 			{
 				try
 				{
@@ -114,6 +114,25 @@ namespace UnityFx.Async
 			{
 				TrySetCanceled(inline);
 			}
+		}
+
+		#endregion
+
+		#region implementation
+
+		private bool CanInvoke()
+		{
+			if (_op.IsCompletedSuccessfully)
+			{
+				return (_options & AsyncContinuationOptions.NotOnRanToCompletion) == 0;
+			}
+
+			if (_op.IsFaulted)
+			{
+				return (_options & AsyncContinuationOptions.NotOnFaulted) == 0;
+			}
+
+			return (_options & AsyncContinuationOptions.NotOnCanceled) == 0;
 		}
 
 		#endregion

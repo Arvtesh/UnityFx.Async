@@ -218,9 +218,9 @@ namespace UnityFx.Async
 			{
 				var result = new TaskCompletionSource<VoidResult>();
 
-				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp, result), null))
+				if (!op.TryAddCompletionCallback(asyncOp => InvokeTaskContinuation(asyncOp, result), null))
 				{
-					AsyncContinuation.InvokeTaskContinuation(op, result);
+					InvokeTaskContinuation(op, result);
 				}
 
 				return result.Task;
@@ -252,9 +252,9 @@ namespace UnityFx.Async
 			{
 				var result = new TaskCompletionSource<TResult>();
 
-				if (!op.TryAddCompletionCallback(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp as IAsyncOperation<TResult>, result), null))
+				if (!op.TryAddCompletionCallback(asyncOp => InvokeTaskContinuation(asyncOp as IAsyncOperation<TResult>, result), null))
 				{
-					AsyncContinuation.InvokeTaskContinuation(op, result);
+					InvokeTaskContinuation(op, result);
 				}
 
 				return result.Task;
@@ -300,6 +300,42 @@ namespace UnityFx.Async
 			else if (!op.TryAddCompletionCallback(asyncOp => continuation(), syncContext))
 			{
 				continuation();
+			}
+		}
+
+		private static void InvokeTaskContinuation(IAsyncOperation op, TaskCompletionSource<VoidResult> tcs)
+		{
+			var status = op.Status;
+
+			if (status == AsyncOperationStatus.RanToCompletion)
+			{
+				tcs.TrySetResult(null);
+			}
+			else if (status == AsyncOperationStatus.Faulted)
+			{
+				tcs.TrySetException(op.Exception);
+			}
+			else if (status == AsyncOperationStatus.Canceled)
+			{
+				tcs.TrySetCanceled();
+			}
+		}
+
+		private static void InvokeTaskContinuation<T>(IAsyncOperation<T> op, TaskCompletionSource<T> tcs)
+		{
+			var status = op.Status;
+
+			if (status == AsyncOperationStatus.RanToCompletion)
+			{
+				tcs.TrySetResult(op.Result);
+			}
+			else if (status == AsyncOperationStatus.Faulted)
+			{
+				tcs.TrySetException(op.Exception);
+			}
+			else if (status == AsyncOperationStatus.Canceled)
+			{
+				tcs.TrySetCanceled();
 			}
 		}
 
