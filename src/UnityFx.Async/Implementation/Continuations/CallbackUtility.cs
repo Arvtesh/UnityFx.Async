@@ -73,18 +73,6 @@ namespace UnityFx.Async
 			}
 		}
 
-		public static void InvokeProgressCallback(IAsyncOperation op, object callback, SynchronizationContext syncContext)
-		{
-			if (syncContext == null || syncContext == SynchronizationContext.Current)
-			{
-				InvokeProgressCallback(op, callback);
-			}
-			else
-			{
-				syncContext.Post(args => InvokeProgressCallback(op, args), callback);
-			}
-		}
-
 		#endregion
 
 		#region implementation

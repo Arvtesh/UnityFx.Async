@@ -55,7 +55,7 @@ namespace UnityFx.Async
 
 				if (!TryAddCallback(value, syncContext, false))
 				{
-					CallbackUtility.InvokeProgressCallback(this, value, syncContext);
+					InvokeProgressCallback(value, syncContext);
 				}
 			}
 			remove
@@ -210,7 +210,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(action))
 			{
-				CallbackUtility.InvokeProgressCallback(this, action, SynchronizationContext.Current);
+				InvokeProgressCallback(action, SynchronizationContext.Current);
 			}
 		}
 
@@ -232,7 +232,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(action, syncContext))
 			{
-				CallbackUtility.InvokeProgressCallback(this, action, syncContext);
+				InvokeProgressCallback(action, syncContext);
 			}
 		}
 
@@ -267,7 +267,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(callback))
 			{
-				CallbackUtility.InvokeProgressCallback(this, callback, SynchronizationContext.Current);
+				InvokeProgressCallback(callback, SynchronizationContext.Current);
 			}
 		}
 
@@ -289,7 +289,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(callback, syncContext))
 			{
-				CallbackUtility.InvokeProgressCallback(this, callback, syncContext);
+				InvokeProgressCallback(callback, syncContext);
 			}
 		}
 
@@ -485,6 +485,18 @@ namespace UnityFx.Async
 				{
 					CallbackUtility.InvokeCompletionCallback(this, value, false);
 				}
+			}
+		}
+
+		private void InvokeProgressCallback(object callback, SynchronizationContext syncContext)
+		{
+			if (syncContext == null || syncContext == SynchronizationContext.Current)
+			{
+				CallbackUtility.InvokeProgressCallback(this, callback);
+			}
+			else
+			{
+				syncContext.Post(args => CallbackUtility.InvokeProgressCallback(this, args), callback);
 			}
 		}
 
