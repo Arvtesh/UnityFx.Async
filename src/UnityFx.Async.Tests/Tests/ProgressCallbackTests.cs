@@ -2,6 +2,8 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.ComponentModel;
+using NSubstitute;
 using Xunit;
 
 namespace UnityFx.Async
@@ -44,28 +46,57 @@ namespace UnityFx.Async
 			Assert.Equal(expectedResult, result);
 		}
 
+		[Theory]
+		[InlineData(AsyncOperationStatus.Created, 0)]
+		[InlineData(AsyncOperationStatus.Scheduled, 0)]
+		[InlineData(AsyncOperationStatus.RanToCompletion, 1)]
+		[InlineData(AsyncOperationStatus.Faulted, 0)]
+		[InlineData(AsyncOperationStatus.Canceled, 0)]
+		public void Progress_ReturnsCorrentValue(AsyncOperationStatus status, float expectedValue)
+		{
+			// Arrange
+			var progress = 0.3f;
+			var op = new AsyncCompletionSource(status);
+
+			// Act
+			op.TrySetProgress(progress);
+
+			// Assert
+			Assert.Equal(expectedValue, op.Progress);
+		}
+
 		[Fact]
-		public void SetCompleted_RaisesProgressCallbacks()
+		public void SetProgress_SetsCorrectValue()
+		{
+			// Arrange
+			var progress = 0.7f;
+			var op = new AsyncCompletionSource(AsyncOperationStatus.Running);
+
+			// Act
+			op.SetProgress(progress);
+
+			// Assert
+			Assert.Equal(progress, op.Progress);
+		}
+
+		[Fact]
+		public void SetProgress_RaisesProgressChanged()
 		{
 			// Arrange
 			var asyncCallbackCalled = false;
-			var progress = 0f;
-			var op = new AsyncCompletionSource();
+			var op = new AsyncCompletionSource(AsyncOperationStatus.Running);
 
-			op.AddProgressCallback(
-				asyncOp =>
-				{
-					asyncCallbackCalled = true;
-					progress = asyncOp.Progress;
-				},
-				null);
+			op.ProgressChanged += (sender, args) =>
+			{
+				asyncCallbackCalled = true;
+			};
 
 			// Act
-			op.SetCompleted();
+			op.SetProgress(0.8f);
 
 			// Assert
 			Assert.True(asyncCallbackCalled);
-			Assert.Equal(1, progress);
+			
 		}
 
 		[Fact]
@@ -73,8 +104,11 @@ namespace UnityFx.Async
 		{
 			// Arrange
 			var asyncCallbackCalled = false;
+			var asyncCallbackCalled2 = false;
 			var progress = 0;
+			var progress2 = 0f;
 			var op = new AsyncCompletionSource();
+			var p = Substitute.For<IProgress<float>>();
 
 			op.ProgressChanged += (sender, args) =>
 			{
@@ -82,12 +116,25 @@ namespace UnityFx.Async
 				progress = args.ProgressPercentage;
 			};
 
+			op.AddProgressCallback(
+				asyncOp =>
+				{
+					asyncCallbackCalled2 = true;
+					progress2 = asyncOp.Progress;
+				},
+				null);
+
+			op.AddProgressCallback(p, null);
+
 			// Act
 			op.SetCompleted();
 
 			// Assert
 			Assert.True(asyncCallbackCalled);
+			Assert.True(asyncCallbackCalled2);
 			Assert.Equal(100, progress);
+			Assert.Equal(1, progress2);
+			p.Received(1).Report(1);
 		}
 
 		#endregion
