@@ -859,7 +859,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Unconditionally reports the operatino progress.
+		/// Unconditionally reports the operation progress.
 		/// </summary>
 		internal void ReportProgress()
 		{

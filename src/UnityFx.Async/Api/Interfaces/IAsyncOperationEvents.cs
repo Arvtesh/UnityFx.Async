@@ -8,7 +8,7 @@ using System.Threading;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// References a method to be called when a corresponding operation completes.
+	/// References a method to be called when a corresponding operation state changes.
 	/// </summary>
 	/// <param name="op">The asynchronous operation.</param>
 	/// <seealso cref="IAsyncOperationEvents"/>
@@ -23,7 +23,7 @@ namespace UnityFx.Async
 	public interface IAsyncOperationEvents
 	{
 		/// <summary>
-		/// Raised when the operation progress has changed.
+		/// Raised when the operation progress is changed.
 		/// </summary>
 		/// <remarks>
 		/// The event handler is invoked on a thread that registered it (if it has a <see cref="SynchronizationContext"/> attached).
@@ -41,7 +41,7 @@ namespace UnityFx.Async
 		event ProgressChangedEventHandler ProgressChanged;
 
 		/// <summary>
-		/// Raised when the operation has completed.
+		/// Raised when the operation is completed.
 		/// </summary>
 		/// <remarks>
 		/// The event handler is invoked on a thread that registered it (if it has a <see cref="SynchronizationContext"/> attached).
