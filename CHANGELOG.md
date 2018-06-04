@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 
 ### Added
 - Added push-based progress reporting support.
+- Added `AsyncResult.Delay(float)` overloads.
 - Added update sources for `LateUpdate`, `FixedUpdate` and end-of-frame updates.
 
 ### Changed
