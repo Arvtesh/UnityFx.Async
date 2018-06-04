@@ -1010,11 +1010,17 @@ namespace UnityFx.Async
 			get
 			{
 				var result = ToString();
-				var state = Status.ToString();
+				var status = Status;
+				var state = status.ToString();
 
 				if (IsFaulted && _exception != null)
 				{
 					state += " (" + _exception.GetType().Name + ')';
+				}
+
+				if (status == AsyncOperationStatus.Running)
+				{
+					state += ", Progress = " + GetProgress().ToString("N2");
 				}
 
 				result += ", Status = ";
