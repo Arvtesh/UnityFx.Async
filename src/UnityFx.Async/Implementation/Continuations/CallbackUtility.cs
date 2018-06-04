@@ -15,12 +15,12 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public static void InvokeCompletionCallback(IAsyncOperation op, object continuation, bool inline)
+		public static void InvokeCompletionCallback(IAsyncOperation op, object continuation)
 		{
 			switch (continuation)
 			{
 				case IAsyncContinuation c:
-					c.Invoke(op, inline);
+					c.Invoke(op);
 					break;
 
 				case AsyncOperationCallback aoc:
@@ -41,15 +41,15 @@ namespace UnityFx.Async
 			}
 		}
 
-		public static void InvokeCompletionCallbackAsync(IAsyncOperation op, object continuation, SynchronizationContext syncContext, bool inline)
+		public static void InvokeCompletionCallbackAsync(IAsyncOperation op, object continuation, SynchronizationContext syncContext)
 		{
 			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
 			{
-				syncContext.Post(args => InvokeCompletionCallback(op, args, inline), continuation);
+				syncContext.Post(args => InvokeCompletionCallback(op, args), continuation);
 			}
 			else
 			{
-				ThreadPool.QueueUserWorkItem(args => InvokeCompletionCallback(op, args, inline), continuation);
+				ThreadPool.QueueUserWorkItem(args => InvokeCompletionCallback(op, args), continuation);
 			}
 		}
 

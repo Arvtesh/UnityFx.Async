@@ -43,26 +43,26 @@ namespace UnityFx.Async.Promises
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool inline)
+		public void Invoke(IAsyncOperation op)
 		{
 			if (op.IsCompletedSuccessfully)
 			{
-				TrySetCompleted(inline);
+				TrySetCompleted(false);
 			}
 			else if (!(op.Exception is TException))
 			{
-				TrySetException(op.Exception, inline);
+				TrySetException(op.Exception, false);
 			}
 			else
 			{
 				try
 				{
 					_errorCallback.Invoke(op.Exception as TException);
-					TrySetCompleted(inline);
+					TrySetCompleted(false);
 				}
 				catch (Exception e)
 				{
-					TrySetException(e, inline);
+					TrySetException(e, false);
 				}
 			}
 		}

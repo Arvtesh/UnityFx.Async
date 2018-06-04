@@ -479,11 +479,11 @@ namespace UnityFx.Async
 				}
 				else if (invokeAsync)
 				{
-					CallbackUtility.InvokeCompletionCallbackAsync(this, value, SynchronizationContext.Current, false);
+					CallbackUtility.InvokeCompletionCallbackAsync(this, value, SynchronizationContext.Current);
 				}
 				else
 				{
-					CallbackUtility.InvokeCompletionCallback(this, value, false);
+					CallbackUtility.InvokeCompletionCallback(this, value);
 				}
 			}
 		}
@@ -504,15 +504,15 @@ namespace UnityFx.Async
 		{
 			if ((_flags & _flagRunContinuationsAsynchronously) != 0)
 			{
-				CallbackUtility.InvokeCompletionCallbackAsync(this, continuation, syncContext, true);
+				CallbackUtility.InvokeCompletionCallbackAsync(this, continuation, syncContext);
 			}
 			else if (syncContext == null || syncContext == SynchronizationContext.Current)
 			{
-				CallbackUtility.InvokeCompletionCallback(this, continuation, true);
+				CallbackUtility.InvokeCompletionCallback(this, continuation);
 			}
 			else
 			{
-				syncContext.Post(args => CallbackUtility.InvokeCompletionCallback(this, args, true), continuation);
+				syncContext.Post(args => CallbackUtility.InvokeCompletionCallback(this, args), continuation);
 			}
 		}
 

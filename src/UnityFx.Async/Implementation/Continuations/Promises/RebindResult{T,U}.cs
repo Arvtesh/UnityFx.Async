@@ -44,7 +44,7 @@ namespace UnityFx.Async.Promises
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool inline)
+		public void Invoke(IAsyncOperation op)
 		{
 			try
 			{
@@ -53,26 +53,26 @@ namespace UnityFx.Async.Promises
 					switch (_continuation)
 					{
 						case Func<U> f1:
-							TrySetResult(f1(), inline);
+							TrySetResult(f1(), false);
 							break;
 
 						case Func<T, U> f2:
-							TrySetResult(f2((op as IAsyncOperation<T>).Result), inline);
+							TrySetResult(f2((op as IAsyncOperation<T>).Result), false);
 							break;
 
 						default:
-							TrySetCanceled(inline);
+							TrySetCanceled(false);
 							break;
 					}
 				}
 				else
 				{
-					TrySetException(op.Exception, inline);
+					TrySetException(op.Exception, false);
 				}
 			}
 			catch (Exception e)
 			{
-				TrySetException(e, inline);
+				TrySetException(e, false);
 			}
 		}
 

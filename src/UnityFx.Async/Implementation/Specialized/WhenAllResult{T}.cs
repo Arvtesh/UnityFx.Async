@@ -58,7 +58,7 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation asyncOp, bool inline)
+		public void Invoke(IAsyncOperation asyncOp)
 		{
 			if (IsCompleted)
 			{
