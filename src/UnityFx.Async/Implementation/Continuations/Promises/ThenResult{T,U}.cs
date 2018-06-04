@@ -37,12 +37,12 @@ namespace UnityFx.Async.Promises
 			{
 				case Action a:
 					a.Invoke();
-					TrySetCompleted(false);
+					TrySetCompleted();
 					break;
 
 				case Action<T> a1:
 					a1.Invoke((op as IAsyncOperation<T>).Result);
-					TrySetCompleted(false);
+					TrySetCompleted();
 					break;
 
 				case Func<IAsyncOperation<U>> f3:
@@ -66,7 +66,7 @@ namespace UnityFx.Async.Promises
 					break;
 
 				default:
-					TrySetCanceled(false);
+					TrySetCanceled();
 					break;
 			}
 
@@ -95,7 +95,7 @@ namespace UnityFx.Async.Promises
 				{
 					if (IsCancellationRequested)
 					{
-						TrySetCanceled(false);
+						TrySetCanceled();
 					}
 					else
 					{
@@ -105,12 +105,12 @@ namespace UnityFx.Async.Promises
 				else
 				{
 					_errorCallback?.Invoke(op.Exception);
-					TrySetException(op.Exception, false);
+					TrySetException(op.Exception);
 				}
 			}
 			catch (Exception e)
 			{
-				TrySetException(e, false);
+				TrySetException(e);
 			}
 		}
 

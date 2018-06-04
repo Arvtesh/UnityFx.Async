@@ -19,7 +19,7 @@ namespace UnityFx.Async
 		public TimerDelayResult(int millisecondsDelay)
 		{
 			_timer = new Timer(
-				state => (state as AsyncResult).TrySetCompleted(false),
+				state => (state as AsyncResult).TrySetCompleted(),
 				this,
 				millisecondsDelay,
 				Timeout.Infinite);
@@ -31,7 +31,7 @@ namespace UnityFx.Async
 
 		protected override void OnCancel()
 		{
-			TrySetCanceled(false);
+			TrySetCanceled();
 		}
 
 		protected override void OnCompleted()

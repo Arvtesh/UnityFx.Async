@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
-using System.Threading;
 
 namespace UnityFx.Async.Promises
 {
@@ -53,26 +52,26 @@ namespace UnityFx.Async.Promises
 					switch (_continuation)
 					{
 						case Func<U> f1:
-							TrySetResult(f1(), false);
+							TrySetResult(f1());
 							break;
 
 						case Func<T, U> f2:
-							TrySetResult(f2((op as IAsyncOperation<T>).Result), false);
+							TrySetResult(f2((op as IAsyncOperation<T>).Result));
 							break;
 
 						default:
-							TrySetCanceled(false);
+							TrySetCanceled();
 							break;
 					}
 				}
 				else
 				{
-					TrySetException(op.Exception, false);
+					TrySetException(op.Exception);
 				}
 			}
 			catch (Exception e)
 			{
-				TrySetException(e, false);
+				TrySetException(e);
 			}
 		}
 

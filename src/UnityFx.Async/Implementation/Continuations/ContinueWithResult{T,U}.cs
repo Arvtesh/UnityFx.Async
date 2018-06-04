@@ -99,20 +99,20 @@ namespace UnityFx.Async
 							break;
 
 						default:
-							TrySetCanceled(false);
+							TrySetCanceled();
 							return;
 					}
 
-					TrySetResult(result, false);
+					TrySetResult(result);
 				}
 				catch (Exception e)
 				{
-					TrySetException(e, false);
+					TrySetException(e);
 				}
 			}
 			else
 			{
-				TrySetCanceled(false);
+				TrySetCanceled();
 			}
 		}
 

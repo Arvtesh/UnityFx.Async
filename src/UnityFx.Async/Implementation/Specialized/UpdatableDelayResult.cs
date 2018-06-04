@@ -40,7 +40,7 @@ namespace UnityFx.Async
 
 		protected override void OnCancel()
 		{
-			TrySetCanceled(false);
+			TrySetCanceled();
 		}
 
 		protected override void OnCompleted()
@@ -59,7 +59,7 @@ namespace UnityFx.Async
 
 			if (_timer <= 0)
 			{
-				TrySetCompleted(false);
+				TrySetCompleted();
 			}
 			else
 			{

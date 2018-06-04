@@ -52,7 +52,7 @@ namespace UnityFx.Async.Promises
 			}
 			else
 			{
-				TrySetCanceled(false);
+				TrySetCanceled();
 			}
 
 			return result;

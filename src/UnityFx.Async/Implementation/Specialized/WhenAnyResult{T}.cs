@@ -44,7 +44,7 @@ namespace UnityFx.Async
 
 		public void Invoke(IAsyncOperation op)
 		{
-			TrySetResult((T)op, false);
+			TrySetResult((T)op);
 		}
 
 		#endregion

@@ -78,7 +78,7 @@ namespace UnityFx.Async
 				}
 				else
 				{
-					TrySetException(op.Exception, false);
+					TrySetException(op.Exception);
 				}
 			}
 			else if (_state == State.WaitingForInnerOperation)
@@ -87,16 +87,16 @@ namespace UnityFx.Async
 				{
 					if (op is IAsyncOperation<T> innerOp)
 					{
-						TrySetResult(innerOp.Result, false);
+						TrySetResult(innerOp.Result);
 					}
 					else
 					{
-						TrySetCompleted(false);
+						TrySetCompleted();
 					}
 				}
 				else
 				{
-					TrySetException(op.Exception, false);
+					TrySetException(op.Exception);
 				}
 
 				_state = State.Done;
@@ -115,7 +115,7 @@ namespace UnityFx.Async
 		{
 			if (innerOp == null)
 			{
-				TrySetCanceled(false);
+				TrySetCanceled();
 			}
 			else
 			{

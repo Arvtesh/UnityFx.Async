@@ -47,22 +47,22 @@ namespace UnityFx.Async.Promises
 		{
 			if (op.IsCompletedSuccessfully)
 			{
-				TrySetCompleted(false);
+				TrySetCompleted();
 			}
 			else if (!(op.Exception is TException))
 			{
-				TrySetException(op.Exception, false);
+				TrySetException(op.Exception);
 			}
 			else
 			{
 				try
 				{
 					_errorCallback.Invoke(op.Exception as TException);
-					TrySetCompleted(false);
+					TrySetCompleted();
 				}
 				catch (Exception e)
 				{
-					TrySetException(e, false);
+					TrySetException(e);
 				}
 			}
 		}

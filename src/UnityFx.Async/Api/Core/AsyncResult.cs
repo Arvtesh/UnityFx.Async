@@ -316,9 +316,21 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Canceled"/> state.
 		/// </summary>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetCanceled(bool)"/>
+		protected internal bool TrySetCanceled()
+		{
+			return TrySetCanceled(false);
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Canceled"/> state.
+		/// </summary>
 		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetCanceled()"/>
 		protected internal bool TrySetCanceled(bool completedSynchronously)
 		{
 			ThrowIfDisposed();
@@ -342,10 +354,25 @@ namespace UnityFx.Async
 		/// if the exception is <see cref="OperationCanceledException"/>) state.
 		/// </summary>
 		/// <param name="exception">An exception that caused the operation to end prematurely.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetException(Exception, bool)"/>
+		protected internal bool TrySetException(Exception exception)
+		{
+			return TrySetException(exception, false);
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> (or <see cref="AsyncOperationStatus.Canceled"/>
+		/// if the exception is <see cref="OperationCanceledException"/>) state.
+		/// </summary>
+		/// <param name="exception">An exception that caused the operation to end prematurely.</param>
 		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetException(Exception)"/>
 		protected internal bool TrySetException(Exception exception, bool completedSynchronously)
 		{
 			ThrowIfDisposed();
@@ -390,11 +417,26 @@ namespace UnityFx.Async
 		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
 		/// </summary>
 		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="exceptions"/> is empty.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetExceptions(IEnumerable{Exception}, bool)"/>
+		protected internal bool TrySetExceptions(IEnumerable<Exception> exceptions)
+		{
+			return TrySetExceptions(exceptions, false);
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
 		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ArgumentException">Thrown if <paramref name="exceptions"/> is empty.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetExceptions(IEnumerable{Exception})"/>
 		protected internal bool TrySetExceptions(IEnumerable<Exception> exceptions, bool completedSynchronously)
 		{
 			ThrowIfDisposed();
@@ -447,9 +489,21 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetCompleted(bool)"/>
+		protected internal bool TrySetCompleted()
+		{
+			return TrySetCompleted(false);
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
+		/// </summary>
 		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetCompleted()"/>
 		protected internal bool TrySetCompleted(bool completedSynchronously)
 		{
 			ThrowIfDisposed();
