@@ -21,9 +21,9 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public UpdatableDelayResult(int millisecondsDelay, IAsyncUpdateSource updateSource)
+		public UpdatableDelayResult(float secondsDelay, IAsyncUpdateSource updateSource)
 		{
-			_timeToWait = millisecondsDelay / 1000f;
+			_timeToWait = secondsDelay;
 			_timer = _timeToWait;
 			_updateService = updateSource;
 			_updateService.AddListener(this);

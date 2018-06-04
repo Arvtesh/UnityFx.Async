@@ -456,6 +456,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="millisecondsDelay"/> is less than -1.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
 		/// <seealso cref="Delay(int, IAsyncUpdateSource)"/>
+		/// <seealso cref="Delay(float)"/>
 		/// <seealso cref="Delay(TimeSpan)"/>
 		public static AsyncResult Delay(int millisecondsDelay)
 		{
@@ -482,7 +483,7 @@ namespace UnityFx.Async
 
 		/// <summary>
 		/// Creates an operation that completes after a time delay. This method creates a more effecient operation
-		/// than <see cref="Delay(int)"/> but requires a specialized updates source.
+		/// than <see cref="Delay(int)"/> but requires a specialized update source.
 		/// </summary>
 		/// <param name="millisecondsDelay">The number of milliseconds to wait before completing the returned operation, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
 		/// <param name="updateSource">Update notifications provider.</param>
@@ -490,6 +491,8 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="millisecondsDelay"/> is less than -1.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
 		/// <seealso cref="Delay(int)"/>
+		/// <seealso cref="Delay(float, IAsyncUpdateSource)"/>
+		/// <seealso cref="Delay(TimeSpan, IAsyncUpdateSource)"/>
 		public static AsyncResult Delay(int millisecondsDelay, IAsyncUpdateSource updateSource)
 		{
 			if (updateSource == null)
@@ -513,7 +516,68 @@ namespace UnityFx.Async
 				return new AsyncCompletionSource(AsyncOperationStatus.Running);
 			}
 
-			var result = new UpdatableDelayResult(millisecondsDelay, updateSource);
+			var result = new UpdatableDelayResult(millisecondsDelay / 1000f, updateSource);
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an operation that completes after a specified time interval.
+		/// </summary>
+		/// <param name="secondsDelay">The number of seconds to wait before completing the returned operation, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="secondsDelay"/> represents a negative time interval.</exception>
+		/// <returns>An operation that represents the time delay.</returns>
+		/// <seealso cref="Delay(float, IAsyncUpdateSource)"/>
+		/// <seealso cref="Delay(int)"/>
+		/// <seealso cref="Delay(TimeSpan)"/>
+		public static AsyncResult Delay(float secondsDelay)
+		{
+			var millisecondsDelay = (long)((double)secondsDelay * 1000);
+
+			if (millisecondsDelay > int.MaxValue)
+			{
+				throw new ArgumentOutOfRangeException(nameof(secondsDelay));
+			}
+
+			return Delay((int)millisecondsDelay);
+		}
+
+		/// <summary>
+		/// Creates an operation that completes after a specified time interval. This method creates a more effecient operation
+		/// than <see cref="Delay(float)"/> but requires a specialized update source.
+		/// </summary>
+		/// <param name="secondsDelay">The number of seconds to wait before completing the returned operation, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
+		/// <param name="updateSource">Update notifications provider.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="updateSource"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="secondsDelay"/> represents a negative time interval other than <c>TimeSpan.FromMillseconds(-1)</c>.</exception>
+		/// <returns>An operation that represents the time delay.</returns>
+		/// <seealso cref="Delay(float)"/>
+		/// <seealso cref="Delay(int, IAsyncUpdateSource)"/>
+		/// <seealso cref="Delay(TimeSpan, IAsyncUpdateSource)"/>
+		public static AsyncResult Delay(float secondsDelay, IAsyncUpdateSource updateSource)
+		{
+			if (updateSource == null)
+			{
+				throw new ArgumentNullException(nameof(updateSource));
+			}
+
+			if (secondsDelay < Timeout.Infinite)
+			{
+				throw new ArgumentOutOfRangeException(nameof(secondsDelay), secondsDelay, Constants.ErrorValueIsLessThanZero);
+			}
+
+			if (secondsDelay == 0)
+			{
+				return CompletedOperation;
+			}
+
+			if (secondsDelay == Timeout.Infinite)
+			{
+				// NOTE: Cannot return AsyncResult instance because its Cancel implementation throws NotSupportedException.
+				return new AsyncCompletionSource(AsyncOperationStatus.Running);
+			}
+
+			var result = new UpdatableDelayResult(secondsDelay, updateSource);
 			result.Start();
 			return result;
 		}
@@ -526,6 +590,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that represents the time delay.</returns>
 		/// <seealso cref="Delay(TimeSpan, IAsyncUpdateSource)"/>
 		/// <seealso cref="Delay(int)"/>
+		/// <seealso cref="Delay(float)"/>
 		public static AsyncResult Delay(TimeSpan delay)
 		{
 			var millisecondsDelay = (long)delay.TotalMilliseconds;
@@ -540,7 +605,7 @@ namespace UnityFx.Async
 
 		/// <summary>
 		/// Creates an operation that completes after a specified time interval. This method creates a more effecient operation
-		/// than <see cref="Delay(TimeSpan)"/> but requires a specialized updates source.
+		/// than <see cref="Delay(TimeSpan)"/> but requires a specialized update source.
 		/// </summary>
 		/// <param name="delay">The time span to wait before completing the returned operation, or <c>TimeSpan.FromMilliseconds(-1)</c> to wait indefinitely.</param>
 		/// <param name="updateSource">Update notifications provider.</param>
@@ -548,16 +613,18 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="delay"/> represents a negative time interval other than <c>TimeSpan.FromMillseconds(-1)</c>.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
 		/// <seealso cref="Delay(TimeSpan)"/>
+		/// <seealso cref="Delay(int, IAsyncUpdateSource)"/>
+		/// <seealso cref="Delay(float, IAsyncUpdateSource)"/>
 		public static AsyncResult Delay(TimeSpan delay, IAsyncUpdateSource updateSource)
 		{
-			var millisecondsDelay = (long)delay.TotalMilliseconds;
+			var secondsDelay = delay.TotalSeconds;
 
-			if (millisecondsDelay > int.MaxValue)
+			if (secondsDelay > float.MaxValue)
 			{
 				throw new ArgumentOutOfRangeException(nameof(delay));
 			}
 
-			return Delay((int)millisecondsDelay, updateSource);
+			return Delay((float)secondsDelay, updateSource);
 		}
 
 		#endregion

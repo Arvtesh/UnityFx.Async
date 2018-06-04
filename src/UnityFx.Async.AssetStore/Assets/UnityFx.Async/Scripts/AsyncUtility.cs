@@ -96,6 +96,17 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Creates an operation that completes after a time delay.
 		/// </summary>
+		/// <param name="secondsDelay">The number of seconds to wait before completing the returned operation, or -1 to wait indefinitely.</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="secondsDelay"/> is less than -1.</exception>
+		/// <returns>An operation that represents the time delay.</returns>
+		public static IAsyncOperation Delay(float secondsDelay)
+		{
+			return AsyncResult.Delay(secondsDelay, GetCoroutineRunner().UpdateSource);
+		}
+
+		/// <summary>
+		/// Creates an operation that completes after a time delay.
+		/// </summary>
 		/// <param name="delay">The time span to wait before completing the returned operation, or <c>TimeSpan.FromMilliseconds(-1)</c> to wait indefinitely.</param>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="delay"/> represents a negative time interval other than <c>TimeSpan.FromMillseconds(-1)</c>.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
