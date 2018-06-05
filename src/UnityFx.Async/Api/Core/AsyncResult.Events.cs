@@ -96,7 +96,7 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public void AddCompletionCallback(AsyncOperationCallback action)
+		public void AddCompletionCallback(Action<IAsyncOperation> action)
 		{
 			if (!TryAddCompletionCallback(action))
 			{
@@ -105,7 +105,7 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public bool TryAddCompletionCallback(AsyncOperationCallback action)
+		public bool TryAddCompletionCallback(Action<IAsyncOperation> action)
 		{
 			ThrowIfDisposed();
 
@@ -118,7 +118,7 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public void AddCompletionCallback(AsyncOperationCallback action, SynchronizationContext syncContext)
+		public void AddCompletionCallback(Action<IAsyncOperation> action, SynchronizationContext syncContext)
 		{
 			if (!TryAddCompletionCallback(action, syncContext))
 			{
@@ -127,7 +127,7 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public bool TryAddCompletionCallback(AsyncOperationCallback action, SynchronizationContext syncContext)
+		public bool TryAddCompletionCallback(Action<IAsyncOperation> action, SynchronizationContext syncContext)
 		{
 			ThrowIfDisposed();
 
@@ -140,7 +140,7 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public bool RemoveCompletionCallback(AsyncOperationCallback action)
+		public bool RemoveCompletionCallback(Action<IAsyncOperation> action)
 		{
 			if (action != null)
 			{

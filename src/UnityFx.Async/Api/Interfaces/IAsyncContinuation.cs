@@ -13,7 +13,6 @@ namespace UnityFx.Async
 	/// continuation operations.
 	/// </remarks>
 	/// <seealso cref="IAsyncOperation"/>
-	/// <seealso cref="AsyncOperationCallback"/>
 	/// <seealso cref="AsyncContinuationOptions"/>
 	public interface IAsyncContinuation
 	{

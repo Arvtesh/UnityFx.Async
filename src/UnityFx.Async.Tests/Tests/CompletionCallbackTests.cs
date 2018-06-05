@@ -60,7 +60,7 @@ namespace UnityFx.Async
 			// Arrange
 			var op = new AsyncCompletionSource();
 			var counter = 0;
-			var d = new AsyncOperationCallback(CompletionCallback);
+			var d = new Action<IAsyncOperation>(CompletionCallback);
 
 			void CompletionCallback(IAsyncOperation o)
 			{

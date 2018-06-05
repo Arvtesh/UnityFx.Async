@@ -23,16 +23,16 @@ namespace UnityFx.Async
 					c.Invoke(op);
 					break;
 
-				case AsyncOperationCallback aoc:
-					aoc.Invoke(op);
+				case Action<IAsyncOperation> a:
+					a.Invoke(op);
 					break;
 
 				case Action a:
 					a.Invoke();
 					break;
 
-				case AsyncCallback ac:
-					ac.Invoke(op);
+				case AsyncCallback a:
+					a.Invoke(op);
 					break;
 
 				case AsyncCompletedEventHandler eh:
@@ -65,10 +65,6 @@ namespace UnityFx.Async
 
 				case Action<float> af:
 					af.Invoke(op.Progress);
-					break;
-
-				case AsyncOperationCallback ac:
-					ac.Invoke(op);
 					break;
 
 				case ProgressChangedEventHandler ph:

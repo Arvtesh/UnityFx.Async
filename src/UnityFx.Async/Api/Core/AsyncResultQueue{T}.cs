@@ -31,7 +31,7 @@ namespace UnityFx.Async
 		private bool _suspended;
 		private List<T> _ops = new List<T>();
 		private SendOrPostCallback _startCallback;
-		private AsyncOperationCallback _completionCallback;
+		private Action<IAsyncOperation> _completionCallback;
 
 		#endregion
 
