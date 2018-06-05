@@ -63,6 +63,10 @@ namespace UnityFx.Async
 					break;
 #endif
 
+				case Action<float> af:
+					af.Invoke(op.Progress);
+					break;
+
 				case AsyncOperationCallback ac:
 					ac.Invoke(op);
 					break;

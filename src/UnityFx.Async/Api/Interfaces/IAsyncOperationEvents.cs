@@ -33,11 +33,11 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="Completed"/>
-		/// <seealso cref="AddProgressCallback(AsyncOperationCallback)"/>
-		/// <seealso cref="AddProgressCallback(AsyncOperationCallback, SynchronizationContext)"/>
-		/// <seealso cref="TryAddProgressCallback(AsyncOperationCallback)"/>
-		/// <seealso cref="TryAddProgressCallback(AsyncOperationCallback, SynchronizationContext)"/>
-		/// <seealso cref="RemoveProgressCallback(AsyncOperationCallback)"/>
+		/// <seealso cref="AddProgressCallback(Action{float})"/>
+		/// <seealso cref="AddProgressCallback(Action{float}, SynchronizationContext)"/>
+		/// <seealso cref="TryAddProgressCallback(Action{float})"/>
+		/// <seealso cref="TryAddProgressCallback(Action{float}, SynchronizationContext)"/>
+		/// <seealso cref="RemoveProgressCallback(Action{float})"/>
 		event ProgressChangedEventHandler ProgressChanged;
 
 		/// <summary>
@@ -236,11 +236,11 @@ namespace UnityFx.Async
 		/// <param name="action">The callback to be executed when the operation progress has changed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddProgressCallback(AsyncOperationCallback, SynchronizationContext)"/>
-		/// <seealso cref="TryAddProgressCallback(AsyncOperationCallback)"/>
-		/// <seealso cref="TryAddProgressCallback(AsyncOperationCallback, SynchronizationContext)"/>
-		/// <seealso cref="RemoveProgressCallback(AsyncOperationCallback)"/>
-		void AddProgressCallback(AsyncOperationCallback action);
+		/// <seealso cref="AddProgressCallback(Action{float}, SynchronizationContext)"/>
+		/// <seealso cref="TryAddProgressCallback(Action{float})"/>
+		/// <seealso cref="TryAddProgressCallback(Action{float}, SynchronizationContext)"/>
+		/// <seealso cref="RemoveProgressCallback(Action{float})"/>
+		void AddProgressCallback(Action<float> action);
 
 		/// <summary>
 		/// Attempts to add a callback to be executed when the operation progress has changed. If the operation is already completed
@@ -254,11 +254,11 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddProgressCallback(AsyncOperationCallback)"/>
-		/// <seealso cref="AddProgressCallback(AsyncOperationCallback, SynchronizationContext)"/>
-		/// <seealso cref="TryAddProgressCallback(AsyncOperationCallback, SynchronizationContext)"/>
-		/// <seealso cref="RemoveProgressCallback(AsyncOperationCallback)"/>
-		bool TryAddProgressCallback(AsyncOperationCallback action);
+		/// <seealso cref="AddProgressCallback(Action{float})"/>
+		/// <seealso cref="AddProgressCallback(Action{float}, SynchronizationContext)"/>
+		/// <seealso cref="TryAddProgressCallback(Action{float}, SynchronizationContext)"/>
+		/// <seealso cref="RemoveProgressCallback(Action{float})"/>
+		bool TryAddProgressCallback(Action<float> action);
 
 		/// <summary>
 		/// Adds a callback to be executed when the operation progress has changed. If the operation is completed <paramref name="action"/> is invoked
@@ -273,11 +273,11 @@ namespace UnityFx.Async
 		/// </param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddProgressCallback(AsyncOperationCallback)"/>
-		/// <seealso cref="TryAddProgressCallback(AsyncOperationCallback)"/>
-		/// <seealso cref="TryAddProgressCallback(AsyncOperationCallback, SynchronizationContext)"/>
-		/// <seealso cref="RemoveProgressCallback(AsyncOperationCallback)"/>
-		void AddProgressCallback(AsyncOperationCallback action, SynchronizationContext syncContext);
+		/// <seealso cref="AddProgressCallback(Action{float})"/>
+		/// <seealso cref="TryAddProgressCallback(Action{float})"/>
+		/// <seealso cref="TryAddProgressCallback(Action{float}, SynchronizationContext)"/>
+		/// <seealso cref="RemoveProgressCallback(Action{float})"/>
+		void AddProgressCallback(Action<float> action, SynchronizationContext syncContext);
 
 		/// <summary>
 		/// Attempts to add a callback to be executed when the operation progress has changed. If the operation is already completed
@@ -293,22 +293,22 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddProgressCallback(AsyncOperationCallback)"/>
-		/// <seealso cref="AddProgressCallback(AsyncOperationCallback, SynchronizationContext)"/>
-		/// <seealso cref="TryAddProgressCallback(AsyncOperationCallback)"/>
-		/// <seealso cref="RemoveProgressCallback(AsyncOperationCallback)"/>
-		bool TryAddProgressCallback(AsyncOperationCallback action, SynchronizationContext syncContext);
+		/// <seealso cref="AddProgressCallback(Action{float})"/>
+		/// <seealso cref="AddProgressCallback(Action{float}, SynchronizationContext)"/>
+		/// <seealso cref="TryAddProgressCallback(Action{float})"/>
+		/// <seealso cref="RemoveProgressCallback(Action{float})"/>
+		bool TryAddProgressCallback(Action<float> action, SynchronizationContext syncContext);
 
 		/// <summary>
 		/// Removes an existing progress callback.
 		/// </summary>
 		/// <param name="action">The callback to remove. Can be <see langword="null"/>.</param>
 		/// <returns>Returns <see langword="true"/> if <paramref name="action"/> was removed; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="AddProgressCallback(AsyncOperationCallback)"/>
-		/// <seealso cref="AddProgressCallback(AsyncOperationCallback, SynchronizationContext)"/>
-		/// <seealso cref="TryAddProgressCallback(AsyncOperationCallback)"/>
-		/// <seealso cref="TryAddProgressCallback(AsyncOperationCallback, SynchronizationContext)"/>
-		bool RemoveProgressCallback(AsyncOperationCallback action);
+		/// <seealso cref="AddProgressCallback(Action{float})"/>
+		/// <seealso cref="AddProgressCallback(Action{float}, SynchronizationContext)"/>
+		/// <seealso cref="TryAddProgressCallback(Action{float})"/>
+		/// <seealso cref="TryAddProgressCallback(Action{float}, SynchronizationContext)"/>
+		bool RemoveProgressCallback(Action<float> action);
 
 #if !NET35
 

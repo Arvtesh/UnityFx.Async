@@ -206,7 +206,7 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public void AddProgressCallback(AsyncOperationCallback action)
+		public void AddProgressCallback(Action<float> action)
 		{
 			if (!TryAddProgressCallback(action))
 			{
@@ -215,7 +215,7 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public bool TryAddProgressCallback(AsyncOperationCallback action)
+		public bool TryAddProgressCallback(Action<float> action)
 		{
 			ThrowIfDisposed();
 
@@ -228,7 +228,7 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public void AddProgressCallback(AsyncOperationCallback action, SynchronizationContext syncContext)
+		public void AddProgressCallback(Action<float> action, SynchronizationContext syncContext)
 		{
 			if (!TryAddProgressCallback(action, syncContext))
 			{
@@ -237,7 +237,7 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public bool TryAddProgressCallback(AsyncOperationCallback action, SynchronizationContext syncContext)
+		public bool TryAddProgressCallback(Action<float> action, SynchronizationContext syncContext)
 		{
 			ThrowIfDisposed();
 
@@ -250,7 +250,7 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public bool RemoveProgressCallback(AsyncOperationCallback action)
+		public bool RemoveProgressCallback(Action<float> action)
 		{
 			if (action != null)
 			{
