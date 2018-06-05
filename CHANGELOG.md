@@ -18,6 +18,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ### Fixed
 - Fixed exception when removing listeners while in `AsyncUpdateSource.OnError` / `AsyncUpdateSource.OnCompleted` / `AsyncUpdateSource.Dispose`.
 
+### Removed
+- Removed `AsyncOperationCallback` delegate type.
+
 -----------------------
 ## [0.9.2] - 2018.05.25
 
