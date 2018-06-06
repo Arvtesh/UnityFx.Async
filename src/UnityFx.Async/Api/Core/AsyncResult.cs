@@ -57,6 +57,7 @@ namespace UnityFx.Async
 
 		private const int _flagDoNotDispose = OptionDoNotDispose << _optionsOffset;
 		private const int _flagRunContinuationsAsynchronously = OptionRunContinuationsAsynchronously << _optionsOffset;
+		private const int _flagSuppressCancellation = OptionSuppressCancellation << _optionsOffset;
 
 		private const int _statusMask = 0x0000000f;
 		private const int _optionsMask = 0x70000000;
@@ -691,6 +692,7 @@ namespace UnityFx.Async
 
 		internal const int OptionDoNotDispose = 1;
 		internal const int OptionRunContinuationsAsynchronously = 2;
+		internal const int OptionSuppressCancellation = 4;
 
 		/// <summary>
 		/// Special status setter for <see cref="AsyncOperationStatus.Scheduled"/> and <see cref="AsyncOperationStatus.Running"/>.
@@ -954,6 +956,11 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		public void Cancel()
 		{
+			if ((_flags & _flagSuppressCancellation) != 0)
+			{
+				return;
+			}
+
 			if (TrySetFlag(_flagCancellationRequested))
 			{
 				OnCancel();
