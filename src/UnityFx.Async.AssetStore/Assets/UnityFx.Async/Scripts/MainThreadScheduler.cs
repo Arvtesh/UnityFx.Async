@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using UnityEngine;
 
@@ -74,14 +73,15 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				var asyncResult = new InvokeResult(d, state);
-
-				lock (_actionQueue)
+				using (var asyncResult = new InvokeResult(d, state))
 				{
-					_actionQueue.Enqueue(asyncResult);
-				}
+					lock (_actionQueue)
+					{
+						_actionQueue.Enqueue(asyncResult);
+					}
 
-				asyncResult.Wait();
+					asyncResult.Wait();
+				}
 			}
 		}
 
@@ -156,16 +156,14 @@ namespace UnityFx.Async
 					{
 						var asyncResult = _actionQueue.Dequeue();
 
-						if (asyncResult != null)
+						try
 						{
-							try
-							{
-								asyncResult.SetCompleted();
-							}
-							catch (Exception e)
-							{
-								asyncResult.SetException(e);
-							}
+							asyncResult.SetCompleted();
+						}
+						catch (Exception e)
+						{
+							asyncResult.SetException(e);
+							Debug.LogException(e);
 						}
 					}
 				}
