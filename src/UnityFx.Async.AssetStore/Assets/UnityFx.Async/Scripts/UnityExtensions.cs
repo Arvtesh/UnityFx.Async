@@ -246,7 +246,7 @@ namespace UnityFx.Async
 #if NET_4_6 || NET_STANDARD_2_0
 
 		/// <summary>
-		/// Provides an object that waits for the completion of an <see cref="WWW"/>. This type and its members are intended for compiler use only.
+		/// Provides an object that waits for the completion of an <see cref="UnityWebRequest"/>. This type and its members are intended for compiler use only.
 		/// </summary>
 		public struct UnityWebRequestAwaiter : INotifyCompletion
 		{
