@@ -528,17 +528,19 @@ namespace UnityFx.Async
 			Assert.Throws<NotSupportedException>(() => op.Cancel());
 		}
 
-		[Fact]
-		public void Cancel_CanBeSuppressed()
+		[Theory]
+		[InlineData(AsyncCreationOptions.None, true)]
+		[InlineData(AsyncCreationOptions.SuppressCancellation, false)]
+		public void Cancel_CanBeSuppressed(AsyncCreationOptions options, bool expectedCompleted)
 		{
 			// Arrange
-			var op = new AsyncCompletionSource(AsyncCreationOptions.SuppressCancellation);
+			var op = new AsyncCompletionSource(options);
 
 			// Act
 			op.Cancel();
 
 			// Assert
-			Assert.False(op.IsCompleted);
+			Assert.Equal(expectedCompleted, op.IsCompleted);
 		}
 
 		#endregion
