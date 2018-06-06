@@ -1107,7 +1107,7 @@ namespace UnityFx.Async
 				_exception = new OperationCanceledException();
 			}
 
-			if (flags > StatusRunning)
+			if ((flags & _statusMask) > StatusRunning)
 			{
 				_callback = _callbackCompletionSentinel;
 				_flags = flags | _flagCompletedSynchronously;
