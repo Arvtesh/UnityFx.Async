@@ -12,11 +12,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added update sources for `LateUpdate`, `FixedUpdate` and end-of-frame updates.
 
 ### Changed
-- Significantly reduced number of memory allocations when adding continuations (implemention optimizations).
+- Significantly reduced number of memory allocations when adding continuations.
 - Changed signature of the `IAsyncContinuation.Invoke` method.
 
 ### Fixed
 - Fixed exception when removing listeners while in `AsyncUpdateSource.OnError` / `AsyncUpdateSource.OnCompleted` / `AsyncUpdateSource.Dispose`.
+- Fixed `AsyncResult.MoveNext` to always return `true` while the operation is not completed.
+- Fixed `AsyncResult` construction code not working as intended when `AsyncCreationOptions` are specified.
 
 ### Removed
 - Removed `AsyncOperationCallback` delegate type.
