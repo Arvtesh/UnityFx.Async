@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 #if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
 using UnityEngine.Networking;
@@ -38,16 +39,24 @@ namespace UnityFx.Async
 		{
 			if (ReferenceEquals(_go, null))
 			{
-				_go = GameObject.Find(RootGoName);
-
-				if (ReferenceEquals(_go, null))
-				{
-					_go = new GameObject(RootGoName);
-					GameObject.DontDestroyOnLoad(_go);
-				}
+				_go = new GameObject(RootGoName);
+				GameObject.DontDestroyOnLoad(_go);
 			}
 
 			return _go;
+		}
+
+		/// <summary>
+		/// Sets the <see cref="SynchronizationContext"/> for main thread (if none).
+		/// </summary>
+		public static void SetSynchronizationContext()
+		{
+			var go = GetRootGo();
+
+			if (go && !go.GetComponent<MainThreadScheduler>())
+			{
+				go.AddComponent<MainThreadScheduler>();
+			}
 		}
 
 		/// <summary>
@@ -55,7 +64,7 @@ namespace UnityFx.Async
 		/// </summary>
 		public static IAsyncUpdateSource GetUpdateSource()
 		{
-			return GetCoroutineRunner().UpdateSource;
+			return GetRootBehaviour().UpdateSource;
 		}
 
 		/// <summary>
@@ -63,7 +72,7 @@ namespace UnityFx.Async
 		/// </summary>
 		public static IAsyncUpdateSource GetLateUpdateSource()
 		{
-			return GetCoroutineRunner().LateUpdateSource;
+			return GetRootBehaviour().LateUpdateSource;
 		}
 
 		/// <summary>
@@ -71,7 +80,7 @@ namespace UnityFx.Async
 		/// </summary>
 		public static IAsyncUpdateSource GetFixedUpdateSource()
 		{
-			return GetCoroutineRunner().FixedUpdateSource;
+			return GetRootBehaviour().FixedUpdateSource;
 		}
 
 		/// <summary>
@@ -79,7 +88,7 @@ namespace UnityFx.Async
 		/// </summary>
 		public static IAsyncUpdateSource GetEndOfFrameUpdateSource()
 		{
-			return GetCoroutineRunner().EofUpdateSource;
+			return GetRootBehaviour().EofUpdateSource;
 		}
 
 		/// <summary>
@@ -90,7 +99,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that represents the time delay.</returns>
 		public static IAsyncOperation Delay(int millisecondsDelay)
 		{
-			return AsyncResult.Delay(millisecondsDelay, GetCoroutineRunner().UpdateSource);
+			return AsyncResult.Delay(millisecondsDelay, GetRootBehaviour().UpdateSource);
 		}
 
 		/// <summary>
@@ -101,7 +110,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that represents the time delay.</returns>
 		public static IAsyncOperation Delay(float secondsDelay)
 		{
-			return AsyncResult.Delay(secondsDelay, GetCoroutineRunner().UpdateSource);
+			return AsyncResult.Delay(secondsDelay, GetRootBehaviour().UpdateSource);
 		}
 
 		/// <summary>
@@ -112,7 +121,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that represents the time delay.</returns>
 		public static IAsyncOperation Delay(TimeSpan delay)
 		{
-			return AsyncResult.Delay(delay, GetCoroutineRunner().UpdateSource);
+			return AsyncResult.Delay(delay, GetRootBehaviour().UpdateSource);
 		}
 
 		/// <summary>
@@ -126,7 +135,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException("enumerator");
 			}
 
-			return GetCoroutineRunner().StartCoroutine(enumerator);
+			return GetRootBehaviour().StartCoroutine(enumerator);
 		}
 
 		/// <summary>
@@ -137,7 +146,7 @@ namespace UnityFx.Async
 		{
 			if (coroutine != null)
 			{
-				var runner = TryGetCoroutineRunner();
+				var runner = TryGetRootBehaviour();
 
 				if (runner)
 				{
@@ -154,7 +163,7 @@ namespace UnityFx.Async
 		{
 			if (enumerator != null)
 			{
-				var runner = TryGetCoroutineRunner();
+				var runner = TryGetRootBehaviour();
 
 				if (runner)
 				{
@@ -168,7 +177,7 @@ namespace UnityFx.Async
 		/// </summary>
 		public static void StopAllCoroutines()
 		{
-			var runner = TryGetCoroutineRunner();
+			var runner = TryGetRootBehaviour();
 
 			if (runner)
 			{
@@ -193,7 +202,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException("completionCallback");
 			}
 
-			GetCoroutineRunner().AddCompletionCallback(op, completionCallback);
+			GetRootBehaviour().AddCompletionCallback(op, completionCallback);
 		}
 
 #if UNITY_5_2_OR_NEWER || UNITY_5_3_OR_NEWER || UNITY_2017 || UNITY_2018
@@ -215,7 +224,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException("completionCallback");
 			}
 
-			GetCoroutineRunner().AddCompletionCallback(request, completionCallback);
+			GetRootBehaviour().AddCompletionCallback(request, completionCallback);
 		}
 
 #endif
@@ -237,14 +246,14 @@ namespace UnityFx.Async
 				throw new ArgumentNullException("completionCallback");
 			}
 
-			GetCoroutineRunner().AddCompletionCallback(request, completionCallback);
+			GetRootBehaviour().AddCompletionCallback(request, completionCallback);
 		}
 
 		#endregion
 
 		#region implementation
 
-		private class CoroutineRunner : MonoBehaviour
+		private class AsyncRootBehaviour : MonoBehaviour
 		{
 			#region data
 
@@ -443,13 +452,13 @@ namespace UnityFx.Async
 			#endregion
 		}
 
-		private static CoroutineRunner TryGetCoroutineRunner()
+		private static AsyncRootBehaviour TryGetRootBehaviour()
 		{
 			var go = GetRootGo();
 
 			if (go)
 			{
-				var runner = go.GetComponent<CoroutineRunner>();
+				var runner = go.GetComponent<AsyncRootBehaviour>();
 
 				if (runner)
 				{
@@ -460,17 +469,17 @@ namespace UnityFx.Async
 			return null;
 		}
 
-		private static CoroutineRunner GetCoroutineRunner()
+		private static AsyncRootBehaviour GetRootBehaviour()
 		{
 			var go = GetRootGo();
 
 			if (go)
 			{
-				var runner = go.GetComponent<CoroutineRunner>();
+				var runner = go.GetComponent<AsyncRootBehaviour>();
 
 				if (!runner)
 				{
-					runner = go.AddComponent<CoroutineRunner>();
+					runner = go.AddComponent<AsyncRootBehaviour>();
 				}
 
 				return runner;
