@@ -46,25 +46,6 @@ namespace UnityFx.Async
 			Assert.Equal(expectedResult, result);
 		}
 
-		[Theory]
-		[InlineData(AsyncOperationStatus.Created, 0)]
-		[InlineData(AsyncOperationStatus.Scheduled, 0)]
-		[InlineData(AsyncOperationStatus.RanToCompletion, 1)]
-		[InlineData(AsyncOperationStatus.Faulted, 0)]
-		[InlineData(AsyncOperationStatus.Canceled, 0)]
-		public void Progress_ReturnsCorrentValue(AsyncOperationStatus status, float expectedValue)
-		{
-			// Arrange
-			var progress = 0.3f;
-			var op = new AsyncCompletionSource(status);
-
-			// Act
-			op.TrySetProgress(progress);
-
-			// Assert
-			Assert.Equal(expectedValue, op.Progress);
-		}
-
 		[Fact]
 		public void SetProgress_SetsCorrectValue()
 		{

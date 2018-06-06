@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -423,7 +424,145 @@ namespace UnityFx.Async
 
 		#endregion
 
+		#region IAsyncOperation
+
+		[Theory]
+		[InlineData(AsyncOperationStatus.Created, 0)]
+		[InlineData(AsyncOperationStatus.Scheduled, 0)]
+		[InlineData(AsyncOperationStatus.Running, 0.3f)]
+		[InlineData(AsyncOperationStatus.RanToCompletion, 1)]
+		[InlineData(AsyncOperationStatus.Faulted, 0)]
+		[InlineData(AsyncOperationStatus.Canceled, 0)]
+		public void Progress_ReturnsCorrentValue(AsyncOperationStatus status, float expectedValue)
+		{
+			// Arrange
+			var progress = 0.3f;
+			var op = new AsyncCompletionSource(status);
+
+			// Act
+			op.TrySetProgress(progress);
+
+			// Assert
+			Assert.Equal(expectedValue, op.Progress);
+		}
+
+		[Theory]
+		[InlineData(AsyncOperationStatus.Created, false)]
+		[InlineData(AsyncOperationStatus.Scheduled, false)]
+		[InlineData(AsyncOperationStatus.Running, false)]
+		[InlineData(AsyncOperationStatus.RanToCompletion, true)]
+		[InlineData(AsyncOperationStatus.Faulted, false)]
+		[InlineData(AsyncOperationStatus.Canceled, false)]
+		public void IsCompletedSuccessfully_ReturnsCorrentValue(AsyncOperationStatus status, bool expectedResult)
+		{
+			// Arrange
+			var op = new AsyncResult(status);
+
+			// Act
+			var result = op.IsCompletedSuccessfully;
+
+			// Assert
+			Assert.Equal(expectedResult, result);
+		}
+
+		[Theory]
+		[InlineData(AsyncOperationStatus.Created, false)]
+		[InlineData(AsyncOperationStatus.Scheduled, false)]
+		[InlineData(AsyncOperationStatus.Running, false)]
+		[InlineData(AsyncOperationStatus.RanToCompletion, false)]
+		[InlineData(AsyncOperationStatus.Faulted, true)]
+		[InlineData(AsyncOperationStatus.Canceled, false)]
+		public void IsFaulted_ReturnsCorrentValue(AsyncOperationStatus status, bool expectedResult)
+		{
+			// Arrange
+			var op = new AsyncResult(status);
+
+			// Act
+			var result = op.IsFaulted;
+
+			// Assert
+			Assert.Equal(expectedResult, result);
+		}
+
+		[Theory]
+		[InlineData(AsyncOperationStatus.Created, false)]
+		[InlineData(AsyncOperationStatus.Scheduled, false)]
+		[InlineData(AsyncOperationStatus.Running, false)]
+		[InlineData(AsyncOperationStatus.RanToCompletion, false)]
+		[InlineData(AsyncOperationStatus.Faulted, false)]
+		[InlineData(AsyncOperationStatus.Canceled, true)]
+		public void IsCancelled_ReturnsCorrentValue(AsyncOperationStatus status, bool expectedResult)
+		{
+			// Arrange
+			var op = new AsyncResult(status);
+
+			// Act
+			var result = op.IsCanceled;
+
+			// Assert
+			Assert.Equal(expectedResult, result);
+		}
+
+		#endregion
+
+		#region IAsyncCancellable
+
+		[Fact]
+		public void Cancel_CanBeCalledWhenDisposed()
+		{
+			// Arrange
+			var op = new AsyncResult(AsyncOperationStatus.RanToCompletion);
+			op.Dispose();
+
+			// Act/Assert
+			op.Cancel();
+		}
+
+		[Fact]
+		public void Cancel_DefaultImplementationThrows()
+		{
+			// Arrange
+			var op = new AsyncResult();
+
+			// Act/Assert
+			Assert.Throws<NotSupportedException>(() => op.Cancel());
+		}
+
+		[Fact]
+		public void Cancel_CanBeSuppressed()
+		{
+			// Arrange
+			var op = new AsyncCompletionSource(AsyncCreationOptions.SuppressCancellation);
+
+			// Act
+			op.Cancel();
+
+			// Assert
+			Assert.False(op.IsCompleted);
+		}
+
+		#endregion
+
 		#region IAsyncResult
+
+		[Theory]
+		[InlineData(AsyncOperationStatus.Created, false)]
+		[InlineData(AsyncOperationStatus.Scheduled, false)]
+		[InlineData(AsyncOperationStatus.Running, false)]
+		[InlineData(AsyncOperationStatus.RanToCompletion, true)]
+		[InlineData(AsyncOperationStatus.Faulted, true)]
+		[InlineData(AsyncOperationStatus.Canceled, true)]
+		public void IsCompleted_ReturnsCorrentValue(AsyncOperationStatus status, bool expectedResult)
+		{
+			// Arrange
+			var op = new AsyncResult(status);
+
+			// Act
+			var result = op.IsCompleted;
+
+			// Assert
+			Assert.Equal(expectedResult, result);
+		}
 
 		[Fact]
 		public void AsyncWaitHandle_ThrowsIfDisposed()
@@ -434,6 +573,56 @@ namespace UnityFx.Async
 
 			// Act/Assert
 			Assert.Throws<ObjectDisposedException>(() => op.AsyncWaitHandle);
+		}
+
+		#endregion
+
+		#region IEnumerator
+
+		[Fact]
+		public void Current_IsNull()
+		{
+			// Arrange/Act
+			var op = new AsyncResult();
+
+			// Act
+			var result = (op as IEnumerator).Current;
+
+			// Assert
+			Assert.Null(result);
+		}
+
+		[Fact]
+		public void MoveNext_CanBeCalledWhenDisposed()
+		{
+			// Arrange
+			var op = new AsyncResult(AsyncOperationStatus.RanToCompletion);
+			op.Dispose();
+
+			// Act
+			var result = (op as IEnumerator).MoveNext();
+
+			// Assert
+			Assert.False(result);
+		}
+
+		[Theory]
+		[InlineData(AsyncOperationStatus.Created, true)]
+		[InlineData(AsyncOperationStatus.Scheduled, true)]
+		[InlineData(AsyncOperationStatus.Running, true)]
+		[InlineData(AsyncOperationStatus.RanToCompletion, false)]
+		[InlineData(AsyncOperationStatus.Faulted, false)]
+		[InlineData(AsyncOperationStatus.Canceled, false)]
+		public void MoveNext_ReturnsCorrentValue(AsyncOperationStatus status, bool expectedResult)
+		{
+			// Arrange
+			var op = new AsyncResult(status);
+
+			// Act
+			var result = (op as IEnumerator).MoveNext();
+
+			// Assert
+			Assert.Equal(expectedResult, result);
 		}
 
 		#endregion
