@@ -5,18 +5,18 @@ Channel  | UnityFx.Async |
 AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/master?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/master) [![AppVeyor tests](https://img.shields.io/appveyor/tests/Arvtesh/unityFx-async.svg)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/build/tests)
 NuGet | [![NuGet](https://img.shields.io/nuget/v/UnityFx.Async.svg)](https://www.nuget.org/packages/UnityFx.Async)
 Github | [![GitHub release](https://img.shields.io/github/release/Arvtesh/UnityFx.Async.svg?logo=github)](https://github.com/Arvtesh/UnityFx.Async/releases)
-Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v0.9.2-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
+Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v0.9.3-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
 
 ## Synopsis
 
-*UnityFx.Async* is a set of classes and interfaces that extend [Unity3d](https://unity3d.com) asynchronous operations and can be used very much like [Task-based Asynchronous Pattern (TAP)](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming) in .NET or [Promises](https://developers.google.com/web/fundamentals/primers/promises) in Javascript. The library at its core defines a container ([AsyncResult](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncResult.html)) for state and result value of an asynchronous operation (aka `promise` or `future`). In many aspects it mimics [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) (for example, it can be used with `async`/`await` operators, supports continuations and synchronization context capturing).
+*UnityFx.Async* is a set of classes and interfaces that extend [Unity3d](https://unity3d.com) asynchronous operations and can be used very much like [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) in .NET or [Promises](https://developers.google.com/web/fundamentals/primers/promises) in JS. The library at its core defines a container ([AsyncResult](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncResult.html)) for state and result value of an asynchronous operation (aka `promise` or `future`). In many aspects it mimics [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) (for example, it can be used with `async`/`await` operators, supports continuations and synchronization context capturing).
 
 Library is designed as a lightweight [Unity3d](https://unity3d.com)-compatible [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) alternative (not a replacement though). Main design goals are:
 - Minimum object size and number of allocations.
 - Extensibility. The library operations are designed to be inherited.
 - Thread-safe. The library classes can be safely used from different threads (unless explicitly stated otherwise).
 - [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)-like interface and behaviour. In many cases library classes can be used much like corresponding [TPL](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-parallel-library-tpl) entities.
-- [Unity3d](https://unity3d.com) compatibility. This includes possibility to <c>yield</c> operations in coroutines and net35-compilance.
+- [Unity3d](https://unity3d.com)-specific features and compatibility. This includes possibility to <c>yield</c> operations in coroutines, net35-compilance, Unity asynchronous operation extensions etc.
 
 The table below summarizes differences berween *UnityFx.Async* and other popular asynchronous operation frameworks:
 
