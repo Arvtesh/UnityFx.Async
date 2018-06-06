@@ -65,32 +65,8 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AggregateException"/> class.
 		/// </summary>
-		public AggregateException(params Exception[] exceptions)
-			: this(string.Empty, exceptions)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AggregateException"/> class.
-		/// </summary>
-		public AggregateException(string message, params Exception[] exceptions)
-			: this(message, (IList<Exception>)exceptions)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AggregateException"/> class.
-		/// </summary>
 		public AggregateException(IEnumerable<Exception> exceptions)
-			: this(string.Empty, exceptions)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AggregateException"/> class.
-		/// </summary>
-		public AggregateException(string message, IEnumerable<Exception> exceptions)
-			: this(message, exceptions as IList<Exception> ?? (exceptions == null ? null : new List<Exception>(exceptions)))
+			: this(string.Empty, exceptions as IList<Exception> ?? (exceptions == null ? (IList<Exception>)new Exception[0] : new List<Exception>(exceptions)))
 		{
 		}
 
