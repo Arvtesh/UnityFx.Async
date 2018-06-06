@@ -1021,7 +1021,7 @@ namespace UnityFx.Async
 		object IEnumerator.Current => null;
 
 		/// <inheritdoc/>
-		bool IEnumerator.MoveNext() => _flags == StatusRunning;
+		bool IEnumerator.MoveNext() => (_flags & _statusMask) <= StatusRunning;
 
 		/// <inheritdoc/>
 		void IEnumerator.Reset() => throw new NotSupportedException();
