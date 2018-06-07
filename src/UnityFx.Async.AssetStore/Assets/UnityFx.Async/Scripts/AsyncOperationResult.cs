@@ -9,7 +9,6 @@ namespace UnityFx.Async
 	/// <summary>
 	/// A wrapper for <see cref="AsyncOperation"/> with result value.
 	/// </summary>
-	/// <typeparam name="T">Result type.</typeparam>
 	public class AsyncOperationResult : AsyncResult
 	{
 		#region data

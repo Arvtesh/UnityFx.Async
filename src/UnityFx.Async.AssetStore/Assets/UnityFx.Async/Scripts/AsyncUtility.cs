@@ -47,16 +47,11 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Sets the <see cref="SynchronizationContext"/> for main thread (if none).
+		/// Initializes the utilities. If skipped the utilities are lazily initialized.
 		/// </summary>
-		public static void SetSynchronizationContext()
+		public static void Initialize()
 		{
-			var go = GetRootGo();
-
-			if (go && !go.GetComponent<MainThreadScheduler>())
-			{
-				go.AddComponent<MainThreadScheduler>();
-			}
+			GetRootBehaviour();
 		}
 
 		/// <summary>
@@ -253,17 +248,83 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		private class AsyncRootBehaviour : MonoBehaviour
+		private sealed class InvokeResult : AsyncResult
+		{
+			private readonly SendOrPostCallback _callback;
+
+			public InvokeResult(SendOrPostCallback d, object asyncState)
+				: base(null, asyncState)
+			{
+				_callback = d;
+			}
+
+			public void Invoke()
+			{
+				_callback.Invoke(AsyncState);
+			}
+
+			public void SetCompleted()
+			{
+				TrySetCompleted();
+			}
+
+			public void SetException(Exception e)
+			{
+				TrySetException(e);
+			}
+		}
+
+		private sealed class MainThreadSynchronizationContext : SynchronizationContext
+		{
+			private readonly AsyncRootBehaviour _scheduler;
+
+			public MainThreadSynchronizationContext(AsyncRootBehaviour scheduler)
+			{
+				_scheduler = scheduler;
+			}
+
+			public override SynchronizationContext CreateCopy()
+			{
+				return new MainThreadSynchronizationContext(_scheduler);
+			}
+
+			public override void Send(SendOrPostCallback d, object state)
+			{
+				if (d == null)
+				{
+					throw new ArgumentNullException("d");
+				}
+
+				_scheduler.Send(d, state);
+			}
+
+			public override void Post(SendOrPostCallback d, object state)
+			{
+				if (d == null)
+				{
+					throw new ArgumentNullException("d");
+				}
+
+				_scheduler.Post(d, state);
+			}
+		}
+
+		private sealed class AsyncRootBehaviour : MonoBehaviour
 		{
 			#region data
 
 			private Dictionary<object, Action> _ops;
 			private List<object> _opsToRemove;
+
 			private AsyncUpdateSource _updateSource;
 			private AsyncUpdateSource _lateUpdateSource;
 			private AsyncUpdateSource _fixedUpdateSource;
 			private AsyncUpdateSource _eofUpdateSource;
 			private WaitForEndOfFrame _eof;
+
+			private SynchronizationContext _context;
+			private int _mainThreadId;
+			private Queue<InvokeResult> _actionQueue;
 
 			#endregion
 
@@ -334,9 +395,64 @@ namespace UnityFx.Async
 				_ops.Add(op, cb);
 			}
 
+			public void Send(SendOrPostCallback d, object state)
+			{
+				if (!this)
+				{
+					throw new ObjectDisposedException(GetType().Name);
+				}
+
+				if (_mainThreadId == Thread.CurrentThread.ManagedThreadId)
+				{
+					d.Invoke(state);
+				}
+				else
+				{
+					using (var asyncResult = new InvokeResult(d, state))
+					{
+						lock (_actionQueue)
+						{
+							_actionQueue.Enqueue(asyncResult);
+						}
+
+						asyncResult.Wait();
+					}
+				}
+			}
+
+			public void Post(SendOrPostCallback d, object state)
+			{
+				if (!this)
+				{
+					throw new ObjectDisposedException(GetType().Name);
+				}
+
+				var asyncResult = new InvokeResult(d, state);
+
+				lock (_actionQueue)
+				{
+					_actionQueue.Enqueue(asyncResult);
+				}
+			}
+
 			#endregion
 
 			#region MonoBehavoiur
+
+			private void Awake()
+			{
+				var currentContext = SynchronizationContext.Current;
+
+				if (currentContext == null)
+				{
+					var context = new MainThreadSynchronizationContext(this);
+					SynchronizationContext.SetSynchronizationContext(context);
+					_context = context;
+				}
+
+				_mainThreadId = Thread.CurrentThread.ManagedThreadId;
+				_actionQueue = new Queue<InvokeResult>();
+			}
 
 			private void Update()
 			{
@@ -390,6 +506,28 @@ namespace UnityFx.Async
 				{
 					_updateSource.OnNext(Time.deltaTime);
 				}
+
+				if (_actionQueue.Count > 0)
+				{
+					lock (_actionQueue)
+					{
+						while (_actionQueue.Count > 0)
+						{
+							var asyncResult = _actionQueue.Dequeue();
+
+							try
+							{
+								asyncResult.Invoke();
+								asyncResult.SetCompleted();
+							}
+							catch (Exception e)
+							{
+								asyncResult.SetException(e);
+								Debug.LogException(e);
+							}
+						}
+					}
+				}
 			}
 
 			private void LateUpdate()
@@ -433,6 +571,18 @@ namespace UnityFx.Async
 					_eofUpdateSource.Dispose();
 					_eofUpdateSource = null;
 				}
+
+				if (_context != null && _context == SynchronizationContext.Current)
+				{
+					SynchronizationContext.SetSynchronizationContext(null);
+				}
+
+				lock (_actionQueue)
+				{
+					_actionQueue.Clear();
+				}
+
+				_context = null;
 			}
 
 			#endregion
