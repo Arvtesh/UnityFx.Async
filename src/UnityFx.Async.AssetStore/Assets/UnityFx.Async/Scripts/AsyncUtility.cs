@@ -87,6 +87,45 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Dispatches a synchronous message to the main thread.
+		/// </summary>
+		/// <param name="d">The delegate to invoke.</param>
+		/// <param name="state">The object passed to the delegate.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="d"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="PostToMainThread(SendOrPostCallback, object)"/>
+		/// <seealso cref="InvokeOnMainThread(SendOrPostCallback, object)"/>
+		public static void SendToMainThread(SendOrPostCallback d, object state)
+		{
+			GetRootBehaviour().Send(d, state);
+		}
+
+		/// <summary>
+		/// Dispatches an asynchronous message to the main thread.
+		/// </summary>
+		/// <param name="d">The delegate to invoke.</param>
+		/// <param name="state">The object passed to the delegate.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="d"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="SendToMainThread(SendOrPostCallback, object)"/>
+		/// <seealso cref="InvokeOnMainThread(SendOrPostCallback, object)"/>
+		public static IAsyncOperation PostToMainThread(SendOrPostCallback d, object state)
+		{
+			return GetRootBehaviour().Post(d, state);
+		}
+
+		/// <summary>
+		/// Dispatches the specified delegate on the main thread.
+		/// </summary>
+		/// <param name="d">The delegate to invoke.</param>
+		/// <param name="state">The object passed to the delegate.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="d"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="SendToMainThread(SendOrPostCallback, object)"/>
+		/// <seealso cref="PostToMainThread(SendOrPostCallback, object)"/>
+		public static IAsyncOperation InvokeOnMainThread(SendOrPostCallback d, object state)
+		{
+			return GetRootBehaviour().Invoke(d, state);
+		}
+
+		/// <summary>
 		/// Creates an operation that completes after a time delay.
 		/// </summary>
 		/// <param name="millisecondsDelay">The number of milliseconds to wait before completing the returned operation, or -1 to wait indefinitely.</param>
@@ -290,21 +329,11 @@ namespace UnityFx.Async
 
 			public override void Send(SendOrPostCallback d, object state)
 			{
-				if (d == null)
-				{
-					throw new ArgumentNullException("d");
-				}
-
 				_scheduler.Send(d, state);
 			}
 
 			public override void Post(SendOrPostCallback d, object state)
 			{
-				if (d == null)
-				{
-					throw new ArgumentNullException("d");
-				}
-
 				_scheduler.Post(d, state);
 			}
 		}
@@ -323,12 +352,20 @@ namespace UnityFx.Async
 			private WaitForEndOfFrame _eof;
 
 			private SynchronizationContext _context;
-			private int _mainThreadId;
+			private SynchronizationContext _mainThreadContext;
 			private Queue<InvokeResult> _actionQueue;
 
 			#endregion
 
 			#region interface
+
+			public SynchronizationContext MainThreadContext
+			{
+				get
+				{
+					return _mainThreadContext;
+				}
+			}
 
 			public IAsyncUpdateSource UpdateSource
 			{
@@ -397,12 +434,17 @@ namespace UnityFx.Async
 
 			public void Send(SendOrPostCallback d, object state)
 			{
+				if (d == null)
+				{
+					throw new ArgumentNullException("d");
+				}
+
 				if (!this)
 				{
 					throw new ObjectDisposedException(GetType().Name);
 				}
 
-				if (_mainThreadId == Thread.CurrentThread.ManagedThreadId)
+				if (_mainThreadContext == SynchronizationContext.Current)
 				{
 					d.Invoke(state);
 				}
@@ -420,8 +462,13 @@ namespace UnityFx.Async
 				}
 			}
 
-			public void Post(SendOrPostCallback d, object state)
+			public IAsyncOperation Post(SendOrPostCallback d, object state)
 			{
+				if (d == null)
+				{
+					throw new ArgumentNullException("d");
+				}
+
 				if (!this)
 				{
 					throw new ObjectDisposedException(GetType().Name);
@@ -432,6 +479,38 @@ namespace UnityFx.Async
 				lock (_actionQueue)
 				{
 					_actionQueue.Enqueue(asyncResult);
+				}
+
+				return asyncResult;
+			}
+
+			public IAsyncOperation Invoke(SendOrPostCallback d, object state)
+			{
+				if (d == null)
+				{
+					throw new ArgumentNullException("d");
+				}
+
+				if (!this)
+				{
+					throw new ObjectDisposedException(GetType().Name);
+				}
+
+				if (_mainThreadContext == SynchronizationContext.Current)
+				{
+					d.Invoke(state);
+					return AsyncResult.CompletedOperation;
+				}
+				else
+				{
+					var asyncResult = new InvokeResult(d, state);
+
+					lock (_actionQueue)
+					{
+						_actionQueue.Enqueue(asyncResult);
+					}
+
+					return asyncResult;
 				}
 			}
 
@@ -448,9 +527,13 @@ namespace UnityFx.Async
 					var context = new MainThreadSynchronizationContext(this);
 					SynchronizationContext.SetSynchronizationContext(context);
 					_context = context;
+					_mainThreadContext = context;
+				}
+				else
+				{
+					_mainThreadContext = currentContext;
 				}
 
-				_mainThreadId = Thread.CurrentThread.ManagedThreadId;
 				_actionQueue = new Queue<InvokeResult>();
 			}
 
@@ -582,6 +665,7 @@ namespace UnityFx.Async
 					_actionQueue.Clear();
 				}
 
+				_mainThreadContext = null;
 				_context = null;
 			}
 
