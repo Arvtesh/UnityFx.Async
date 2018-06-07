@@ -57,6 +57,9 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for Update.
 		/// </summary>
+		/// <seealso cref="GetLateUpdateSource"/>
+		/// <seealso cref="GetFixedUpdateSource"/>
+		/// <seealso cref="GetEndOfFrameUpdateSource"/>
 		public static IAsyncUpdateSource GetUpdateSource()
 		{
 			return GetRootBehaviour().UpdateSource;
@@ -65,6 +68,9 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for LateUpdate.
 		/// </summary>
+		/// <seealso cref="GetUpdateSource"/>
+		/// <seealso cref="GetFixedUpdateSource"/>
+		/// <seealso cref="GetEndOfFrameUpdateSource"/>
 		public static IAsyncUpdateSource GetLateUpdateSource()
 		{
 			return GetRootBehaviour().LateUpdateSource;
@@ -73,6 +79,9 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for FixedUpdate.
 		/// </summary>
+		/// <seealso cref="GetUpdateSource"/>
+		/// <seealso cref="GetLateUpdateSource"/>
+		/// <seealso cref="GetEndOfFrameUpdateSource"/>
 		public static IAsyncUpdateSource GetFixedUpdateSource()
 		{
 			return GetRootBehaviour().FixedUpdateSource;
@@ -81,6 +90,9 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for end of frame.
 		/// </summary>
+		/// <seealso cref="GetUpdateSource"/>
+		/// <seealso cref="GetLateUpdateSource"/>
+		/// <seealso cref="GetFixedUpdateSource"/>
 		public static IAsyncUpdateSource GetEndOfFrameUpdateSource()
 		{
 			return GetRootBehaviour().EofUpdateSource;
@@ -131,6 +143,8 @@ namespace UnityFx.Async
 		/// <param name="millisecondsDelay">The number of milliseconds to wait before completing the returned operation, or -1 to wait indefinitely.</param>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="millisecondsDelay"/> is less than -1.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
+		/// <seealso cref="Delay(float)"/>
+		/// <seealso cref="Delay(TimeSpan)"/>
 		public static IAsyncOperation Delay(int millisecondsDelay)
 		{
 			return AsyncResult.Delay(millisecondsDelay, GetRootBehaviour().UpdateSource);
@@ -142,6 +156,8 @@ namespace UnityFx.Async
 		/// <param name="secondsDelay">The number of seconds to wait before completing the returned operation, or -1 to wait indefinitely.</param>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="secondsDelay"/> is less than -1.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
+		/// <seealso cref="Delay(int)"/>
+		/// <seealso cref="Delay(TimeSpan)"/>
 		public static IAsyncOperation Delay(float secondsDelay)
 		{
 			return AsyncResult.Delay(secondsDelay, GetRootBehaviour().UpdateSource);
@@ -153,6 +169,8 @@ namespace UnityFx.Async
 		/// <param name="delay">The time span to wait before completing the returned operation, or <c>TimeSpan.FromMilliseconds(-1)</c> to wait indefinitely.</param>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="delay"/> represents a negative time interval other than <c>TimeSpan.FromMillseconds(-1)</c>.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
+		/// <seealso cref="Delay(int)"/>
+		/// <seealso cref="Delay(float)"/>
 		public static IAsyncOperation Delay(TimeSpan delay)
 		{
 			return AsyncResult.Delay(delay, GetRootBehaviour().UpdateSource);
@@ -162,6 +180,11 @@ namespace UnityFx.Async
 		/// Starts a coroutine.
 		/// </summary>
 		/// <param name="enumerator">The coroutine to run.</param>
+		/// <returns>Returns the coroutine handle.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="enumerator"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="StopCoroutine(Coroutine)"/>
+		/// <seealso cref="StopCoroutine(IEnumerator)"/>
+		/// <seealso cref="StopAllCoroutines"/>
 		public static Coroutine StartCoroutine(IEnumerator enumerator)
 		{
 			if (enumerator == null)
@@ -175,7 +198,10 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Stops the specified coroutine.
 		/// </summary>
-		/// <param name="coroutine">The coroutine to run.</param>
+		/// <param name="coroutine">The coroutine to stop.</param>
+		/// <seealso cref="StartCoroutine(IEnumerator)"/>
+		/// <seealso cref="StopCoroutine(IEnumerator)"/>
+		/// <seealso cref="StopAllCoroutines"/>
 		public static void StopCoroutine(Coroutine coroutine)
 		{
 			if (coroutine != null)
@@ -192,7 +218,10 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Stops the specified coroutine.
 		/// </summary>
-		/// <param name="enumerator">The coroutine to run.</param>
+		/// <param name="enumerator">The coroutine to stop.</param>
+		/// <seealso cref="StartCoroutine(IEnumerator)"/>
+		/// <seealso cref="StopCoroutine(Coroutine)"/>
+		/// <seealso cref="StopAllCoroutines"/>
 		public static void StopCoroutine(IEnumerator enumerator)
 		{
 			if (enumerator != null)
@@ -209,6 +238,9 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Stops all coroutines.
 		/// </summary>
+		/// <seealso cref="StartCoroutine(IEnumerator)"/>
+		/// <seealso cref="StopCoroutine(Coroutine)"/>
+		/// <seealso cref="StopCoroutine(IEnumerator)"/>
 		public static void StopAllCoroutines()
 		{
 			var runner = TryGetRootBehaviour();
@@ -224,6 +256,8 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="op">The request to register completion callback for.</param>
 		/// <param name="completionCallback">A delegate to be called when the <paramref name="op"/> has completed.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="op"/> or <paramref name="completionCallback"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="AddCompletionCallback(WWW, Action)"/>
 		public static void AddCompletionCallback(AsyncOperation op, Action completionCallback)
 		{
 			if (op == null)
@@ -246,6 +280,9 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="request">The request to register completion callback for.</param>
 		/// <param name="completionCallback">A delegate to be called when the <paramref name="request"/> has completed.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="request"/> or <paramref name="completionCallback"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="AddCompletionCallback(AsyncOperation, Action)"/>
+		/// <seealso cref="AddCompletionCallback(WWW, Action)"/>
 		public static void AddCompletionCallback(UnityWebRequest request, Action completionCallback)
 		{
 			if (request == null)
@@ -268,6 +305,8 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="request">The request to register completion callback for.</param>
 		/// <param name="completionCallback">A delegate to be called when the <paramref name="request"/> has completed.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="request"/> or <paramref name="completionCallback"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="AddCompletionCallback(AsyncOperation, Action)"/>
 		internal static void AddCompletionCallback(WWW request, Action completionCallback)
 		{
 			if (request == null)
