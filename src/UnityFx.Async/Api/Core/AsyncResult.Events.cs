@@ -39,7 +39,17 @@ namespace UnityFx.Async
 
 		#region IAsyncOperationEvents
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Raised when the operation progress is changed.
+		/// </summary>
+		/// <remarks>
+		/// The event handler is invoked on a thread that registered it (if it has a <see cref="SynchronizationContext"/> attached).
+		/// If the operation is already completed the event handler is called synchronously. Throwing an exception from the event handler
+		/// might cause unspecified behaviour.
+		/// </remarks>
+		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="Completed"/>
 		public event ProgressChangedEventHandler ProgressChanged
 		{
 			add
@@ -67,7 +77,17 @@ namespace UnityFx.Async
 			}
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Raised when the operation is completed.
+		/// </summary>
+		/// <remarks>
+		/// The event handler is invoked on a thread that registered it (if it has a <see cref="SynchronizationContext"/> attached).
+		/// If the operation is already completed the event handler is called synchronously. Throwing an exception from the event handler
+		/// might cause unspecified behaviour.
+		/// </remarks>
+		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="ProgressChanged"/>
 		public event AsyncCompletedEventHandler Completed
 		{
 			add
@@ -95,7 +115,16 @@ namespace UnityFx.Async
 			}
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is already completed the <paramref name="action"/> is called synchronously.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="action"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="action">The callback to be executed when the operation has completed.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public void AddCompletionCallback(Action<IAsyncOperation> action)
 		{
 			if (!TryAddCompletionCallback(action))
@@ -104,7 +133,18 @@ namespace UnityFx.Async
 			}
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Attempts to add a completion callback to be executed after the operation has finished. If the operation is already completed
+		/// the method does nothing and just returns <see langword="false"/>.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="action"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="action">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public bool TryAddCompletionCallback(Action<IAsyncOperation> action)
 		{
 			ThrowIfDisposed();
@@ -117,7 +157,19 @@ namespace UnityFx.Async
 			return TryAddCallback(action, SynchronizationContext.Current, true);
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed <paramref name="action"/> is invoked
+		/// on the <paramref name="syncContext"/> specified.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="action"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="action">The callback to be executed when the operation has completed.</param>
+		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
+		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
+		/// </param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public void AddCompletionCallback(Action<IAsyncOperation> action, SynchronizationContext syncContext)
 		{
 			if (!TryAddCompletionCallback(action, syncContext))
@@ -126,7 +178,20 @@ namespace UnityFx.Async
 			}
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Attempts to add a completion callback to be executed after the operation has finished. If the operation is already completed
+		/// the method does nothing and just returns <see langword="false"/>.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="action"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="action">The callback to be executed when the operation has completed.</param>
+		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
+		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
+		/// </param>
+		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public bool TryAddCompletionCallback(Action<IAsyncOperation> action, SynchronizationContext syncContext)
 		{
 			ThrowIfDisposed();
@@ -139,7 +204,11 @@ namespace UnityFx.Async
 			return TryAddCallback(action, syncContext, true);
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Removes an existing completion callback.
+		/// </summary>
+		/// <param name="action">The callback to remove. Can be <see langword="null"/>.</param>
+		/// <returns>Returns <see langword="true"/> if <paramref name="action"/> was removed; <see langword="false"/> otherwise.</returns>
 		public bool RemoveCompletionCallback(Action<IAsyncOperation> action)
 		{
 			if (action != null)
@@ -150,7 +219,16 @@ namespace UnityFx.Async
 			return false;
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Adds a continuation to be executed after the operation has completed. If the operation is completed <paramref name="continuation"/> is invoked synchronously.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="continuation"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="continuation">The callback to be executed when the operation has completed.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="continuation"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public void AddCompletionCallback(IAsyncContinuation continuation)
 		{
 			if (!TryAddCompletionCallback(continuation))
@@ -159,7 +237,18 @@ namespace UnityFx.Async
 			}
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Attempts to add a continuation to be executed after the operation has finished. If the operation is already completed
+		/// the method does nothing and just returns <see langword="false"/>.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="continuation"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="continuation">The cotinuation to be executed when the operation has completed.</param>
+		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="continuation"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public bool TryAddCompletionCallback(IAsyncContinuation continuation)
 		{
 			ThrowIfDisposed();
@@ -172,7 +261,19 @@ namespace UnityFx.Async
 			return TryAddCallback(continuation, SynchronizationContext.Current, true);
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Adds a continuation to be executed after the operation has completed. If the operation is completed <paramref name="continuation"/>
+		/// is invoked on the <paramref name="syncContext"/> specified.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="continuation"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="continuation">The callback to be executed when the operation has completed.</param>
+		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
+		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
+		/// </param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="continuation"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public void AddCompletionCallback(IAsyncContinuation continuation, SynchronizationContext syncContext)
 		{
 			if (!TryAddCompletionCallback(continuation, syncContext))
@@ -181,7 +282,20 @@ namespace UnityFx.Async
 			}
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Attempts to add a continuation to be executed after the operation has finished. If the operation is already completed
+		/// the method does nothing and just returns <see langword="false"/>.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="continuation"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="continuation">The cotinuation to be executed when the operation has completed.</param>
+		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
+		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
+		/// </param>
+		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="continuation"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public bool TryAddCompletionCallback(IAsyncContinuation continuation, SynchronizationContext syncContext)
 		{
 			ThrowIfDisposed();
@@ -194,7 +308,11 @@ namespace UnityFx.Async
 			return TryAddCallback(continuation, syncContext, true);
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Removes an existing continuation.
+		/// </summary>
+		/// <param name="continuation">The continuation to remove. Can be <see langword="null"/>.</param>
+		/// <returns>Returns <see langword="true"/> if <paramref name="continuation"/> was removed; <see langword="false"/> otherwise.</returns>
 		public bool RemoveCompletionCallback(IAsyncContinuation continuation)
 		{
 			if (continuation != null)
@@ -205,7 +323,16 @@ namespace UnityFx.Async
 			return false;
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Adds a callback to be executed when the operation progress has changed. If the operation is already completed the <paramref name="action"/> is called synchronously.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="action"/> is invoked on a thread that registered the callback (if it has a <see cref="SynchronizationContext"/> attached).
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="action">The callback to be executed when the operation progress has changed.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public void AddProgressCallback(Action<float> action)
 		{
 			if (!TryAddProgressCallback(action))
@@ -214,7 +341,18 @@ namespace UnityFx.Async
 			}
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Attempts to add a callback to be executed when the operation progress has changed. If the operation is already completed
+		/// the method does nothing and just returns <see langword="false"/>.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="action"/> is invoked on a thread that registered the callback (if it has a <see cref="SynchronizationContext"/> attached).
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="action">The callback to be executed when the operation progress has changed.</param>
+		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public bool TryAddProgressCallback(Action<float> action)
 		{
 			ThrowIfDisposed();
@@ -227,7 +365,19 @@ namespace UnityFx.Async
 			return TryAddCallback(action, SynchronizationContext.Current, false);
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Adds a callback to be executed when the operation progress has changed. If the operation is completed <paramref name="action"/> is invoked
+		/// on the <paramref name="syncContext"/> specified.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="action"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="action">The callback to be executed when the operation progress has changed.</param>
+		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
+		/// Otherwise the callback is invoked on a thread that initiated the operation.
+		/// </param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public void AddProgressCallback(Action<float> action, SynchronizationContext syncContext)
 		{
 			if (!TryAddProgressCallback(action, syncContext))
@@ -236,7 +386,20 @@ namespace UnityFx.Async
 			}
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Attempts to add a callback to be executed when the operation progress has changed. If the operation is already completed
+		/// the method does nothing and just returns <see langword="false"/>.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="action"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="action">The callback to be executed when the operation progress has changed.</param>
+		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the callback to the synchronization context.
+		/// Otherwise the callback is invoked on a thread that initiated the operation.
+		/// </param>
+		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public bool TryAddProgressCallback(Action<float> action, SynchronizationContext syncContext)
 		{
 			ThrowIfDisposed();
@@ -249,7 +412,11 @@ namespace UnityFx.Async
 			return TryAddCallback(action, syncContext, false);
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Removes an existing progress callback.
+		/// </summary>
+		/// <param name="action">The callback to remove. Can be <see langword="null"/>.</param>
+		/// <returns>Returns <see langword="true"/> if <paramref name="action"/> was removed; <see langword="false"/> otherwise.</returns>
 		public bool RemoveProgressCallback(Action<float> action)
 		{
 			if (action != null)
@@ -262,7 +429,16 @@ namespace UnityFx.Async
 
 #if !NET35
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Adds a callback to be executed each time progress value changes. If the operation is completed <paramref name="callback"/> is invoked synchronously.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="callback"/> is invoked on a thread that registered it (if it has a <see cref="SynchronizationContext"/> attached).
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="callback">The callback to be executed when the operation progress value has changed.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public void AddProgressCallback(IProgress<float> callback)
 		{
 			if (!TryAddProgressCallback(callback))
@@ -271,7 +447,18 @@ namespace UnityFx.Async
 			}
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Attempts to add a progress callback to be executed each time progress value changes. If the operation is already completed
+		/// the method does nothing and just returns <see langword="false"/>.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="callback"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="callback">The callback to be executed when the operation progress value has changed.</param>
+		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public bool TryAddProgressCallback(IProgress<float> callback)
 		{
 			ThrowIfDisposed();
@@ -284,7 +471,19 @@ namespace UnityFx.Async
 			return TryAddCallback(callback, SynchronizationContext.Current, false);
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Adds a callback to be executed each time progress value changes. If the operation is completed <paramref name="callback"/>
+		/// is invoked on the <paramref name="syncContext"/> specified.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="callback">The callback to be executed when the operation progress value has changed.</param>
+		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
+		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
+		/// </param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public void AddProgressCallback(IProgress<float> callback, SynchronizationContext syncContext)
 		{
 			if (!TryAddProgressCallback(callback, syncContext))
@@ -293,7 +492,20 @@ namespace UnityFx.Async
 			}
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Attempts to add a progress callback to be executed each time progress value changes. If the operation is already completed
+		/// the method does nothing and just returns <see langword="false"/>.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="callback">The callback to be executed when the operation progress value has changed.</param>
+		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the callback to the synchronization context.
+		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
+		/// </param>
+		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public bool TryAddProgressCallback(IProgress<float> callback, SynchronizationContext syncContext)
 		{
 			ThrowIfDisposed();
@@ -306,7 +518,11 @@ namespace UnityFx.Async
 			return TryAddCallback(callback, syncContext, false);
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Removes an existing progress callback.
+		/// </summary>
+		/// <param name="callback">The callback to remove. Can be <see langword="null"/>.</param>
+		/// <returns>Returns <see langword="true"/> if <paramref name="callback"/> was removed; <see langword="false"/> otherwise.</returns>
 		public bool RemoveProgressCallback(IProgress<float> callback)
 		{
 			if (callback != null)
