@@ -13,10 +13,10 @@ Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io
 
 Library is designed as a lightweight [Unity3d](https://unity3d.com)-compatible [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) alternative (not a replacement though). Main design goals are:
 - Minimum object size and number of allocations.
-- Extensibility. The library operations are designed to be inherited.
+- Extensibility. The library entities are designed to be easily extensible.
 - Thread-safe. The library classes can be safely used from different threads (unless explicitly stated otherwise).
 - [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)-like interface and behaviour. In many cases library classes can be used much like corresponding [TPL](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-parallel-library-tpl) entities.
-- [Unity3d](https://unity3d.com)-specific features and compatibility. This includes possibility to <c>yield</c> operations in coroutines, net35-compilance, Unity asynchronous operation extensions etc.
+- [Unity3d](https://unity3d.com)-specific features and compatibility. This includes possibility to <c>yield</c> operations in coroutines, net35-compilance, extensions of Unity asynchronous operations etc.
 
 The table below summarizes differences berween *UnityFx.Async* and other popular asynchronous operation frameworks:
 
