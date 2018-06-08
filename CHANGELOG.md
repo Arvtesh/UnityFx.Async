@@ -9,8 +9,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ### Added
 - Added push-based progress reporting support.
 - Added `AsyncResult.Delay(float)` overloads.
+- Added `AsyncCreationOptions.SuppressCancellation` option.
 - Added update sources for `LateUpdate`, `FixedUpdate` and end-of-frame updates.
-- Added default Unity `SynchronizationContext` implementation.
+- Added `SynchronizationContext` for the main thread (if not set by Unity).
+- Added methods `AsyncUtility.PostToMainThread`, `AsyncUtility.SendToMainThread` as `AsyncUtility.InvokeOnMainThread`.
 
 ### Changed
 - Significantly reduced number of memory allocations when adding continuations.
