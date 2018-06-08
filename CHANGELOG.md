@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ### Changed
 - Significantly reduced number of memory allocations when adding continuations.
 - Changed signature of the `IAsyncContinuation.Invoke` method.
+- Changed `AsyncResult.OnCancel` implementation to do nothing (previously it threw `NotSupportedException`).
 
 ### Fixed
 - Fixed exception when removing listeners while in `AsyncUpdateSource.OnError` / `AsyncUpdateSource.OnCompleted` / `AsyncUpdateSource.Dispose`.
