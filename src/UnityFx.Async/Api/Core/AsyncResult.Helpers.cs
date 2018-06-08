@@ -558,8 +558,7 @@ namespace UnityFx.Async
 
 			if (millisecondsDelay == Timeout.Infinite)
 			{
-				// NOTE: Cannot return AsyncResult instance because its Cancel implementation throws NotSupportedException.
-				return new AsyncCompletionSource(AsyncOperationStatus.Running);
+				return new AsyncResult(AsyncOperationStatus.Running);
 			}
 
 			var result = new TimerDelayResult(millisecondsDelay);
@@ -598,8 +597,7 @@ namespace UnityFx.Async
 
 			if (millisecondsDelay == Timeout.Infinite)
 			{
-				// NOTE: Cannot return AsyncResult instance because its Cancel implementation throws NotSupportedException.
-				return new AsyncCompletionSource(AsyncOperationStatus.Running);
+				return new AsyncResult(AsyncOperationStatus.Running);
 			}
 
 			var result = new UpdatableDelayResult(millisecondsDelay / 1000f, updateSource);
@@ -659,8 +657,7 @@ namespace UnityFx.Async
 
 			if (secondsDelay == Timeout.Infinite)
 			{
-				// NOTE: Cannot return AsyncResult instance because its Cancel implementation throws NotSupportedException.
-				return new AsyncCompletionSource(AsyncOperationStatus.Running);
+				return new AsyncResult(AsyncOperationStatus.Running);
 			}
 
 			var result = new UpdatableDelayResult(secondsDelay, updateSource);

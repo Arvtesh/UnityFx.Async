@@ -623,12 +623,11 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Called when the operation cancellation has been requested. Default implementation throws <see cref="NotSupportedException"/>.
+		/// Called when the operation cancellation has been requested. Default implementation does nothing.
 		/// </summary>
 		/// <seealso cref="Cancel"/>
 		protected virtual void OnCancel()
 		{
-			throw new NotSupportedException();
 		}
 
 		/// <summary>
@@ -971,7 +970,6 @@ namespace UnityFx.Async
 		/// There is no guarantee that this call will actually cancel the operation or that the operation will be cancelled immidiately.
 		/// <see cref="AsyncCreationOptions.SuppressCancellation"/> can be used to suppress this method for a specific operation instance.
 		/// </remarks>
-		/// <exception cref="NotSupportedException">Thrown if cancellation is not supported by the implementation.</exception>
 		public void Cancel()
 		{
 			if ((_flags & _flagSuppressCancellation) != 0)

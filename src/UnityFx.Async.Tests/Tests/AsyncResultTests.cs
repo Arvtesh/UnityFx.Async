@@ -519,13 +519,16 @@ namespace UnityFx.Async
 		}
 
 		[Fact]
-		public void Cancel_DefaultImplementationThrows()
+		public void Cancel_DefaultImplementationDoesNothing()
 		{
 			// Arrange
 			var op = new AsyncResult();
 
-			// Act/Assert
-			Assert.Throws<NotSupportedException>(() => op.Cancel());
+			// Act
+			op.Cancel();
+
+			// Assert
+			Assert.False(op.IsCompleted);
 		}
 
 		[Theory]
