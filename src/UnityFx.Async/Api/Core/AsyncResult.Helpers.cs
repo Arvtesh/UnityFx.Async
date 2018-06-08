@@ -270,6 +270,8 @@ namespace UnityFx.Async
 		/// <param name="action">The delegate to execute.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>A completed operation that represents <paramref name="action"/> result.</returns>
+		/// <seealso cref="FromAction(Action{object}, object)"/>
+		/// <seealso cref="FromAction(SendOrPostCallback, object)"/>
 		/// <seealso cref="FromAction{TResult}(Func{TResult})"/>
 		public static AsyncResult FromAction(Action action)
 		{
@@ -290,12 +292,69 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Creates a completed <see cref="IAsyncOperation"/> that represents result of the <paramref name="action"/> specified.
+		/// </summary>
+		/// <param name="action">The delegate to execute.</param>
+		/// <param name="state">User-defained state to pass to the <paramref name="action"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <returns>A completed operation that represents <paramref name="action"/> result.</returns>
+		/// <seealso cref="FromAction(Action)"/>
+		/// <seealso cref="FromAction(SendOrPostCallback, object)"/>
+		/// <seealso cref="FromAction{TResult}(Func{TResult})"/>
+		public static AsyncResult FromAction(Action<object> action, object state)
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			try
+			{
+				action(state);
+				return CompletedOperation;
+			}
+			catch (Exception e)
+			{
+				return new AsyncResult(e, state);
+			}
+		}
+
+		/// <summary>
+		/// Creates a completed <see cref="IAsyncOperation"/> that represents result of the <paramref name="callback"/> specified.
+		/// </summary>
+		/// <param name="callback">The delegate to execute.</param>
+		/// <param name="state">User-defained state to pass to the <paramref name="callback"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <returns>A completed operation that represents <paramref name="callback"/> result.</returns>
+		/// <seealso cref="FromAction(Action)"/>
+		/// <seealso cref="FromAction(Action{object}, object)"/>
+		/// <seealso cref="FromAction{TResult}(Func{TResult})"/>
+		public static AsyncResult FromAction(SendOrPostCallback callback, object state)
+		{
+			if (callback == null)
+			{
+				throw new ArgumentNullException(nameof(callback));
+			}
+
+			try
+			{
+				callback(state);
+				return CompletedOperation;
+			}
+			catch (Exception e)
+			{
+				return new AsyncResult(e, state);
+			}
+		}
+
+		/// <summary>
 		/// Creates a completed <see cref="IAsyncOperation{TResult}"/> that represents result of the <paramref name="action"/> specified.
 		/// </summary>
 		/// <param name="action">The delegate to execute.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>A completed operation that represents <paramref name="action"/> result.</returns>
 		/// <seealso cref="FromAction(Action)"/>
+		/// <seealso cref="FromAction{TResult}(Func{object, TResult}, object)"/>
 		public static AsyncResult<TResult> FromAction<TResult>(Func<TResult> action)
 		{
 			if (action == null)
@@ -311,6 +370,33 @@ namespace UnityFx.Async
 			catch (Exception e)
 			{
 				return new AsyncResult<TResult>(e, null);
+			}
+		}
+
+		/// <summary>
+		/// Creates a completed <see cref="IAsyncOperation"/> that represents result of the <paramref name="action"/> specified.
+		/// </summary>
+		/// <param name="action">The delegate to execute.</param>
+		/// <param name="state">User-defained state to pass to the <paramref name="action"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <returns>A completed operation that represents <paramref name="action"/> result.</returns>
+		/// <seealso cref="FromAction(Action{object}, object)"/>
+		/// <seealso cref="FromAction{TResult}(Func{TResult})"/>
+		public static AsyncResult<TResult> FromAction<TResult>(Func<object, TResult> action, object state)
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			try
+			{
+				var result = action(state);
+				return new AsyncResult<TResult>(result, state);
+			}
+			catch (Exception e)
+			{
+				return new AsyncResult<TResult>(e, state);
 			}
 		}
 

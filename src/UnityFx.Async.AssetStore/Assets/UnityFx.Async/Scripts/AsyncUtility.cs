@@ -525,31 +525,13 @@ namespace UnityFx.Async
 
 			public IAsyncOperation Invoke(SendOrPostCallback d, object state)
 			{
-				if (d == null)
-				{
-					throw new ArgumentNullException("d");
-				}
-
-				if (!this)
-				{
-					throw new ObjectDisposedException(GetType().Name);
-				}
-
 				if (_mainThreadContext == SynchronizationContext.Current)
 				{
-					d.Invoke(state);
-					return AsyncResult.CompletedOperation;
+					return AsyncResult.FromAction(d, state);
 				}
 				else
 				{
-					var asyncResult = new InvokeResult(d, state);
-
-					lock (_actionQueue)
-					{
-						_actionQueue.Enqueue(asyncResult);
-					}
-
-					return asyncResult;
+					return Post(d, state);
 				}
 			}
 
