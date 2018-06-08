@@ -9,14 +9,14 @@ Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io
 
 ## Synopsis
 
-*UnityFx.Async* is a set of classes and interfaces that extend [Unity3d](https://unity3d.com) asynchronous operations and can be used very much like [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) in .NET or [Promises](https://developers.google.com/web/fundamentals/primers/promises) in JS. The library at its core defines a container ([AsyncResult](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncResult.html)) for state and result value of an asynchronous operation (aka `promise` or `future`). In many aspects it mimics [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) (for example, it can be used with `async`/`await` operators, supports continuations and synchronization context capturing).
+*UnityFx.Async* introduces effective and portable asynchronous operations that can be used very much like [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) in .NET or [Promises](https://developers.google.com/web/fundamentals/primers/promises) in JS. [AsyncResult](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncResult.html) class is an implementation of a generic asynchronous operation (aka `promise` or `future`). In many aspects it mimics [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) (for example, it can be used with `async`/`await` operators, supports continuations and synchronization context capturing) while maintaining Unity/net35 compatibility. It is a great foundation toolset for any Unity project.
 
 Library is designed as a lightweight [Unity3d](https://unity3d.com)-compatible [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) alternative (not a replacement though). Main design goals are:
 - Minimum object size and number of allocations.
 - Extensibility. The library entities are designed to be easily extensible.
 - Thread-safe. The library classes can be safely used from different threads (unless explicitly stated otherwise).
 - [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)-like interface and behaviour. In many cases library classes can be used much like corresponding [TPL](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-parallel-library-tpl) entities.
-- [Unity3d](https://unity3d.com)-specific features and compatibility. This includes possibility to <c>yield</c> operations in coroutines, net35-compilance, extensions of Unity asynchronous operations etc.
+- [Unity3d](https://unity3d.com)-specific features and compatibility. This includes possibility to <c>yield</c> operations in coroutines, `net35`-compilance, extensions of Unity asynchronous operations etc.
 
 The table below summarizes differences berween *UnityFx.Async* and other popular asynchronous operation frameworks:
 
