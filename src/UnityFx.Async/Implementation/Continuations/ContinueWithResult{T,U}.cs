@@ -56,7 +56,7 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool inline)
+		public void Invoke(IAsyncOperation op)
 		{
 			if (CanInvoke())
 			{
@@ -99,20 +99,20 @@ namespace UnityFx.Async
 							break;
 
 						default:
-							TrySetCanceled(inline);
+							TrySetCanceled();
 							return;
 					}
 
-					TrySetResult(result, inline);
+					TrySetResult(result);
 				}
 				catch (Exception e)
 				{
-					TrySetException(e, inline);
+					TrySetException(e);
 				}
 			}
 			else
 			{
-				TrySetCanceled(inline);
+				TrySetCanceled();
 			}
 		}
 

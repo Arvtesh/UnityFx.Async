@@ -163,9 +163,22 @@ namespace UnityFx.Async
 		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
 		/// <param name="result">The operation result.</param>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetResult(TResult, bool)"/>
+		protected internal bool TrySetResult(TResult result)
+		{
+			return TrySetResult(result, false);
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
+		/// </summary>
+		/// <param name="result">The operation result.</param>
 		/// <param name="completedSynchronously">Value of the <see cref="IAsyncResult.CompletedSynchronously"/> property.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetResult(TResult)"/>
 		protected internal bool TrySetResult(TResult result, bool completedSynchronously)
 		{
 			ThrowIfDisposed();
@@ -247,7 +260,11 @@ namespace UnityFx.Async
 
 		#region IAsyncOperation
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Gets the operation result value.
+		/// </summary>
+		/// <value>Result of the operation.</value>
+		/// <exception cref="InvalidOperationException">Thrown if the property is accessed before operation is completed.</exception>
 		public TResult Result
 		{
 			get
@@ -268,7 +285,11 @@ namespace UnityFx.Async
 
 #if !NET35
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Notifies the provider that an observer is to receive notifications.
+		/// </summary>
+		/// <param name="observer">The object that is to receive notifications.</param>
+		/// <returns>A reference to an interface that allows observers to stop receiving notifications before the provider has finished sending them.</returns>
 		public IDisposable Subscribe(IObserver<TResult> observer)
 		{
 			ThrowIfDisposed();

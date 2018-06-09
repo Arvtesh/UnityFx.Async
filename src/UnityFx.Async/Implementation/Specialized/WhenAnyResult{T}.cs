@@ -42,9 +42,9 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool inline)
+		public void Invoke(IAsyncOperation op)
 		{
-			TrySetResult((T)op, inline);
+			TrySetResult((T)op);
 		}
 
 		#endregion

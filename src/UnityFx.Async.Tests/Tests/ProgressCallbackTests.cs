@@ -46,25 +46,6 @@ namespace UnityFx.Async
 			Assert.Equal(expectedResult, result);
 		}
 
-		[Theory]
-		[InlineData(AsyncOperationStatus.Created, 0)]
-		[InlineData(AsyncOperationStatus.Scheduled, 0)]
-		[InlineData(AsyncOperationStatus.RanToCompletion, 1)]
-		[InlineData(AsyncOperationStatus.Faulted, 0)]
-		[InlineData(AsyncOperationStatus.Canceled, 0)]
-		public void Progress_ReturnsCorrentValue(AsyncOperationStatus status, float expectedValue)
-		{
-			// Arrange
-			var progress = 0.3f;
-			var op = new AsyncCompletionSource(status);
-
-			// Act
-			op.TrySetProgress(progress);
-
-			// Assert
-			Assert.Equal(expectedValue, op.Progress);
-		}
-
 		[Fact]
 		public void SetProgress_SetsCorrectValue()
 		{
@@ -108,7 +89,7 @@ namespace UnityFx.Async
 			var progress = 0;
 			var progress2 = 0f;
 			var op = new AsyncCompletionSource();
-			var p = Substitute.For<IProgress<float>>();
+			var pc = Substitute.For<IProgress<float>>();
 
 			op.ProgressChanged += (sender, args) =>
 			{
@@ -117,14 +98,14 @@ namespace UnityFx.Async
 			};
 
 			op.AddProgressCallback(
-				asyncOp =>
+				p =>
 				{
 					asyncCallbackCalled2 = true;
-					progress2 = asyncOp.Progress;
+					progress2 = p;
 				},
 				null);
 
-			op.AddProgressCallback(p, null);
+			op.AddProgressCallback(pc, null);
 
 			// Act
 			op.SetCompleted();
@@ -134,7 +115,7 @@ namespace UnityFx.Async
 			Assert.True(asyncCallbackCalled2);
 			Assert.Equal(100, progress);
 			Assert.Equal(1, progress2);
-			p.Received(1).Report(1);
+			pc.Received(1).Report(1);
 		}
 
 		#endregion

@@ -32,20 +32,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				var result = new AsyncCompletionSource(AsyncOperationStatus.Running, op);
-
-#if UNITY_2017_2_OR_NEWER || UNITY_2018
-
-				// Starting with Unity 2017.2 there is AsyncOperation.completed event
-				op.completed += o => result.TrySetCompleted();
-
-#else
-
-				AsyncUtility.AddCompletionCallback(op, () => result.TrySetCompleted());
-
-#endif
-
-				return result;
+				return new AsyncOperationResult(op);
 			}
 		}
 
@@ -55,27 +42,7 @@ namespace UnityFx.Async
 		/// <param name="op">The source operation.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this ResourceRequest op) where T : UnityEngine.Object
 		{
-			if (op.isDone)
-			{
-				return AsyncResult.FromResult(op.asset as T);
-			}
-			else
-			{
-				var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running, op);
-
-#if UNITY_2017_2_OR_NEWER || UNITY_2018
-
-				// Starting with Unity 2017.2 there is AsyncOperation.completed event
-				op.completed += o => result.TrySetResult(op.asset as T);
-
-#else
-
-				AsyncUtility.AddCompletionCallback(op, () => result.TrySetResult(op.asset as T));
-
-#endif
-
-				return result;
-			}
+			return new ResourceRequestResult<T>(op);
 		}
 
 		/// <summary>
@@ -84,27 +51,7 @@ namespace UnityFx.Async
 		/// <param name="op">The source operation.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this AssetBundleRequest op) where T : UnityEngine.Object
 		{
-			if (op.isDone)
-			{
-				return AsyncResult.FromResult(op.asset as T);
-			}
-			else
-			{
-				var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running, op);
-
-#if UNITY_2017_2_OR_NEWER || UNITY_2018
-
-				// Starting with Unity 2017.2 there is AsyncOperation.completed event
-				op.completed += o => result.TrySetResult(op.asset as T);
-
-#else
-
-				AsyncUtility.AddCompletionCallback(op, () => result.TrySetResult(op.asset as T));
-
-#endif
-
-				return result;
-			}
+			return new AssetBundleRequestResult<T>(op);
 		}
 
 #if NET_4_6 || NET_STANDARD_2_0
@@ -246,7 +193,7 @@ namespace UnityFx.Async
 #if NET_4_6 || NET_STANDARD_2_0
 
 		/// <summary>
-		/// Provides an object that waits for the completion of an <see cref="WWW"/>. This type and its members are intended for compiler use only.
+		/// Provides an object that waits for the completion of an <see cref="UnityWebRequest"/>. This type and its members are intended for compiler use only.
 		/// </summary>
 		public struct UnityWebRequestAwaiter : INotifyCompletion
 		{

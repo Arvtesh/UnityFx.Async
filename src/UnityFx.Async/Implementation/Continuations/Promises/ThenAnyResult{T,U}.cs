@@ -23,7 +23,7 @@ namespace UnityFx.Async.Promises
 
 		#region ThenResult
 
-		protected override IAsyncOperation InvokeSuccessCallback(IAsyncOperation op, bool completedSynchronously, object continuation)
+		protected override IAsyncOperation InvokeSuccessCallback(IAsyncOperation op, object continuation)
 		{
 			IAsyncOperation result = null;
 
@@ -53,7 +53,7 @@ namespace UnityFx.Async.Promises
 					{
 						if (IsCancellationRequested)
 						{
-							TrySetCanceled(false);
+							TrySetCanceled();
 						}
 						else if (op2.IsCompletedSuccessfully)
 						{
@@ -61,23 +61,23 @@ namespace UnityFx.Async.Promises
 
 							if (op3 is IAsyncOperation<U> op4)
 							{
-								TrySetResult(op4.Result, false);
+								TrySetResult(op4.Result);
 							}
 							else
 							{
-								TrySetCompleted(false);
+								TrySetCompleted();
 							}
 						}
 						else
 						{
-							TrySetException(op2.Exception, false);
+							TrySetException(op2.Exception);
 						}
 					},
 					null);
 			}
 			else
 			{
-				TrySetCanceled(completedSynchronously);
+				TrySetCanceled();
 			}
 
 			return result;

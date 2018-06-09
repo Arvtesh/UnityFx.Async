@@ -270,6 +270,8 @@ namespace UnityFx.Async
 		/// <param name="action">The delegate to execute.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>A completed operation that represents <paramref name="action"/> result.</returns>
+		/// <seealso cref="FromAction{T}(Action{T}, T)"/>
+		/// <seealso cref="FromAction(SendOrPostCallback, object)"/>
 		/// <seealso cref="FromAction{TResult}(Func{TResult})"/>
 		public static AsyncResult FromAction(Action action)
 		{
@@ -290,12 +292,69 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Creates a completed <see cref="IAsyncOperation"/> that represents result of the <paramref name="action"/> specified.
+		/// </summary>
+		/// <param name="action">The delegate to execute.</param>
+		/// <param name="state">User-defained state to pass to the <paramref name="action"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <returns>A completed operation that represents <paramref name="action"/> result.</returns>
+		/// <seealso cref="FromAction(Action)"/>
+		/// <seealso cref="FromAction(SendOrPostCallback, object)"/>
+		/// <seealso cref="FromAction{TResult}(Func{TResult})"/>
+		public static AsyncResult FromAction<T>(Action<T> action, T state)
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			try
+			{
+				action(state);
+				return CompletedOperation;
+			}
+			catch (Exception e)
+			{
+				return new AsyncResult(e, state);
+			}
+		}
+
+		/// <summary>
+		/// Creates a completed <see cref="IAsyncOperation"/> that represents result of the <paramref name="callback"/> specified.
+		/// </summary>
+		/// <param name="callback">The delegate to execute.</param>
+		/// <param name="state">User-defained state to pass to the <paramref name="callback"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <returns>A completed operation that represents <paramref name="callback"/> result.</returns>
+		/// <seealso cref="FromAction(Action)"/>
+		/// <seealso cref="FromAction{T}(Action{T}, T)"/>
+		/// <seealso cref="FromAction{TResult}(Func{TResult})"/>
+		public static AsyncResult FromAction(SendOrPostCallback callback, object state)
+		{
+			if (callback == null)
+			{
+				throw new ArgumentNullException(nameof(callback));
+			}
+
+			try
+			{
+				callback(state);
+				return CompletedOperation;
+			}
+			catch (Exception e)
+			{
+				return new AsyncResult(e, state);
+			}
+		}
+
+		/// <summary>
 		/// Creates a completed <see cref="IAsyncOperation{TResult}"/> that represents result of the <paramref name="action"/> specified.
 		/// </summary>
 		/// <param name="action">The delegate to execute.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <returns>A completed operation that represents <paramref name="action"/> result.</returns>
 		/// <seealso cref="FromAction(Action)"/>
+		/// <seealso cref="FromAction{T, TResult}(Func{T, TResult}, T)"/>
 		public static AsyncResult<TResult> FromAction<TResult>(Func<TResult> action)
 		{
 			if (action == null)
@@ -311,6 +370,33 @@ namespace UnityFx.Async
 			catch (Exception e)
 			{
 				return new AsyncResult<TResult>(e, null);
+			}
+		}
+
+		/// <summary>
+		/// Creates a completed <see cref="IAsyncOperation"/> that represents result of the <paramref name="action"/> specified.
+		/// </summary>
+		/// <param name="action">The delegate to execute.</param>
+		/// <param name="state">User-defained state to pass to the <paramref name="action"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <returns>A completed operation that represents <paramref name="action"/> result.</returns>
+		/// <seealso cref="FromAction{T}(Action{T}, T)"/>
+		/// <seealso cref="FromAction{TResult}(Func{TResult})"/>
+		public static AsyncResult<TResult> FromAction<T, TResult>(Func<T, TResult> action, T state)
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			try
+			{
+				var result = action(state);
+				return new AsyncResult<TResult>(result, state);
+			}
+			catch (Exception e)
+			{
+				return new AsyncResult<TResult>(e, state);
 			}
 		}
 
@@ -456,6 +542,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="millisecondsDelay"/> is less than -1.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
 		/// <seealso cref="Delay(int, IAsyncUpdateSource)"/>
+		/// <seealso cref="Delay(float)"/>
 		/// <seealso cref="Delay(TimeSpan)"/>
 		public static AsyncResult Delay(int millisecondsDelay)
 		{
@@ -471,8 +558,7 @@ namespace UnityFx.Async
 
 			if (millisecondsDelay == Timeout.Infinite)
 			{
-				// NOTE: Cannot return AsyncResult instance because its Cancel implementation throws NotSupportedException.
-				return new AsyncCompletionSource(AsyncOperationStatus.Running);
+				return new AsyncResult(AsyncOperationStatus.Running);
 			}
 
 			var result = new TimerDelayResult(millisecondsDelay);
@@ -482,7 +568,7 @@ namespace UnityFx.Async
 
 		/// <summary>
 		/// Creates an operation that completes after a time delay. This method creates a more effecient operation
-		/// than <see cref="Delay(int)"/> but requires a specialized updates source.
+		/// than <see cref="Delay(int)"/> but requires a specialized update source.
 		/// </summary>
 		/// <param name="millisecondsDelay">The number of milliseconds to wait before completing the returned operation, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
 		/// <param name="updateSource">Update notifications provider.</param>
@@ -490,6 +576,8 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="millisecondsDelay"/> is less than -1.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
 		/// <seealso cref="Delay(int)"/>
+		/// <seealso cref="Delay(float, IAsyncUpdateSource)"/>
+		/// <seealso cref="Delay(TimeSpan, IAsyncUpdateSource)"/>
 		public static AsyncResult Delay(int millisecondsDelay, IAsyncUpdateSource updateSource)
 		{
 			if (updateSource == null)
@@ -509,11 +597,70 @@ namespace UnityFx.Async
 
 			if (millisecondsDelay == Timeout.Infinite)
 			{
-				// NOTE: Cannot return AsyncResult instance because its Cancel implementation throws NotSupportedException.
-				return new AsyncCompletionSource(AsyncOperationStatus.Running);
+				return new AsyncResult(AsyncOperationStatus.Running);
 			}
 
-			var result = new UpdatableDelayResult(millisecondsDelay, updateSource);
+			var result = new UpdatableDelayResult(millisecondsDelay / 1000f, updateSource);
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an operation that completes after a specified time interval.
+		/// </summary>
+		/// <param name="secondsDelay">The number of seconds to wait before completing the returned operation, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="secondsDelay"/> represents a negative time interval.</exception>
+		/// <returns>An operation that represents the time delay.</returns>
+		/// <seealso cref="Delay(float, IAsyncUpdateSource)"/>
+		/// <seealso cref="Delay(int)"/>
+		/// <seealso cref="Delay(TimeSpan)"/>
+		public static AsyncResult Delay(float secondsDelay)
+		{
+			var millisecondsDelay = (long)((double)secondsDelay * 1000);
+
+			if (millisecondsDelay > int.MaxValue)
+			{
+				throw new ArgumentOutOfRangeException(nameof(secondsDelay));
+			}
+
+			return Delay((int)millisecondsDelay);
+		}
+
+		/// <summary>
+		/// Creates an operation that completes after a specified time interval. This method creates a more effecient operation
+		/// than <see cref="Delay(float)"/> but requires a specialized update source.
+		/// </summary>
+		/// <param name="secondsDelay">The number of seconds to wait before completing the returned operation, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.</param>
+		/// <param name="updateSource">Update notifications provider.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="updateSource"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="secondsDelay"/> represents a negative time interval other than <c>TimeSpan.FromMillseconds(-1)</c>.</exception>
+		/// <returns>An operation that represents the time delay.</returns>
+		/// <seealso cref="Delay(float)"/>
+		/// <seealso cref="Delay(int, IAsyncUpdateSource)"/>
+		/// <seealso cref="Delay(TimeSpan, IAsyncUpdateSource)"/>
+		public static AsyncResult Delay(float secondsDelay, IAsyncUpdateSource updateSource)
+		{
+			if (updateSource == null)
+			{
+				throw new ArgumentNullException(nameof(updateSource));
+			}
+
+			if (secondsDelay < Timeout.Infinite)
+			{
+				throw new ArgumentOutOfRangeException(nameof(secondsDelay), secondsDelay, Constants.ErrorValueIsLessThanZero);
+			}
+
+			if (secondsDelay == 0)
+			{
+				return CompletedOperation;
+			}
+
+			if (secondsDelay == Timeout.Infinite)
+			{
+				return new AsyncResult(AsyncOperationStatus.Running);
+			}
+
+			var result = new UpdatableDelayResult(secondsDelay, updateSource);
 			result.Start();
 			return result;
 		}
@@ -526,6 +673,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that represents the time delay.</returns>
 		/// <seealso cref="Delay(TimeSpan, IAsyncUpdateSource)"/>
 		/// <seealso cref="Delay(int)"/>
+		/// <seealso cref="Delay(float)"/>
 		public static AsyncResult Delay(TimeSpan delay)
 		{
 			var millisecondsDelay = (long)delay.TotalMilliseconds;
@@ -540,7 +688,7 @@ namespace UnityFx.Async
 
 		/// <summary>
 		/// Creates an operation that completes after a specified time interval. This method creates a more effecient operation
-		/// than <see cref="Delay(TimeSpan)"/> but requires a specialized updates source.
+		/// than <see cref="Delay(TimeSpan)"/> but requires a specialized update source.
 		/// </summary>
 		/// <param name="delay">The time span to wait before completing the returned operation, or <c>TimeSpan.FromMilliseconds(-1)</c> to wait indefinitely.</param>
 		/// <param name="updateSource">Update notifications provider.</param>
@@ -548,16 +696,18 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="delay"/> represents a negative time interval other than <c>TimeSpan.FromMillseconds(-1)</c>.</exception>
 		/// <returns>An operation that represents the time delay.</returns>
 		/// <seealso cref="Delay(TimeSpan)"/>
+		/// <seealso cref="Delay(int, IAsyncUpdateSource)"/>
+		/// <seealso cref="Delay(float, IAsyncUpdateSource)"/>
 		public static AsyncResult Delay(TimeSpan delay, IAsyncUpdateSource updateSource)
 		{
-			var millisecondsDelay = (long)delay.TotalMilliseconds;
+			var secondsDelay = delay.TotalSeconds;
 
-			if (millisecondsDelay > int.MaxValue)
+			if (secondsDelay > float.MaxValue)
 			{
 				throw new ArgumentOutOfRangeException(nameof(delay));
 			}
 
-			return Delay((int)millisecondsDelay, updateSource);
+			return Delay((float)secondsDelay, updateSource);
 		}
 
 		#endregion

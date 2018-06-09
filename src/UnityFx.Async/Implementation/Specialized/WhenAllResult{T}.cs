@@ -58,7 +58,7 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation asyncOp, bool inline)
+		public void Invoke(IAsyncOperation asyncOp)
 		{
 			if (IsCompleted)
 			{
@@ -87,15 +87,15 @@ namespace UnityFx.Async
 
 				if (exceptions != null)
 				{
-					TrySetExceptions(exceptions, false);
+					TrySetExceptions(exceptions);
 				}
 				else if (canceledOp != null)
 				{
-					TrySetCanceled(false);
+					TrySetCanceled();
 				}
 				else if (typeof(T) == typeof(VoidResult))
 				{
-					TrySetCompleted(false);
+					TrySetCompleted();
 				}
 				else
 				{
@@ -109,7 +109,7 @@ namespace UnityFx.Async
 						}
 					}
 
-					TrySetResult(results.ToArray(), false);
+					TrySetResult(results.ToArray());
 				}
 			}
 			else

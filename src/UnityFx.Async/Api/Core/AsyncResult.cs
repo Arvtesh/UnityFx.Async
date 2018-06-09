@@ -16,23 +16,15 @@ namespace UnityFx.Async
 	/// A lightweight <c>net35</c>-compatible asynchronous operation for <c>Unity3d</c>.
 	/// </summary>
 	/// <remarks>
-	/// <para>This class is the core entity of the library. In many aspects it mimics <c>Task</c>
+	/// This class is the core entity of the library. In many aspects it mimics <c>Task</c>
 	/// interface and behaviour. For example, any <see cref="AsyncResult"/> instance can have any
 	/// number of continuations (added either explicitly via <c>TryAddCompletionCallback</c>
 	/// call or implicitly using <c>async</c>/<c>await</c> keywords). These continuations can be
 	/// invoked on a captured <see cref="SynchronizationContext"/>. The class inherits <see cref="IAsyncResult"/>
-	/// (just like <c>Task</c>) and can be used to implement Asynchronous Programming Model (APM).
-	/// There are operation state accessors that can be used exactly like corresponding properties of <c>Task</c>.
-	/// </para>
-	/// <para>The class implements <see cref="IDisposable"/> interface. So strictly speaking <see cref="Dispose()"/>
-	/// should be called when the operation is no longed in use. In practice that is only required
-	/// if <see cref="AsyncWaitHandle"/> property was used. Also keep in mind that <see cref="Dispose()"/>
-	/// implementation is not thread-safe.
-	/// </para>
-	/// <para>Please note that while the class is designed as a lightweight and portable <c>Task</c>-like object,
-	/// it's NOT a replacement for .NET <c>Task</c>. It is recommended to use <c>Task</c> in general and only switch
-	/// to this class if Unity/net35 compatibility is a concern.
-	/// </para>
+	/// and can be used to implement Asynchronous Programming Model (APM). There are operation
+	/// state accessors that can be used exactly like corresponding properties of <c>Task</c>.
+	/// While the class implements <see cref="IDisposable"/> disposing is only required
+	/// if <see cref="AsyncWaitHandle"/> property was used.
 	/// </remarks>
 	/// <seealso href="http://www.what-could-possibly-go-wrong.com/promises-for-game-development/">Promises for game development</seealso>
 	/// <seealso href="https://blogs.msdn.microsoft.com/nikos/2011/03/14/how-to-implement-the-iasyncresult-design-pattern/">How to implement the IAsyncResult design pattern</seealso>
@@ -57,6 +49,7 @@ namespace UnityFx.Async
 
 		private const int _flagDoNotDispose = OptionDoNotDispose << _optionsOffset;
 		private const int _flagRunContinuationsAsynchronously = OptionRunContinuationsAsynchronously << _optionsOffset;
+		private const int _flagSuppressCancellation = OptionSuppressCancellation << _optionsOffset;
 
 		private const int _statusMask = 0x0000000f;
 		private const int _optionsMask = 0x70000000;
@@ -316,9 +309,21 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Canceled"/> state.
 		/// </summary>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetCanceled(bool)"/>
+		protected internal bool TrySetCanceled()
+		{
+			return TrySetCanceled(false);
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Canceled"/> state.
+		/// </summary>
 		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetCanceled()"/>
 		protected internal bool TrySetCanceled(bool completedSynchronously)
 		{
 			ThrowIfDisposed();
@@ -342,10 +347,25 @@ namespace UnityFx.Async
 		/// if the exception is <see cref="OperationCanceledException"/>) state.
 		/// </summary>
 		/// <param name="exception">An exception that caused the operation to end prematurely.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetException(Exception, bool)"/>
+		protected internal bool TrySetException(Exception exception)
+		{
+			return TrySetException(exception, false);
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> (or <see cref="AsyncOperationStatus.Canceled"/>
+		/// if the exception is <see cref="OperationCanceledException"/>) state.
+		/// </summary>
+		/// <param name="exception">An exception that caused the operation to end prematurely.</param>
 		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetException(Exception)"/>
 		protected internal bool TrySetException(Exception exception, bool completedSynchronously)
 		{
 			ThrowIfDisposed();
@@ -390,11 +410,26 @@ namespace UnityFx.Async
 		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
 		/// </summary>
 		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="exceptions"/> is empty.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetExceptions(IEnumerable{Exception}, bool)"/>
+		protected internal bool TrySetExceptions(IEnumerable<Exception> exceptions)
+		{
+			return TrySetExceptions(exceptions, false);
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
 		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ArgumentException">Thrown if <paramref name="exceptions"/> is empty.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetExceptions(IEnumerable{Exception})"/>
 		protected internal bool TrySetExceptions(IEnumerable<Exception> exceptions, bool completedSynchronously)
 		{
 			ThrowIfDisposed();
@@ -447,9 +482,21 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetCompleted(bool)"/>
+		protected internal bool TrySetCompleted()
+		{
+			return TrySetCompleted(false);
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
+		/// </summary>
 		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetCompleted()"/>
 		protected internal bool TrySetCompleted(bool completedSynchronously)
 		{
 			ThrowIfDisposed();
@@ -576,12 +623,11 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Called when the operation cancellation has been requested. Default implementation throws <see cref="NotSupportedException"/>.
+		/// Called when the operation cancellation has been requested. Default implementation does nothing.
 		/// </summary>
 		/// <seealso cref="Cancel"/>
 		protected virtual void OnCancel()
 		{
-			throw new NotSupportedException();
 		}
 
 		/// <summary>
@@ -637,6 +683,7 @@ namespace UnityFx.Async
 
 		internal const int OptionDoNotDispose = 1;
 		internal const int OptionRunContinuationsAsynchronously = 2;
+		internal const int OptionSuppressCancellation = 4;
 
 		/// <summary>
 		/// Special status setter for <see cref="AsyncOperationStatus.Scheduled"/> and <see cref="AsyncOperationStatus.Running"/>.
@@ -805,7 +852,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Unconditionally reports the operatino progress.
+		/// Unconditionally reports the operation progress.
 		/// </summary>
 		internal void ReportProgress()
 		{
@@ -858,7 +905,10 @@ namespace UnityFx.Async
 
 		#region IAsyncOperation
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Gets the operation progress in range [0, 1].
+		/// </summary>
+		/// <value>Progress of the operation in range [0, 1].</value>
 		public float Progress
 		{
 			get
@@ -878,28 +928,55 @@ namespace UnityFx.Async
 			}
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Gets the operation status identifier.
+		/// </summary>
+		/// <value>Identifier of the operation status.</value>
 		public AsyncOperationStatus Status => (AsyncOperationStatus)(_flags & _statusMask);
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Gets an exception that caused the operation to end prematurely. If the operation completed successfully
+		/// or has not yet thrown any exceptions, this will return <see langword="null"/>.
+		/// </summary>
+		/// <value>An exception that caused the operation to end prematurely.</value>
 		public Exception Exception => (_flags & _flagCompleted) != 0 ? _exception : null;
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Gets a value indicating whether the operation completed successfully (i.e. with <see cref="AsyncOperationStatus.RanToCompletion"/> status).
+		/// </summary>
+		/// <value>A value indicating whether the operation completed successfully.</value>
 		public bool IsCompletedSuccessfully => (_flags & _statusMask) == StatusRanToCompletion;
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Gets a value indicating whether the operation completed due to an unhandled exception (i.e. with <see cref="AsyncOperationStatus.Faulted"/> status).
+		/// </summary>
+		/// <value>A value indicating whether the operation has failed.</value>
 		public bool IsFaulted => (_flags & _statusMask) == StatusFaulted;
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Gets a value indicating whether the operation completed due to being canceled (i.e. with <see cref="AsyncOperationStatus.Canceled"/> status).
+		/// </summary>
+		/// <value>A value indicating whether the operation was canceled.</value>
 		public bool IsCanceled => (_flags & _statusMask) == StatusCanceled;
 
 		#endregion
 
 		#region IAsyncCancellable
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Initiates cancellation of an asynchronous operation.
+		/// </summary>
+		/// <remarks>
+		/// There is no guarantee that this call will actually cancel the operation or that the operation will be cancelled immidiately.
+		/// <see cref="AsyncCreationOptions.SuppressCancellation"/> can be used to suppress this method for a specific operation instance.
+		/// </remarks>
 		public void Cancel()
 		{
+			if ((_flags & _flagSuppressCancellation) != 0)
+			{
+				return;
+			}
+
 			if (TrySetFlag(_flagCancellationRequested))
 			{
 				OnCancel();
@@ -910,7 +987,15 @@ namespace UnityFx.Async
 
 		#region IAsyncResult
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Gets a <see cref="WaitHandle"/> that is used to wait for an asynchronous operation to complete.
+		/// </summary>
+		/// <remarks>
+		/// The handle is lazily allocated on the first property access. Make sure to call <see cref="Dispose()"/> when
+		/// the operation instance is not in use.
+		/// </remarks>
+		/// <value>A <see cref="WaitHandle"/> that is used to wait for an asynchronous operation to complete.</value>
+		/// <seealso cref="Dispose()"/>
 		public WaitHandle AsyncWaitHandle
 		{
 			get
@@ -943,26 +1028,59 @@ namespace UnityFx.Async
 			}
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
+		/// </summary>
+		/// <value>A user-defined object that qualifies or contains information about an asynchronous operation.</value>
 		public object AsyncState => _asyncState;
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Gets a value indicating whether the asynchronous operation completed synchronously.
+		/// </summary>
+		/// <remarks>
+		/// For the vast majority of cases this is <see langword="false"/>. Do not rely on this vlaue.
+		/// </remarks>
+		/// <value><see langword="true"/> if the asynchronous operation completed synchronously; otherwise, <see langword="false"/>.</value>
+		/// <seealso cref="IsCompleted"/>
 		public bool CompletedSynchronously => (_flags & _flagSynchronous) != 0;
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Gets a value indicating whether the asynchronous operation has completed.
+		/// </summary>
+		/// <value><see langword="true"/> if the operation is complete; otherwise, <see langword="false"/>.</value>
+		/// <seealso cref="CompletedSynchronously"/>
 		public bool IsCompleted => (_flags & _flagCompleted) != 0;
 
 		#endregion
 
 		#region IEnumerator
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Gets the current element in the collection.
+		/// </summary>
+		/// <remarks>
+		/// Not implemented. Always returns <see langword="null"/>.
+		/// </remarks>
+		/// <value>
+		/// The current element in the collection.
+		/// </value>
 		object IEnumerator.Current => null;
 
-		/// <inheritdoc/>
-		bool IEnumerator.MoveNext() => _flags == StatusRunning;
+		/// <summary>
+		/// Advances the enumerator to the next element of the collection.
+		/// </summary>
+		/// <remarks>
+		/// Checks whether the operation is completed. Returns <see langword="false"/> if it is; otherwise, <see langword="true"/>.
+		/// </remarks>
+		/// <returns>Returns <see langword="true"/> if the enumerator was successfully advanced to the next element; <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
+		bool IEnumerator.MoveNext() => (_flags & _statusMask) <= StatusRunning;
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Sets the enumerator to its initial position, which is before the first element in the collection.
+		/// </summary>
+		/// <remarks>
+		/// Not implemented. Always throws <see cref="NotSupportedException"/>.
+		/// </remarks>
 		void IEnumerator.Reset() => throw new NotSupportedException();
 
 		#endregion
@@ -970,7 +1088,8 @@ namespace UnityFx.Async
 		#region IDisposable
 
 		/// <summary>
-		/// Disposes the <see cref="AsyncResult"/>, releasing all of its unmanaged resources.
+		/// Disposes the <see cref="AsyncResult"/>, releasing all of its unmanaged resources. This call is only required if
+		/// <see cref="AsyncWaitHandle"/> was accessed; otherwise it is safe to ignore this method.
 		/// </summary>
 		/// <remarks>
 		/// Unlike most of the members of <see cref="AsyncResult"/>, this method is not thread-safe.
@@ -1010,11 +1129,17 @@ namespace UnityFx.Async
 			get
 			{
 				var result = ToString();
-				var state = Status.ToString();
+				var status = Status;
+				var state = status.ToString();
 
 				if (IsFaulted && _exception != null)
 				{
 					state += " (" + _exception.GetType().Name + ')';
+				}
+
+				if (status == AsyncOperationStatus.Running)
+				{
+					state += ", Progress = " + GetProgress().ToString("N2");
 				}
 
 				result += ", Status = ";
@@ -1040,7 +1165,7 @@ namespace UnityFx.Async
 				_exception = new OperationCanceledException();
 			}
 
-			if (flags > StatusRunning)
+			if ((flags & _statusMask) > StatusRunning)
 			{
 				_callback = _callbackCompletionSentinel;
 				_flags = flags | _flagCompletedSynchronously;

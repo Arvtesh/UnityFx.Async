@@ -43,7 +43,7 @@ namespace UnityFx.Async.Promises
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool inline)
+		public void Invoke(IAsyncOperation op)
 		{
 			try
 			{
@@ -51,7 +51,7 @@ namespace UnityFx.Async.Promises
 				{
 					case Action a:
 						a.Invoke();
-						TrySetCompleted(inline);
+						TrySetCompleted();
 						break;
 
 					case Func<IAsyncOperation<T>> f1:
@@ -63,13 +63,13 @@ namespace UnityFx.Async.Promises
 						break;
 
 					default:
-						TrySetCanceled(inline);
+						TrySetCanceled();
 						break;
 				}
 			}
 			catch (Exception e)
 			{
-				TrySetException(e, inline);
+				TrySetException(e);
 			}
 		}
 

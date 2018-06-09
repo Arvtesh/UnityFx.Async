@@ -60,7 +60,7 @@ namespace UnityFx.Async
 			// Arrange
 			var op = new AsyncCompletionSource();
 			var counter = 0;
-			var d = new AsyncOperationCallback(CompletionCallback);
+			var d = new Action<IAsyncOperation>(CompletionCallback);
 
 			void CompletionCallback(IAsyncOperation o)
 			{
@@ -109,8 +109,7 @@ namespace UnityFx.Async
 			op.SetCompleted();
 
 			// Assert
-			continuation.Received(1).Invoke(op, false);
-			continuation.Received(0).Invoke(op, true);
+			continuation.Received(1).Invoke(op);
 		}
 
 		[Fact]
@@ -124,8 +123,7 @@ namespace UnityFx.Async
 			op.AddCompletionCallback(continuation);
 
 			// Assert
-			continuation.Received(1).Invoke(op, true);
-			continuation.Received(0).Invoke(op, false);
+			continuation.Received(1).Invoke(op);
 		}
 
 		[Fact]

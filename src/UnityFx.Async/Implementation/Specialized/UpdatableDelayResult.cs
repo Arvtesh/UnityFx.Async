@@ -21,9 +21,9 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public UpdatableDelayResult(int millisecondsDelay, IAsyncUpdateSource updateSource)
+		public UpdatableDelayResult(float secondsDelay, IAsyncUpdateSource updateSource)
 		{
-			_timeToWait = millisecondsDelay / 1000f;
+			_timeToWait = secondsDelay;
 			_timer = _timeToWait;
 			_updateService = updateSource;
 			_updateService.AddListener(this);
@@ -40,7 +40,7 @@ namespace UnityFx.Async
 
 		protected override void OnCancel()
 		{
-			TrySetCanceled(false);
+			TrySetCanceled();
 		}
 
 		protected override void OnCompleted()
@@ -59,7 +59,7 @@ namespace UnityFx.Async
 
 			if (_timer <= 0)
 			{
-				TrySetCompleted(false);
+				TrySetCompleted();
 			}
 			else
 			{

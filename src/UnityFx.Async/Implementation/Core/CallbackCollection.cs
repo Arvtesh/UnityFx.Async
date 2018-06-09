@@ -269,7 +269,7 @@ namespace UnityFx.Async
 		private void InvokeInline(object callback)
 		{
 			Debug.Assert(callback != null);
-			CallbackUtility.InvokeCompletionCallback(_op, callback, false);
+			CallbackUtility.InvokeCompletionCallback(_op, callback);
 		}
 
 		private void InvokeProgressChangedInline(object callback)

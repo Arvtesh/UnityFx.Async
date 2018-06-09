@@ -232,16 +232,16 @@ namespace UnityFx.Async
 		}
 
 		/// <inheritdoc/>
-		public bool TrySetCanceled() => TrySetCanceled(false);
+		public new bool TrySetCanceled() => TrySetCanceled(false);
 
 		/// <inheritdoc/>
-		public bool TrySetException(Exception exception) => TrySetException(exception, false);
+		public new bool TrySetException(Exception exception) => TrySetException(exception, false);
 
 		/// <inheritdoc/>
-		public bool TrySetExceptions(IEnumerable<Exception> exceptions) => TrySetExceptions(exceptions, false);
+		public new bool TrySetExceptions(IEnumerable<Exception> exceptions) => TrySetExceptions(exceptions, false);
 
 		/// <inheritdoc/>
-		public bool TrySetResult(TResult result) => TrySetResult(result, false);
+		public new bool TrySetResult(TResult result) => TrySetResult(result, false);
 
 		#endregion
 	}
