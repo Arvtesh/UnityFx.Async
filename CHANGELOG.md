@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
 -----------------------
-## [0.9.3] - unreleased
+## [0.9.3] - 2018.06.09
 
 ### Added
 - Added push-based progress reporting support.
@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added update sources for `LateUpdate`, `FixedUpdate` and end-of-frame updates.
 - Added `SynchronizationContext` for the main thread (if not set by Unity).
 - Added methods `AsyncUtility.PostToMainThread`, `AsyncUtility.SendToMainThread` as `AsyncUtility.InvokeOnMainThread`.
+- Added new `FromAction` overloads.
 
 ### Changed
 - Significantly reduced number of memory allocations when adding continuations.
