@@ -19,7 +19,7 @@ namespace UnityFx.Async
 			op.SetCanceled();
 
 			// Act
-			var result = op.TryAddContinuation(_ => { }, null);
+			var result = op.TryAddCompletionCallback(_ => { }, null);
 
 			// Assert
 			Assert.False(result);
@@ -32,7 +32,7 @@ namespace UnityFx.Async
 			var op = AsyncResult.CompletedOperation;
 
 			// Act
-			var result = op.TryAddContinuation(_ => { }, null);
+			var result = op.TryAddCompletionCallback(_ => { }, null);
 
 			// Assert
 			Assert.False(result);
@@ -45,7 +45,7 @@ namespace UnityFx.Async
 			var op = AsyncResult.Delay(1);
 			var callbackCalled = false;
 
-			op.TryAddContinuation(_ => callbackCalled = true, null);
+			op.TryAddCompletionCallback(_ => callbackCalled = true, null);
 
 			// Act
 			await op;
@@ -60,18 +60,18 @@ namespace UnityFx.Async
 			// Arrange
 			var op = new AsyncCompletionSource();
 			var counter = 0;
-			var d = new AsyncOperationCallback(CompletionCallback);
+			var d = new Action<IAsyncOperation>(CompletionCallback);
 
 			void CompletionCallback(IAsyncOperation o)
 			{
-				++counter;
+				Interlocked.Increment(ref counter);
 			}
 
 			void TestMethod()
 			{
 				for (var i = 0; i < 10000; ++i)
 				{
-					op.TryAddContinuation(d);
+					op.TryAddCompletionCallback(d);
 				}
 			}
 
@@ -79,7 +79,7 @@ namespace UnityFx.Async
 			{
 				for (var i = 0; i < 10000; ++i)
 				{
-					op.RemoveContinuation(d);
+					op.RemoveCompletionCallback(d);
 				}
 			}
 
@@ -103,14 +103,13 @@ namespace UnityFx.Async
 			// Arrange
 			var op = new AsyncCompletionSource();
 			var continuation = Substitute.For<IAsyncContinuation>();
-			op.TryAddContinuation(continuation);
+			op.TryAddCompletionCallback(continuation);
 
 			// Act
 			op.SetCompleted();
 
 			// Assert
-			continuation.Received(1).Invoke(op, false);
-			continuation.Received(0).Invoke(op, true);
+			continuation.Received(1).Invoke(op);
 		}
 
 		[Fact]
@@ -121,11 +120,10 @@ namespace UnityFx.Async
 			var continuation = Substitute.For<IAsyncContinuation>();
 
 			// Act
-			op.AddContinuation(continuation);
+			op.AddCompletionCallback(continuation);
 
 			// Assert
-			continuation.Received(1).Invoke(op, true);
-			continuation.Received(0).Invoke(op, false);
+			continuation.Received(1).Invoke(op);
 		}
 
 		[Fact]
@@ -136,7 +134,7 @@ namespace UnityFx.Async
 			var callbackCalled = false;
 
 			// Act
-			op.AddContinuation(_ => callbackCalled = true, null);
+			op.AddCompletionCallback(_ => callbackCalled = true, null);
 
 			// Assert
 			Assert.True(callbackCalled);
@@ -152,8 +150,8 @@ namespace UnityFx.Async
 			var tid = 0;
 			var tidActual = 0;
 
-			op.TryAddContinuation(_ => { }, sc);
-			op2.TryAddContinuation(_ => tidActual = Thread.CurrentThread.ManagedThreadId, null);
+			op.TryAddCompletionCallback(_ => { }, sc);
+			op2.TryAddCompletionCallback(_ => tidActual = Thread.CurrentThread.ManagedThreadId, null);
 
 			// Act
 			await Task.Run(() => op.SetCompleted());

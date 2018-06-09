@@ -23,7 +23,7 @@ namespace UnityFx.Async.Promises
 
 		#region ThenResult
 
-		protected override IAsyncOperation InvokeSuccessCallback(IAsyncOperation op, bool completedSynchronously, object continuation)
+		protected override IAsyncOperation InvokeSuccessCallback(IAsyncOperation op, object continuation)
 		{
 			IAsyncOperation result = null;
 
@@ -48,11 +48,11 @@ namespace UnityFx.Async.Promises
 
 			if (result != null)
 			{
-				result.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+				result.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 			}
 			else
 			{
-				TrySetCanceled(completedSynchronously);
+				TrySetCanceled();
 			}
 
 			return result;

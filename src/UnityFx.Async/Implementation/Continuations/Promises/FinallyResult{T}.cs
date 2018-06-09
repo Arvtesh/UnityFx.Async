@@ -22,7 +22,7 @@ namespace UnityFx.Async.Promises
 			_op = op;
 			_continuation = action;
 
-			op.AddContinuation(this);
+			op.AddCompletionCallback(this);
 		}
 
 		#endregion
@@ -43,7 +43,7 @@ namespace UnityFx.Async.Promises
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool inline)
+		public void Invoke(IAsyncOperation op)
 		{
 			try
 			{
@@ -51,25 +51,25 @@ namespace UnityFx.Async.Promises
 				{
 					case Action a:
 						a.Invoke();
-						TrySetCompleted(inline);
+						TrySetCompleted();
 						break;
 
 					case Func<IAsyncOperation<T>> f1:
-						f1().AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+						f1().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 						break;
 
 					case Func<IAsyncOperation> f2:
-						f2().AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+						f2().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 						break;
 
 					default:
-						TrySetCanceled(inline);
+						TrySetCanceled();
 						break;
 				}
 			}
 			catch (Exception e)
 			{
-				TrySetException(e, inline);
+				TrySetException(e);
 			}
 		}
 

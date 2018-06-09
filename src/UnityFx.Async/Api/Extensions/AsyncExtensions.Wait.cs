@@ -19,18 +19,10 @@ namespace UnityFx.Async
 		/// <seealso cref="Wait(IAsyncOperation, TimeSpan)"/>
 		public static void Wait(this IAsyncOperation op)
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			SpinUntilCompleted(op);
-
-#else
-
 			if (!op.IsCompleted)
 			{
 				op.AsyncWaitHandle.WaitOne();
 			}
-
-#endif
 
 			AsyncResult.ThrowIfNonSuccess(op);
 		}
@@ -47,20 +39,12 @@ namespace UnityFx.Async
 		/// <seealso cref="Wait(IAsyncOperation, TimeSpan)"/>
 		public static bool Wait(this IAsyncOperation op, int millisecondsTimeout)
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			var result = SpinUntilCompleted(op, millisecondsTimeout);
-
-#else
-
 			var result = true;
 
 			if (!op.IsCompleted)
 			{
 				result = op.AsyncWaitHandle.WaitOne(millisecondsTimeout);
 			}
-
-#endif
 
 			if (result)
 			{
@@ -82,20 +66,12 @@ namespace UnityFx.Async
 		/// <seealso cref="Wait(IAsyncOperation, int)"/>
 		public static bool Wait(this IAsyncOperation op, TimeSpan timeout)
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			var result = SpinUntilCompleted(op, timeout);
-
-#else
-
 			var result = true;
 
 			if (!op.IsCompleted)
 			{
 				result = op.AsyncWaitHandle.WaitOne(timeout);
 			}
-
-#endif
 
 			if (result)
 			{
@@ -186,18 +162,10 @@ namespace UnityFx.Async
 		/// <seealso cref="Join{T}(IAsyncOperation{T})"/>
 		public static void Join(this IAsyncOperation op)
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			SpinUntilCompleted(op);
-
-#else
-
 			if (!op.IsCompleted)
 			{
 				op.AsyncWaitHandle.WaitOne();
 			}
-
-#endif
 
 			AsyncResult.ThrowIfNonSuccess(op);
 		}
@@ -215,20 +183,12 @@ namespace UnityFx.Async
 		/// <seealso cref="Join{TResult}(IAsyncOperation{TResult}, int)"/>
 		public static void Join(this IAsyncOperation op, int millisecondsTimeout)
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			var result = SpinUntilCompleted(op, millisecondsTimeout);
-
-#else
-
 			var result = true;
 
 			if (!op.IsCompleted)
 			{
 				result = op.AsyncWaitHandle.WaitOne(millisecondsTimeout);
 			}
-
-#endif
 
 			if (result)
 			{
@@ -253,20 +213,12 @@ namespace UnityFx.Async
 		/// <seealso cref="Join{TResult}(IAsyncOperation{TResult}, TimeSpan)"/>
 		public static void Join(this IAsyncOperation op, TimeSpan timeout)
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			var result = SpinUntilCompleted(op, timeout);
-
-#else
-
 			var result = true;
 
 			if (!op.IsCompleted)
 			{
 				result = op.AsyncWaitHandle.WaitOne(timeout);
 			}
-
-#endif
 
 			if (result)
 			{
@@ -289,18 +241,10 @@ namespace UnityFx.Async
 		/// <seealso cref="Join(IAsyncOperation)"/>
 		public static TResult Join<TResult>(this IAsyncOperation<TResult> op)
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			SpinUntilCompleted(op);
-
-#else
-
 			if (!op.IsCompleted)
 			{
 				op.AsyncWaitHandle.WaitOne();
 			}
-
-#endif
 
 			return op.Result;
 		}
@@ -319,20 +263,12 @@ namespace UnityFx.Async
 		/// <seealso cref="Join(IAsyncOperation, int)"/>
 		public static TResult Join<TResult>(this IAsyncOperation<TResult> op, int millisecondsTimeout)
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			var result = SpinUntilCompleted(op, millisecondsTimeout);
-
-#else
-
 			var result = true;
 
 			if (!op.IsCompleted)
 			{
 				result = op.AsyncWaitHandle.WaitOne(millisecondsTimeout);
 			}
-
-#endif
 
 			if (!result)
 			{
@@ -356,20 +292,12 @@ namespace UnityFx.Async
 		/// <seealso cref="Join(IAsyncOperation, TimeSpan)"/>
 		public static TResult Join<TResult>(this IAsyncOperation<TResult> op, TimeSpan timeout)
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			var result = SpinUntilCompleted(op, timeout);
-
-#else
-
 			var result = true;
 
 			if (!op.IsCompleted)
 			{
 				result = op.AsyncWaitHandle.WaitOne(timeout);
 			}
-
-#endif
 
 			if (!result)
 			{
@@ -516,12 +444,6 @@ namespace UnityFx.Async
 
 		private static void WaitInternal(IAsyncOperation op, CancellationToken cancellationToken)
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			SpinUntilCompleted(op, cancellationToken);
-
-#else
-
 			if (!op.IsCompleted)
 			{
 				if (cancellationToken.CanBeCanceled)
@@ -540,18 +462,10 @@ namespace UnityFx.Async
 					op.AsyncWaitHandle.WaitOne();
 				}
 			}
-
-#endif
 		}
 
 		private static bool WaitInternal(IAsyncOperation op, int millisecondsTimeout, CancellationToken cancellationToken)
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			return SpinUntilCompleted(op, millisecondsTimeout, cancellationToken);
-
-#else
-
 			var result = true;
 
 			if (!op.IsCompleted)
@@ -578,17 +492,10 @@ namespace UnityFx.Async
 			}
 
 			return result;
-#endif
 		}
 
 		private static bool WaitInternal(IAsyncOperation op, TimeSpan timeout, CancellationToken cancellationToken)
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			return SpinUntilCompleted(op, timeout, cancellationToken);
-
-#else
-
 			var result = true;
 
 			if (!op.IsCompleted)
@@ -615,7 +522,6 @@ namespace UnityFx.Async
 			}
 
 			return result;
-#endif
 		}
 
 #endif

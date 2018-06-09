@@ -4,19 +4,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
 -----------------------
-## [0.9.3] - unreleased
+## [0.9.3] - 2018.06.09
+
+### Added
+- Added push-based progress reporting support.
+- Added `AsyncResult.Delay(float)` overloads.
+- Added `AsyncCreationOptions.SuppressCancellation` option.
+- Added update sources for `LateUpdate`, `FixedUpdate` and end-of-frame updates.
+- Added `SynchronizationContext` for the main thread (if not set by Unity).
+- Added methods `AsyncUtility.PostToMainThread`, `AsyncUtility.SendToMainThread` as `AsyncUtility.InvokeOnMainThread`.
+- Added new `FromAction` overloads.
+
+### Changed
+- Significantly reduced number of memory allocations when adding continuations.
+- Changed signature of the `IAsyncContinuation.Invoke` method.
+- Changed `AsyncResult.OnCancel` implementation to do nothing (previously it threw `NotSupportedException`).
+
+### Fixed
+- Fixed exception when removing listeners while in `AsyncUpdateSource.OnError` / `AsyncUpdateSource.OnCompleted` / `AsyncUpdateSource.Dispose`.
+- Fixed `AsyncResult.MoveNext` to always return `true` while the operation is not completed.
+- Fixed `AsyncResult` construction code not working as intended when `AsyncCreationOptions` are specified.
+
+### Removed
+- Removed `AsyncOperationCallback` delegate type.
 
 -----------------------
 ## [0.9.2] - 2018.05.25
 
 ### Added
-- Added pull-based progress support (`IAsyncOperation.Progress`).
+- Added pull-based progress reporting support.
 - Added new methods to `IAsyncUpdateSource`.
 - Added `AsyncUpdateSource` class as default `IAsyncUpdateSource` implementation.
 - `IAsyncOperation<T>` now inherits `IObservable<T>`.
 
 ### Changed
-- Renamed `(Try)AddCompletionCallback`/`RemoveCompletionCallback` methods to `(Try)AddContinuation`/`RemoveContinuation`.
 - Changed `IAsyncOperation.Exception` type to `Exception`.
 - Changed `IAsyncOperationEvents.Completed` type to `AsyncCompletedEventHandler`.
 

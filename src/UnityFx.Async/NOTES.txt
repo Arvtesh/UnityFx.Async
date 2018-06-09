@@ -1,8 +1,0 @@
-﻿TODO:
-1) IProgress support:
-	- progress reporting should support standard IProgress interface;
-2) Optimize number of allocations needed for adding continuations:
-	- most common case is a 1-2 continuations per operation;
-	- it's a very rare case when more than 4 continuations per operation is needed, so this case is not a subject to any optimizations currently;
-	- one possible optimization is removing internal List<object> that is allocated for cases when more that 1 continuation is needed,
-	  AsyncContinuation can be modified to store a reference to the next continuation object;

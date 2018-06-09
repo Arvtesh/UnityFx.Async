@@ -30,11 +30,11 @@ namespace UnityFx.Async
 
 			if ((options & AsyncContinuationOptions.ExecuteSynchronously) != 0)
 			{
-				op.AddContinuation(this, null);
+				op.AddCompletionCallback(this, null);
 			}
 			else
 			{
-				op.AddContinuation(this);
+				op.AddCompletionCallback(this);
 			}
 		}
 
@@ -56,9 +56,9 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool inline)
+		public void Invoke(IAsyncOperation op)
 		{
-			if (AsyncContinuation.CanInvoke(op, _options))
+			if (CanInvoke())
 			{
 				try
 				{
@@ -99,21 +99,40 @@ namespace UnityFx.Async
 							break;
 
 						default:
-							TrySetCanceled(inline);
+							TrySetCanceled();
 							return;
 					}
 
-					TrySetResult(result, inline);
+					TrySetResult(result);
 				}
 				catch (Exception e)
 				{
-					TrySetException(e, inline);
+					TrySetException(e);
 				}
 			}
 			else
 			{
-				TrySetCanceled(inline);
+				TrySetCanceled();
 			}
+		}
+
+		#endregion
+
+		#region implementation
+
+		private bool CanInvoke()
+		{
+			if (_op.IsCompletedSuccessfully)
+			{
+				return (_options & AsyncContinuationOptions.NotOnRanToCompletion) == 0;
+			}
+
+			if (_op.IsFaulted)
+			{
+				return (_options & AsyncContinuationOptions.NotOnFaulted) == 0;
+			}
+
+			return (_options & AsyncContinuationOptions.NotOnCanceled) == 0;
 		}
 
 		#endregion

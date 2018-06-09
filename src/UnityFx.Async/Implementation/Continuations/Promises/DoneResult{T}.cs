@@ -26,7 +26,7 @@ namespace UnityFx.Async.Promises
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool inline)
+		public void Invoke(IAsyncOperation op)
 		{
 			if (op.IsCompletedSuccessfully)
 			{

@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
-using System.Threading;
 
 namespace UnityFx.Async.Promises
 {
@@ -23,7 +22,7 @@ namespace UnityFx.Async.Promises
 			_op = op;
 			_continuation = action;
 
-			op.AddContinuation(this);
+			op.AddCompletionCallback(this);
 		}
 
 		#endregion
@@ -44,7 +43,7 @@ namespace UnityFx.Async.Promises
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool inline)
+		public void Invoke(IAsyncOperation op)
 		{
 			try
 			{
@@ -53,26 +52,26 @@ namespace UnityFx.Async.Promises
 					switch (_continuation)
 					{
 						case Func<U> f1:
-							TrySetResult(f1(), inline);
+							TrySetResult(f1());
 							break;
 
 						case Func<T, U> f2:
-							TrySetResult(f2((op as IAsyncOperation<T>).Result), inline);
+							TrySetResult(f2((op as IAsyncOperation<T>).Result));
 							break;
 
 						default:
-							TrySetCanceled(inline);
+							TrySetCanceled();
 							break;
 					}
 				}
 				else
 				{
-					TrySetException(op.Exception, inline);
+					TrySetException(op.Exception);
 				}
 			}
 			catch (Exception e)
 			{
-				TrySetException(e, inline);
+				TrySetException(e);
 			}
 		}
 

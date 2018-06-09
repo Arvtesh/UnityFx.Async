@@ -22,7 +22,7 @@ namespace UnityFx.Async
 
 			foreach (var op in ops)
 			{
-				op.AddContinuation(this, null);
+				op.AddCompletionCallback(this, null);
 			}
 		}
 
@@ -42,9 +42,9 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool inline)
+		public void Invoke(IAsyncOperation op)
 		{
-			TrySetResult((T)op, inline);
+			TrySetResult((T)op);
 		}
 
 		#endregion

@@ -28,7 +28,7 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool inline)
+		public void Invoke(IAsyncOperation op)
 		{
 			if (_op.IsCompletedSuccessfully)
 			{
@@ -47,7 +47,7 @@ namespace UnityFx.Async
 
 		public void Dispose()
 		{
-			_op.RemoveContinuation(this);
+			_op.RemoveCompletionCallback(this);
 		}
 
 		#endregion

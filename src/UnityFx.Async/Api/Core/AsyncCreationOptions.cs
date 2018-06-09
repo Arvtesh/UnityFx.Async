@@ -13,13 +13,18 @@ namespace UnityFx.Async
 	public enum AsyncCreationOptions
 	{
 		/// <summary>
-		///  Specifies that the default behavior should be used.
+		/// Specifies that the default behavior should be used.
 		/// </summary>
 		None = 0,
 
 		/// <summary>
-		///  Forces continuations added to the current operation to be executed asynchronously.
+		/// Forces continuations added to the current operation to be executed asynchronously.
 		/// </summary>
-		RunContinuationsAsynchronously = AsyncResult.OptionRunContinuationsAsynchronously
+		RunContinuationsAsynchronously = AsyncResult.OptionRunContinuationsAsynchronously,
+
+		/// <summary>
+		/// If set cancelling the operation has no effect (silently ignored).
+		/// </summary>
+		SuppressCancellation = AsyncResult.OptionSuppressCancellation
 	}
 }

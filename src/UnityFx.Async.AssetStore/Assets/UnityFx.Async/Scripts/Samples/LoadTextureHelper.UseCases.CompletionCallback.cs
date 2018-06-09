@@ -12,7 +12,7 @@ namespace UnityFx.Async.Samples
 		/// </summary>
 		public void WaitForLoadOperationInCompletionCallback(string textureUrl)
 		{
-			LoadTextureAsync(textureUrl).AddContinuation(op =>
+			LoadTextureAsync(textureUrl).AddCompletionCallback(op =>
 			{
 				if (op.IsCompletedSuccessfully)
 				{

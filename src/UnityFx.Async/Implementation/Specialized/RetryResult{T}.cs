@@ -36,7 +36,7 @@ namespace UnityFx.Async
 			{
 				if (IsCancellationRequested)
 				{
-					TrySetCanceled(false);
+					TrySetCanceled();
 				}
 				else
 				{
@@ -65,7 +65,7 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool inline)
+		public void Invoke(IAsyncOperation op)
 		{
 			Debug.Assert(_op == op);
 			Debug.Assert(_op.IsCompleted);
@@ -78,10 +78,11 @@ namespace UnityFx.Async
 				}
 				else if (IsCancellationRequested)
 				{
-					TrySetCanceled(false);
+					TrySetCanceled();
 				}
 				else if (_millisecondsRetryDelay > 0)
 				{
+					ReportProgress();
 					BeginWait(_millisecondsRetryDelay);
 				}
 				else
@@ -112,7 +113,7 @@ namespace UnityFx.Async
 					throw new InvalidOperationException("Invalid delegate type.");
 				}
 
-				if (!_op.TryAddContinuation(this))
+				if (!_op.TryAddCompletionCallback(this))
 				{
 					if (_op.IsCompletedSuccessfully)
 					{
@@ -126,7 +127,7 @@ namespace UnityFx.Async
 			}
 			catch (Exception e)
 			{
-				TrySetException(e, false);
+				TrySetException(e);
 			}
 		}
 
@@ -141,16 +142,16 @@ namespace UnityFx.Async
 			}
 			else if (_op.IsFaulted)
 			{
-				TrySetException(_op.Exception, false);
+				TrySetException(_op.Exception);
 			}
 			else if (_op.IsCanceled)
 			{
-				TrySetCanceled(false);
+				TrySetCanceled();
 			}
 			else
 			{
 				// NOTE: should not get here.
-				TrySetException(new Exception("Maximum number of retries exceeded."), false);
+				TrySetException(new Exception(Constants.ErrorMaxNumberOrRetries));
 			}
 		}
 
@@ -161,11 +162,11 @@ namespace UnityFx.Async
 
 			if (_op is IAsyncOperation<T> rop)
 			{
-				TrySetResult(rop.Result, false);
+				TrySetResult(rop.Result);
 			}
 			else
 			{
-				TrySetCompleted(false);
+				TrySetCompleted();
 			}
 		}
 

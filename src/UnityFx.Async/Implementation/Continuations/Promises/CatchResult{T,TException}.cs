@@ -22,7 +22,7 @@ namespace UnityFx.Async.Promises
 			_op = op;
 			_errorCallback = errorCallback;
 
-			op.AddContinuation(this);
+			op.AddCompletionCallback(this);
 		}
 
 		#endregion
@@ -43,26 +43,26 @@ namespace UnityFx.Async.Promises
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool inline)
+		public void Invoke(IAsyncOperation op)
 		{
 			if (op.IsCompletedSuccessfully)
 			{
-				TrySetCompleted(inline);
+				TrySetCompleted();
 			}
 			else if (!(op.Exception is TException))
 			{
-				TrySetException(op.Exception, inline);
+				TrySetException(op.Exception);
 			}
 			else
 			{
 				try
 				{
 					_errorCallback.Invoke(op.Exception as TException);
-					TrySetCompleted(inline);
+					TrySetCompleted();
 				}
 				catch (Exception e)
 				{
-					TrySetException(e, inline);
+					TrySetException(e);
 				}
 			}
 		}

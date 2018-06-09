@@ -154,15 +154,7 @@ namespace UnityFx.Async
 		/// <seealso cref="GetAwaiter{TResult}(IAsyncOperation{TResult})"/>
 		public static AsyncAwaiter GetAwaiter(this IAsyncOperation op)
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			return new AsyncAwaiter(op, false);
-
-#else
-
 			return new AsyncAwaiter(op, true);
-
-#endif
 		}
 
 		/// <summary>
@@ -172,15 +164,7 @@ namespace UnityFx.Async
 		/// <seealso cref="GetAwaiter(IAsyncOperation)"/>
 		public static AsyncAwaiter<TResult> GetAwaiter<TResult>(this IAsyncOperation<TResult> op)
 		{
-#if UNITYFX_NOT_THREAD_SAFE
-
-			return new AsyncAwaiter<TResult>(op, false);
-
-#else
-
 			return new AsyncAwaiter<TResult>(op, true);
-
-#endif
 		}
 
 		/// <summary>
@@ -234,9 +218,9 @@ namespace UnityFx.Async
 			{
 				var result = new TaskCompletionSource<VoidResult>();
 
-				if (!op.TryAddContinuation(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp, result), null))
+				if (!op.TryAddCompletionCallback(asyncOp => InvokeTaskContinuation(asyncOp, result), null))
 				{
-					AsyncContinuation.InvokeTaskContinuation(op, result);
+					InvokeTaskContinuation(op, result);
 				}
 
 				return result.Task;
@@ -268,9 +252,9 @@ namespace UnityFx.Async
 			{
 				var result = new TaskCompletionSource<TResult>();
 
-				if (!op.TryAddContinuation(asyncOp => AsyncContinuation.InvokeTaskContinuation(asyncOp as IAsyncOperation<TResult>, result), null))
+				if (!op.TryAddCompletionCallback(asyncOp => InvokeTaskContinuation(asyncOp as IAsyncOperation<TResult>, result), null))
 				{
-					AsyncContinuation.InvokeTaskContinuation(op, result);
+					InvokeTaskContinuation(op, result);
 				}
 
 				return result.Task;
@@ -313,9 +297,45 @@ namespace UnityFx.Async
 			{
 				ar.SetContinuationForAwait(continuation, syncContext);
 			}
-			else if (!op.TryAddContinuation(asyncOp => continuation(), syncContext))
+			else if (!op.TryAddCompletionCallback(asyncOp => continuation(), syncContext))
 			{
 				continuation();
+			}
+		}
+
+		private static void InvokeTaskContinuation(IAsyncOperation op, TaskCompletionSource<VoidResult> tcs)
+		{
+			var status = op.Status;
+
+			if (status == AsyncOperationStatus.RanToCompletion)
+			{
+				tcs.TrySetResult(null);
+			}
+			else if (status == AsyncOperationStatus.Faulted)
+			{
+				tcs.TrySetException(op.Exception);
+			}
+			else if (status == AsyncOperationStatus.Canceled)
+			{
+				tcs.TrySetCanceled();
+			}
+		}
+
+		private static void InvokeTaskContinuation<T>(IAsyncOperation<T> op, TaskCompletionSource<T> tcs)
+		{
+			var status = op.Status;
+
+			if (status == AsyncOperationStatus.RanToCompletion)
+			{
+				tcs.TrySetResult(op.Result);
+			}
+			else if (status == AsyncOperationStatus.Faulted)
+			{
+				tcs.TrySetException(op.Exception);
+			}
+			else if (status == AsyncOperationStatus.Canceled)
+			{
+				tcs.TrySetCanceled();
 			}
 		}
 

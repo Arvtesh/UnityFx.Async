@@ -9,17 +9,21 @@ namespace UnityFx.Async
 	{
 		#region data
 
+		private const float _progressEventTimeout = 0.1f;
+
 		private readonly IAsyncUpdateSource _updateService;
-		private float _timeToWait;
+		private readonly float _timeToWait;
+
+		private float _progressEventTimer;
 		private float _timer;
 
 		#endregion
 
 		#region interface
 
-		public UpdatableDelayResult(int millisecondsDelay, IAsyncUpdateSource updateSource)
+		public UpdatableDelayResult(float secondsDelay, IAsyncUpdateSource updateSource)
 		{
-			_timeToWait = millisecondsDelay / 1000f;
+			_timeToWait = secondsDelay;
 			_timer = _timeToWait;
 			_updateService = updateSource;
 			_updateService.AddListener(this);
@@ -36,7 +40,7 @@ namespace UnityFx.Async
 
 		protected override void OnCancel()
 		{
-			TrySetCanceled(false);
+			TrySetCanceled();
 		}
 
 		protected override void OnCompleted()
@@ -55,7 +59,17 @@ namespace UnityFx.Async
 
 			if (_timer <= 0)
 			{
-				TrySetCompleted(false);
+				TrySetCompleted();
+			}
+			else
+			{
+				_progressEventTimer += frameTime;
+
+				if (_progressEventTimer >= _progressEventTimeout)
+				{
+					_progressEventTimer = 0;
+					ReportProgress();
+				}
 			}
 		}
 

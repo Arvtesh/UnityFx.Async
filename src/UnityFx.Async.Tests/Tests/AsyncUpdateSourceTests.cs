@@ -109,7 +109,7 @@ namespace UnityFx.Async
 		}
 
 		[Fact]
-		public void Unsubscribe_CanBeCalledFromUpdate()
+		public void Unsubscribe_CanBeCalledFromOnNext()
 		{
 			// Arrange
 			var updateSource = new AsyncUpdateSource();
@@ -124,6 +124,58 @@ namespace UnityFx.Async
 
 			// Assert
 			observer.Received(1).OnNext(Arg.Any<float>());
+		}
+
+		[Fact]
+		public void Unsubscribe_CanBeCalledFromOnError()
+		{
+			// Arrange
+			var updateSource = new AsyncUpdateSource();
+			var observer = Substitute.For<IObserver<float>>();
+			var subscription = updateSource.Subscribe(observer);
+			var e = new Exception();
+
+			observer.When(x => x.OnError(e)).Do(x => subscription.Dispose());
+
+			// Act
+			updateSource.OnError(e);
+
+			// Assert
+			observer.Received(1).OnError(e);
+		}
+
+		[Fact]
+		public void Unsubscribe_CanBeCalledFromOnCompleted()
+		{
+			// Arrange
+			var updateSource = new AsyncUpdateSource();
+			var observer = Substitute.For<IObserver<float>>();
+			var subscription = updateSource.Subscribe(observer);
+
+			observer.When(x => x.OnCompleted()).Do(x => subscription.Dispose());
+
+			// Act
+			updateSource.OnCompleted();
+
+			// Assert
+			observer.Received(1).OnCompleted();
+		}
+
+		[Fact]
+		public void Unsubscribe_CanBeCalledFromDispose()
+		{
+			// Arrange
+			var updateSource = new AsyncUpdateSource();
+			var observer = Substitute.For<IObserver<float>>();
+			var subscription = updateSource.Subscribe(observer);
+
+			observer.When(x => x.OnCompleted()).Do(x => subscription.Dispose());
+
+			// Act
+			updateSource.Dispose();
+
+			// Assert
+			observer.Received(1).OnCompleted();
 		}
 	}
 }

@@ -26,10 +26,10 @@ namespace UnityFx.Async.Promises
 			_successCallback = successCallback;
 			_errorCallback = errorCallback;
 
-			op.AddContinuation(this);
+			op.AddCompletionCallback(this);
 		}
 
-		protected virtual IAsyncOperation InvokeSuccessCallback(IAsyncOperation op, bool completedSynchronously, object continuation)
+		protected virtual IAsyncOperation InvokeSuccessCallback(IAsyncOperation op, object continuation)
 		{
 			IAsyncOperation result = null;
 
@@ -37,36 +37,36 @@ namespace UnityFx.Async.Promises
 			{
 				case Action a:
 					a.Invoke();
-					TrySetCompleted(completedSynchronously);
+					TrySetCompleted();
 					break;
 
 				case Action<T> a1:
 					a1.Invoke((op as IAsyncOperation<T>).Result);
-					TrySetCompleted(completedSynchronously);
+					TrySetCompleted();
 					break;
 
 				case Func<IAsyncOperation<U>> f3:
 					result = f3();
-					result.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+					result.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				case Func<IAsyncOperation> f1:
 					result = f1();
-					result.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+					result.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				case Func<T, IAsyncOperation<U>> f4:
 					result = f4((op as IAsyncOperation<T>).Result);
-					result.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+					result.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				case Func<T, IAsyncOperation> f2:
 					result = f2((op as IAsyncOperation<T>).Result);
-					result.AddContinuation(op2 => TryCopyCompletionState(op2, false), null);
+					result.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
 					break;
 
 				default:
-					TrySetCanceled(completedSynchronously);
+					TrySetCanceled();
 					break;
 			}
 
@@ -87,7 +87,7 @@ namespace UnityFx.Async.Promises
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op, bool inline)
+		public void Invoke(IAsyncOperation op)
 		{
 			try
 			{
@@ -95,22 +95,22 @@ namespace UnityFx.Async.Promises
 				{
 					if (IsCancellationRequested)
 					{
-						TrySetCanceled(inline);
+						TrySetCanceled();
 					}
 					else
 					{
-						_continuation = InvokeSuccessCallback(op, inline, _successCallback);
+						_continuation = InvokeSuccessCallback(op, _successCallback);
 					}
 				}
 				else
 				{
 					_errorCallback?.Invoke(op.Exception);
-					TrySetException(op.Exception, inline);
+					TrySetException(op.Exception);
 				}
 			}
 			catch (Exception e)
 			{
-				TrySetException(e, inline);
+				TrySetException(e);
 			}
 		}
 
