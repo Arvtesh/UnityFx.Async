@@ -1,4 +1,8 @@
-﻿{
-    "name": "UnityFx.Async.Unity",
-    "references": [ "UnityFx.Async" ]
+{
+    "name": "UnityFx.Async.Package",
+    "references": [],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
 }
