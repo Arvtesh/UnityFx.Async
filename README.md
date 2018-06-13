@@ -375,7 +375,7 @@ There are also non-delegate completion callbacks (`IAsyncContinuation`):
 ```csharp
 class MyContinuation : IAsyncContinuation
 {
-    public void Invoke(IAsyncOperation op, bool inline) => Debug.Log("Done");
+    public void Invoke(IAsyncOperation op) => Debug.Log("Done");
 }
 
 // ...
