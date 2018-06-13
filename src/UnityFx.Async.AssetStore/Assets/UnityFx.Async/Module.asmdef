@@ -1,0 +1,4 @@
+﻿{
+    "name": "UnityFx.Async.Unity",
+    "references": [ "UnityFx.Async" ]
+}
