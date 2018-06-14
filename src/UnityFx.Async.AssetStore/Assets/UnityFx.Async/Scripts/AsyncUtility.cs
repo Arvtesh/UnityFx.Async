@@ -138,6 +138,15 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Checks whether current thread is the main Unity thread.
+		/// </summary>
+		/// <returns>Returns <see langword="true"/> if current thread is Unity main thread; <see langword="false"/> otherwise.</returns>
+		public static bool IsMainThread()
+		{
+			return GetRootBehaviour().MainThreadContext == SynchronizationContext.Current;
+		}
+
+		/// <summary>
 		/// Creates an operation that completes after a time delay.
 		/// </summary>
 		/// <param name="millisecondsDelay">The number of milliseconds to wait before completing the returned operation, or -1 to wait indefinitely.</param>
