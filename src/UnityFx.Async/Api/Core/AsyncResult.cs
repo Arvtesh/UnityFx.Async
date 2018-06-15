@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 #if !NET35
 using System.Runtime.ExceptionServices;
 #endif
@@ -1132,17 +1133,16 @@ namespace UnityFx.Async
 				var status = Status;
 				var state = status.ToString();
 
-				if (IsFaulted && _exception != null)
+				if (status == AsyncOperationStatus.Running)
+				{
+					state += " (" + ((int)(GetProgress() * 100)).ToString(CultureInfo.InvariantCulture) + "%)";
+				}
+				else if ((status == AsyncOperationStatus.Faulted || status == AsyncOperationStatus.Canceled) && _exception != null)
 				{
 					state += " (" + _exception.GetType().Name + ')';
 				}
 
-				if (status == AsyncOperationStatus.Running)
-				{
-					state += ", Progress = " + GetProgress().ToString("N2");
-				}
-
-				result += ", Status = ";
+				result += ": ";
 				result += state;
 
 				if (IsDisposed)
