@@ -48,9 +48,8 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="request">Source web request.</param>
 		public WwwResult(WWW request)
-			: base(AsyncOperationStatus.Running)
+			: this(request, null)
 		{
-			_www = request;
 		}
 
 		/// <summary>
@@ -59,8 +58,13 @@ namespace UnityFx.Async
 		/// <param name="request">Source web request.</param>
 		/// <param name="userState">User-defined data.</param>
 		public WwwResult(WWW request, object userState)
-			: base(AsyncOperationStatus.Running, userState)
+			: base(null, userState)
 		{
+			if (request == null)
+			{
+				throw new ArgumentNullException("request");
+			}
+
 			_www = request;
 		}
 
@@ -105,30 +109,6 @@ namespace UnityFx.Async
 			return null;
 		}
 
-		/// <summary>
-		/// Creates a wrapper for the specified <see cref="WWW"/> instance.
-		/// </summary>
-		public static WwwResult<T> FromWWW(WWW request)
-		{
-			if (request == null)
-			{
-				throw new ArgumentNullException("request");
-			}
-
-			var result = new WwwResult<T>(request);
-
-			if (request.isDone)
-			{
-				result.SetCompleted(true);
-			}
-			else
-			{
-				AsyncUtility.AddCompletionCallback(request, () => result.SetCompleted(false));
-			}
-
-			return result;
-		}
-
 		#endregion
 
 		#region AsyncResult
@@ -142,9 +122,14 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		protected override void OnStarted()
 		{
-			base.OnStarted();
-
-			AsyncUtility.AddCompletionCallback(_www, () => SetCompleted(false));
+			if (_www.isDone)
+			{
+				SetCompleted();
+			}
+			else
+			{
+				AsyncUtility.AddCompletionCallback(_www, SetCompleted);
+			}
 		}
 
 		/// <inheritdoc/>
@@ -186,15 +171,15 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		private void SetCompleted(bool completedSynchronously)
+		private void SetCompleted()
 		{
 			if (string.IsNullOrEmpty(_www.error))
 			{
-				TrySetResult(GetResult(_www), completedSynchronously);
+				TrySetResult(GetResult(_www));
 			}
 			else
 			{
-				TrySetException(new WebRequestException(_www.error), completedSynchronously);
+				TrySetException(new WebRequestException(_www.error));
 			}
 		}
 

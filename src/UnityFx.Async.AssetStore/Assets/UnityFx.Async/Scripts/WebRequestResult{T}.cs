@@ -56,9 +56,8 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="request">Source web request.</param>
 		public WebRequestResult(UnityWebRequest request)
-			: base(request.isModifiable ? AsyncOperationStatus.Created : AsyncOperationStatus.Running, null)
+			: this(request, null)
 		{
-			_request = request;
 		}
 
 		/// <summary>
@@ -67,8 +66,13 @@ namespace UnityFx.Async
 		/// <param name="request">Source web request.</param>
 		/// <param name="userState">User-defined data.</param>
 		public WebRequestResult(UnityWebRequest request, object userState)
-			: base(request.isModifiable ? AsyncOperationStatus.Created : AsyncOperationStatus.Running, userState)
+			: base(null, userState)
 		{
+			if (request == null)
+			{
+				throw new ArgumentNullException("request");
+			}
+
 			_request = request;
 		}
 
@@ -107,30 +111,6 @@ namespace UnityFx.Async
 			return null;
 		}
 
-		/// <summary>
-		/// Creates a wrapper for the specified <see cref="UnityWebRequest"/> instance.
-		/// </summary>
-		public static WebRequestResult<T> FromUnityWebRequest(UnityWebRequest request)
-		{
-			if (request == null)
-			{
-				throw new ArgumentNullException("request");
-			}
-
-			var result = new WebRequestResult<T>(request);
-
-			if (request.isDone)
-			{
-				result.SetCompleted(true);
-			}
-			else if (!request.isModifiable)
-			{
-				AsyncUtility.AddCompletionCallback(request, () => result.SetCompleted(false));
-			}
-
-			return result;
-		}
-
 		#endregion
 
 		#region AsyncResult
@@ -149,20 +129,25 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		protected override void OnStarted()
 		{
-			base.OnStarted();
-
+			if (_request.isDone)
+			{
+				SetCompleted();
+			}
+			else if (_request.isModifiable)
+			{
 #if UNITY_2017_2_OR_NEWER || UNITY_2018
 
-			// Starting with Unity 2017.2 there is AsyncOperation.completed event
-			_op = _request.SendWebRequest();
-			_op.completed += op => SetCompleted(false);
+				// Starting with Unity 2017.2 there is AsyncOperation.completed event
+				_op = _request.SendWebRequest();
+				_op.completed += op => SetCompleted();
 
 #else
 
-			_op = _request.Send();
-			AsyncUtility.AddCompletionCallback(_request, () => SetCompleted(false));
+				_op = _request.Send();
+				AsyncUtility.AddCompletionCallback(_request, SetCompleted);
 
 #endif
+			}
 		}
 
 		/// <inheritdoc/>
@@ -229,7 +214,7 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		private void SetCompleted(bool completedSynchronously)
+		private void SetCompleted()
 		{
 #if UNITY_5
 			if (_request.isError)
@@ -237,15 +222,15 @@ namespace UnityFx.Async
 			if (_request.isHttpError || _request.isNetworkError)
 #endif
 			{
-				TrySetException(new WebRequestException(_request.error, _request.responseCode), completedSynchronously);
+				TrySetException(new WebRequestException(_request.error, _request.responseCode));
 			}
 			else if (_request.downloadHandler != null)
 			{
-				TrySetResult(GetResult(_request), completedSynchronously);
+				TrySetResult(GetResult(_request));
 			}
 			else
 			{
-				TrySetCompleted(completedSynchronously);
+				TrySetCompleted();
 			}
 		}
 

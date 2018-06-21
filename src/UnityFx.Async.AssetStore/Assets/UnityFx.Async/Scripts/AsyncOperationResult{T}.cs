@@ -9,7 +9,7 @@ namespace UnityFx.Async
 	/// <summary>
 	/// A wrapper for <see cref="AsyncOperation"/> with result value.
 	/// </summary>
-	public class AsyncOperationResult : AsyncResult
+	public abstract class AsyncOperationResult<T> : AsyncResult<T> where T : UnityEngine.Object
 	{
 		#region data
 
@@ -31,18 +31,18 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncOperationResult"/> class.
+		/// Initializes a new instance of the <see cref="AsyncOperationResult{T}"/> class.
 		/// </summary>
 		/// <param name="op">Source web request.</param>
-		public AsyncOperationResult(AsyncOperation op)
+		protected AsyncOperationResult(AsyncOperation op)
 		{
-			if (op == null)
-			{
-				throw new ArgumentNullException("op");
-			}
-
 			_op = op;
 		}
+
+		/// <summary>
+		/// Called when the source <see cref="AsyncOperation"/> is completed.
+		/// </summary>
+		protected abstract T GetResult(AsyncOperation op);
 
 		#endregion
 
@@ -53,18 +53,18 @@ namespace UnityFx.Async
 		{
 			if (_op.isDone)
 			{
-				TrySetCompleted(true);
+				OnSetCompleted(_op);
 			}
 			else
 			{
 #if UNITY_2017_2_OR_NEWER || UNITY_2018
 
 				// Starting with Unity 2017.2 there is AsyncOperation.completed event
-				_op.completed += o => TrySetCompleted();
+				_op.completed += OnSetCompleted;
 
 #else
 
-				AsyncUtility.AddCompletionCallback(_op, () => TrySetCompleted());
+				AsyncUtility.AddCompletionCallback(_op, () => OnSetCompleted(_op));
 
 #endif
 			}
@@ -74,6 +74,15 @@ namespace UnityFx.Async
 		protected override float GetProgress()
 		{
 			return _op.progress;
+		}
+
+		#endregion
+
+		#region implementation
+
+		private void OnSetCompleted(AsyncOperation op)
+		{
+			TrySetResult(GetResult(op));
 		}
 
 		#endregion

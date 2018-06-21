@@ -197,8 +197,6 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequest.GetAssetBundle(url);
 			var result = new WebRequestResult<AssetBundle>(webRequest);
 
-			result.Start();
-
 #else
 
 			var www = new WWW(url);
@@ -206,6 +204,7 @@ namespace UnityFx.Async
 
 #endif
 
+			result.Start();
 			return result;
 		}
 
@@ -222,8 +221,6 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequest.GetAssetBundle(url, hash, 0);
 			var result = new WebRequestResult<AssetBundle>(webRequest);
 
-			result.Start();
-
 #else
 
 			var www = WWW.LoadFromCacheOrDownload(url, hash);
@@ -231,6 +228,7 @@ namespace UnityFx.Async
 
 #endif
 
+			result.Start();
 			return result;
 		}
 
@@ -248,8 +246,6 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequest.GetAssetBundle(url, hash, crc);
 			var result = new WebRequestResult<AssetBundle>(webRequest);
 
-			result.Start();
-
 #else
 
 			var www = WWW.LoadFromCacheOrDownload(url, hash, crc);
@@ -257,6 +253,7 @@ namespace UnityFx.Async
 
 #endif
 
+			result.Start();
 			return result;
 		}
 
@@ -272,8 +269,6 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.UNKNOWN);
 			var result = new WebRequestResult<AudioClip>(webRequest);
 
-			result.Start();
-
 #else
 
 			var www = new WWW(url);
@@ -281,6 +276,7 @@ namespace UnityFx.Async
 
 #endif
 
+			result.Start();
 			return result;
 		}
 
@@ -297,8 +293,6 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, audioType);
 			var result = new WebRequestResult<AudioClip>(webRequest);
 
-			result.Start();
-
 #else
 
 			var www = new WWW(url);
@@ -306,6 +300,7 @@ namespace UnityFx.Async
 
 #endif
 
+			result.Start();
 			return result;
 		}
 
@@ -321,8 +316,6 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequestTexture.GetTexture(url, false);
 			var result = new WebRequestResult<Texture2D>(webRequest);
 
-			result.Start();
-
 #else
 
 			var www = new WWW(url);
@@ -330,6 +323,7 @@ namespace UnityFx.Async
 
 #endif
 
+			result.Start();
 			return result;
 		}
 
@@ -346,8 +340,6 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequestTexture.GetTexture(url, nonReadable);
 			var result = new WebRequestResult<Texture2D>(webRequest);
 
-			result.Start();
-
 #else
 
 			var www = new WWW(url);
@@ -355,6 +347,7 @@ namespace UnityFx.Async
 
 #endif
 
+			result.Start();
 			return result;
 		}
 
@@ -370,8 +363,6 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequestMultimedia.GetMovieTexture(url);
 			var result = new WebRequestResult<MovieTexture>(webRequest);
 
-			result.Start();
-
 #else
 
 			var www = new WWW(url);
@@ -379,6 +370,7 @@ namespace UnityFx.Async
 
 #endif
 
+			result.Start();
 			return result;
 		}
 
