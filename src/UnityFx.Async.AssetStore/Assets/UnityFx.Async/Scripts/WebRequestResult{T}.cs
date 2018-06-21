@@ -56,7 +56,18 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="request">Source web request.</param>
 		public WebRequestResult(UnityWebRequest request)
-			: base(request.isModifiable ? AsyncOperationStatus.Created : AsyncOperationStatus.Running, null, request)
+			: base(request.isModifiable ? AsyncOperationStatus.Created : AsyncOperationStatus.Running, null)
+		{
+			_request = request;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WebRequestResult{T}"/> class.
+		/// </summary>
+		/// <param name="request">Source web request.</param>
+		/// <param name="userState">User-defined data.</param>
+		public WebRequestResult(UnityWebRequest request, object userState)
+			: base(request.isModifiable ? AsyncOperationStatus.Created : AsyncOperationStatus.Running, userState)
 		{
 			_request = request;
 		}
@@ -66,11 +77,7 @@ namespace UnityFx.Async
 		/// </summary>
 		protected virtual T GetResult(UnityWebRequest request)
 		{
-			if (request.downloadHandler is DownloadHandlerBuffer)
-			{
-				return ((DownloadHandlerBuffer)request.downloadHandler).data as T;
-			}
-			else if (request.downloadHandler is DownloadHandlerAssetBundle)
+			if (request.downloadHandler is DownloadHandlerAssetBundle)
 			{
 				return ((DownloadHandlerAssetBundle)request.downloadHandler).assetBundle as T;
 			}
@@ -88,6 +95,10 @@ namespace UnityFx.Async
 				return ((DownloadHandlerMovieTexture)request.downloadHandler).movieTexture as T;
 			}
 #endif
+			else if (typeof(T) == typeof(byte[]))
+			{
+				return request.downloadHandler.data as T;
+			}
 			else if (typeof(T) != typeof(object))
 			{
 				return request.downloadHandler.text as T;

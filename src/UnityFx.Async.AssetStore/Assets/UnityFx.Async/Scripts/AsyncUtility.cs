@@ -186,6 +186,203 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="AssetBundle"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the asset bundle to download.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<AssetBundle> GetAssetBundle(string url)
+		{
+#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+
+			var webRequest = UnityWebRequest.GetAssetBundle(url);
+			var result = new WebRequestResult<AssetBundle>(webRequest);
+
+			result.Start();
+
+#else
+
+			var www = new WWW(url);
+			var result = new WwwResult<AssetBundle>(www);
+
+#endif
+
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="AssetBundle"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the asset bundle to download.</param>
+		/// <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<AssetBundle> GetAssetBundle(string url, Hash128 hash)
+		{
+#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+
+			var webRequest = UnityWebRequest.GetAssetBundle(url, hash, 0);
+			var result = new WebRequestResult<AssetBundle>(webRequest);
+
+			result.Start();
+
+#else
+
+			var www = WWW.LoadFromCacheOrDownload(url, hash);
+			var result = new WwwResult<AssetBundle>(www);
+
+#endif
+
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="AssetBundle"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the asset bundle to download.</param>
+		/// <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
+		/// <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<AssetBundle> GetAssetBundle(string url, Hash128 hash, uint crc)
+		{
+#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+
+			var webRequest = UnityWebRequest.GetAssetBundle(url, hash, crc);
+			var result = new WebRequestResult<AssetBundle>(webRequest);
+
+			result.Start();
+
+#else
+
+			var www = WWW.LoadFromCacheOrDownload(url, hash, crc);
+			var result = new WwwResult<AssetBundle>(www);
+
+#endif
+
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="AudioClip"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the audio clip to download.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<AudioClip> GetAudioClip(string url)
+		{
+#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+
+			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.UNKNOWN);
+			var result = new WebRequestResult<AudioClip>(webRequest);
+
+			result.Start();
+
+#else
+
+			var www = new WWW(url);
+			var result = new WwwResult<AudioClip>(www);
+
+#endif
+
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="AudioClip"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the audio clip to download.</param>
+		/// <param name="audioType">The type of audio encoding for the downloaded audio clip.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<AudioClip> GetAudioClip(string url, AudioType audioType)
+		{
+#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+
+			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, audioType);
+			var result = new WebRequestResult<AudioClip>(webRequest);
+
+			result.Start();
+
+#else
+
+			var www = new WWW(url);
+			var result = new WwwResult<AudioClip>(www);
+
+#endif
+
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="Texture2D"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the texture to download.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<Texture2D> GetTexture(string url)
+		{
+#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+
+			var webRequest = UnityWebRequestTexture.GetTexture(url, false);
+			var result = new WebRequestResult<Texture2D>(webRequest);
+
+			result.Start();
+
+#else
+
+			var www = new WWW(url);
+			var result = new WwwResult<Texture2D>(www);
+
+#endif
+
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="Texture2D"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the texture to download.</param>
+		/// <param name="nonReadable">If <see langword="true"/>, the texture's raw data will not be accessible to script. This can conserve memory.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<Texture2D> GetTexture(string url, bool nonReadable)
+		{
+#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+
+			var webRequest = UnityWebRequestTexture.GetTexture(url, nonReadable);
+			var result = new WebRequestResult<Texture2D>(webRequest);
+
+			result.Start();
+
+#else
+
+			var www = new WWW(url);
+			var result = new WwwResult<Texture2D>(www);
+
+#endif
+
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="MovieTexture"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the texture to download.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<MovieTexture> GetMovieTexture(string url)
+		{
+#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+
+			var webRequest = UnityWebRequestMultimedia.GetMovieTexture(url);
+			var result = new WebRequestResult<MovieTexture>(webRequest);
+
+			result.Start();
+
+#else
+
+			var www = new WWW(url);
+			var result = new WwwResult<MovieTexture>(www);
+
+#endif
+
+			return result;
+		}
+
+		/// <summary>
 		/// Starts a coroutine.
 		/// </summary>
 		/// <param name="enumerator">The coroutine to run.</param>

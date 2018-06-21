@@ -48,7 +48,18 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="request">Source web request.</param>
 		public WwwResult(WWW request)
-			: base(AsyncOperationStatus.Running, null, request)
+			: base(AsyncOperationStatus.Running)
+		{
+			_www = request;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WwwResult{T}"/> class.
+		/// </summary>
+		/// <param name="request">Source web request.</param>
+		/// <param name="userState">User-defined data.</param>
+		public WwwResult(WWW request, object userState)
+			: base(AsyncOperationStatus.Running, userState)
 		{
 			_www = request;
 		}
@@ -58,11 +69,7 @@ namespace UnityFx.Async
 		/// </summary>
 		protected virtual T GetResult(WWW request)
 		{
-			if (typeof(T) == typeof(byte[]))
-			{
-				return request.bytes as T;
-			}
-			else if (typeof(T) == typeof(AssetBundle))
+			if (typeof(T) == typeof(AssetBundle))
 			{
 				return request.assetBundle as T;
 			}
@@ -85,6 +92,10 @@ namespace UnityFx.Async
 #else
 				return request.movie as T;
 #endif
+			}
+			else if (typeof(T) == typeof(byte[]))
+			{
+				return request.bytes as T;
 			}
 			else if (typeof(T) != typeof(object))
 			{
