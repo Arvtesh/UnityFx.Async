@@ -862,30 +862,6 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Throws if the specified operation is faulted/canceled.
-		/// </summary>
-		internal static void ThrowIfNonSuccess(IAsyncOperation op)
-		{
-			var status = op.Status;
-
-			if (status == AsyncOperationStatus.Faulted)
-			{
-				if (!TryThrowException(op.Exception))
-				{
-					// Should never get here. Exception should never be null in faulted state.
-					throw new Exception();
-				}
-			}
-			else if (status == AsyncOperationStatus.Canceled)
-			{
-				if (!TryThrowException(op.Exception))
-				{
-					throw new OperationCanceledException();
-				}
-			}
-		}
-
-		/// <summary>
 		/// Rethrows the specified exception.
 		/// </summary>
 		internal static bool TryThrowException(Exception e)

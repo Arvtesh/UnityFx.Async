@@ -27,6 +27,30 @@ namespace UnityFx.Async
 		#region Common
 
 		/// <summary>
+		/// Throws if the specified operation is faulted/canceled.
+		/// </summary>
+		public static void ThrowIfNonSuccess(this IAsyncOperation op)
+		{
+			var status = op.Status;
+
+			if (status == AsyncOperationStatus.Faulted)
+			{
+				if (!AsyncResult.TryThrowException(op.Exception))
+				{
+					// Should never get here. Exception should never be null in faulted state.
+					throw new Exception();
+				}
+			}
+			else if (status == AsyncOperationStatus.Canceled)
+			{
+				if (!AsyncResult.TryThrowException(op.Exception))
+				{
+					throw new OperationCanceledException();
+				}
+			}
+		}
+
+		/// <summary>
 		/// Spins until the operation has completed.
 		/// </summary>
 		/// <param name="op">The operation to wait for.</param>
