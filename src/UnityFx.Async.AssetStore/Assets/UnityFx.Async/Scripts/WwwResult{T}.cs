@@ -83,7 +83,7 @@ namespace UnityFx.Async
 			}
 			else if (typeof(T) == typeof(AudioClip))
 			{
-#if UNITY_2017_1_OR_NEWER
+#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
 				return request.GetAudioClip() as T;
 #else
 				return request.audioClip as T;
@@ -91,7 +91,7 @@ namespace UnityFx.Async
 			}
 			else if (typeof(T) == typeof(MovieTexture))
 			{
-#if UNITY_2017_1_OR_NEWER
+#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
 				return request.GetMovieTexture() as T;
 #else
 				return request.movie as T;

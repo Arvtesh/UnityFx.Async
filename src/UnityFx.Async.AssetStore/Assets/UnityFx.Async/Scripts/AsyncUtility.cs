@@ -266,7 +266,11 @@ namespace UnityFx.Async
 		{
 #if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
 
+#if UNITY_2017 || UNITY_2018
 			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.UNKNOWN);
+#else
+			var webRequest = UnityWebRequest.GetAudioClip(url, AudioType.UNKNOWN);
+#endif
 			var result = new WebRequestResult<AudioClip>(webRequest);
 
 #else
@@ -290,7 +294,11 @@ namespace UnityFx.Async
 		{
 #if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
 
+#if UNITY_2017 || UNITY_2018
 			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, audioType);
+#else
+			var webRequest = UnityWebRequest.GetAudioClip(url, audioType);
+#endif
 			var result = new WebRequestResult<AudioClip>(webRequest);
 
 #else
@@ -313,7 +321,11 @@ namespace UnityFx.Async
 		{
 #if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
 
+#if UNITY_2017 || UNITY_2018
 			var webRequest = UnityWebRequestTexture.GetTexture(url, false);
+#else
+			var webRequest = UnityWebRequest.GetTexture(url);
+#endif
 			var result = new WebRequestResult<Texture2D>(webRequest);
 
 #else
@@ -337,7 +349,11 @@ namespace UnityFx.Async
 		{
 #if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
 
+#if UNITY_2017 || UNITY_2018
 			var webRequest = UnityWebRequestTexture.GetTexture(url, nonReadable);
+#else
+			var webRequest = UnityWebRequest.GetTexture(url, nonReadable);
+#endif
 			var result = new WebRequestResult<Texture2D>(webRequest);
 
 #else
@@ -358,8 +374,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<MovieTexture> GetMovieTexture(string url)
 		{
-#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
-
+#if UNITY_2017 || UNITY_2018
 			var webRequest = UnityWebRequestMultimedia.GetMovieTexture(url);
 			var result = new WebRequestResult<MovieTexture>(webRequest);
 
