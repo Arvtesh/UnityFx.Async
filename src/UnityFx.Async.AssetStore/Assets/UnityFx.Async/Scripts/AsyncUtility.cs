@@ -192,7 +192,12 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<AssetBundle> GetAssetBundle(string url)
 		{
-#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+#if UNITY_2018
+
+			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url);
+			var result = new WebRequestResult<AssetBundle>(webRequest);
+
+#elif UNITY_5_4_OR_NEWER || UNITY_2017
 
 			var webRequest = UnityWebRequest.GetAssetBundle(url);
 			var result = new WebRequestResult<AssetBundle>(webRequest);
@@ -216,7 +221,12 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<AssetBundle> GetAssetBundle(string url, Hash128 hash)
 		{
-#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+#if UNITY_2018
+
+			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, 0);
+			var result = new WebRequestResult<AssetBundle>(webRequest);
+
+#elif UNITY_5_4_OR_NEWER || UNITY_2017
 
 			var webRequest = UnityWebRequest.GetAssetBundle(url, hash, 0);
 			var result = new WebRequestResult<AssetBundle>(webRequest);
@@ -241,7 +251,12 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<AssetBundle> GetAssetBundle(string url, Hash128 hash, uint crc)
 		{
-#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+#if UNITY_2018
+
+			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, crc);
+			var result = new WebRequestResult<AssetBundle>(webRequest);
+
+#elif UNITY_5_4_OR_NEWER || UNITY_2017
 
 			var webRequest = UnityWebRequest.GetAssetBundle(url, hash, crc);
 			var result = new WebRequestResult<AssetBundle>(webRequest);
@@ -264,13 +279,14 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<AudioClip> GetAudioClip(string url)
 		{
-#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
-
 #if UNITY_2017 || UNITY_2018
+
 			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.UNKNOWN);
-#else
+			var result = new WebRequestResult<AudioClip>(webRequest);
+
+#elif UNITY_5_4_OR_NEWER
+
 			var webRequest = UnityWebRequest.GetAudioClip(url, AudioType.UNKNOWN);
-#endif
 			var result = new WebRequestResult<AudioClip>(webRequest);
 
 #else
@@ -292,13 +308,14 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<AudioClip> GetAudioClip(string url, AudioType audioType)
 		{
-#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
-
 #if UNITY_2017 || UNITY_2018
+
 			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, audioType);
-#else
+			var result = new WebRequestResult<AudioClip>(webRequest);
+
+#elif UNITY_5_4_OR_NEWER
+
 			var webRequest = UnityWebRequest.GetAudioClip(url, audioType);
-#endif
 			var result = new WebRequestResult<AudioClip>(webRequest);
 
 #else
@@ -319,13 +336,14 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<Texture2D> GetTexture(string url)
 		{
-#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
-
 #if UNITY_2017 || UNITY_2018
+
 			var webRequest = UnityWebRequestTexture.GetTexture(url, false);
-#else
+			var result = new WebRequestResult<Texture2D>(webRequest);
+
+#elif UNITY_5_4_OR_NEWER
+
 			var webRequest = UnityWebRequest.GetTexture(url);
-#endif
 			var result = new WebRequestResult<Texture2D>(webRequest);
 
 #else
@@ -347,13 +365,14 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<Texture2D> GetTexture(string url, bool nonReadable)
 		{
-#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
-
 #if UNITY_2017 || UNITY_2018
+
 			var webRequest = UnityWebRequestTexture.GetTexture(url, nonReadable);
-#else
+			var result = new WebRequestResult<Texture2D>(webRequest);
+
+#elif UNITY_5_4_OR_NEWER
+
 			var webRequest = UnityWebRequest.GetTexture(url, nonReadable);
-#endif
 			var result = new WebRequestResult<Texture2D>(webRequest);
 
 #else
