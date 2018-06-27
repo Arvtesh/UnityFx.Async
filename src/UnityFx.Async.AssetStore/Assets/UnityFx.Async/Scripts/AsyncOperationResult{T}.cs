@@ -40,6 +40,17 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncOperationResult{T}"/> class.
+		/// </summary>
+		/// <param name="op">Source web request.</param>
+		/// <param name="userState">User-defined data.</param>
+		protected AsyncOperationResult(AsyncOperation op, object userState)
+			: base(null, userState)
+		{
+			_op = op;
+		}
+
+		/// <summary>
 		/// Called when the source <see cref="AsyncOperation"/> is completed.
 		/// </summary>
 		protected abstract T GetResult(AsyncOperation op);

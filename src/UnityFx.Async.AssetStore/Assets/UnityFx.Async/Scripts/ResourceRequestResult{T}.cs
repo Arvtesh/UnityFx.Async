@@ -26,6 +26,16 @@ namespace UnityFx.Async
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ResourceRequestResult{T}"/> class.
+		/// </summary>
+		/// <param name="op">Source web request.</param>
+		/// <param name="userState">User-defined data.</param>
+		public ResourceRequestResult(ResourceRequest op, object userState)
+			: base(op, userState)
+		{
+		}
+
 		#endregion
 
 		#region AsyncResult

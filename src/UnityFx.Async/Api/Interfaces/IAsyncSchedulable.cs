@@ -15,7 +15,7 @@ namespace UnityFx.Async
 		/// Starts the operation execution.
 		/// </summary>
 		/// <remarks>
-		/// An operation may be started on once. Any attempts to schedule it a second time will result in an exception.
+		/// An operation may be started only once. Any attempts to schedule it a second time will result in an exception.
 		/// </remarks>
 		/// <exception cref="InvalidOperationException">Thrown if the operation has already been started.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>

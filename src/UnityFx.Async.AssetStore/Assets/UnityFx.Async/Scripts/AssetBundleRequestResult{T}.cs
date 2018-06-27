@@ -26,6 +26,16 @@ namespace UnityFx.Async
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AssetBundleRequestResult{T}"/> class.
+		/// </summary>
+		/// <param name="op">Source operation.</param>
+		/// <param name="userState">User-defined data.</param>
+		public AssetBundleRequestResult(AssetBundleRequest op, object userState)
+			: base(op, userState)
+		{
+		}
+
 		#endregion
 
 		#region AsyncOperationResult
