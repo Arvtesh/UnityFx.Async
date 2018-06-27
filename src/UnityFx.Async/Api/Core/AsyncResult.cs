@@ -37,7 +37,7 @@ namespace UnityFx.Async
 	/// <seealso cref="AsyncResult{T}"/>
 	/// <seealso cref="IAsyncResult"/>
 	[DebuggerDisplay("{DebuggerDisplay,nq}")]
-	public partial class AsyncResult : IAsyncOperation, IEnumerator
+	public partial class AsyncResult : IAsyncOperation, IAsyncSchedulable, IEnumerator
 	{
 		#region data
 
@@ -241,35 +241,6 @@ namespace UnityFx.Async
 
 			_callback = _callbackCompletionSentinel;
 			_asyncState = asyncState;
-		}
-
-		/// <summary>
-		/// Transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
-		/// </summary>
-		/// <exception cref="InvalidOperationException">Thrown if the transition has failed.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="TryStart"/>
-		/// <seealso cref="TrySetRunning"/>
-		/// <seealso cref="OnStarted"/>
-		public void Start()
-		{
-			if (!TrySetRunning())
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <summary>
-		/// Attempts to transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
-		/// </summary>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the operation status was changed to <see cref="AsyncOperationStatus.Running"/>; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="Start"/>
-		/// <seealso cref="TrySetRunning"/>
-		/// <seealso cref="OnStarted"/>
-		public bool TryStart()
-		{
-			return TrySetRunning();
 		}
 
 		/// <summary>
@@ -935,6 +906,45 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <value>A value indicating whether the operation was canceled.</value>
 		public bool IsCanceled => (_flags & _statusMask) == StatusCanceled;
+
+		#endregion
+
+		#region IAsyncSchedulable
+
+		/// <summary>
+		/// Transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
+		/// </summary>
+		/// <remarks>
+		/// <para>An operation may be started on once. Any attempts to schedule it a second time will result in an exception.</para>
+		/// <para>The <see cref="Start"/> is used to execute an operation that has been created by calling one of the constructors.
+		/// Typically, you do this when you need to separate the operation's creation from its execution, such as when you conditionally
+		/// execute operations that you've created.</para>
+		/// </remarks>
+		/// <exception cref="InvalidOperationException">Thrown if the transition has failed.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="TryStart"/>
+		/// <seealso cref="TrySetRunning"/>
+		/// <seealso cref="OnStarted"/>
+		public void Start()
+		{
+			if (!TrySetRunning())
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Attempts to transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
+		/// </summary>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the operation status was changed to <see cref="AsyncOperationStatus.Running"/>; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="Start"/>
+		/// <seealso cref="TrySetRunning"/>
+		/// <seealso cref="OnStarted"/>
+		public bool TryStart()
+		{
+			return TrySetRunning();
+		}
 
 		#endregion
 
