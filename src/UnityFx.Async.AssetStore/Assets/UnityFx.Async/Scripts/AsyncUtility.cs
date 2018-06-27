@@ -564,14 +564,9 @@ namespace UnityFx.Async
 			private readonly SendOrPostCallback _callback;
 
 			public InvokeResult(SendOrPostCallback d, object asyncState)
-				: base(null, asyncState)
+				: base(AsyncOperationStatus.Scheduled, asyncState)
 			{
 				_callback = d;
-			}
-
-			public void Invoke()
-			{
-				_callback.Invoke(AsyncState);
 			}
 
 			public void SetCompleted()
@@ -582,6 +577,11 @@ namespace UnityFx.Async
 			public void SetException(Exception e)
 			{
 				TrySetException(e);
+			}
+
+			protected override void OnStarted()
+			{
+				_callback.Invoke(AsyncState);
 			}
 		}
 
@@ -795,40 +795,47 @@ namespace UnityFx.Async
 			{
 				if (_ops != null && _ops.Count > 0)
 				{
-					foreach (var item in _ops)
+					try
 					{
-						if (item.Key is AsyncOperation)
+						foreach (var item in _ops)
 						{
-							var asyncOp = item.Key as AsyncOperation;
-
-							if (asyncOp.isDone)
+							if (item.Key is AsyncOperation)
 							{
-								item.Value();
-								_opsToRemove.Add(asyncOp);
+								var asyncOp = item.Key as AsyncOperation;
+
+								if (asyncOp.isDone)
+								{
+									_opsToRemove.Add(asyncOp);
+									item.Value();
+								}
 							}
-						}
 #if UNITY_5_2_OR_NEWER || UNITY_5_3_OR_NEWER || UNITY_2017 || UNITY_2018
-						else if (item.Key is UnityWebRequest)
-						{
-							var asyncOp = item.Key as UnityWebRequest;
-
-							if (asyncOp.isDone)
+							else if (item.Key is UnityWebRequest)
 							{
-								item.Value();
-								_opsToRemove.Add(asyncOp);
+								var asyncOp = item.Key as UnityWebRequest;
+
+								if (asyncOp.isDone)
+								{
+									_opsToRemove.Add(asyncOp);
+									item.Value();
+								}
 							}
-						}
 #endif
-						else if (item.Key is WWW)
-						{
-							var asyncOp = item.Key as WWW;
-
-							if (asyncOp.isDone)
+							else if (item.Key is WWW)
 							{
-								item.Value();
-								_opsToRemove.Add(asyncOp);
+								var asyncOp = item.Key as WWW;
+
+								if (asyncOp.isDone)
+								{
+									_opsToRemove.Add(asyncOp);
+									item.Value();
+								}
 							}
 						}
+					}
+					catch (Exception e)
+					{
+						Debug.LogException(e, this);
 					}
 
 					foreach (var item in _opsToRemove)
@@ -841,7 +848,14 @@ namespace UnityFx.Async
 
 				if (_updateSource != null)
 				{
-					_updateSource.OnNext(Time.deltaTime);
+					try
+					{
+						_updateSource.OnNext(Time.deltaTime);
+					}
+					catch (Exception e)
+					{
+						Debug.LogException(e, this);
+					}
 				}
 
 				if (_actionQueue.Count > 0)
@@ -854,13 +868,13 @@ namespace UnityFx.Async
 
 							try
 							{
-								asyncResult.Invoke();
+								asyncResult.Start();
 								asyncResult.SetCompleted();
 							}
 							catch (Exception e)
 							{
 								asyncResult.SetException(e);
-								Debug.LogException(e);
+								Debug.LogException(e, this);
 							}
 						}
 					}
