@@ -7,7 +7,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ## [0.9.4] - unreleased
 
 ### Added
-- Added assembly definition file for Unity 2017.3+. 
+- Added assembly definition file for Unity 2017.3+.
+- Added `AsyncUtility.IsMainThread` method.
+- Added `AsyncUtility.GetAssetBundle`, `AsyncUtility.GetTexture`, `AsyncUtility.AudioClip` and `AsyncUtility.GetMovieTexture` methods.
+- Added `AssetBundleCreateRequest` wrapper.
+- Added `ThrowIfNonSuccess` extension method.
+- Added `IAsyncSchedulable` interface.
+
+### Fixed
+- Fixed compile warnings on some Unity versions.
 
 -----------------------
 ## [0.9.3] - 2018.06.09
