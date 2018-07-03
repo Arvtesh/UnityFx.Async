@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
@@ -48,6 +49,16 @@ namespace UnityFx.Async
 					throw new OperationCanceledException();
 				}
 			}
+		}
+
+		/// <summary>
+		/// Creates an <see cref="IEnumerator"/> that completes when the specified operation completes.
+		/// </summary>
+		/// <param name="op">The operation to convert to enumerator.</param>
+		/// <returns>An enumerator that represents the operation.</returns>
+		public static IEnumerator ToEnum(this IAsyncResult op)
+		{
+			return new TaskEnumerator(op);
 		}
 
 		/// <summary>
@@ -412,6 +423,16 @@ namespace UnityFx.Async
 		#endregion
 
 		#region implementation
+
+		private class TaskEnumerator : IEnumerator
+		{
+			private readonly IAsyncResult _op;
+
+			public TaskEnumerator(IAsyncResult op) => _op = op;
+			public object Current => null;
+			public bool MoveNext() => !_op.IsCompleted;
+			public void Reset() => throw new NotSupportedException();
+		}
 
 #if !NET35
 
