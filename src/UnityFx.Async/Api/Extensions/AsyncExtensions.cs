@@ -58,6 +58,11 @@ namespace UnityFx.Async
 		/// <returns>An enumerator that represents the operation.</returns>
 		public static IEnumerator ToEnum(this IAsyncResult op)
 		{
+			if (op is IEnumerator e)
+			{
+				return e;
+			}
+
 			return new TaskEnumerator(op);
 		}
 
