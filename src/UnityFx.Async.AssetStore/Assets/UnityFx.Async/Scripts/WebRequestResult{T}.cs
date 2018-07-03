@@ -216,21 +216,29 @@ namespace UnityFx.Async
 
 		private void SetCompleted()
 		{
+			try
+			{
 #if UNITY_5
-			if (_request.isError)
+				if (_request.isError)
 #else
-			if (_request.isHttpError || _request.isNetworkError)
+				if (_request.isHttpError || _request.isNetworkError)
 #endif
-			{
-				TrySetException(new WebRequestException(_request.error, _request.responseCode));
+				{
+					TrySetException(new WebRequestException(_request.error, _request.responseCode));
+				}
+				else if (_request.downloadHandler != null)
+				{
+					var result = GetResult(_request);
+					TrySetResult(result);
+				}
+				else
+				{
+					TrySetCompleted();
+				}
 			}
-			else if (_request.downloadHandler != null)
+			catch (Exception e)
 			{
-				TrySetResult(GetResult(_request));
-			}
-			else
-			{
-				TrySetCompleted();
+				TrySetException(e);
 			}
 		}
 

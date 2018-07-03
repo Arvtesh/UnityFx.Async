@@ -9,7 +9,7 @@ namespace UnityFx.Async
 	/// <summary>
 	/// A wrapper for <see cref="AsyncOperation"/> with result value.
 	/// </summary>
-	public abstract class AsyncOperationResult<T> : AsyncResult<T> where T : UnityEngine.Object
+	public abstract class AsyncOperationResult<T> : AsyncResult<T>
 	{
 		#region data
 
@@ -46,6 +46,18 @@ namespace UnityFx.Async
 		/// <param name="userState">User-defined data.</param>
 		protected AsyncOperationResult(AsyncOperation op, object userState)
 			: base(null, userState)
+		{
+			_op = op;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncOperationResult{T}"/> class.
+		/// </summary>
+		/// <param name="op">Source web request.</param>
+		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="userState">User-defined data.</param>
+		protected AsyncOperationResult(AsyncOperation op, AsyncCallback asyncCallback, object userState)
+			: base(asyncCallback, userState)
 		{
 			_op = op;
 		}
@@ -93,7 +105,15 @@ namespace UnityFx.Async
 
 		private void OnSetCompleted(AsyncOperation op)
 		{
-			TrySetResult(GetResult(op));
+			try
+			{
+				var result = GetResult(op);
+				TrySetResult(result);
+			}
+			catch (Exception e)
+			{
+				TrySetException(e);
+			}
 		}
 
 		#endregion
