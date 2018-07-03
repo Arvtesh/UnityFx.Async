@@ -428,7 +428,7 @@ namespace UnityFx.Async
 		{
 			private readonly IAsyncResult _op;
 
-			public TaskEnumerator(IAsyncResult op) => _op = op;
+			public TaskEnumerator(IAsyncResult task) => _op = task;
 			public object Current => null;
 			public bool MoveNext() => !_op.IsCompleted;
 			public void Reset() => throw new NotSupportedException();

@@ -216,14 +216,29 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				var result = new TaskCompletionSource<VoidResult>();
+				var tcs = new TaskCompletionSource<VoidResult>();
 
-				if (!op.TryAddCompletionCallback(asyncOp => InvokeTaskContinuation(asyncOp, result), null))
-				{
-					InvokeTaskContinuation(op, result);
-				}
+				op.AddCompletionCallback(
+					asyncOp =>
+					{
+						status = op.Status;
 
-				return result.Task;
+						if (status == AsyncOperationStatus.RanToCompletion)
+						{
+							tcs.TrySetResult(null);
+						}
+						else if (status == AsyncOperationStatus.Faulted)
+						{
+							tcs.TrySetException(op.Exception);
+						}
+						else if (status == AsyncOperationStatus.Canceled)
+						{
+							tcs.TrySetCanceled();
+						}
+					},
+					null);
+
+				return tcs.Task;
 			}
 		}
 
@@ -250,14 +265,29 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				var result = new TaskCompletionSource<TResult>();
+				var tcs = new TaskCompletionSource<TResult>();
 
-				if (!op.TryAddCompletionCallback(asyncOp => InvokeTaskContinuation(asyncOp as IAsyncOperation<TResult>, result), null))
-				{
-					InvokeTaskContinuation(op, result);
-				}
+				op.AddCompletionCallback(
+					asyncOp =>
+					{
+						status = op.Status;
 
-				return result.Task;
+						if (status == AsyncOperationStatus.RanToCompletion)
+						{
+							tcs.TrySetResult(op.Result);
+						}
+						else if (status == AsyncOperationStatus.Faulted)
+						{
+							tcs.TrySetException(op.Exception);
+						}
+						else if (status == AsyncOperationStatus.Canceled)
+						{
+							tcs.TrySetCanceled();
+						}
+					},
+					null);
+
+				return tcs.Task;
 			}
 		}
 
@@ -297,45 +327,9 @@ namespace UnityFx.Async
 			{
 				ar.SetContinuationForAwait(continuation, syncContext);
 			}
-			else if (!op.TryAddCompletionCallback(asyncOp => continuation(), syncContext))
+			else
 			{
-				continuation();
-			}
-		}
-
-		private static void InvokeTaskContinuation(IAsyncOperation op, TaskCompletionSource<VoidResult> tcs)
-		{
-			var status = op.Status;
-
-			if (status == AsyncOperationStatus.RanToCompletion)
-			{
-				tcs.TrySetResult(null);
-			}
-			else if (status == AsyncOperationStatus.Faulted)
-			{
-				tcs.TrySetException(op.Exception);
-			}
-			else if (status == AsyncOperationStatus.Canceled)
-			{
-				tcs.TrySetCanceled();
-			}
-		}
-
-		private static void InvokeTaskContinuation<T>(IAsyncOperation<T> op, TaskCompletionSource<T> tcs)
-		{
-			var status = op.Status;
-
-			if (status == AsyncOperationStatus.RanToCompletion)
-			{
-				tcs.TrySetResult(op.Result);
-			}
-			else if (status == AsyncOperationStatus.Faulted)
-			{
-				tcs.TrySetException(op.Exception);
-			}
-			else if (status == AsyncOperationStatus.Canceled)
-			{
-				tcs.TrySetCanceled();
+				op.AddCompletionCallback(asyncOp => continuation(), syncContext);
 			}
 		}
 
