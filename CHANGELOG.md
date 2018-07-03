@@ -9,13 +9,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ### Added
 - Added assembly definition file for Unity 2017.3+.
 - Added `AsyncUtility.IsMainThread` method.
-- Added `AsyncUtility.GetAssetBundle`, `AsyncUtility.GetTexture`, `AsyncUtility.AudioClip` and `AsyncUtility.GetMovieTexture` methods.
-- Added `AssetBundleCreateRequest` wrapper.
-- Added `ThrowIfNonSuccess` extension method.
-- Added `IAsyncSchedulable` interface.
+- Added `AsyncUtility.GetAssetBundle`, `AsyncUtility.GetTexture`, `AsyncUtility.AudioClip` and `AsyncUtility.GetMovieTexture` helper methods.
+- Added `AssetBundleCreateRequest` wrapper operation.
+- Added `ThrowIfNonSuccess` extension for `IAsyncOperation`.
+- Added `ToEnum` extension for `IAsyncResult` that converts an asynchronous operation (`Task`, `AsyncResult` etc) to enumerator.
+- Added `IAsyncSchedulable` interface - an abstraction of schedulable entity.
 
 ### Fixed
 - Fixed compile warnings on some Unity versions.
+- Fixed error handling for Unity operation wrappers.
 
 -----------------------
 ## [0.9.3] - 2018.06.09
