@@ -19,6 +19,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Fixed compile warnings on some Unity versions.
 - Fixed error handling for Unity operation wrappers.
 
+### Removed
+- Removed `AggregateException` class for net35.
+
 -----------------------
 ## [0.9.3] - 2018.06.09
 
