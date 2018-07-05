@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 
 ### Added
 - Added assembly definition file for Unity 2017.3+.
+- Added `AsyncResult.FaultedOperation` helper.
 - Added `AsyncUtility.IsMainThread` method.
 - Added `AsyncUtility.GetAssetBundle`, `AsyncUtility.GetTexture`, `AsyncUtility.AudioClip` and `AsyncUtility.GetMovieTexture` helper methods.
 - Added `AssetBundleCreateRequest` wrapper operation.
