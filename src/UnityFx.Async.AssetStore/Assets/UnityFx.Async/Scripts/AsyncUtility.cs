@@ -485,7 +485,8 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Register a completion callback for the specified <see cref="AsyncOperation"/> instance.
+		/// Register a completion callback for the specified <see cref="AsyncOperation"/> instance. If operation is completed
+		/// the <paramref name="completionCallback"/> is executed synchronously.
 		/// </summary>
 		/// <param name="op">The request to register completion callback for.</param>
 		/// <param name="completionCallback">A delegate to be called when the <paramref name="op"/> has completed.</param>
@@ -503,7 +504,23 @@ namespace UnityFx.Async
 				throw new ArgumentNullException("completionCallback");
 			}
 
-			GetRootBehaviour().AddCompletionCallback(op, completionCallback);
+			if (op.isDone)
+			{
+				completionCallback();
+			}
+			else
+			{
+#if UNITY_2017_2_OR_NEWER || UNITY_2018
+
+				// Starting with Unity 2017.2 there is AsyncOperation.completed event.
+				op.completed += o => completionCallback();
+
+#else
+
+				GetRootBehaviour().AddCompletionCallback(op, completionCallback);
+
+#endif
+			}
 		}
 
 #if UNITY_5_2_OR_NEWER || UNITY_5_3_OR_NEWER || UNITY_2017 || UNITY_2018
