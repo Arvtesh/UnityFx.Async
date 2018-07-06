@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `ThrowIfNonSuccess` extension for `IAsyncOperation`.
 - Added `ToEnum` extension for `IAsyncResult` that converts an asynchronous operation (`Task`, `AsyncResult` etc) to enumerator.
 - Added `IAsyncSchedulable` interface - an abstraction of schedulable entity.
+- Added `AsyncLazy` helper.
 
 ### Fixed
 - Fixed compile warnings on some Unity versions.
