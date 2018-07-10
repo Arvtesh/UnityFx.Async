@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net35;net46</TargetFrameworks>
@@ -20,11 +20,11 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net46'">
-		<DefineConstants>UNITY_2017_1_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_2_OR_NEWER;NET_4_6</DefineConstants>
+		<DefineConstants>UNITY_2017;UNITY_2017_1_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_2_OR_NEWER;NET_4_6</DefineConstants>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
-		<DefineConstants>UNITY_2017_1_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_2_OR_NEWER</DefineConstants>
+		<DefineConstants>UNITY_2017;UNITY_2017_1_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_2_OR_NEWER</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>

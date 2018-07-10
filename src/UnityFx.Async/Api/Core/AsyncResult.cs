@@ -5,6 +5,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
 #if !NET35
 using System.Runtime.ExceptionServices;
 #endif
@@ -36,7 +38,7 @@ namespace UnityFx.Async
 	/// <seealso cref="AsyncResult{T}"/>
 	/// <seealso cref="IAsyncResult"/>
 	[DebuggerDisplay("{DebuggerDisplay,nq}")]
-	public partial class AsyncResult : IAsyncOperation, IEnumerator
+	public partial class AsyncResult : IAsyncOperation, IAsyncSchedulable, IEnumerator
 	{
 		#region data
 
@@ -214,6 +216,21 @@ namespace UnityFx.Async
 			_asyncState = asyncState;
 		}
 
+#if NET35
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class that is faulted. For internal use only.
+		/// </summary>
+		/// <param name="exceptions">Exceptions to complete the operation with.</param>
+		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
+		internal AsyncResult(IEnumerable<Exception> exceptions, object asyncState)
+			: this(exceptions?.First(), asyncState)
+		{
+		}
+
+#else
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class that is faulted. For internal use only.
 		/// </summary>
@@ -242,34 +259,7 @@ namespace UnityFx.Async
 			_asyncState = asyncState;
 		}
 
-		/// <summary>
-		/// Transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
-		/// </summary>
-		/// <exception cref="InvalidOperationException">Thrown if the transition has failed.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="TryStart"/>
-		/// <seealso cref="TrySetRunning"/>
-		/// <seealso cref="OnStarted"/>
-		public void Start()
-		{
-			if (!TrySetRunning())
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <summary>
-		/// Attempts to transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
-		/// </summary>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the operation status was changed to <see cref="AsyncOperationStatus.Running"/>; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="Start"/>
-		/// <seealso cref="TrySetRunning"/>
-		/// <seealso cref="OnStarted"/>
-		public bool TryStart()
-		{
-			return TrySetRunning();
-		}
+#endif
 
 		/// <summary>
 		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Scheduled"/> state.
@@ -386,6 +376,12 @@ namespace UnityFx.Async
 				{
 					_exception = exception;
 
+#if NET35
+
+					SetCompleted(StatusFaulted, completedSynchronously);
+
+#else
+
 					if (exception is AggregateException && _exception.InnerException is OperationCanceledException)
 					{
 						SetCompleted(StatusCanceled, completedSynchronously);
@@ -394,6 +390,8 @@ namespace UnityFx.Async
 					{
 						SetCompleted(StatusFaulted, completedSynchronously);
 					}
+
+#endif
 				}
 
 				return true;
@@ -458,6 +456,21 @@ namespace UnityFx.Async
 
 			if (TryReserveCompletion())
 			{
+#if NET35
+
+				_exception = list[0];
+
+				if (_exception is OperationCanceledException)
+				{
+					SetCompleted(StatusCanceled, completedSynchronously);
+				}
+				else
+				{
+					SetCompleted(StatusFaulted, completedSynchronously);
+				}
+
+#else
+
 				_exception = new AggregateException(list);
 
 				if (_exception.InnerException is OperationCanceledException)
@@ -468,6 +481,8 @@ namespace UnityFx.Async
 				{
 					SetCompleted(StatusFaulted, completedSynchronously);
 				}
+
+#endif
 
 				return true;
 			}
@@ -861,30 +876,6 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Throws if the specified operation is faulted/canceled.
-		/// </summary>
-		internal static void ThrowIfNonSuccess(IAsyncOperation op)
-		{
-			var status = op.Status;
-
-			if (status == AsyncOperationStatus.Faulted)
-			{
-				if (!TryThrowException(op.Exception))
-				{
-					// Should never get here. Exception should never be null in faulted state.
-					throw new Exception();
-				}
-			}
-			else if (status == AsyncOperationStatus.Canceled)
-			{
-				if (!TryThrowException(op.Exception))
-				{
-					throw new OperationCanceledException();
-				}
-			}
-		}
-
-		/// <summary>
 		/// Rethrows the specified exception.
 		/// </summary>
 		internal static bool TryThrowException(Exception e)
@@ -958,6 +949,45 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <value>A value indicating whether the operation was canceled.</value>
 		public bool IsCanceled => (_flags & _statusMask) == StatusCanceled;
+
+		#endregion
+
+		#region IAsyncSchedulable
+
+		/// <summary>
+		/// Transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
+		/// </summary>
+		/// <remarks>
+		/// <para>An operation may be started on once. Any attempts to schedule it a second time will result in an exception.</para>
+		/// <para>The <see cref="Start"/> is used to execute an operation that has been created by calling one of the constructors.
+		/// Typically, you do this when you need to separate the operation's creation from its execution, such as when you conditionally
+		/// execute operations that you've created.</para>
+		/// </remarks>
+		/// <exception cref="InvalidOperationException">Thrown if the transition has failed.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="TryStart"/>
+		/// <seealso cref="TrySetRunning"/>
+		/// <seealso cref="OnStarted"/>
+		public void Start()
+		{
+			if (!TrySetRunning())
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Attempts to transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
+		/// </summary>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the operation status was changed to <see cref="AsyncOperationStatus.Running"/>; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="Start"/>
+		/// <seealso cref="TrySetRunning"/>
+		/// <seealso cref="OnStarted"/>
+		public bool TryStart()
+		{
+			return TrySetRunning();
+		}
 
 		#endregion
 
@@ -1132,17 +1162,16 @@ namespace UnityFx.Async
 				var status = Status;
 				var state = status.ToString();
 
-				if (IsFaulted && _exception != null)
+				if (status == AsyncOperationStatus.Running)
+				{
+					state += " (" + ((int)(GetProgress() * 100)).ToString(CultureInfo.InvariantCulture) + "%)";
+				}
+				else if ((status == AsyncOperationStatus.Faulted || status == AsyncOperationStatus.Canceled) && _exception != null)
 				{
 					state += " (" + _exception.GetType().Name + ')';
 				}
 
-				if (status == AsyncOperationStatus.Running)
-				{
-					state += ", Progress = " + GetProgress().ToString("N2");
-				}
-
-				result += ", Status = ";
+				result += ": ";
 				result += state;
 
 				if (IsDisposed)

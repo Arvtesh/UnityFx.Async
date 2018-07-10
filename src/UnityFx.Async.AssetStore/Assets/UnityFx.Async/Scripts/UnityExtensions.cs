@@ -32,7 +32,9 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				return new AsyncOperationResult(op);
+				var result = new AsyncOperationResult(op);
+				result.Start();
+				return result;
 			}
 		}
 
@@ -42,7 +44,9 @@ namespace UnityFx.Async
 		/// <param name="op">The source operation.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this ResourceRequest op) where T : UnityEngine.Object
 		{
-			return new ResourceRequestResult<T>(op);
+			var result = new ResourceRequestResult<T>(op);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -51,7 +55,9 @@ namespace UnityFx.Async
 		/// <param name="op">The source operation.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this AssetBundleRequest op) where T : UnityEngine.Object
 		{
-			return new AssetBundleRequestResult<T>(op);
+			var result = new AssetBundleRequestResult<T>(op);
+			result.Start();
+			return result;
 		}
 
 #if NET_4_6 || NET_STANDARD_2_0
@@ -123,7 +129,9 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static AsyncResult ToAsync(this UnityWebRequest request)
 		{
-			return WebRequestResult<object>.FromUnityWebRequest(request);
+			var result = new WebRequestResult<object>(request);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -132,7 +140,9 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<T> ToAsync<T>(this UnityWebRequest request) where T : class
 		{
-			return WebRequestResult<T>.FromUnityWebRequest(request);
+			var result = new WebRequestResult<T>(request);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -141,7 +151,9 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<AssetBundle> ToAsyncAssetBundle(this UnityWebRequest request)
 		{
-			return WebRequestResult<AssetBundle>.FromUnityWebRequest(request);
+			var result = new WebRequestResult<AssetBundle>(request);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -150,7 +162,9 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<Texture2D> ToAsyncTexture(this UnityWebRequest request)
 		{
-			return WebRequestResult<Texture2D>.FromUnityWebRequest(request);
+			var result = new WebRequestResult<Texture2D>(request);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -159,7 +173,9 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<AudioClip> ToAsyncAudioClip(this UnityWebRequest request)
 		{
-			return WebRequestResult<AudioClip>.FromUnityWebRequest(request);
+			var result = new WebRequestResult<AudioClip>(request);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -168,7 +184,9 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<MovieTexture> ToAsyncMovieTexture(this UnityWebRequest request)
 		{
-			return WebRequestResult<MovieTexture>.FromUnityWebRequest(request);
+			var result = new WebRequestResult<MovieTexture>(request);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -177,7 +195,9 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static WebRequestResult<byte[]> ToAsyncByteArray(this UnityWebRequest request)
 		{
-			return WebRequestResult<byte[]>.FromUnityWebRequest(request);
+			var result = new WebRequestResult<byte[]>(request);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -187,7 +207,9 @@ namespace UnityFx.Async
 		/// <returns>Returns a <see cref="IAsyncOperation{TResult}"/> instance that will complete when the source operation have completed.</returns>
 		public static WebRequestResult<string> ToAsyncString(this UnityWebRequest request)
 		{
-			return WebRequestResult<string>.FromUnityWebRequest(request);
+			var result = new WebRequestResult<string>(request);
+			result.Start();
+			return result;
 		}
 
 #if NET_4_6 || NET_STANDARD_2_0
@@ -250,7 +272,9 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static AsyncResult ToAsync(this WWW request)
 		{
-			return WwwResult<object>.FromWWW(request);
+			var result = new WwwResult<object>(request);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -259,7 +283,9 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<T> ToAsync<T>(this WWW request) where T : class
 		{
-			return WwwResult<T>.FromWWW(request);
+			var result = new WwwResult<T>(request);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -268,7 +294,9 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<AssetBundle> ToAsyncAssetBundle(this WWW request)
 		{
-			return WwwResult<AssetBundle>.FromWWW(request);
+			var result = new WwwResult<AssetBundle>(request);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -277,7 +305,9 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<Texture2D> ToAsyncTexture(this WWW request)
 		{
-			return WwwResult<Texture2D>.FromWWW(request);
+			var result = new WwwResult<Texture2D>(request);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -286,7 +316,9 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<AudioClip> ToAsyncAudioClip(this WWW request)
 		{
-			return WwwResult<AudioClip>.FromWWW(request);
+			var result = new WwwResult<AudioClip>(request);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -295,7 +327,9 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<MovieTexture> ToAsyncMovieTexture(this WWW request)
 		{
-			return WwwResult<MovieTexture>.FromWWW(request);
+			var result = new WwwResult<MovieTexture>(request);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -304,7 +338,9 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<byte[]> ToAsyncByteArray(this WWW request)
 		{
-			return WwwResult<byte[]>.FromWWW(request);
+			var result = new WwwResult<byte[]>(request);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -313,7 +349,9 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static WwwResult<string> ToAsyncString(this WWW request)
 		{
-			return WwwResult<string>.FromWWW(request);
+			var result = new WwwResult<string>(request);
+			result.Start();
+			return result;
 		}
 
 #if NET_4_6 || NET_STANDARD_2_0

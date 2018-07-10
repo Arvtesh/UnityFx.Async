@@ -7,6 +7,8 @@ NuGet | [![NuGet](https://img.shields.io/nuget/v/UnityFx.Async.svg)](https://www
 Github | [![GitHub release](https://img.shields.io/github/release/Arvtesh/UnityFx.Async.svg?logo=github)](https://github.com/Arvtesh/UnityFx.Async/releases)
 Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v0.9.3-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
 
+**If you enjoy using the library - please, [rate and review](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696) it on the Asset Store!**
+
 ## Synopsis
 
 *UnityFx.Async* introduces effective and portable asynchronous operations that can be used very much like [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) in .NET or [Promises](https://developers.google.com/web/fundamentals/primers/promises) in JS. [AsyncResult](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncResult.html) class is an implementation of a generic asynchronous operation (aka `promise` or `future`). In many aspects it mimics [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) (for example, it can be used with `async`/`await` operators, supports continuations and synchronization context capturing) while maintaining Unity/net35 compatibility. It is a great foundation toolset for any Unity project.
@@ -331,12 +333,12 @@ DownloadTextAsync("http://www.google.com")
     .Then(text => ExtractFirstParagraph(text))
     .WithCancellation(cancellationToken);
 ```
-If the [token](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken) passed to `WithCancellation()` is cancelled the target operation is cancelled as well (and that means cancelling all chained operations) as soon as possible. Cancellation might not be instant (depends on specific operation implementation). Also, please note that not all operations might support cancellation; in this case `Cancel()` will throw `NotSupportedException`.
+If the [token](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken) passed to `WithCancellation()` is cancelled, the target operation is cancelled as well (and that means cancelling all chained operations) as soon as possible. Cancellation might not be instant (depends on specific operation implementation). Also, please note that not all operations might support cancellation; in this case `Cancel()` will throw `NotSupportedException`.
 
 ### Progress reporting
 Library operations support progress reporting via exposing `IAsyncOperation.Progress` property and progress reporting events:
 ```csharp
-var progress = op.Progess;  // gets an operation progress as a float value in range [0, 1]
+var progress = op.Progress;  // gets an operation progress as a float value in range [0, 1]
 
 // subscribe to progress changed event
 op.ProgressChanged += (sender, args) =>
@@ -375,7 +377,7 @@ There are also non-delegate completion callbacks (`IAsyncContinuation`):
 ```csharp
 class MyContinuation : IAsyncContinuation
 {
-    public void Invoke(IAsyncOperation op, bool inline) => Debug.Log("Done");
+    public void Invoke(IAsyncOperation op) => Debug.Log("Done");
 }
 
 // ...
@@ -483,7 +485,7 @@ Please note that the library is NOT a replacement for [Tasks](https://docs.micro
 - An extendable [IAsyncResult](https://docs.microsoft.com/en-us/dotnet/api/system.iasyncresult) implementation is needed.
 
 ## Motivation
-The project was initially created to help author with his [Unity3d](https://unity3d.com) projects. Unity's [AsyncOperation](https://docs.unity3d.com/ScriptReference/AsyncOperation.html) and the like can only be used in coroutines, cannot be extended and mostly do not return result or error information, .NET 3.5 does not provide much help either and even with .NET 4.6 support compatibility requirements often do not allow using [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task). When I caught myself writing the same asynchronous operation wrappers in each project I decided to share my experience for the best of human kind.
+The project was initially created to help author with his [Unity3d](https://unity3d.com) projects. Unity's [AsyncOperation](https://docs.unity3d.com/ScriptReference/AsyncOperation.html) and similar can only be used in coroutines, cannot be extended and mostly do not return result or error information, .NET 3.5 does not provide much help either and even with .NET 4.6 support compatibility requirements often do not allow using [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task). When I caught myself writing the same asynchronous operation wrappers in each project I decided to share my experience to the best of human kind.
 
 ## Documentation
 Please see the links below for extended information on the product:

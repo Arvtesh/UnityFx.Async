@@ -7,10 +7,9 @@ using UnityEngine;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// A wrapper for <see cref="ResourceRequest"/> with result value.
+	/// A wrapper for <see cref="AssetBundleCreateRequest"/>.
 	/// </summary>
-	/// <typeparam name="T">Result type.</typeparam>
-	public class ResourceRequestResult<T> : AsyncOperationResult<T> where T : UnityEngine.Object
+	public class AssetBundleCreateRequestResult : AsyncOperationResult<AssetBundle>
 	{
 		#region data
 		#endregion
@@ -18,20 +17,20 @@ namespace UnityFx.Async
 		#region interface
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ResourceRequestResult{T}"/> class.
+		/// Initializes a new instance of the <see cref="AssetBundleCreateRequestResult"/> class.
 		/// </summary>
 		/// <param name="op">Source web request.</param>
-		public ResourceRequestResult(ResourceRequest op)
+		public AssetBundleCreateRequestResult(AssetBundleCreateRequest op)
 			: base(op)
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ResourceRequestResult{T}"/> class.
+		/// Initializes a new instance of the <see cref="AssetBundleCreateRequestResult"/> class.
 		/// </summary>
 		/// <param name="op">Source web request.</param>
 		/// <param name="userState">User-defined data.</param>
-		public ResourceRequestResult(ResourceRequest op, object userState)
+		public AssetBundleCreateRequestResult(AssetBundleCreateRequest op, object userState)
 			: base(op, userState)
 		{
 		}
@@ -41,9 +40,9 @@ namespace UnityFx.Async
 		#region AsyncResult
 
 		/// <inheritdoc/>
-		protected override T GetResult(AsyncOperation op)
+		protected override AssetBundle GetResult(AsyncOperation op)
 		{
-			return (op as ResourceRequest).asset as T;
+			return (op as AssetBundleCreateRequest).assetBundle;
 		}
 
 		#endregion

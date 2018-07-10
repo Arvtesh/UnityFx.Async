@@ -56,8 +56,23 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="request">Source web request.</param>
 		public WebRequestResult(UnityWebRequest request)
-			: base(request.isModifiable ? AsyncOperationStatus.Created : AsyncOperationStatus.Running, null, request)
+			: this(request, null)
 		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WebRequestResult{T}"/> class.
+		/// </summary>
+		/// <param name="request">Source web request.</param>
+		/// <param name="userState">User-defined data.</param>
+		public WebRequestResult(UnityWebRequest request, object userState)
+			: base(null, userState)
+		{
+			if (request == null)
+			{
+				throw new ArgumentNullException("request");
+			}
+
 			_request = request;
 		}
 
@@ -66,11 +81,7 @@ namespace UnityFx.Async
 		/// </summary>
 		protected virtual T GetResult(UnityWebRequest request)
 		{
-			if (request.downloadHandler is DownloadHandlerBuffer)
-			{
-				return ((DownloadHandlerBuffer)request.downloadHandler).data as T;
-			}
-			else if (request.downloadHandler is DownloadHandlerAssetBundle)
+			if (request.downloadHandler is DownloadHandlerAssetBundle)
 			{
 				return ((DownloadHandlerAssetBundle)request.downloadHandler).assetBundle as T;
 			}
@@ -88,36 +99,16 @@ namespace UnityFx.Async
 				return ((DownloadHandlerMovieTexture)request.downloadHandler).movieTexture as T;
 			}
 #endif
+			else if (typeof(T) == typeof(byte[]))
+			{
+				return request.downloadHandler.data as T;
+			}
 			else if (typeof(T) != typeof(object))
 			{
 				return request.downloadHandler.text as T;
 			}
 
 			return null;
-		}
-
-		/// <summary>
-		/// Creates a wrapper for the specified <see cref="UnityWebRequest"/> instance.
-		/// </summary>
-		public static WebRequestResult<T> FromUnityWebRequest(UnityWebRequest request)
-		{
-			if (request == null)
-			{
-				throw new ArgumentNullException("request");
-			}
-
-			var result = new WebRequestResult<T>(request);
-
-			if (request.isDone)
-			{
-				result.SetCompleted(true);
-			}
-			else if (!request.isModifiable)
-			{
-				AsyncUtility.AddCompletionCallback(request, () => result.SetCompleted(false));
-			}
-
-			return result;
 		}
 
 		#endregion
@@ -138,20 +129,20 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		protected override void OnStarted()
 		{
-			base.OnStarted();
-
+			if (_request.isDone)
+			{
+				SetCompleted();
+			}
+			else if (_request.isModifiable)
+			{
 #if UNITY_2017_2_OR_NEWER || UNITY_2018
-
-			// Starting with Unity 2017.2 there is AsyncOperation.completed event
-			_op = _request.SendWebRequest();
-			_op.completed += op => SetCompleted(false);
-
+				_op = _request.SendWebRequest();
 #else
-
-			_op = _request.Send();
-			AsyncUtility.AddCompletionCallback(_request, () => SetCompleted(false));
-
+				_op = _request.Send();
 #endif
+
+				AsyncUtility.AddCompletionCallback(_op, SetCompleted);
+			}
 		}
 
 		/// <inheritdoc/>
@@ -218,23 +209,31 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		private void SetCompleted(bool completedSynchronously)
+		private void SetCompleted()
 		{
+			try
+			{
 #if UNITY_5
-			if (_request.isError)
+				if (_request.isError)
 #else
-			if (_request.isHttpError || _request.isNetworkError)
+				if (_request.isHttpError || _request.isNetworkError)
 #endif
-			{
-				TrySetException(new WebRequestException(_request.error, _request.responseCode), completedSynchronously);
+				{
+					TrySetException(new WebRequestException(_request.error, _request.responseCode));
+				}
+				else if (_request.downloadHandler != null)
+				{
+					var result = GetResult(_request);
+					TrySetResult(result);
+				}
+				else
+				{
+					TrySetCompleted();
+				}
 			}
-			else if (_request.downloadHandler != null)
+			catch (Exception e)
 			{
-				TrySetResult(GetResult(_request), completedSynchronously);
-			}
-			else
-			{
-				TrySetCompleted(completedSynchronously);
+				TrySetException(e);
 			}
 		}
 

@@ -138,6 +138,15 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Checks whether current thread is the main Unity thread.
+		/// </summary>
+		/// <returns>Returns <see langword="true"/> if current thread is Unity main thread; <see langword="false"/> otherwise.</returns>
+		public static bool IsMainThread()
+		{
+			return GetRootBehaviour().MainThreadContext == SynchronizationContext.Current;
+		}
+
+		/// <summary>
 		/// Creates an operation that completes after a time delay.
 		/// </summary>
 		/// <param name="millisecondsDelay">The number of milliseconds to wait before completing the returned operation, or -1 to wait indefinitely.</param>
@@ -174,6 +183,230 @@ namespace UnityFx.Async
 		public static IAsyncOperation Delay(TimeSpan delay)
 		{
 			return AsyncResult.Delay(delay, GetRootBehaviour().UpdateSource);
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="AssetBundle"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the asset bundle to download.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<AssetBundle> GetAssetBundle(string url)
+		{
+#if UNITY_2018
+
+			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url);
+			var result = new WebRequestResult<AssetBundle>(webRequest);
+
+#elif UNITY_5_4_OR_NEWER || UNITY_2017
+
+			var webRequest = UnityWebRequest.GetAssetBundle(url);
+			var result = new WebRequestResult<AssetBundle>(webRequest);
+
+#else
+
+			var www = new WWW(url);
+			var result = new WwwResult<AssetBundle>(www);
+
+#endif
+
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="AssetBundle"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the asset bundle to download.</param>
+		/// <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<AssetBundle> GetAssetBundle(string url, Hash128 hash)
+		{
+#if UNITY_2018
+
+			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, 0);
+			var result = new WebRequestResult<AssetBundle>(webRequest);
+
+#elif UNITY_5_4_OR_NEWER || UNITY_2017
+
+			var webRequest = UnityWebRequest.GetAssetBundle(url, hash, 0);
+			var result = new WebRequestResult<AssetBundle>(webRequest);
+
+#else
+
+			var www = WWW.LoadFromCacheOrDownload(url, hash);
+			var result = new WwwResult<AssetBundle>(www);
+
+#endif
+
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="AssetBundle"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the asset bundle to download.</param>
+		/// <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
+		/// <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<AssetBundle> GetAssetBundle(string url, Hash128 hash, uint crc)
+		{
+#if UNITY_2018
+
+			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, crc);
+			var result = new WebRequestResult<AssetBundle>(webRequest);
+
+#elif UNITY_5_4_OR_NEWER || UNITY_2017
+
+			var webRequest = UnityWebRequest.GetAssetBundle(url, hash, crc);
+			var result = new WebRequestResult<AssetBundle>(webRequest);
+
+#else
+
+			var www = WWW.LoadFromCacheOrDownload(url, hash, crc);
+			var result = new WwwResult<AssetBundle>(www);
+
+#endif
+
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="AudioClip"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the audio clip to download.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<AudioClip> GetAudioClip(string url)
+		{
+#if UNITY_2017 || UNITY_2018
+
+			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.UNKNOWN);
+			var result = new WebRequestResult<AudioClip>(webRequest);
+
+#elif UNITY_5_4_OR_NEWER
+
+			var webRequest = UnityWebRequest.GetAudioClip(url, AudioType.UNKNOWN);
+			var result = new WebRequestResult<AudioClip>(webRequest);
+
+#else
+
+			var www = new WWW(url);
+			var result = new WwwResult<AudioClip>(www);
+
+#endif
+
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="AudioClip"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the audio clip to download.</param>
+		/// <param name="audioType">The type of audio encoding for the downloaded audio clip.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<AudioClip> GetAudioClip(string url, AudioType audioType)
+		{
+#if UNITY_2017 || UNITY_2018
+
+			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, audioType);
+			var result = new WebRequestResult<AudioClip>(webRequest);
+
+#elif UNITY_5_4_OR_NEWER
+
+			var webRequest = UnityWebRequest.GetAudioClip(url, audioType);
+			var result = new WebRequestResult<AudioClip>(webRequest);
+
+#else
+
+			var www = new WWW(url);
+			var result = new WwwResult<AudioClip>(www);
+
+#endif
+
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="Texture2D"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the texture to download.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<Texture2D> GetTexture(string url)
+		{
+#if UNITY_2017 || UNITY_2018
+
+			var webRequest = UnityWebRequestTexture.GetTexture(url, false);
+			var result = new WebRequestResult<Texture2D>(webRequest);
+
+#elif UNITY_5_4_OR_NEWER
+
+			var webRequest = UnityWebRequest.GetTexture(url);
+			var result = new WebRequestResult<Texture2D>(webRequest);
+
+#else
+
+			var www = new WWW(url);
+			var result = new WwwResult<Texture2D>(www);
+
+#endif
+
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="Texture2D"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the texture to download.</param>
+		/// <param name="nonReadable">If <see langword="true"/>, the texture's raw data will not be accessible to script. This can conserve memory.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<Texture2D> GetTexture(string url, bool nonReadable)
+		{
+#if UNITY_2017 || UNITY_2018
+
+			var webRequest = UnityWebRequestTexture.GetTexture(url, nonReadable);
+			var result = new WebRequestResult<Texture2D>(webRequest);
+
+#elif UNITY_5_4_OR_NEWER
+
+			var webRequest = UnityWebRequest.GetTexture(url, nonReadable);
+			var result = new WebRequestResult<Texture2D>(webRequest);
+
+#else
+
+			var www = new WWW(url);
+			var result = new WwwResult<Texture2D>(www);
+
+#endif
+
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="MovieTexture"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the texture to download.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<MovieTexture> GetMovieTexture(string url)
+		{
+#if UNITY_2017 || UNITY_2018
+
+			var webRequest = UnityWebRequestMultimedia.GetMovieTexture(url);
+			var result = new WebRequestResult<MovieTexture>(webRequest);
+
+#else
+
+			var www = new WWW(url);
+			var result = new WwwResult<MovieTexture>(www);
+
+#endif
+
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -252,7 +485,8 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Register a completion callback for the specified <see cref="AsyncOperation"/> instance.
+		/// Register a completion callback for the specified <see cref="AsyncOperation"/> instance. If operation is completed
+		/// the <paramref name="completionCallback"/> is executed synchronously.
 		/// </summary>
 		/// <param name="op">The request to register completion callback for.</param>
 		/// <param name="completionCallback">A delegate to be called when the <paramref name="op"/> has completed.</param>
@@ -270,7 +504,23 @@ namespace UnityFx.Async
 				throw new ArgumentNullException("completionCallback");
 			}
 
-			GetRootBehaviour().AddCompletionCallback(op, completionCallback);
+			if (op.isDone)
+			{
+				completionCallback();
+			}
+			else
+			{
+#if UNITY_2017_2_OR_NEWER || UNITY_2018
+
+				// Starting with Unity 2017.2 there is AsyncOperation.completed event.
+				op.completed += o => completionCallback();
+
+#else
+
+				GetRootBehaviour().AddCompletionCallback(op, completionCallback);
+
+#endif
+			}
 		}
 
 #if UNITY_5_2_OR_NEWER || UNITY_5_3_OR_NEWER || UNITY_2017 || UNITY_2018
@@ -331,14 +581,9 @@ namespace UnityFx.Async
 			private readonly SendOrPostCallback _callback;
 
 			public InvokeResult(SendOrPostCallback d, object asyncState)
-				: base(null, asyncState)
+				: base(AsyncOperationStatus.Scheduled, asyncState)
 			{
 				_callback = d;
-			}
-
-			public void Invoke()
-			{
-				_callback.Invoke(AsyncState);
 			}
 
 			public void SetCompleted()
@@ -349,6 +594,11 @@ namespace UnityFx.Async
 			public void SetException(Exception e)
 			{
 				TrySetException(e);
+			}
+
+			protected override void OnStarted()
+			{
+				_callback.Invoke(AsyncState);
 			}
 		}
 
@@ -562,40 +812,47 @@ namespace UnityFx.Async
 			{
 				if (_ops != null && _ops.Count > 0)
 				{
-					foreach (var item in _ops)
+					try
 					{
-						if (item.Key is AsyncOperation)
+						foreach (var item in _ops)
 						{
-							var asyncOp = item.Key as AsyncOperation;
-
-							if (asyncOp.isDone)
+							if (item.Key is AsyncOperation)
 							{
-								item.Value();
-								_opsToRemove.Add(asyncOp);
+								var asyncOp = item.Key as AsyncOperation;
+
+								if (asyncOp.isDone)
+								{
+									_opsToRemove.Add(asyncOp);
+									item.Value();
+								}
 							}
-						}
 #if UNITY_5_2_OR_NEWER || UNITY_5_3_OR_NEWER || UNITY_2017 || UNITY_2018
-						else if (item.Key is UnityWebRequest)
-						{
-							var asyncOp = item.Key as UnityWebRequest;
-
-							if (asyncOp.isDone)
+							else if (item.Key is UnityWebRequest)
 							{
-								item.Value();
-								_opsToRemove.Add(asyncOp);
+								var asyncOp = item.Key as UnityWebRequest;
+
+								if (asyncOp.isDone)
+								{
+									_opsToRemove.Add(asyncOp);
+									item.Value();
+								}
 							}
-						}
 #endif
-						else if (item.Key is WWW)
-						{
-							var asyncOp = item.Key as WWW;
-
-							if (asyncOp.isDone)
+							else if (item.Key is WWW)
 							{
-								item.Value();
-								_opsToRemove.Add(asyncOp);
+								var asyncOp = item.Key as WWW;
+
+								if (asyncOp.isDone)
+								{
+									_opsToRemove.Add(asyncOp);
+									item.Value();
+								}
 							}
 						}
+					}
+					catch (Exception e)
+					{
+						Debug.LogException(e, this);
 					}
 
 					foreach (var item in _opsToRemove)
@@ -608,7 +865,14 @@ namespace UnityFx.Async
 
 				if (_updateSource != null)
 				{
-					_updateSource.OnNext(Time.deltaTime);
+					try
+					{
+						_updateSource.OnNext(Time.deltaTime);
+					}
+					catch (Exception e)
+					{
+						Debug.LogException(e, this);
+					}
 				}
 
 				if (_actionQueue.Count > 0)
@@ -621,13 +885,13 @@ namespace UnityFx.Async
 
 							try
 							{
-								asyncResult.Invoke();
+								asyncResult.Start();
 								asyncResult.SetCompleted();
 							}
 							catch (Exception e)
 							{
 								asyncResult.SetException(e);
-								Debug.LogException(e);
+								Debug.LogException(e, this);
 							}
 						}
 					}

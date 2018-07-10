@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
@@ -25,6 +26,45 @@ namespace UnityFx.Async
 		#endregion
 
 		#region Common
+
+		/// <summary>
+		/// Throws if the specified operation is faulted/canceled.
+		/// </summary>
+		public static void ThrowIfNonSuccess(this IAsyncOperation op)
+		{
+			var status = op.Status;
+
+			if (status == AsyncOperationStatus.Faulted)
+			{
+				if (!AsyncResult.TryThrowException(op.Exception))
+				{
+					// Should never get here. Exception should never be null in faulted state.
+					throw new Exception();
+				}
+			}
+			else if (status == AsyncOperationStatus.Canceled)
+			{
+				if (!AsyncResult.TryThrowException(op.Exception))
+				{
+					throw new OperationCanceledException();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Creates an <see cref="IEnumerator"/> that completes when the specified operation completes.
+		/// </summary>
+		/// <param name="op">The operation to convert to enumerator.</param>
+		/// <returns>An enumerator that represents the operation.</returns>
+		public static IEnumerator ToEnum(this IAsyncResult op)
+		{
+			if (op is IEnumerator e)
+			{
+				return e;
+			}
+
+			return new TaskEnumerator(op);
+		}
 
 		/// <summary>
 		/// Spins until the operation has completed.
@@ -388,6 +428,16 @@ namespace UnityFx.Async
 		#endregion
 
 		#region implementation
+
+		private class TaskEnumerator : IEnumerator
+		{
+			private readonly IAsyncResult _op;
+
+			public TaskEnumerator(IAsyncResult task) => _op = task;
+			public object Current => null;
+			public bool MoveNext() => !_op.IsCompleted;
+			public void Reset() => throw new NotSupportedException();
+		}
 
 #if !NET35
 

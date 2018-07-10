@@ -48,8 +48,23 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="request">Source web request.</param>
 		public WwwResult(WWW request)
-			: base(AsyncOperationStatus.Running, null, request)
+			: this(request, null)
 		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WwwResult{T}"/> class.
+		/// </summary>
+		/// <param name="request">Source web request.</param>
+		/// <param name="userState">User-defined data.</param>
+		public WwwResult(WWW request, object userState)
+			: base(null, userState)
+		{
+			if (request == null)
+			{
+				throw new ArgumentNullException("request");
+			}
+
 			_www = request;
 		}
 
@@ -58,11 +73,7 @@ namespace UnityFx.Async
 		/// </summary>
 		protected virtual T GetResult(WWW request)
 		{
-			if (typeof(T) == typeof(byte[]))
-			{
-				return request.bytes as T;
-			}
-			else if (typeof(T) == typeof(AssetBundle))
+			if (typeof(T) == typeof(AssetBundle))
 			{
 				return request.assetBundle as T;
 			}
@@ -72,7 +83,7 @@ namespace UnityFx.Async
 			}
 			else if (typeof(T) == typeof(AudioClip))
 			{
-#if UNITY_2017_1_OR_NEWER
+#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
 				return request.GetAudioClip() as T;
 #else
 				return request.audioClip as T;
@@ -80,11 +91,15 @@ namespace UnityFx.Async
 			}
 			else if (typeof(T) == typeof(MovieTexture))
 			{
-#if UNITY_2017_1_OR_NEWER
+#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
 				return request.GetMovieTexture() as T;
 #else
 				return request.movie as T;
 #endif
+			}
+			else if (typeof(T) == typeof(byte[]))
+			{
+				return request.bytes as T;
 			}
 			else if (typeof(T) != typeof(object))
 			{
@@ -92,30 +107,6 @@ namespace UnityFx.Async
 			}
 
 			return null;
-		}
-
-		/// <summary>
-		/// Creates a wrapper for the specified <see cref="WWW"/> instance.
-		/// </summary>
-		public static WwwResult<T> FromWWW(WWW request)
-		{
-			if (request == null)
-			{
-				throw new ArgumentNullException("request");
-			}
-
-			var result = new WwwResult<T>(request);
-
-			if (request.isDone)
-			{
-				result.SetCompleted(true);
-			}
-			else
-			{
-				AsyncUtility.AddCompletionCallback(request, () => result.SetCompleted(false));
-			}
-
-			return result;
 		}
 
 		#endregion
@@ -131,9 +122,14 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		protected override void OnStarted()
 		{
-			base.OnStarted();
-
-			AsyncUtility.AddCompletionCallback(_www, () => SetCompleted(false));
+			if (_www.isDone)
+			{
+				SetCompleted();
+			}
+			else
+			{
+				AsyncUtility.AddCompletionCallback(_www, SetCompleted);
+			}
 		}
 
 		/// <inheritdoc/>
@@ -175,15 +171,23 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		private void SetCompleted(bool completedSynchronously)
+		private void SetCompleted()
 		{
-			if (string.IsNullOrEmpty(_www.error))
+			try
 			{
-				TrySetResult(GetResult(_www), completedSynchronously);
+				if (string.IsNullOrEmpty(_www.error))
+				{
+					var result = GetResult(_www);
+					TrySetResult(result);
+				}
+				else
+				{
+					TrySetException(new WebRequestException(_www.error));
+				}
 			}
-			else
+			catch (Exception e)
 			{
-				TrySetException(new WebRequestException(_www.error), completedSynchronously);
+				TrySetException(e);
 			}
 		}
 

@@ -127,10 +127,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public void AddCompletionCallback(Action<IAsyncOperation> action)
 		{
-			if (!TryAddCompletionCallback(action))
-			{
-				InvokeCompletionCallback(action, SynchronizationContext.Current);
-			}
+			AddCompletionCallback(action, SynchronizationContext.Current);
 		}
 
 		/// <summary>
@@ -147,14 +144,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public bool TryAddCompletionCallback(Action<IAsyncOperation> action)
 		{
-			ThrowIfDisposed();
-
-			if (action == null)
-			{
-				throw new ArgumentNullException(nameof(action));
-			}
-
-			return TryAddCallback(action, SynchronizationContext.Current, true);
+			return TryAddCompletionCallback(action, SynchronizationContext.Current);
 		}
 
 		/// <summary>
@@ -231,10 +221,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public void AddCompletionCallback(IAsyncContinuation continuation)
 		{
-			if (!TryAddCompletionCallback(continuation))
-			{
-				InvokeCompletionCallback(continuation, SynchronizationContext.Current);
-			}
+			AddCompletionCallback(continuation, SynchronizationContext.Current);
 		}
 
 		/// <summary>
@@ -251,14 +238,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public bool TryAddCompletionCallback(IAsyncContinuation continuation)
 		{
-			ThrowIfDisposed();
-
-			if (continuation == null)
-			{
-				throw new ArgumentNullException(nameof(continuation));
-			}
-
-			return TryAddCallback(continuation, SynchronizationContext.Current, true);
+			return TryAddCompletionCallback(continuation, SynchronizationContext.Current);
 		}
 
 		/// <summary>
@@ -324,6 +304,50 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Schedules a <paramref name="continuation"/> to be started (or cancelled in case of the operatino failure) after the operation has completed.
+		/// If the operation is already completed the <paramref name="continuation"/> is called synchronously.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="continuation"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="continuation">The continuation to be executed when the operation has completed.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="continuation"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		public void Schedule(IAsyncSchedulable continuation)
+		{
+			Schedule(continuation, SynchronizationContext.Current);
+		}
+
+		/// <summary>
+		/// Schedules a <paramref name="continuation"/> to be started (or cancelled in case of the operatino failure) after the operation has completed.
+		/// If the operation is completed <paramref name="continuation"/> is invoked on the <paramref name="syncContext"/> specified.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="continuation"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="continuation">The continuation to be executed when the operation has completed.</param>
+		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
+		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
+		/// </param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="continuation"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		public void Schedule(IAsyncSchedulable continuation, SynchronizationContext syncContext)
+		{
+			ThrowIfDisposed();
+
+			if (continuation == null)
+			{
+				throw new ArgumentNullException(nameof(continuation));
+			}
+
+			if (!TryAddCallback(continuation, syncContext, true))
+			{
+				InvokeCompletionCallback(continuation, syncContext);
+			}
+		}
+
+		/// <summary>
 		/// Adds a callback to be executed when the operation progress has changed. If the operation is already completed the <paramref name="action"/> is called synchronously.
 		/// </summary>
 		/// <remarks>
@@ -335,10 +359,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public void AddProgressCallback(Action<float> action)
 		{
-			if (!TryAddProgressCallback(action))
-			{
-				InvokeProgressCallback(action, SynchronizationContext.Current);
-			}
+			AddProgressCallback(action, SynchronizationContext.Current);
 		}
 
 		/// <summary>
@@ -355,14 +376,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public bool TryAddProgressCallback(Action<float> action)
 		{
-			ThrowIfDisposed();
-
-			if (action == null)
-			{
-				throw new ArgumentNullException(nameof(action));
-			}
-
-			return TryAddCallback(action, SynchronizationContext.Current, false);
+			return TryAddProgressCallback(action, SynchronizationContext.Current);
 		}
 
 		/// <summary>
@@ -441,10 +455,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public void AddProgressCallback(IProgress<float> callback)
 		{
-			if (!TryAddProgressCallback(callback))
-			{
-				InvokeProgressCallback(callback, SynchronizationContext.Current);
-			}
+			AddProgressCallback(callback, SynchronizationContext.Current);
 		}
 
 		/// <summary>
@@ -461,14 +472,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public bool TryAddProgressCallback(IProgress<float> callback)
 		{
-			ThrowIfDisposed();
-
-			if (callback == null)
-			{
-				throw new ArgumentNullException(nameof(callback));
-			}
-
-			return TryAddCallback(callback, SynchronizationContext.Current, false);
+			return TryAddProgressCallback(callback, SynchronizationContext.Current);
 		}
 
 		/// <summary>

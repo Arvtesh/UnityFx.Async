@@ -11,7 +11,17 @@ namespace UnityFx.Async
 	/// Manages events and callbacks of <see cref="IAsyncOperation"/>.
 	/// </summary>
 	/// <seealso cref="IAsyncOperation"/>
-	public interface IAsyncOperationEvents
+	public interface IAsyncOperationEvents :
+#if NET35
+		IAsyncCompletionCallbacks<Action<IAsyncOperation>>,
+		IAsyncCompletionCallbacks<IAsyncContinuation>,
+		IAsyncProgressCallbacks<Action<float>>
+#else
+		IAsyncCompletionCallbacks<Action<IAsyncOperation>>,
+		IAsyncCompletionCallbacks<IAsyncContinuation>,
+		IAsyncProgressCallbacks<Action<float>>,
+		IAsyncProgressCallbacks<IProgress<float>>
+#endif
 	{
 		/// <summary>
 		/// Raised when the operation progress is changed.
@@ -24,11 +34,6 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="Completed"/>
-		/// <seealso cref="AddProgressCallback(Action{float})"/>
-		/// <seealso cref="AddProgressCallback(Action{float}, SynchronizationContext)"/>
-		/// <seealso cref="TryAddProgressCallback(Action{float})"/>
-		/// <seealso cref="TryAddProgressCallback(Action{float}, SynchronizationContext)"/>
-		/// <seealso cref="RemoveProgressCallback(Action{float})"/>
 		event ProgressChangedEventHandler ProgressChanged;
 
 		/// <summary>
@@ -42,351 +47,36 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		/// <seealso cref="ProgressChanged"/>
-		/// <seealso cref="AddCompletionCallback(Action{IAsyncOperation})"/>
-		/// <seealso cref="AddCompletionCallback(Action{IAsyncOperation}, SynchronizationContext)"/>
-		/// <seealso cref="TryAddCompletionCallback(Action{IAsyncOperation})"/>
-		/// <seealso cref="TryAddCompletionCallback(Action{IAsyncOperation}, SynchronizationContext)"/>
-		/// <seealso cref="RemoveCompletionCallback(Action{IAsyncOperation})"/>
 		event AsyncCompletedEventHandler Completed;
 
 		/// <summary>
-		/// Adds a completion callback to be executed after the operation has completed. If the operation is already completed the <paramref name="action"/> is called synchronously.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="action"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
-		/// Throwing an exception from the callback might cause unspecified behaviour.
-		/// </remarks>
-		/// <param name="action">The callback to be executed when the operation has completed.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddCompletionCallback(Action{IAsyncOperation}, SynchronizationContext)"/>
-		/// <seealso cref="TryAddCompletionCallback(Action{IAsyncOperation})"/>
-		/// <seealso cref="TryAddCompletionCallback(Action{IAsyncOperation}, SynchronizationContext)"/>
-		/// <seealso cref="RemoveCompletionCallback(Action{IAsyncOperation})"/>
-		void AddCompletionCallback(Action<IAsyncOperation> action);
-
-		/// <summary>
-		/// Attempts to add a completion callback to be executed after the operation has finished. If the operation is already completed
-		/// the method does nothing and just returns <see langword="false"/>.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="action"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
-		/// Throwing an exception from the callback might cause unspecified behaviour.
-		/// </remarks>
-		/// <param name="action">The callback to be executed when the operation has completed.</param>
-		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddCompletionCallback(Action{IAsyncOperation})"/>
-		/// <seealso cref="AddCompletionCallback(Action{IAsyncOperation}, SynchronizationContext)"/>
-		/// <seealso cref="TryAddCompletionCallback(Action{IAsyncOperation}, SynchronizationContext)"/>
-		/// <seealso cref="RemoveCompletionCallback(Action{IAsyncOperation})"/>
-		bool TryAddCompletionCallback(Action<IAsyncOperation> action);
-
-		/// <summary>
-		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed <paramref name="action"/> is invoked
-		/// on the <paramref name="syncContext"/> specified.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="action"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
-		/// </remarks>
-		/// <param name="action">The callback to be executed when the operation has completed.</param>
-		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
-		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
-		/// </param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddCompletionCallback(Action{IAsyncOperation})"/>
-		/// <seealso cref="TryAddCompletionCallback(Action{IAsyncOperation})"/>
-		/// <seealso cref="TryAddCompletionCallback(Action{IAsyncOperation}, SynchronizationContext)"/>
-		/// <seealso cref="RemoveCompletionCallback(Action{IAsyncOperation})"/>
-		void AddCompletionCallback(Action<IAsyncOperation> action, SynchronizationContext syncContext);
-
-		/// <summary>
-		/// Attempts to add a completion callback to be executed after the operation has finished. If the operation is already completed
-		/// the method does nothing and just returns <see langword="false"/>.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="action"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
-		/// </remarks>
-		/// <param name="action">The callback to be executed when the operation has completed.</param>
-		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
-		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
-		/// </param>
-		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddCompletionCallback(Action{IAsyncOperation})"/>
-		/// <seealso cref="AddCompletionCallback(Action{IAsyncOperation}, SynchronizationContext)"/>
-		/// <seealso cref="TryAddCompletionCallback(Action{IAsyncOperation})"/>
-		/// <seealso cref="RemoveCompletionCallback(Action{IAsyncOperation})"/>
-		bool TryAddCompletionCallback(Action<IAsyncOperation> action, SynchronizationContext syncContext);
-
-		/// <summary>
-		/// Removes an existing completion callback.
-		/// </summary>
-		/// <param name="action">The callback to remove. Can be <see langword="null"/>.</param>
-		/// <returns>Returns <see langword="true"/> if <paramref name="action"/> was removed; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="AddCompletionCallback(Action{IAsyncOperation})"/>
-		/// <seealso cref="AddCompletionCallback(Action{IAsyncOperation}, SynchronizationContext)"/>
-		/// <seealso cref="TryAddCompletionCallback(Action{IAsyncOperation})"/>
-		/// <seealso cref="TryAddCompletionCallback(Action{IAsyncOperation}, SynchronizationContext)"/>
-		bool RemoveCompletionCallback(Action<IAsyncOperation> action);
-
-		/// <summary>
-		/// Adds a continuation to be executed after the operation has completed. If the operation is completed <paramref name="continuation"/> is invoked synchronously.
+		/// Schedules a <paramref name="continuation"/> to be started (or cancelled in case of the operatino failure) after the operation has completed.
+		/// If the operation is already completed the <paramref name="continuation"/> is called synchronously.
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="continuation"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
 		/// Throwing an exception from the callback might cause unspecified behaviour.
 		/// </remarks>
-		/// <param name="continuation">The callback to be executed when the operation has completed.</param>
+		/// <param name="continuation">The continuation to be executed when the operation has completed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="continuation"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddCompletionCallback(IAsyncContinuation, SynchronizationContext)"/>
-		/// <seealso cref="TryAddCompletionCallback(IAsyncContinuation)"/>
-		/// <seealso cref="TryAddCompletionCallback(IAsyncContinuation, SynchronizationContext)"/>
-		/// <seealso cref="RemoveCompletionCallback(IAsyncContinuation)"/>
-		void AddCompletionCallback(IAsyncContinuation continuation);
+		/// <seealso cref="Schedule(IAsyncSchedulable, SynchronizationContext)"/>
+		void Schedule(IAsyncSchedulable continuation);
 
 		/// <summary>
-		/// Attempts to add a continuation to be executed after the operation has finished. If the operation is already completed
-		/// the method does nothing and just returns <see langword="false"/>.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="continuation"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
-		/// Throwing an exception from the callback might cause unspecified behaviour.
-		/// </remarks>
-		/// <param name="continuation">The cotinuation to be executed when the operation has completed.</param>
-		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="continuation"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddCompletionCallback(IAsyncContinuation)"/>
-		/// <seealso cref="AddCompletionCallback(IAsyncContinuation, SynchronizationContext)"/>
-		/// <seealso cref="TryAddCompletionCallback(IAsyncContinuation, SynchronizationContext)"/>
-		/// <seealso cref="RemoveCompletionCallback(IAsyncContinuation)"/>
-		bool TryAddCompletionCallback(IAsyncContinuation continuation);
-
-		/// <summary>
-		/// Adds a continuation to be executed after the operation has completed. If the operation is completed <paramref name="continuation"/>
-		/// is invoked on the <paramref name="syncContext"/> specified.
+		/// Schedules a <paramref name="continuation"/> to be started (or cancelled in case of the operatino failure) after the operation has completed.
+		/// If the operation is completed <paramref name="continuation"/> is invoked on the <paramref name="syncContext"/> specified.
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="continuation"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
 		/// </remarks>
-		/// <param name="continuation">The callback to be executed when the operation has completed.</param>
+		/// <param name="continuation">The continuation to be executed when the operation has completed.</param>
 		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
 		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
 		/// </param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="continuation"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddCompletionCallback(IAsyncContinuation)"/>
-		/// <seealso cref="TryAddCompletionCallback(IAsyncContinuation)"/>
-		/// <seealso cref="TryAddCompletionCallback(IAsyncContinuation, SynchronizationContext)"/>
-		/// <seealso cref="RemoveCompletionCallback(IAsyncContinuation)"/>
-		void AddCompletionCallback(IAsyncContinuation continuation, SynchronizationContext syncContext);
-
-		/// <summary>
-		/// Attempts to add a continuation to be executed after the operation has finished. If the operation is already completed
-		/// the method does nothing and just returns <see langword="false"/>.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="continuation"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
-		/// </remarks>
-		/// <param name="continuation">The cotinuation to be executed when the operation has completed.</param>
-		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
-		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
-		/// </param>
-		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="continuation"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddCompletionCallback(IAsyncContinuation)"/>
-		/// <seealso cref="AddCompletionCallback(IAsyncContinuation, SynchronizationContext)"/>
-		/// <seealso cref="TryAddCompletionCallback(IAsyncContinuation)"/>
-		/// <seealso cref="RemoveCompletionCallback(IAsyncContinuation)"/>
-		bool TryAddCompletionCallback(IAsyncContinuation continuation, SynchronizationContext syncContext);
-
-		/// <summary>
-		/// Removes an existing continuation.
-		/// </summary>
-		/// <param name="continuation">The continuation to remove. Can be <see langword="null"/>.</param>
-		/// <returns>Returns <see langword="true"/> if <paramref name="continuation"/> was removed; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="AddCompletionCallback(IAsyncContinuation)"/>
-		/// <seealso cref="AddCompletionCallback(IAsyncContinuation, SynchronizationContext)"/>
-		/// <seealso cref="TryAddCompletionCallback(IAsyncContinuation)"/>
-		/// <seealso cref="TryAddCompletionCallback(IAsyncContinuation, SynchronizationContext)"/>
-		bool RemoveCompletionCallback(IAsyncContinuation continuation);
-
-		/// <summary>
-		/// Adds a callback to be executed when the operation progress has changed. If the operation is already completed the <paramref name="action"/> is called synchronously.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="action"/> is invoked on a thread that registered the callback (if it has a <see cref="SynchronizationContext"/> attached).
-		/// Throwing an exception from the callback might cause unspecified behaviour.
-		/// </remarks>
-		/// <param name="action">The callback to be executed when the operation progress has changed.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddProgressCallback(Action{float}, SynchronizationContext)"/>
-		/// <seealso cref="TryAddProgressCallback(Action{float})"/>
-		/// <seealso cref="TryAddProgressCallback(Action{float}, SynchronizationContext)"/>
-		/// <seealso cref="RemoveProgressCallback(Action{float})"/>
-		void AddProgressCallback(Action<float> action);
-
-		/// <summary>
-		/// Attempts to add a callback to be executed when the operation progress has changed. If the operation is already completed
-		/// the method does nothing and just returns <see langword="false"/>.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="action"/> is invoked on a thread that registered the callback (if it has a <see cref="SynchronizationContext"/> attached).
-		/// Throwing an exception from the callback might cause unspecified behaviour.
-		/// </remarks>
-		/// <param name="action">The callback to be executed when the operation progress has changed.</param>
-		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddProgressCallback(Action{float})"/>
-		/// <seealso cref="AddProgressCallback(Action{float}, SynchronizationContext)"/>
-		/// <seealso cref="TryAddProgressCallback(Action{float}, SynchronizationContext)"/>
-		/// <seealso cref="RemoveProgressCallback(Action{float})"/>
-		bool TryAddProgressCallback(Action<float> action);
-
-		/// <summary>
-		/// Adds a callback to be executed when the operation progress has changed. If the operation is completed <paramref name="action"/> is invoked
-		/// on the <paramref name="syncContext"/> specified.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="action"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
-		/// </remarks>
-		/// <param name="action">The callback to be executed when the operation progress has changed.</param>
-		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
-		/// Otherwise the callback is invoked on a thread that initiated the operation.
-		/// </param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddProgressCallback(Action{float})"/>
-		/// <seealso cref="TryAddProgressCallback(Action{float})"/>
-		/// <seealso cref="TryAddProgressCallback(Action{float}, SynchronizationContext)"/>
-		/// <seealso cref="RemoveProgressCallback(Action{float})"/>
-		void AddProgressCallback(Action<float> action, SynchronizationContext syncContext);
-
-		/// <summary>
-		/// Attempts to add a callback to be executed when the operation progress has changed. If the operation is already completed
-		/// the method does nothing and just returns <see langword="false"/>.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="action"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
-		/// </remarks>
-		/// <param name="action">The callback to be executed when the operation progress has changed.</param>
-		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the callback to the synchronization context.
-		/// Otherwise the callback is invoked on a thread that initiated the operation.
-		/// </param>
-		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddProgressCallback(Action{float})"/>
-		/// <seealso cref="AddProgressCallback(Action{float}, SynchronizationContext)"/>
-		/// <seealso cref="TryAddProgressCallback(Action{float})"/>
-		/// <seealso cref="RemoveProgressCallback(Action{float})"/>
-		bool TryAddProgressCallback(Action<float> action, SynchronizationContext syncContext);
-
-		/// <summary>
-		/// Removes an existing progress callback.
-		/// </summary>
-		/// <param name="action">The callback to remove. Can be <see langword="null"/>.</param>
-		/// <returns>Returns <see langword="true"/> if <paramref name="action"/> was removed; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="AddProgressCallback(Action{float})"/>
-		/// <seealso cref="AddProgressCallback(Action{float}, SynchronizationContext)"/>
-		/// <seealso cref="TryAddProgressCallback(Action{float})"/>
-		/// <seealso cref="TryAddProgressCallback(Action{float}, SynchronizationContext)"/>
-		bool RemoveProgressCallback(Action<float> action);
-
-#if !NET35
-
-		/// <summary>
-		/// Adds a callback to be executed each time progress value changes. If the operation is completed <paramref name="callback"/> is invoked synchronously.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="callback"/> is invoked on a thread that registered it (if it has a <see cref="SynchronizationContext"/> attached).
-		/// Throwing an exception from the callback might cause unspecified behaviour.
-		/// </remarks>
-		/// <param name="callback">The callback to be executed when the operation progress value has changed.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddProgressCallback(IProgress{float}, SynchronizationContext)"/>
-		/// <seealso cref="TryAddProgressCallback(IProgress{float})"/>
-		/// <seealso cref="TryAddProgressCallback(IProgress{float}, SynchronizationContext)"/>
-		/// <seealso cref="RemoveProgressCallback(IProgress{float})"/>
-		void AddProgressCallback(IProgress<float> callback);
-
-		/// <summary>
-		/// Adds a callback to be executed each time progress value changes. If the operation is completed <paramref name="callback"/>
-		/// is invoked on the <paramref name="syncContext"/> specified.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
-		/// </remarks>
-		/// <param name="callback">The callback to be executed when the operation progress value has changed.</param>
-		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
-		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
-		/// </param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddProgressCallback(IProgress{float})"/>
-		/// <seealso cref="TryAddProgressCallback(IProgress{float})"/>
-		/// <seealso cref="TryAddProgressCallback(IProgress{float}, SynchronizationContext)"/>
-		/// <seealso cref="RemoveProgressCallback(IProgress{float})"/>
-		void AddProgressCallback(IProgress<float> callback, SynchronizationContext syncContext);
-
-		/// <summary>
-		/// Attempts to add a progress callback to be executed each time progress value changes. If the operation is already completed
-		/// the method does nothing and just returns <see langword="false"/>.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="callback"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
-		/// Throwing an exception from the callback might cause unspecified behaviour.
-		/// </remarks>
-		/// <param name="callback">The callback to be executed when the operation progress value has changed.</param>
-		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddProgressCallback(IProgress{float})"/>
-		/// <seealso cref="AddProgressCallback(IProgress{float}, SynchronizationContext)"/>
-		/// <seealso cref="TryAddProgressCallback(IProgress{float}, SynchronizationContext)"/>
-		/// <seealso cref="RemoveProgressCallback(IProgress{float})"/>
-		bool TryAddProgressCallback(IProgress<float> callback);
-
-		/// <summary>
-		/// Attempts to add a progress callback to be executed each time progress value changes. If the operation is already completed
-		/// the method does nothing and just returns <see langword="false"/>.
-		/// </summary>
-		/// <remarks>
-		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
-		/// </remarks>
-		/// <param name="callback">The callback to be executed when the operation progress value has changed.</param>
-		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the callback to the synchronization context.
-		/// Otherwise the callback is invoked on a thread that initiated the operation completion.
-		/// </param>
-		/// <returns>Returns <see langword="true"/> if the callback was added; <see langword="false"/> otherwise (the operation is completed).</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="AddProgressCallback(IProgress{float})"/>
-		/// <seealso cref="AddProgressCallback(IProgress{float}, SynchronizationContext)"/>
-		/// <seealso cref="TryAddProgressCallback(IProgress{float})"/>
-		/// <seealso cref="RemoveProgressCallback(IProgress{float})"/>
-		bool TryAddProgressCallback(IProgress<float> callback, SynchronizationContext syncContext);
-
-		/// <summary>
-		/// Removes an existing progress callback.
-		/// </summary>
-		/// <param name="callback">The callback to remove. Can be <see langword="null"/>.</param>
-		/// <returns>Returns <see langword="true"/> if <paramref name="callback"/> was removed; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="AddProgressCallback(IProgress{float})"/>
-		/// <seealso cref="AddProgressCallback(IProgress{float}, SynchronizationContext)"/>
-		/// <seealso cref="TryAddProgressCallback(IProgress{float})"/>
-		/// <seealso cref="TryAddProgressCallback(IProgress{float}, SynchronizationContext)"/>
-		bool RemoveProgressCallback(IProgress<float> callback);
-
-#endif
+		/// <seealso cref="Schedule(IAsyncSchedulable)"/>
+		void Schedule(IAsyncSchedulable continuation, SynchronizationContext syncContext);
 	}
 }

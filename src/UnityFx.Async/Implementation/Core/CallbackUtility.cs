@@ -23,6 +23,10 @@ namespace UnityFx.Async
 					c.Invoke(op);
 					break;
 
+				case IAsyncSchedulable s:
+					InvokeSchedulable(op, s);
+					break;
+
 				case Action<IAsyncOperation> a:
 					a.Invoke(op);
 					break;
@@ -75,7 +79,20 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region implementation
+		#region
+
+		private static void InvokeSchedulable(IAsyncOperation op, IAsyncSchedulable s)
+		{
+			if (op.IsCompletedSuccessfully)
+			{
+				s.Start();
+			}
+			else
+			{
+				s.Cancel();
+			}
+		}
+
 		#endregion
 	}
 }

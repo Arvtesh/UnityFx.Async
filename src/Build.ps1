@@ -69,6 +69,7 @@ function _PublishAssetStorePackage
 	param([string]$targetFramework)
 
 	$changelogPath = (Join-Path $scriptPath "..\CHANGELOG.md")
+	$readmePath = (Join-Path $scriptPath "UnityFx.Async\README.txt")
 	$filesToPublish = (Join-Path $scriptPath "UnityFx.Async.AssetStore\Assets\*")
 	$binToPublish =(Join-Path $binPath (Join-Path $targetFramework "\*")) 
 	$publishPath = (Join-Path $assetStorePath (Join-Path $targetFramework "Assets"))
@@ -79,8 +80,8 @@ function _PublishAssetStorePackage
 	Copy-Item -Path $filesToPublish -Destination $publishPath -Force -Recurse
 	Copy-Item -Path $binToPublish -Destination $publishBinPath -Force -Recurse
 	Copy-Item -Path $changelogPath -Destination $publishPath2 -Force
+	Copy-Item -Path $readmePath -Destination $publishPath2 -Force
 }
-
 
 _PublishAssetStorePackage "net35"
 _PublishAssetStorePackage "net46"

@@ -35,11 +35,29 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="op">Source web request.</param>
 		public AsyncOperationResult(AsyncOperation op)
-			: base(AsyncOperationStatus.Running)
 		{
 			_op = op;
+		}
 
-			if (op.isDone)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncOperationResult"/> class.
+		/// </summary>
+		/// <param name="op">Source web request.</param>
+		/// <param name="userState">User-defined data.</param>
+		public AsyncOperationResult(AsyncOperation op, object userState)
+			: base(null, userState)
+		{
+			_op = op;
+		}
+
+		#endregion
+
+		#region AsyncResult
+
+		/// <inheritdoc/>
+		protected override void OnStarted()
+		{
+			if (_op.isDone)
 			{
 				TrySetCompleted(true);
 			}
@@ -48,19 +66,15 @@ namespace UnityFx.Async
 #if UNITY_2017_2_OR_NEWER || UNITY_2018
 
 				// Starting with Unity 2017.2 there is AsyncOperation.completed event
-				op.completed += o => TrySetCompleted();
+				_op.completed += o => TrySetCompleted();
 
 #else
 
-				AsyncUtility.AddCompletionCallback(op, () => TrySetCompleted());
+				AsyncUtility.AddCompletionCallback(_op, () => TrySetCompleted());
 
 #endif
 			}
 		}
-
-		#endregion
-
-		#region AsyncResult
 
 		/// <inheritdoc/>
 		protected override float GetProgress()
