@@ -124,12 +124,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				if (_opFactory == null)
-				{
-					throw new InvalidOperationException();
-				}
-
-				_op = _opFactory();
+				_op = _opFactory?.Invoke() ?? throw new InvalidOperationException();
 			}
 
 			return _op;
@@ -144,6 +139,14 @@ namespace UnityFx.Async
 		public void Schedule(IAsyncSchedulable continuation)
 		{
 			StartOrUpdate().Schedule(continuation);
+		}
+
+		/// <summary>
+		/// Resets state of the instance to default.
+		/// </summary>
+		public void Reset()
+		{
+			_op = null;
 		}
 
 		/// <summary>
@@ -168,16 +171,6 @@ namespace UnityFx.Async
 				{
 					case AsyncOperationStatus.RanToCompletion:
 						_op = AsyncResult.CompletedOperation;
-						_opFactory = null;
-						break;
-
-					case AsyncOperationStatus.Faulted:
-						_op = AsyncResult.FaultedOperation;
-						_opFactory = null;
-						break;
-
-					case AsyncOperationStatus.Canceled:
-						_op = AsyncResult.CanceledOperation;
 						_opFactory = null;
 						break;
 				}
