@@ -17,6 +17,7 @@ namespace UnityFx.Async
 		#region data
 
 		private static AsyncResult _completedOperation;
+		private static AsyncResult _faultedOperation;
 		private static AsyncResult _canceledOperation;
 
 		#endregion
@@ -44,12 +45,32 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Gets a faulted operation.
+		/// </summary>
+		/// <remarks>
+		/// Note that <see cref="Dispose()"/> call have no effect on operations returned with the property. May not always return the same instance.
+		/// </remarks>
+		/// <value>Faulted <see cref="IAsyncOperation"/> instance.</value>
+		public static AsyncResult FaultedOperation
+		{
+			get
+			{
+				if (_faultedOperation == null)
+				{
+					_faultedOperation = new AsyncResult(_flagDoNotDispose | _flagCompletedSynchronously | StatusFaulted);
+				}
+
+				return _faultedOperation;
+			}
+		}
+
+		/// <summary>
 		/// Gets an operation that's already been canceled.
 		/// </summary>
 		/// <remarks>
 		/// Note that <see cref="Dispose()"/> call have no effect on operations returned with the property. May not always return the same instance.
 		/// </remarks>
-		/// <value>Completed <see cref="IAsyncOperation"/> instance.</value>
+		/// <value>Canceled <see cref="IAsyncOperation"/> instance.</value>
 		public static AsyncResult CanceledOperation
 		{
 			get

@@ -136,17 +136,12 @@ namespace UnityFx.Async
 			else if (_request.isModifiable)
 			{
 #if UNITY_2017_2_OR_NEWER || UNITY_2018
-
-				// Starting with Unity 2017.2 there is AsyncOperation.completed event
 				_op = _request.SendWebRequest();
-				_op.completed += op => SetCompleted();
-
 #else
-
 				_op = _request.Send();
-				AsyncUtility.AddCompletionCallback(_request, SetCompleted);
-
 #endif
+
+				AsyncUtility.AddCompletionCallback(_op, SetCompleted);
 			}
 		}
 
@@ -216,21 +211,29 @@ namespace UnityFx.Async
 
 		private void SetCompleted()
 		{
+			try
+			{
 #if UNITY_5
-			if (_request.isError)
+				if (_request.isError)
 #else
-			if (_request.isHttpError || _request.isNetworkError)
+				if (_request.isHttpError || _request.isNetworkError)
 #endif
-			{
-				TrySetException(new WebRequestException(_request.error, _request.responseCode));
+				{
+					TrySetException(new WebRequestException(_request.error, _request.responseCode));
+				}
+				else if (_request.downloadHandler != null)
+				{
+					var result = GetResult(_request);
+					TrySetResult(result);
+				}
+				else
+				{
+					TrySetCompleted();
+				}
 			}
-			else if (_request.downloadHandler != null)
+			catch (Exception e)
 			{
-				TrySetResult(GetResult(_request));
-			}
-			else
-			{
-				TrySetCompleted();
+				TrySetException(e);
 			}
 		}
 

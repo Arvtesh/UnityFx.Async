@@ -95,6 +95,9 @@
       <h4><a class="xref" href="UnityFx.Async.AsyncResultQueue-1.html">AsyncResultQueue&lt;T&gt;</a></h4>
       <section><p>A FIFO queue of <a class="xref" href="UnityFx.Async.AsyncResult.html">AsyncResult</a> instances that are executed sequentially.</p>
 </section>
+      <h4><a class="xref" href="UnityFx.Async.AsyncUpdateSource.html">AsyncUpdateSource</a></h4>
+      <section><p>Implementation of <a class="xref" href="UnityFx.Async.IAsyncUpdateSource.html">IAsyncUpdateSource</a>.</p>
+</section>
     <h3 id="structs">Structs
   </h3>
       <h4><a class="xref" href="UnityFx.Async.AsyncExtensions.AsyncAwaiter.html">AsyncExtensions.AsyncAwaiter</a></h4>
@@ -124,15 +127,14 @@
       <section><p>A generic non-delegate continuation.</p>
 </section>
       <h4><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></h4>
-      <section><p>Represents the consumer side of an asynchronous operation. A disposable <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iasyncresult">IAsyncResult</a>
-with status information.</p>
+      <section><p>Represents the consumer side of an asynchronous operation. It is basically a disposable/hookable <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iasyncresult">IAsyncResult</a> with status information.</p>
 </section>
       <h4><a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation&lt;TResult&gt;</a></h4>
       <section><p>Represents the consumer side of an asynchronous operation. Extends an <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>
 interface with a result value.</p>
 </section>
       <h4><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html">IAsyncOperationEvents</a></h4>
-      <section><p>A controller for <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a> completion callbacks.</p>
+      <section><p>Manages events and callbacks of <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>.</p>
 </section>
       <h4><a class="xref" href="UnityFx.Async.IAsyncUpdatable.html">IAsyncUpdatable</a></h4>
       <section><p>An updatable object.</p>

@@ -173,13 +173,21 @@ namespace UnityFx.Async
 
 		private void SetCompleted()
 		{
-			if (string.IsNullOrEmpty(_www.error))
+			try
 			{
-				TrySetResult(GetResult(_www));
+				if (string.IsNullOrEmpty(_www.error))
+				{
+					var result = GetResult(_www);
+					TrySetResult(result);
+				}
+				else
+				{
+					TrySetException(new WebRequestException(_www.error));
+				}
 			}
-			else
+			catch (Exception e)
 			{
-				TrySetException(new WebRequestException(_www.error));
+				TrySetException(e);
 			}
 		}
 

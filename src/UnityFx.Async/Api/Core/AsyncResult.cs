@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 #if !NET35
 using System.Runtime.ExceptionServices;
 #endif
@@ -215,6 +216,21 @@ namespace UnityFx.Async
 			_asyncState = asyncState;
 		}
 
+#if NET35
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult"/> class that is faulted. For internal use only.
+		/// </summary>
+		/// <param name="exceptions">Exceptions to complete the operation with.</param>
+		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
+		internal AsyncResult(IEnumerable<Exception> exceptions, object asyncState)
+			: this(exceptions?.First(), asyncState)
+		{
+		}
+
+#else
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult"/> class that is faulted. For internal use only.
 		/// </summary>
@@ -242,6 +258,8 @@ namespace UnityFx.Async
 			_callback = _callbackCompletionSentinel;
 			_asyncState = asyncState;
 		}
+
+#endif
 
 		/// <summary>
 		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Scheduled"/> state.
@@ -358,6 +376,12 @@ namespace UnityFx.Async
 				{
 					_exception = exception;
 
+#if NET35
+
+					SetCompleted(StatusFaulted, completedSynchronously);
+
+#else
+
 					if (exception is AggregateException && _exception.InnerException is OperationCanceledException)
 					{
 						SetCompleted(StatusCanceled, completedSynchronously);
@@ -366,6 +390,8 @@ namespace UnityFx.Async
 					{
 						SetCompleted(StatusFaulted, completedSynchronously);
 					}
+
+#endif
 				}
 
 				return true;
@@ -430,6 +456,21 @@ namespace UnityFx.Async
 
 			if (TryReserveCompletion())
 			{
+#if NET35
+
+				_exception = list[0];
+
+				if (_exception is OperationCanceledException)
+				{
+					SetCompleted(StatusCanceled, completedSynchronously);
+				}
+				else
+				{
+					SetCompleted(StatusFaulted, completedSynchronously);
+				}
+
+#else
+
 				_exception = new AggregateException(list);
 
 				if (_exception.InnerException is OperationCanceledException)
@@ -440,6 +481,8 @@ namespace UnityFx.Async
 				{
 					SetCompleted(StatusFaulted, completedSynchronously);
 				}
+
+#endif
 
 				return true;
 			}
