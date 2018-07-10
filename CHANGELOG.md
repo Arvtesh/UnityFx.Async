@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
 -----------------------
-## [0.9.4] - unreleased
+## [0.9.4] - 2018.07.10
 
 ### Added
 - Added assembly definition file for Unity 2017.3+.
@@ -14,11 +14,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `AssetBundleCreateRequest` wrapper operation.
 - Added `ThrowIfNonSuccess` extension for `IAsyncOperation`.
 - Added `ToEnum` extension for `IAsyncResult` that converts an asynchronous operation (`Task`, `AsyncResult` etc) to enumerator.
-- Added `IAsyncSchedulable` interface - an abstraction of schedulable entity.
-- Added `AsyncLazy` helper.
+- Added `IAsyncSchedulable` interface - an abstraction of a schedulable entity.
+- Added `AsyncLazy` helper for initialization operations.
 
 ### Fixed
-- Fixed compile warnings on some Unity versions.
+- Fixed compile warnings for some older Unity versions.
 - Fixed error handling for Unity operation wrappers.
 
 ### Removed
