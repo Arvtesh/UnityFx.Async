@@ -20,6 +20,23 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ResourceRequestResult{T}"/> class.
 		/// </summary>
+		protected ResourceRequestResult()
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ResourceRequestResult{T}"/> class.
+		/// </summary>
+		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="userState">User-defined data.</param>
+		protected ResourceRequestResult(AsyncCallback asyncCallback, object userState)
+			: base(asyncCallback, userState)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ResourceRequestResult{T}"/> class.
+		/// </summary>
 		/// <param name="op">Source web request.</param>
 		public ResourceRequestResult(ResourceRequest op)
 			: base(op)

@@ -10,12 +10,29 @@ namespace UnityFx.Async
 	/// A wrapper for <see cref="AssetBundleRequest"/> with result value.
 	/// </summary>
 	/// <typeparam name="T">Result type.</typeparam>
-	public sealed class AssetBundleRequestResult<T> : AsyncOperationResult<T> where T : UnityEngine.Object
+	public class AssetBundleRequestResult<T> : AsyncOperationResult<T> where T : UnityEngine.Object
 	{
 		#region data
 		#endregion
 
 		#region interface
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AssetBundleRequestResult{T}"/> class.
+		/// </summary>
+		protected AssetBundleRequestResult()
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AssetBundleRequestResult{T}"/> class.
+		/// </summary>
+		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="userState">User-defined data.</param>
+		protected AssetBundleRequestResult(AsyncCallback asyncCallback, object userState)
+			: base(asyncCallback, userState)
+		{
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AssetBundleRequestResult{T}"/> class.

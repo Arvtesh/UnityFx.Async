@@ -13,7 +13,7 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private readonly AsyncOperation _op;
+		private AsyncOperation _op;
 
 		#endregion
 
@@ -28,6 +28,23 @@ namespace UnityFx.Async
 			{
 				return _op;
 			}
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncOperationResult{T}"/> class.
+		/// </summary>
+		protected AsyncOperationResult()
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncOperationResult{T}"/> class.
+		/// </summary>
+		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="userState">User-defined data.</param>
+		protected AsyncOperationResult(AsyncCallback asyncCallback, object userState)
+			: base(asyncCallback, userState)
+		{
 		}
 
 		/// <summary>
@@ -67,6 +84,14 @@ namespace UnityFx.Async
 		/// </summary>
 		protected abstract T GetResult(AsyncOperation op);
 
+		/// <summary>
+		/// Called when the <see cref="AsyncOperation"/> needs to be created. Not called if the operation is initialized in class constructor.
+		/// </summary>
+		protected virtual AsyncOperation GetOperation()
+		{
+			throw new NotImplementedException();
+		}
+
 		#endregion
 
 		#region AsyncResult
@@ -74,6 +99,11 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		protected override void OnStarted()
 		{
+			if (_op == null)
+			{
+				_op = GetOperation();
+			}
+
 			if (_op.isDone)
 			{
 				OnSetCompleted(_op);
@@ -96,6 +126,11 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		protected override float GetProgress()
 		{
+			if (_op == null)
+			{
+				return 0;
+			}
+
 			return _op.progress;
 		}
 
@@ -113,6 +148,10 @@ namespace UnityFx.Async
 			catch (Exception e)
 			{
 				TrySetException(e);
+			}
+			finally
+			{
+				_op = null;
 			}
 		}
 

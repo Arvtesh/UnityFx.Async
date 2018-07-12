@@ -19,6 +19,23 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AssetBundleCreateRequestResult"/> class.
 		/// </summary>
+		protected AssetBundleCreateRequestResult()
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AssetBundleCreateRequestResult"/> class.
+		/// </summary>
+		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="userState">User-defined data.</param>
+		protected AssetBundleCreateRequestResult(AsyncCallback asyncCallback, object userState)
+			: base(asyncCallback, userState)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AssetBundleCreateRequestResult"/> class.
+		/// </summary>
 		/// <param name="op">Source web request.</param>
 		public AssetBundleCreateRequestResult(AssetBundleCreateRequest op)
 			: base(op)
