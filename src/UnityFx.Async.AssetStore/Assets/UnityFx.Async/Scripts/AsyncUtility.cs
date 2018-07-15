@@ -189,6 +189,52 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading text via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the text to download.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<string> GetText(string url)
+		{
+#if UNITY_5_4_OR_NEWER
+
+			var webRequest = UnityWebRequest.Get(url);
+			var result = new WebRequestResult<string>(webRequest);
+
+#else
+
+			var www = new WWW(url);
+			var result = new WwwResult<string>(www);
+
+#endif
+
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading binary content via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the binary content to download.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<byte[]> GetBytes(string url)
+		{
+#if UNITY_5_4_OR_NEWER
+
+			var webRequest = UnityWebRequest.Get(url);
+			var result = new WebRequestResult<byte[]>(webRequest);
+
+#else
+
+			var www = new WWW(url);
+			var result = new WwwResult<byte[]>(www);
+
+#endif
+
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
 		/// Creates an asyncronous operation optimized for downloading a <see cref="AssetBundle"/> via HTTP GET.
 		/// </summary>
 		/// <param name="url">The URI of the asset bundle to download.</param>
