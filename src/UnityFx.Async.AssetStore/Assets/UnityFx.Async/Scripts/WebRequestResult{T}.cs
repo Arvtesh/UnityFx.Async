@@ -4,15 +4,18 @@
 using System;
 using System.Text;
 using UnityEngine;
-#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+#if UNITY_5_4_OR_NEWER
 using UnityEngine.Networking;
-#elif UNITY_5_2_OR_NEWER
+#elif UNITY_5_2 || UNITY_5_3
 using UnityEngine.Experimental.Networking;
+#endif
+#if UNITY_2018_2_OR_NEWER
+using UnityEngine.Video;
 #endif
 
 namespace UnityFx.Async
 {
-#if UNITY_5_2_OR_NEWER || UNITY_5_3_OR_NEWER || UNITY_2017 || UNITY_2018
+#if UNITY_5_2 || UNITY_5_3_OR_NEWER
 
 	/// <summary>
 	/// A wrapper for <see cref="UnityWebRequest"/> with result value.
@@ -93,7 +96,7 @@ namespace UnityFx.Async
 			{
 				return ((DownloadHandlerAudioClip)request.downloadHandler).audioClip as T;
 			}
-#if !UNITY_5
+#if !UNITY_5 && !UNITY_2018_2_OR_NEWER
 			else if (request.downloadHandler is DownloadHandlerMovieTexture)
 			{
 				return ((DownloadHandlerMovieTexture)request.downloadHandler).movieTexture as T;
@@ -135,7 +138,7 @@ namespace UnityFx.Async
 			}
 			else if (_request.isModifiable)
 			{
-#if UNITY_2017_2_OR_NEWER || UNITY_2018
+#if UNITY_2017_2_OR_NEWER
 				_op = _request.SendWebRequest();
 #else
 				_op = _request.Send();

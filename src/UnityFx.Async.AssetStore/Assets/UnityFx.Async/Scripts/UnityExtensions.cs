@@ -5,10 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
-#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+#if UNITY_5_4_OR_NEWER
 using UnityEngine.Networking;
-#elif UNITY_5_2_OR_NEWER
+#elif UNITY_5_2 || UNITY_5_3
 using UnityEngine.Experimental.Networking;
+#endif
+#if UNITY_2018_2_OR_NEWER
+using UnityEngine.Video;
 #endif
 
 namespace UnityFx.Async
@@ -93,7 +96,7 @@ namespace UnityFx.Async
 			/// <inheritdoc/>
 			public void OnCompleted(Action continuation)
 			{
-#if UNITY_2017_2_OR_NEWER || UNITY_2018
+#if UNITY_2017_2_OR_NEWER
 
 				// Starting with Unity 2017.2 there is AsyncOperation.completed event
 				_op.completed += o => continuation();
@@ -121,7 +124,7 @@ namespace UnityFx.Async
 
 		#region UnityWebRequest
 
-#if UNITY_5_2_OR_NEWER || UNITY_5_3_OR_NEWER || UNITY_2017 || UNITY_2018
+#if UNITY_5_2 || UNITY_5_3_OR_NEWER
 
 		/// <summary>
 		/// Creates an <see cref="IAsyncOperation"/> wrapper for the specified <see cref="UnityWebRequest"/>.
@@ -178,6 +181,21 @@ namespace UnityFx.Async
 			return result;
 		}
 
+#if UNITY_2018_2_OR_NEWER
+
+		/// <summary>
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <param name="request">The source web request.</param>
+		public static WebRequestResult<VideoClip> ToAsyncVideoClip(this UnityWebRequest request)
+		{
+			var result = new WebRequestResult<VideoClip>(request);
+			result.Start();
+			return result;
+		}
+
+#else
+
 		/// <summary>
 		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
@@ -188,6 +206,8 @@ namespace UnityFx.Async
 			result.Start();
 			return result;
 		}
+
+#endif
 
 		/// <summary>
 		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
@@ -321,6 +341,21 @@ namespace UnityFx.Async
 			return result;
 		}
 
+#if UNITY_2018_2_OR_NEWER
+
+		/// <summary>
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
+		/// </summary>
+		/// <param name="request">The source web request.</param>
+		public static WwwResult<VideoClip> ToAsyncVideoClip(this WWW request)
+		{
+			var result = new WwwResult<VideoClip>(request);
+			result.Start();
+			return result;
+		}
+
+#else
+
 		/// <summary>
 		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
@@ -331,6 +366,8 @@ namespace UnityFx.Async
 			result.Start();
 			return result;
 		}
+
+#endif
 
 		/// <summary>
 		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.

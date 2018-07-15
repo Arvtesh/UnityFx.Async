@@ -6,10 +6,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
-#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+#if UNITY_5_4_OR_NEWER
 using UnityEngine.Networking;
-#elif UNITY_5_2_OR_NEWER
+#elif UNITY_5_2 || UNITY_5_3
 using UnityEngine.Experimental.Networking;
+#endif
+#if UNITY_2018_2_OR_NEWER
+using UnityEngine.Video;
 #endif
 
 namespace UnityFx.Async
@@ -192,12 +195,12 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<AssetBundle> GetAssetBundle(string url)
 		{
-#if UNITY_2018
+#if UNITY_2018_1_OR_NEWER
 
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url);
 			var result = new WebRequestResult<AssetBundle>(webRequest);
 
-#elif UNITY_5_4_OR_NEWER || UNITY_2017
+#elif UNITY_5_4_OR_NEWER
 
 			var webRequest = UnityWebRequest.GetAssetBundle(url);
 			var result = new WebRequestResult<AssetBundle>(webRequest);
@@ -221,12 +224,12 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<AssetBundle> GetAssetBundle(string url, Hash128 hash)
 		{
-#if UNITY_2018
+#if UNITY_2018_1_OR_NEWER
 
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, 0);
 			var result = new WebRequestResult<AssetBundle>(webRequest);
 
-#elif UNITY_5_4_OR_NEWER || UNITY_2017
+#elif UNITY_5_4_OR_NEWER
 
 			var webRequest = UnityWebRequest.GetAssetBundle(url, hash, 0);
 			var result = new WebRequestResult<AssetBundle>(webRequest);
@@ -251,12 +254,12 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<AssetBundle> GetAssetBundle(string url, Hash128 hash, uint crc)
 		{
-#if UNITY_2018
+#if UNITY_2018_1_OR_NEWER
 
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, crc);
 			var result = new WebRequestResult<AssetBundle>(webRequest);
 
-#elif UNITY_5_4_OR_NEWER || UNITY_2017
+#elif UNITY_5_4_OR_NEWER
 
 			var webRequest = UnityWebRequest.GetAssetBundle(url, hash, crc);
 			var result = new WebRequestResult<AssetBundle>(webRequest);
@@ -279,7 +282,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<AudioClip> GetAudioClip(string url)
 		{
-#if UNITY_2017 || UNITY_2018
+#if UNITY_2017_1_OR_NEWER
 
 			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.UNKNOWN);
 			var result = new WebRequestResult<AudioClip>(webRequest);
@@ -308,7 +311,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<AudioClip> GetAudioClip(string url, AudioType audioType)
 		{
-#if UNITY_2017 || UNITY_2018
+#if UNITY_2017_1_OR_NEWER
 
 			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, audioType);
 			var result = new WebRequestResult<AudioClip>(webRequest);
@@ -336,7 +339,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<Texture2D> GetTexture(string url)
 		{
-#if UNITY_2017 || UNITY_2018
+#if UNITY_2017_1_OR_NEWER
 
 			var webRequest = UnityWebRequestTexture.GetTexture(url, false);
 			var result = new WebRequestResult<Texture2D>(webRequest);
@@ -365,7 +368,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<Texture2D> GetTexture(string url, bool nonReadable)
 		{
-#if UNITY_2017 || UNITY_2018
+#if UNITY_2017_1_OR_NEWER
 
 			var webRequest = UnityWebRequestTexture.GetTexture(url, nonReadable);
 			var result = new WebRequestResult<Texture2D>(webRequest);
@@ -386,6 +389,23 @@ namespace UnityFx.Async
 			return result;
 		}
 
+#if UNITY_2018_2_OR_NEWER
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for downloading a <see cref="VideoClip"/> via HTTP GET.
+		/// </summary>
+		/// <param name="url">The URI of the video to download.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<VideoClip> GetVideoClip(string url)
+		{
+			var webRequest = UnityWebRequest.Get(url);
+			var result = new WebRequestResult<VideoClip>(webRequest);
+			result.Start();
+			return result;
+		}
+
+#else
+
 		/// <summary>
 		/// Creates an asyncronous operation optimized for downloading a <see cref="MovieTexture"/> via HTTP GET.
 		/// </summary>
@@ -393,7 +413,7 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<MovieTexture> GetMovieTexture(string url)
 		{
-#if UNITY_2017 || UNITY_2018
+#if UNITY_2017_1_OR_NEWER
 
 			var webRequest = UnityWebRequestMultimedia.GetMovieTexture(url);
 			var result = new WebRequestResult<MovieTexture>(webRequest);
@@ -408,6 +428,8 @@ namespace UnityFx.Async
 			result.Start();
 			return result;
 		}
+
+#endif
 
 		/// <summary>
 		/// Starts a coroutine.
@@ -510,7 +532,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-#if UNITY_2017_2_OR_NEWER || UNITY_2018
+#if UNITY_2017_2_OR_NEWER
 
 				// Starting with Unity 2017.2 there is AsyncOperation.completed event.
 				op.completed += o => completionCallback();
@@ -523,7 +545,7 @@ namespace UnityFx.Async
 			}
 		}
 
-#if UNITY_5_2_OR_NEWER || UNITY_5_3_OR_NEWER || UNITY_2017 || UNITY_2018
+#if UNITY_5_2 || UNITY_5_3_OR_NEWER
 
 		/// <summary>
 		/// Register a completion callback for the specified <see cref="UnityWebRequest"/> instance.
@@ -826,7 +848,7 @@ namespace UnityFx.Async
 									item.Value();
 								}
 							}
-#if UNITY_5_2_OR_NEWER || UNITY_5_3_OR_NEWER || UNITY_2017 || UNITY_2018
+#if UNITY_5_2 || UNITY_5_3_OR_NEWER
 							else if (item.Key is UnityWebRequest)
 							{
 								var asyncOp = item.Key as UnityWebRequest;

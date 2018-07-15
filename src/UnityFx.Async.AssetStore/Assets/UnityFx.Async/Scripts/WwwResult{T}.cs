@@ -4,6 +4,9 @@
 using System;
 using System.Text;
 using UnityEngine;
+#if UNITY_2018_2_OR_NEWER
+using UnityEngine.Video;
+#endif
 
 namespace UnityFx.Async
 {
@@ -83,20 +86,28 @@ namespace UnityFx.Async
 			}
 			else if (typeof(T) == typeof(AudioClip))
 			{
-#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+#if UNITY_5_4_OR_NEWER
 				return request.GetAudioClip() as T;
 #else
 				return request.audioClip as T;
 #endif
 			}
+#if UNITY_2018_2_OR_NEWER
+			else if (typeof(T) == typeof(VideoClip))
+			{
+				// TODO
+				throw new NotImplementedException();
+			}
+#else
 			else if (typeof(T) == typeof(MovieTexture))
 			{
-#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+#if UNITY_5_4_OR_NEWER
 				return request.GetMovieTexture() as T;
 #else
 				return request.movie as T;
 #endif
 			}
+#endif
 			else if (typeof(T) == typeof(byte[]))
 			{
 				return request.bytes as T;

@@ -93,7 +93,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-#if UNITY_2017_2_OR_NEWER || UNITY_2018
+#if UNITY_2017_2_OR_NEWER
 
 				// Starting with Unity 2017.2 there is AsyncOperation.completed event
 				_op.completed += o => TrySetCompleted();
