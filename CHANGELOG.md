@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 -----------------------
 ## [0.9.5] - unreleased
 
+### Added
+- Added `AsyncUtility.GetText` and `AsyncUtility.GetBytes` helpers.
+
+### Fixed
+
+
+### Removed
+- Removed `ToAsyncXxx` extension methods for `WWW` and `UnityWebRequest`.
+- Removed `MovieTexture` related methods for Unity 2018.2 (the class is deprecated now).
+
 -----------------------
 ## [0.9.4] - 2018.07.10
 
