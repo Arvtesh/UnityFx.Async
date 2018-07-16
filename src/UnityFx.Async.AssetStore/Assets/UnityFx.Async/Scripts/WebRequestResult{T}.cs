@@ -6,8 +6,6 @@ using System.Text;
 using UnityEngine;
 #if UNITY_5_4_OR_NEWER
 using UnityEngine.Networking;
-#elif UNITY_5_2 || UNITY_5_3
-using UnityEngine.Experimental.Networking;
 #endif
 #if UNITY_2018_2_OR_NEWER
 using UnityEngine.Video;
@@ -15,7 +13,7 @@ using UnityEngine.Video;
 
 namespace UnityFx.Async
 {
-#if UNITY_5_2 || UNITY_5_3_OR_NEWER
+#if UNITY_5_4_OR_NEWER
 
 	/// <summary>
 	/// A wrapper for <see cref="UnityWebRequest"/> with result value.
@@ -59,8 +57,8 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="request">Source web request.</param>
 		public WebRequestResult(UnityWebRequest request)
-			: this(request, null)
 		{
+			_request = request;
 		}
 
 		/// <summary>
@@ -71,11 +69,6 @@ namespace UnityFx.Async
 		public WebRequestResult(UnityWebRequest request, object userState)
 			: base(null, userState)
 		{
-			if (request == null)
-			{
-				throw new ArgumentNullException("request");
-			}
-
 			_request = request;
 		}
 

@@ -7,8 +7,6 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 #if UNITY_5_4_OR_NEWER
 using UnityEngine.Networking;
-#elif UNITY_5_2 || UNITY_5_3
-using UnityEngine.Experimental.Networking;
 #endif
 #if UNITY_2018_2_OR_NEWER
 using UnityEngine.Video;
@@ -124,7 +122,7 @@ namespace UnityFx.Async
 
 		#region UnityWebRequest
 
-#if UNITY_5_2 || UNITY_5_3_OR_NEWER
+#if UNITY_5_4_OR_NEWER
 
 		/// <summary>
 		/// Creates an <see cref="IAsyncOperation"/> wrapper for the specified <see cref="UnityWebRequest"/>.

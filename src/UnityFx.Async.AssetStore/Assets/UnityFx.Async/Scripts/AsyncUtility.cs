@@ -8,8 +8,6 @@ using System.Threading;
 using UnityEngine;
 #if UNITY_5_4_OR_NEWER
 using UnityEngine.Networking;
-#elif UNITY_5_2 || UNITY_5_3
-using UnityEngine.Experimental.Networking;
 #endif
 #if UNITY_2018_2_OR_NEWER
 using UnityEngine.Video;
@@ -591,7 +589,7 @@ namespace UnityFx.Async
 			}
 		}
 
-#if UNITY_5_2 || UNITY_5_3_OR_NEWER
+#if UNITY_5_4_OR_NEWER
 
 		/// <summary>
 		/// Register a completion callback for the specified <see cref="UnityWebRequest"/> instance.
@@ -894,7 +892,7 @@ namespace UnityFx.Async
 									item.Value();
 								}
 							}
-#if UNITY_5_2 || UNITY_5_3_OR_NEWER
+#if UNITY_5_4_OR_NEWER
 							else if (item.Key is UnityWebRequest)
 							{
 								var asyncOp = item.Key as UnityWebRequest;

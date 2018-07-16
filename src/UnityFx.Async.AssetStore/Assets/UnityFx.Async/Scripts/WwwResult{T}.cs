@@ -51,8 +51,8 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="request">Source web request.</param>
 		public WwwResult(WWW request)
-			: this(request, null)
 		{
+			_www = request;
 		}
 
 		/// <summary>
@@ -63,11 +63,6 @@ namespace UnityFx.Async
 		public WwwResult(WWW request, object userState)
 			: base(null, userState)
 		{
-			if (request == null)
-			{
-				throw new ArgumentNullException("request");
-			}
-
 			_www = request;
 		}
 
