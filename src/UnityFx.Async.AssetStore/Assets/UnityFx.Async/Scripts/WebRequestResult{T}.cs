@@ -7,9 +7,6 @@ using UnityEngine;
 #if UNITY_5_4_OR_NEWER
 using UnityEngine.Networking;
 #endif
-#if UNITY_2018_2_OR_NEWER
-using UnityEngine.Video;
-#endif
 
 namespace UnityFx.Async
 {

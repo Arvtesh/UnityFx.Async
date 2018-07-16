@@ -4,9 +4,6 @@
 using System;
 using System.Text;
 using UnityEngine;
-#if UNITY_2018_2_OR_NEWER
-using UnityEngine.Video;
-#endif
 
 namespace UnityFx.Async
 {
@@ -87,13 +84,7 @@ namespace UnityFx.Async
 				return request.audioClip as T;
 #endif
 			}
-#if UNITY_2018_2_OR_NEWER
-			else if (typeof(T) == typeof(VideoClip))
-			{
-				// TODO
-				throw new NotImplementedException();
-			}
-#else
+#if !UNITY_2018_2_OR_NEWER
 			else if (typeof(T) == typeof(MovieTexture))
 			{
 #if UNITY_5_4_OR_NEWER

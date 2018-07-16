@@ -9,9 +9,6 @@ using UnityEngine;
 #if UNITY_5_4_OR_NEWER
 using UnityEngine.Networking;
 #endif
-#if UNITY_2018_2_OR_NEWER
-using UnityEngine.Video;
-#endif
 
 namespace UnityFx.Async
 {
@@ -433,22 +430,7 @@ namespace UnityFx.Async
 			return result;
 		}
 
-#if UNITY_2018_2_OR_NEWER
-
-		/// <summary>
-		/// Creates an asyncronous operation optimized for downloading a <see cref="VideoClip"/> via HTTP GET.
-		/// </summary>
-		/// <param name="url">The URI of the video to download.</param>
-		/// <returns>An operation that can be used to track the download process.</returns>
-		public static IAsyncOperation<VideoClip> GetVideoClip(string url)
-		{
-			var webRequest = UnityWebRequest.Get(url);
-			var result = new WebRequestResult<VideoClip>(webRequest);
-			result.Start();
-			return result;
-		}
-
-#else
+#if !UNITY_2018_2_OR_NEWER
 
 		/// <summary>
 		/// Creates an asyncronous operation optimized for downloading a <see cref="MovieTexture"/> via HTTP GET.
