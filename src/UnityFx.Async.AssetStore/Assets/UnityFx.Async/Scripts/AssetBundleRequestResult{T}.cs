@@ -31,7 +31,18 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AssetBundleRequestResult{T}"/> class.
 		/// </summary>
 		/// <param name="assetName">Name of an asset to load.</param>
-		protected AssetBundleRequestResult(string assetName)
+		public AssetBundleRequestResult(string assetName)
+		{
+			_assetName = assetName;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AssetBundleRequestResult{T}"/> class.
+		/// </summary>
+		/// <param name="assetName">Name of an asset to load.</param>
+		/// <param name="userState">User-defined data.</param>
+		public AssetBundleRequestResult(string assetName, object userState)
+			: base(null, userState)
 		{
 			_assetName = assetName;
 		}
@@ -41,8 +52,20 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="assetbundle">The asset bundle to load asset from.</param>
 		/// <param name="assetName">Name of an asset to load.</param>
-		protected AssetBundleRequestResult(AssetBundle assetbundle, string assetName)
+		public AssetBundleRequestResult(AssetBundle assetbundle, string assetName)
 			: base(assetbundle.LoadAssetAsync(assetName))
+		{
+			_assetName = assetName;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AssetBundleRequestResult{T}"/> class.
+		/// </summary>
+		/// <param name="assetbundle">The asset bundle to load asset from.</param>
+		/// <param name="assetName">Name of an asset to load.</param>
+		/// <param name="userState">User-defined data.</param>
+		public AssetBundleRequestResult(AssetBundle assetbundle, string assetName, object userState)
+			: base(assetbundle.LoadAssetAsync(assetName), userState)
 		{
 			_assetName = assetName;
 		}
