@@ -5,7 +5,7 @@ using System;
 
 namespace UnityFx.Async
 {
-	internal class WhenAnyResult<T> : AsyncResult<T>, IAsyncContinuation where T : IAsyncOperation
+	internal class WhenAnyResult<T> : AsyncResult<T> where T : IAsyncOperation
 	{
 		#region data
 
@@ -42,7 +42,7 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op)
+		public override void Invoke(IAsyncOperation op)
 		{
 			TrySetResult((T)op);
 		}

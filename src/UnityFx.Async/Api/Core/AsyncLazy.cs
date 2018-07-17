@@ -136,9 +136,9 @@ namespace UnityFx.Async
 		/// <param name="continuation">A continuation to schedule after this operation completes.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="continuation"/> value is <see langword="null"/>.</exception>
 		/// <exception cref="InvalidOperationException">Thrown if <see cref="OperationFactory"/> is <see langword="null"/>.</exception>
-		public void Schedule(IAsyncSchedulable continuation)
+		public void Schedule(IAsyncContinuation continuation)
 		{
-			StartOrUpdate().Schedule(continuation);
+			StartOrUpdate().AddCompletionCallback(continuation);
 		}
 
 		/// <summary>

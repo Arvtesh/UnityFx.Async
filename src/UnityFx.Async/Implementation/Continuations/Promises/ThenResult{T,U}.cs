@@ -5,7 +5,7 @@ using System;
 
 namespace UnityFx.Async.Promises
 {
-	internal class ThenResult<T, U> : AsyncResult<U>, IAsyncContinuation
+	internal class ThenResult<T, U> : AsyncResult<U>
 	{
 		#region data
 
@@ -87,7 +87,7 @@ namespace UnityFx.Async.Promises
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op)
+		public override void Invoke(IAsyncOperation op)
 		{
 			try
 			{

@@ -17,7 +17,6 @@ namespace UnityFx.Async
 	/// <typeparam name="TResult">Type of the operation result value.</typeparam>
 	/// <seealso cref="AsyncCompletionSource{T}"/>
 	/// <seealso cref="AsyncResult"/>
-	/// <seealso cref="IAsyncResult"/>
 	public class AsyncResult<TResult> : AsyncResult, IAsyncOperation<TResult>
 	{
 		#region data
