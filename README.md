@@ -385,6 +385,15 @@ class MyContinuation : IAsyncContinuation
 var op = DownloadTextAsync("http://www.google.com");
 op.AddCompletionCallback(new MyContinuation());
 ```
+Please note that `AsyncResult` implements `IAsyncContinuation`. This means several `AsyncResult` instances can be chained like this:
+```csharp
+IAsyncOperation Foo(AsyncResult op1, AsyncResult op2, AsyncResult op3)
+{
+    op1.AddCompletionCallback(op2);
+    op2.AddCompletionCallback(op3);
+    return op3;
+}
+```
 
 ### Disposing of operations
 All operations implement [IDisposable](https://docs.microsoft.com/en-us/dotnet/api/system.idisposable) interface. So strictly speaking users should call `Dispose()` when an operation is not in use. That said library implementation only requires this if `AsyncWaitHandle` was accessed (just like [tasks](https://blogs.msdn.microsoft.com/pfxteam/2012/03/25/do-i-need-to-dispose-of-tasks/)).
