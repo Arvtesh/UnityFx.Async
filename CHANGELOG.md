@@ -8,13 +8,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 
 ### Added
 - Added `AsyncUtility.GetText` and `AsyncUtility.GetBytes` helpers.
-
-### Fixed
-
+- `AsyncResult` now implements `AsyncContinuation` to enable easy operation chaining.
 
 ### Removed
 - Removed `ToAsyncXxx` extension methods for `WWW` and `UnityWebRequest`.
 - Removed `MovieTexture` related methods for Unity 2018.2 (the class is deprecated now).
+- Removed `IAsyncSchedulable` interface (it was just another form of `IAsyncContinuation`).
 
 -----------------------
 ## [0.9.4] - 2018.07.10
