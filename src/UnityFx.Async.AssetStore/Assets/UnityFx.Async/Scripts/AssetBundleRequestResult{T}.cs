@@ -13,6 +13,9 @@ namespace UnityFx.Async
 	public class AssetBundleRequestResult<T> : AsyncOperationResult<T> where T : UnityEngine.Object
 	{
 		#region data
+
+		private readonly string _assetName;
+
 		#endregion
 
 		#region interface
@@ -27,11 +30,21 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AssetBundleRequestResult{T}"/> class.
 		/// </summary>
-		/// <param name="asyncCallback">User-defined completion callback.</param>
-		/// <param name="userState">User-defined data.</param>
-		protected AssetBundleRequestResult(AsyncCallback asyncCallback, object userState)
-			: base(asyncCallback, userState)
+		/// <param name="assetName">Name of an asset to load.</param>
+		protected AssetBundleRequestResult(string assetName)
 		{
+			_assetName = assetName;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AssetBundleRequestResult{T}"/> class.
+		/// </summary>
+		/// <param name="assetbundle">The asset bundle to load asset from.</param>
+		/// <param name="assetName">Name of an asset to load.</param>
+		protected AssetBundleRequestResult(AssetBundle assetbundle, string assetName)
+			: base(assetbundle.LoadAssetAsync(assetName))
+		{
+			_assetName = assetName;
 		}
 
 		/// <summary>
@@ -61,6 +74,29 @@ namespace UnityFx.Async
 		protected override T GetResult(AsyncOperation op)
 		{
 			return (op as AssetBundleRequest).asset as T;
+		}
+
+		#endregion
+
+		#region IAsyncContinuation
+
+		/// <inheritdoc/>
+		public override void Invoke(IAsyncOperation op)
+		{
+			var abr = op as IAsyncOperation<AssetBundle>;
+
+			if (abr != null && abr.IsCompletedSuccessfully)
+			{
+				Debug.Assert(Operation == null);
+				Debug.Assert(_assetName != null);
+
+				Operation = abr.Result.LoadAssetAsync(_assetName);
+				Start();
+			}
+			else
+			{
+				base.Invoke(op);
+			}
 		}
 
 		#endregion

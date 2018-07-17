@@ -20,7 +20,7 @@ namespace UnityFx.Async
 		#region interface
 
 		/// <summary>
-		/// Gets the underlying <see cref="AsyncOperation"/> instance.
+		/// Gets or sets the underlying <see cref="AsyncOperation"/> instance.
 		/// </summary>
 		public AsyncOperation Operation
 		{
@@ -28,22 +28,16 @@ namespace UnityFx.Async
 			{
 				return _op;
 			}
+			protected set
+			{
+				_op = value;
+			}
 		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncOperationResult"/> class.
 		/// </summary>
 		protected AsyncOperationResult()
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncOperationResult"/> class.
-		/// </summary>
-		/// <param name="asyncCallback">User-defined completion callback.</param>
-		/// <param name="userState">User-defined data.</param>
-		protected AsyncOperationResult(AsyncCallback asyncCallback, object userState)
-			: base(asyncCallback, userState)
 		{
 		}
 
@@ -67,14 +61,6 @@ namespace UnityFx.Async
 			_op = op;
 		}
 
-		/// <summary>
-		/// Called when the <see cref="AsyncOperation"/> needs to be created. Not called if the operation is initialized in class constructor.
-		/// </summary>
-		protected virtual AsyncOperation GetOperation()
-		{
-			throw new NotImplementedException();
-		}
-
 		#endregion
 
 		#region AsyncResult
@@ -82,10 +68,7 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		protected override void OnStarted()
 		{
-			if (_op == null)
-			{
-				_op = GetOperation();
-			}
+			Debug.Assert(_op != null);
 
 			if (_op.isDone)
 			{
