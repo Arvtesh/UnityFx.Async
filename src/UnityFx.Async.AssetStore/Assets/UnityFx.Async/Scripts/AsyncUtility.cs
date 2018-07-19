@@ -596,6 +596,47 @@ namespace UnityFx.Async
 			GetRootBehaviour().AddCompletionCallback(request, completionCallback);
 		}
 
+		/// <summary>
+		/// Returns result value of the specified <see cref="UnityWebRequest"/> instance.
+		/// </summary>
+		/// <param name="request">The request to get result for.</param>
+		public static T GetResult<T>(UnityWebRequest request) where T : class
+		{
+			if (request == null)
+			{
+				throw new ArgumentNullException("request");
+			}
+
+			if (request.downloadHandler is DownloadHandlerAssetBundle)
+			{
+				return ((DownloadHandlerAssetBundle)request.downloadHandler).assetBundle as T;
+			}
+			else if (request.downloadHandler is DownloadHandlerTexture)
+			{
+				return ((DownloadHandlerTexture)request.downloadHandler).texture as T;
+			}
+			else if (request.downloadHandler is DownloadHandlerAudioClip)
+			{
+				return ((DownloadHandlerAudioClip)request.downloadHandler).audioClip as T;
+			}
+#if !UNITY_5 && !UNITY_2018_2_OR_NEWER
+			else if (request.downloadHandler is DownloadHandlerMovieTexture)
+			{
+				return ((DownloadHandlerMovieTexture)request.downloadHandler).movieTexture as T;
+			}
+#endif
+			else if (typeof(T) == typeof(byte[]))
+			{
+				return request.downloadHandler.data as T;
+			}
+			else if (typeof(T) != typeof(object))
+			{
+				return request.downloadHandler.text as T;
+			}
+
+			return default(T);
+		}
+
 #endif
 
 		/// <summary>
@@ -605,7 +646,7 @@ namespace UnityFx.Async
 		/// <param name="completionCallback">A delegate to be called when the <paramref name="request"/> has completed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="request"/> or <paramref name="completionCallback"/> is <see langword="null"/>.</exception>
 		/// <seealso cref="AddCompletionCallback(AsyncOperation, Action)"/>
-		internal static void AddCompletionCallback(WWW request, Action completionCallback)
+		public static void AddCompletionCallback(WWW request, Action completionCallback)
 		{
 			if (request == null)
 			{
@@ -618,6 +659,55 @@ namespace UnityFx.Async
 			}
 
 			GetRootBehaviour().AddCompletionCallback(request, completionCallback);
+		}
+
+		/// <summary>
+		/// Returns result value of the specified <see cref="WWW"/> instance.
+		/// </summary>
+		/// <param name="request">The request to get result for.</param>
+		public static T GetResult<T>(WWW request) where T : class
+		{
+			if (request == null)
+			{
+				throw new ArgumentNullException("request");
+			}
+
+			if (typeof(T) == typeof(AssetBundle))
+			{
+				return request.assetBundle as T;
+			}
+			else if (typeof(T) == typeof(Texture2D))
+			{
+				return request.texture as T;
+			}
+			else if (typeof(T) == typeof(AudioClip))
+			{
+#if UNITY_5_4_OR_NEWER
+				return request.GetAudioClip() as T;
+#else
+				return request.audioClip as T;
+#endif
+			}
+#if !UNITY_2018_2_OR_NEWER
+			else if (typeof(T) == typeof(MovieTexture))
+			{
+#if UNITY_5_4_OR_NEWER
+				return request.GetMovieTexture() as T;
+#else
+				return request.movie as T;
+#endif
+			}
+#endif
+			else if (typeof(T) == typeof(byte[]))
+			{
+				return request.bytes as T;
+			}
+			else if (typeof(T) != typeof(object))
+			{
+				return request.text as T;
+			}
+
+			return null;
 		}
 
 		#endregion

@@ -74,34 +74,7 @@ namespace UnityFx.Async
 		/// </summary>
 		protected virtual T GetResult(UnityWebRequest request)
 		{
-			if (request.downloadHandler is DownloadHandlerAssetBundle)
-			{
-				return ((DownloadHandlerAssetBundle)request.downloadHandler).assetBundle as T;
-			}
-			else if (request.downloadHandler is DownloadHandlerTexture)
-			{
-				return ((DownloadHandlerTexture)request.downloadHandler).texture as T;
-			}
-			else if (request.downloadHandler is DownloadHandlerAudioClip)
-			{
-				return ((DownloadHandlerAudioClip)request.downloadHandler).audioClip as T;
-			}
-#if !UNITY_5 && !UNITY_2018_2_OR_NEWER
-			else if (request.downloadHandler is DownloadHandlerMovieTexture)
-			{
-				return ((DownloadHandlerMovieTexture)request.downloadHandler).movieTexture as T;
-			}
-#endif
-			else if (typeof(T) == typeof(byte[]))
-			{
-				return request.downloadHandler.data as T;
-			}
-			else if (typeof(T) != typeof(object))
-			{
-				return request.downloadHandler.text as T;
-			}
-
-			return null;
+			return AsyncUtility.GetResult<T>(request);
 		}
 
 		#endregion

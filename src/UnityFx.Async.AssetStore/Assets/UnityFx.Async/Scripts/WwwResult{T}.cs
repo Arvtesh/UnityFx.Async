@@ -68,42 +68,7 @@ namespace UnityFx.Async
 		/// </summary>
 		protected virtual T GetResult(WWW request)
 		{
-			if (typeof(T) == typeof(AssetBundle))
-			{
-				return request.assetBundle as T;
-			}
-			else if (typeof(T) == typeof(Texture2D))
-			{
-				return request.texture as T;
-			}
-			else if (typeof(T) == typeof(AudioClip))
-			{
-#if UNITY_5_4_OR_NEWER
-				return request.GetAudioClip() as T;
-#else
-				return request.audioClip as T;
-#endif
-			}
-#if !UNITY_2018_2_OR_NEWER
-			else if (typeof(T) == typeof(MovieTexture))
-			{
-#if UNITY_5_4_OR_NEWER
-				return request.GetMovieTexture() as T;
-#else
-				return request.movie as T;
-#endif
-			}
-#endif
-			else if (typeof(T) == typeof(byte[]))
-			{
-				return request.bytes as T;
-			}
-			else if (typeof(T) != typeof(object))
-			{
-				return request.text as T;
-			}
-
-			return null;
+			return AsyncUtility.GetResult<T>(request);
 		}
 
 		#endregion

@@ -8,6 +8,9 @@ using UnityEngine;
 #if UNITY_5_4_OR_NEWER
 using UnityEngine.Networking;
 #endif
+#if NET_4_6 || NET_STANDARD_2_0
+using System.Threading.Tasks;
+#endif
 
 namespace UnityFx.Async
 {
@@ -37,7 +40,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the Unity <see cref="AsyncOperation"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the Unity <see cref="ResourceRequest"/>.
 		/// </summary>
 		/// <param name="op">The source operation.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this ResourceRequest op) where T : UnityEngine.Object
@@ -48,7 +51,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the Unity <see cref="AsyncOperation"/>.
+		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the Unity <see cref="AssetBundleRequest"/>.
 		/// </summary>
 		/// <param name="op">The source operation.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this AssetBundleRequest op) where T : UnityEngine.Object
@@ -59,6 +62,46 @@ namespace UnityFx.Async
 		}
 
 #if NET_4_6 || NET_STANDARD_2_0
+
+		/// <summary>
+		/// Creates an <see cref="Task"/> wrapper for the Unity <see cref="AsyncOperation"/>.
+		/// </summary>
+		/// <param name="op">The source operation.</param>
+		public static Task ToTask(this AsyncOperation op)
+		{
+			if (op.isDone)
+			{
+				return Task.CompletedTask;
+			}
+			else
+			{
+				var result = new TaskCompletionSource<object>(op);
+				AsyncUtility.AddCompletionCallback(op, () => result.TrySetResult(null));
+				return result.Task;
+			}
+		}
+
+		/// <summary>
+		/// Creates an <see cref="Task{TResult}"/> wrapper for the Unity <see cref="ResourceRequest"/>.
+		/// </summary>
+		/// <param name="op">The source operation.</param>
+		public static Task<T> ToTask<T>(this ResourceRequest op) where T : UnityEngine.Object
+		{
+			var result = new TaskCompletionSource<T>(op);
+			AsyncUtility.AddCompletionCallback(op, () => result.TrySetResult(op.asset as T));
+			return result.Task;
+		}
+
+		/// <summary>
+		/// Creates an <see cref="Task{TResult}"/> wrapper for the Unity <see cref="AssetBundleRequest"/>.
+		/// </summary>
+		/// <param name="op">The source operation.</param>
+		public static Task<T> ToTask<T>(this AssetBundleRequest op) where T : UnityEngine.Object
+		{
+			var result = new TaskCompletionSource<T>(op);
+			AsyncUtility.AddCompletionCallback(op, () => result.TrySetResult(op.asset as T));
+			return result.Task;
+		}
 
 		/// <summary>
 		/// Provides an object that waits for the completion of an <see cref="AsyncOperation"/>. This type and its members are intended for compiler use only.
@@ -91,16 +134,7 @@ namespace UnityFx.Async
 			/// <inheritdoc/>
 			public void OnCompleted(Action continuation)
 			{
-#if UNITY_2017_2_OR_NEWER
-
-				// Starting with Unity 2017.2 there is AsyncOperation.completed event
-				_op.completed += o => continuation();
-
-#else
-
 				AsyncUtility.AddCompletionCallback(_op, continuation);
-
-#endif
 			}
 		}
 
@@ -125,7 +159,7 @@ namespace UnityFx.Async
 		/// Creates an <see cref="IAsyncOperation"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
-		public static AsyncResult ToAsync(this UnityWebRequest request)
+		public static IAsyncOperation ToAsync(this UnityWebRequest request)
 		{
 			var result = new WebRequestResult<object>(request);
 			result.Start();
@@ -136,7 +170,7 @@ namespace UnityFx.Async
 		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
-		public static WebRequestResult<T> ToAsync<T>(this UnityWebRequest request) where T : class
+		public static IAsyncOperation<T> ToAsync<T>(this UnityWebRequest request) where T : class
 		{
 			var result = new WebRequestResult<T>(request);
 			result.Start();
@@ -144,6 +178,28 @@ namespace UnityFx.Async
 		}
 
 #if NET_4_6 || NET_STANDARD_2_0
+
+		/// <summary>
+		/// Creates an <see cref="Task"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <param name="request">The source web request.</param>
+		public static Task ToTask(this UnityWebRequest request)
+		{
+			var result = new TaskCompletionSource<object>(request);
+			AsyncUtility.AddCompletionCallback(request, () => OnTaskCompleted(result, request));
+			return result.Task;
+		}
+
+		/// <summary>
+		/// Creates an <see cref="Task{TResult}"/> wrapper for the specified <see cref="UnityWebRequest"/>.
+		/// </summary>
+		/// <param name="request">The source web request.</param>
+		public static Task<T> ToTask<T>(this UnityWebRequest request) where T : class
+		{
+			var result = new TaskCompletionSource<T>(request);
+			AsyncUtility.AddCompletionCallback(request, () => OnTaskCompleted(result, request));
+			return result.Task;
+		}
 
 		/// <summary>
 		/// Provides an object that waits for the completion of an <see cref="UnityWebRequest"/>. This type and its members are intended for compiler use only.
@@ -201,7 +257,7 @@ namespace UnityFx.Async
 		/// Creates an <see cref="IAsyncOperation"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
-		public static AsyncResult ToAsync(this WWW request)
+		public static IAsyncOperation ToAsync(this WWW request)
 		{
 			var result = new WwwResult<object>(request);
 			result.Start();
@@ -212,7 +268,7 @@ namespace UnityFx.Async
 		/// Creates an <see cref="IAsyncOperation{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
-		public static WwwResult<T> ToAsync<T>(this WWW request) where T : class
+		public static IAsyncOperation<T> ToAsync<T>(this WWW request) where T : class
 		{
 			var result = new WwwResult<T>(request);
 			result.Start();
@@ -220,6 +276,28 @@ namespace UnityFx.Async
 		}
 
 #if NET_4_6 || NET_STANDARD_2_0
+
+		/// <summary>
+		/// Creates an <see cref="Task"/> wrapper for the specified <see cref="WWW"/>.
+		/// </summary>
+		/// <param name="request">The source web request.</param>
+		public static Task ToTask(this WWW request)
+		{
+			var result = new TaskCompletionSource<object>(request);
+			AsyncUtility.AddCompletionCallback(request, () => OnTaskCompleted(result, request));
+			return result.Task;
+		}
+
+		/// <summary>
+		/// Creates an <see cref="Task{TResult}"/> wrapper for the specified <see cref="WWW"/>.
+		/// </summary>
+		/// <param name="request">The source web request.</param>
+		public static Task<T> ToTask<T>(this WWW request) where T : class
+		{
+			var result = new TaskCompletionSource<T>(request);
+			AsyncUtility.AddCompletionCallback(request, () => OnTaskCompleted(result, request));
+			return result.Task;
+		}
 
 		/// <summary>
 		/// Provides an object that waits for the completion of an <see cref="WWW"/>. This type and its members are intended for compiler use only.
@@ -270,6 +348,63 @@ namespace UnityFx.Async
 		#endregion
 
 		#region implementation
+
+#if NET_4_6 || NET_STANDARD_2_0
+
+#if UNITY_5_4_OR_NEWER
+
+		private static void OnTaskCompleted<T>(TaskCompletionSource<T> tcs, UnityWebRequest request) where T : class
+		{
+			try
+			{
+#if UNITY_5
+				if (request.isError)
+#else
+				if (request.isHttpError || request.isNetworkError)
+#endif
+				{
+					tcs.TrySetException(new WebRequestException(request.error, request.responseCode));
+				}
+				else if (request.downloadHandler != null)
+				{
+					var result = AsyncUtility.GetResult<T>(request);
+					tcs.TrySetResult(result);
+				}
+				else
+				{
+					tcs.TrySetResult(null);
+				}
+			}
+			catch (Exception e)
+			{
+				tcs.TrySetException(e);
+			}
+		}
+
+#endif
+
+		private static void OnTaskCompleted<T>(TaskCompletionSource<T> tcs, WWW www) where T : class
+		{
+			try
+			{
+				if (string.IsNullOrEmpty(www.error))
+				{
+					var result = AsyncUtility.GetResult<T>(www);
+					tcs.TrySetResult(result);
+				}
+				else
+				{
+					tcs.TrySetException(new WebRequestException(www.error));
+				}
+			}
+			catch (Exception e)
+			{
+				tcs.TrySetException(e);
+			}
+		}
+
+#endif
+
 		#endregion
 	}
 }
