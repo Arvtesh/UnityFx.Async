@@ -9,6 +9,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ### Added
 - Added `AsyncUtility.GetText` and `AsyncUtility.GetBytes` helpers.
 - `AsyncResult` now implements `AsyncContinuation` to enable easy operation chaining.
+- Added `ToTask` extensions for `AsyncOperation`/`UnityWebRequest`/`WWW`.
+
+### Fixed
+- Fixed compile warnings for Unity 2018.2.
 
 ### Removed
 - Removed `ToAsyncXxx` extension methods for `WWW` and `UnityWebRequest`.
