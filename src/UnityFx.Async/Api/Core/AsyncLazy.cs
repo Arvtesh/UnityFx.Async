@@ -11,39 +11,7 @@ namespace UnityFx.Async
 	/// <remarks>
 	/// This value-type is mutable, so DO NOT create readonly instances of it.
 	/// </remarks>
-	/// <example>
-	/// class LazySample
-	/// {
-	///     private AsyncLazy _initOp;
-	///
-	///     public LazySample()
-	///     {
-	///         _initOp.OperationFactory = InitializeInternal;
-	///     }
-	///
-	///     public IAsyncOperation Initialize()
-	///     {
-	///         return _initOp.StartOrUpdate();
-	///     }
-	///
-	///     public IAsyncOperation DoAsyncWork()
-	///     {
-	///         var op = DoAsyncWorkInternal();
-	///         _initOp.StartOrUpdate().Schedule(op);
-	///         return op;
-	///     }
-	///
-	///     private IAsyncOperation InitializeInternal()
-	///     {
-	///         // Do some asynchronous work.
-	///     }
-	///
-	///     public AsyncResult DoAsyncWorkInternal()
-	///     {
-	///         // Create an asynchronous operation but do not start it.
-	///     }
-	/// }
-	/// </example>
+	/// <seealso cref="IAsyncOperation"/>
 	public struct AsyncLazy
 	{
 		#region data
