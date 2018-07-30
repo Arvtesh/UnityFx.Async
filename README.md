@@ -34,7 +34,7 @@ The table below summarizes differences berween *UnityFx.Async* and other popular
 | Supports cancellation | ✔️ | -️ | ✔️ |
 | Supports progress reporting | ✔️ | ✔️ | ✔️ |
 | Supports child operations | - | - | ✔️ |
-| Minimum operation data size for 32-bit systems (in bytes) | 28+ | 36+ | 40+ |
+| Minimum operation data size for 32-bit systems (in bytes) | 32+ | 36+ | 40+ |
 | Minimum number of allocations per continuation | ~1 | 5+ | 2+ |
 
 ## Getting Started
