@@ -7,9 +7,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ## [0.9.5] - unreleased
 
 ### Added
+- Added `IAsyncOperation.Id` property for easy operation identification.
 - Added `AsyncUtility.GetText` and `AsyncUtility.GetBytes` helpers.
-- `AsyncResult` now implements `AsyncContinuation` to enable easy operation chaining.
 - Added `ToTask` extensions for `AsyncOperation`/`UnityWebRequest`/`WWW`.
+- `AsyncResult` now implements `AsyncContinuation` to enable easy operation chaining.
 
 ### Fixed
 - Fixed compile warnings for Unity 2018.2.
