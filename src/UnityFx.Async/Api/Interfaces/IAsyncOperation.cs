@@ -15,6 +15,15 @@ namespace UnityFx.Async
 	public interface IAsyncOperation : IAsyncOperationEvents, IAsyncCancellable, IAsyncResult, IDisposable
 	{
 		/// <summary>
+		/// Gets a unique ID for the operation instance.
+		/// </summary>
+		/// <remarks>
+		/// The identifiers might be assigned on demand and do not represent the order in which operations instances were created.
+		/// </remarks>
+		/// <value>Unique non-zero identifier of the operation instance.</value>
+		int Id { get; }
+
+		/// <summary>
 		/// Gets the operation progress [0, 1].
 		/// </summary>
 		/// <remarks>
