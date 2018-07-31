@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Represents an asynchronous operation with external completion control. <see cref="IAsyncCompletionSource{TResult}"/>
+	/// Represents an asynchronous operation with external completion control. <see cref="IAsyncCompletionSource{TResult}"/>.
 	/// </summary>
 	/// <typeparam name="TResult">Type of the operation result value.</typeparam>
 	/// <seealso cref="AsyncCompletionSource"/>

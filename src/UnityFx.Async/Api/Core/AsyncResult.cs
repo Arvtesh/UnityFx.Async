@@ -38,7 +38,7 @@ namespace UnityFx.Async
 	/// <seealso cref="AsyncResult{T}"/>
 	/// <seealso cref="IAsyncResult"/>
 	[DebuggerDisplay("{DebuggerDisplay,nq}")]
-	public partial class AsyncResult : IAsyncOperation, IAsyncSchedulable, IEnumerator
+	public partial class AsyncResult : IAsyncOperation, IAsyncContinuation, IEnumerator
 	{
 		#region data
 
@@ -57,7 +57,10 @@ namespace UnityFx.Async
 		private const int _optionsMask = 0x70000000;
 		private const int _optionsOffset = 28;
 
+		private static int _idCounter;
+
 		private readonly object _asyncState;
+		private int _id;
 		private Exception _exception;
 		private EventWaitHandle _waitHandle;
 		private volatile int _flags;
@@ -260,6 +263,41 @@ namespace UnityFx.Async
 		}
 
 #endif
+
+		/// <summary>
+		/// Transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
+		/// </summary>
+		/// <remarks>
+		/// <para>An operation may be started on once. Any attempts to schedule it a second time will result in an exception.</para>
+		/// <para>The <see cref="Start"/> is used to execute an operation that has been created by calling one of the constructors.
+		/// Typically, you do this when you need to separate the operation's creation from its execution, such as when you conditionally
+		/// execute operations that you've created.</para>
+		/// </remarks>
+		/// <exception cref="InvalidOperationException">Thrown if the transition has failed.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="TryStart"/>
+		/// <seealso cref="TrySetRunning"/>
+		/// <seealso cref="OnStarted"/>
+		public void Start()
+		{
+			if (!TrySetRunning())
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Attempts to transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
+		/// </summary>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the operation status was changed to <see cref="AsyncOperationStatus.Running"/>; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="Start"/>
+		/// <seealso cref="TrySetRunning"/>
+		/// <seealso cref="OnStarted"/>
+		public bool TryStart()
+		{
+			return TrySetRunning();
+		}
 
 		/// <summary>
 		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Scheduled"/> state.
@@ -581,6 +619,25 @@ namespace UnityFx.Async
 			}
 		}
 
+		/// <summary>
+		/// Gets a unique ID for an <see cref="AsyncResult"/> instance.
+		/// </summary>
+		/// <remarks>
+		/// This method should be used by all <see cref="IAsyncOperation"/> implementation for generating value of the <see cref="IAsyncOperation.Id"/> property.
+		/// </remarks>
+		public static int GetNewId()
+		{
+			var result = 0;
+
+			do
+			{
+				result = Interlocked.Increment(ref _idCounter);
+			}
+			while (result == 0);
+
+			return result;
+		}
+
 		#endregion
 
 		#region virtual interface
@@ -897,6 +954,24 @@ namespace UnityFx.Async
 		#region IAsyncOperation
 
 		/// <summary>
+		/// Gets a unique ID for the operation instance.
+		/// </summary>
+		/// <value>Unique non-zero identifier of the operation instance.</value>
+		public int Id
+		{
+			get
+			{
+				if (_id == 0)
+				{
+					var newId = GetNewId();
+					Interlocked.CompareExchange(ref _id, newId, 0);
+				}
+
+				return _id;
+			}
+		}
+
+		/// <summary>
 		/// Gets the operation progress in range [0, 1].
 		/// </summary>
 		/// <value>Progress of the operation in range [0, 1].</value>
@@ -952,41 +1027,23 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region IAsyncSchedulable
+		#region IAsyncContinuation
 
 		/// <summary>
-		/// Transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
+		/// Invokes the operation-specific continuation logic. Default implementation attempts to run the operation is <paramref name="op"/> has succeeded;
+		/// otherwise the operation transitions to failed state.
 		/// </summary>
-		/// <remarks>
-		/// <para>An operation may be started on once. Any attempts to schedule it a second time will result in an exception.</para>
-		/// <para>The <see cref="Start"/> is used to execute an operation that has been created by calling one of the constructors.
-		/// Typically, you do this when you need to separate the operation's creation from its execution, such as when you conditionally
-		/// execute operations that you've created.</para>
-		/// </remarks>
-		/// <exception cref="InvalidOperationException">Thrown if the transition has failed.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="TryStart"/>
-		/// <seealso cref="TrySetRunning"/>
-		/// <seealso cref="OnStarted"/>
-		public void Start()
+		/// <param name="op">The completed antecedent operation.</param>
+		public virtual void Invoke(IAsyncOperation op)
 		{
-			if (!TrySetRunning())
+			if (op.IsCompletedSuccessfully)
 			{
-				throw new InvalidOperationException();
+				TrySetRunning();
 			}
-		}
-
-		/// <summary>
-		/// Attempts to transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
-		/// </summary>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the operation status was changed to <see cref="AsyncOperationStatus.Running"/>; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="Start"/>
-		/// <seealso cref="TrySetRunning"/>
-		/// <seealso cref="OnStarted"/>
-		public bool TryStart()
-		{
-			return TrySetRunning();
+			else
+			{
+				TrySetException(op.Exception);
+			}
 		}
 
 		#endregion
@@ -1142,37 +1199,23 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region Object
-
-		/// <inheritdoc/>
-		public override string ToString()
-		{
-			return GetType().Name;
-		}
-
-		#endregion
-
 		#region implementation
 
 		private string DebuggerDisplay
 		{
 			get
 			{
-				var result = ToString();
 				var status = Status;
-				var state = status.ToString();
+				var result = string.Format("Id = {0}, Status = {1}", Id.ToString(CultureInfo.InvariantCulture), status.ToString());
 
 				if (status == AsyncOperationStatus.Running)
 				{
-					state += " (" + ((int)(GetProgress() * 100)).ToString(CultureInfo.InvariantCulture) + "%)";
+					result += " (" + ((int)(GetProgress() * 100)).ToString(CultureInfo.InvariantCulture) + "%)";
 				}
 				else if ((status == AsyncOperationStatus.Faulted || status == AsyncOperationStatus.Canceled) && _exception != null)
 				{
-					state += " (" + _exception.GetType().Name + ')';
+					result += " (" + _exception.GetType().Name + ')';
 				}
-
-				result += ": ";
-				result += state;
 
 				if (IsDisposed)
 				{

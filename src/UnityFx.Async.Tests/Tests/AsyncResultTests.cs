@@ -426,6 +426,16 @@ namespace UnityFx.Async
 
 		#region IAsyncOperation
 
+		[Fact]
+		public void Id_ShouldReturnNonZeroValue()
+		{
+			// Arrange
+			var op = new AsyncCompletionSource();
+
+			// Act/Assert
+			Assert.NotEqual(0, op.Id);
+		}
+
 		[Theory]
 		[InlineData(AsyncOperationStatus.Created, 0)]
 		[InlineData(AsyncOperationStatus.Scheduled, 0)]

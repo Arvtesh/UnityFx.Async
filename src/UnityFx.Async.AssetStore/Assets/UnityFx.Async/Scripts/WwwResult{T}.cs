@@ -48,8 +48,8 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="request">Source web request.</param>
 		public WwwResult(WWW request)
-			: this(request, null)
 		{
+			_www = request;
 		}
 
 		/// <summary>
@@ -60,11 +60,6 @@ namespace UnityFx.Async
 		public WwwResult(WWW request, object userState)
 			: base(null, userState)
 		{
-			if (request == null)
-			{
-				throw new ArgumentNullException("request");
-			}
-
 			_www = request;
 		}
 
@@ -73,40 +68,7 @@ namespace UnityFx.Async
 		/// </summary>
 		protected virtual T GetResult(WWW request)
 		{
-			if (typeof(T) == typeof(AssetBundle))
-			{
-				return request.assetBundle as T;
-			}
-			else if (typeof(T) == typeof(Texture2D))
-			{
-				return request.texture as T;
-			}
-			else if (typeof(T) == typeof(AudioClip))
-			{
-#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
-				return request.GetAudioClip() as T;
-#else
-				return request.audioClip as T;
-#endif
-			}
-			else if (typeof(T) == typeof(MovieTexture))
-			{
-#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
-				return request.GetMovieTexture() as T;
-#else
-				return request.movie as T;
-#endif
-			}
-			else if (typeof(T) == typeof(byte[]))
-			{
-				return request.bytes as T;
-			}
-			else if (typeof(T) != typeof(object))
-			{
-				return request.text as T;
-			}
-
-			return null;
+			return AsyncUtility.GetResult<T>(request);
 		}
 
 		#endregion

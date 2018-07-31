@@ -20,6 +20,13 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ResourceRequestResult{T}"/> class.
 		/// </summary>
+		protected ResourceRequestResult()
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ResourceRequestResult{T}"/> class.
+		/// </summary>
 		/// <param name="op">Source web request.</param>
 		public ResourceRequestResult(ResourceRequest op)
 			: base(op)

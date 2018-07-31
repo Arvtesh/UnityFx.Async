@@ -17,7 +17,7 @@ namespace UnityFx.Async
 	public interface IAsyncContinuation
 	{
 		/// <summary>
-		/// Starts the continuation.
+		/// Invokes the continuation.
 		/// </summary>
 		/// <param name="op">The completed antecedent operation.</param>
 		void Invoke(IAsyncOperation op);

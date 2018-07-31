@@ -5,7 +5,7 @@ using System;
 
 namespace UnityFx.Async.Promises
 {
-	internal sealed class CatchResult<T, TException> : AsyncResult<T>, IAsyncContinuation where TException : Exception
+	internal sealed class CatchResult<T, TException> : AsyncResult<T> where TException : Exception
 	{
 		#region data
 
@@ -43,7 +43,7 @@ namespace UnityFx.Async.Promises
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op)
+		public override void Invoke(IAsyncOperation op)
 		{
 			if (op.IsCompletedSuccessfully)
 			{

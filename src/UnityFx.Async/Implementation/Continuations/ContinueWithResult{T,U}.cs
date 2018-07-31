@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal sealed class ContinueWithResult<T, U> : AsyncResult<U>, IAsyncContinuation
+	internal sealed class ContinueWithResult<T, U> : AsyncResult<U>
 	{
 		#region data
 
@@ -56,7 +56,7 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op)
+		public override void Invoke(IAsyncOperation op)
 		{
 			if (CanInvoke())
 			{

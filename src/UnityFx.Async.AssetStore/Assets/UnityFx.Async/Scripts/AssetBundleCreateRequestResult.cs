@@ -19,6 +19,13 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AssetBundleCreateRequestResult"/> class.
 		/// </summary>
+		protected AssetBundleCreateRequestResult()
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AssetBundleCreateRequestResult"/> class.
+		/// </summary>
 		/// <param name="op">Source web request.</param>
 		public AssetBundleCreateRequestResult(AssetBundleCreateRequest op)
 			: base(op)

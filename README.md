@@ -5,7 +5,7 @@ Channel  | UnityFx.Async |
 AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/master?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/master) [![AppVeyor tests](https://img.shields.io/appveyor/tests/Arvtesh/unityFx-async.svg)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/build/tests)
 NuGet | [![NuGet](https://img.shields.io/nuget/v/UnityFx.Async.svg)](https://www.nuget.org/packages/UnityFx.Async)
 Github | [![GitHub release](https://img.shields.io/github/release/Arvtesh/UnityFx.Async.svg?logo=github)](https://github.com/Arvtesh/UnityFx.Async/releases)
-Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v0.9.3-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
+Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v0.9.5-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
 
 **If you enjoy using the library - please, [rate and review](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696) it on the Asset Store!**
 
@@ -34,7 +34,7 @@ The table below summarizes differences berween *UnityFx.Async* and other popular
 | Supports cancellation | ✔️ | -️ | ✔️ |
 | Supports progress reporting | ✔️ | ✔️ | ✔️ |
 | Supports child operations | - | - | ✔️ |
-| Minimum operation data size for 32-bit systems (in bytes) | 28+ | 36+ | 40+ |
+| Minimum operation data size for 32-bit systems (in bytes) | 32+ | 36+ | 40+ |
 | Minimum number of allocations per continuation | ~1 | 5+ | 2+ |
 
 ## Getting Started
@@ -384,6 +384,15 @@ class MyContinuation : IAsyncContinuation
 
 var op = DownloadTextAsync("http://www.google.com");
 op.AddCompletionCallback(new MyContinuation());
+```
+Please note that `AsyncResult` implements `IAsyncContinuation`. This means several `AsyncResult` instances can be chained like this:
+```csharp
+IAsyncOperation Foo(AsyncResult op1, AsyncResult op2, AsyncResult op3)
+{
+    op1.AddCompletionCallback(op2);
+    op2.AddCompletionCallback(op3);
+    return op3;
+}
 ```
 
 ### Disposing of operations

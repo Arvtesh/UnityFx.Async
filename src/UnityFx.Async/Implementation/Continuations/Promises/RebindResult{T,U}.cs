@@ -5,7 +5,7 @@ using System;
 
 namespace UnityFx.Async.Promises
 {
-	internal sealed class RebindResult<T, U> : AsyncResult<U>, IAsyncContinuation
+	internal sealed class RebindResult<T, U> : AsyncResult<U>
 	{
 		#region data
 
@@ -43,7 +43,7 @@ namespace UnityFx.Async.Promises
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op)
+		public override void Invoke(IAsyncOperation op)
 		{
 			try
 			{

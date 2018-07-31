@@ -23,10 +23,6 @@ namespace UnityFx.Async
 					c.Invoke(op);
 					break;
 
-				case IAsyncSchedulable s:
-					InvokeSchedulable(op, s);
-					break;
-
 				case Action<IAsyncOperation> a:
 					a.Invoke(op);
 					break;
@@ -74,22 +70,6 @@ namespace UnityFx.Async
 				case ProgressChangedEventHandler ph:
 					ph.Invoke(op, new ProgressChangedEventArgs((int)(op.Progress * 100), op.AsyncState));
 					break;
-			}
-		}
-
-		#endregion
-
-		#region
-
-		private static void InvokeSchedulable(IAsyncOperation op, IAsyncSchedulable s)
-		{
-			if (op.IsCompletedSuccessfully)
-			{
-				s.Start();
-			}
-			else
-			{
-				s.Cancel();
 			}
 		}
 

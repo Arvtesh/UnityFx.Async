@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal abstract class RetryResult<T> : AsyncResult<T>, IAsyncContinuation
+	internal abstract class RetryResult<T> : AsyncResult<T>
 	{
 		#region data
 
@@ -65,7 +65,7 @@ namespace UnityFx.Async
 
 		#region IAsyncContinuation
 
-		public void Invoke(IAsyncOperation op)
+		public override void Invoke(IAsyncOperation op)
 		{
 			Debug.Assert(_op == op);
 			Debug.Assert(_op.IsCompleted);

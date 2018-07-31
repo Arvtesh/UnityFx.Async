@@ -10,12 +10,65 @@ namespace UnityFx.Async
 	/// A wrapper for <see cref="AssetBundleRequest"/> with result value.
 	/// </summary>
 	/// <typeparam name="T">Result type.</typeparam>
-	public sealed class AssetBundleRequestResult<T> : AsyncOperationResult<T> where T : UnityEngine.Object
+	public class AssetBundleRequestResult<T> : AsyncOperationResult<T> where T : UnityEngine.Object
 	{
 		#region data
+
+		private readonly string _assetName;
+
 		#endregion
 
 		#region interface
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AssetBundleRequestResult{T}"/> class.
+		/// </summary>
+		protected AssetBundleRequestResult()
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AssetBundleRequestResult{T}"/> class.
+		/// </summary>
+		/// <param name="assetName">Name of an asset to load.</param>
+		public AssetBundleRequestResult(string assetName)
+		{
+			_assetName = assetName;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AssetBundleRequestResult{T}"/> class.
+		/// </summary>
+		/// <param name="assetName">Name of an asset to load.</param>
+		/// <param name="userState">User-defined data.</param>
+		public AssetBundleRequestResult(string assetName, object userState)
+			: base(null, userState)
+		{
+			_assetName = assetName;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AssetBundleRequestResult{T}"/> class.
+		/// </summary>
+		/// <param name="assetbundle">The asset bundle to load asset from.</param>
+		/// <param name="assetName">Name of an asset to load.</param>
+		public AssetBundleRequestResult(AssetBundle assetbundle, string assetName)
+			: base(assetbundle.LoadAssetAsync(assetName))
+		{
+			_assetName = assetName;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AssetBundleRequestResult{T}"/> class.
+		/// </summary>
+		/// <param name="assetbundle">The asset bundle to load asset from.</param>
+		/// <param name="assetName">Name of an asset to load.</param>
+		/// <param name="userState">User-defined data.</param>
+		public AssetBundleRequestResult(AssetBundle assetbundle, string assetName, object userState)
+			: base(assetbundle.LoadAssetAsync(assetName), userState)
+		{
+			_assetName = assetName;
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AssetBundleRequestResult{T}"/> class.
@@ -44,6 +97,29 @@ namespace UnityFx.Async
 		protected override T GetResult(AsyncOperation op)
 		{
 			return (op as AssetBundleRequest).asset as T;
+		}
+
+		#endregion
+
+		#region IAsyncContinuation
+
+		/// <inheritdoc/>
+		public override void Invoke(IAsyncOperation op)
+		{
+			var abr = op as IAsyncOperation<AssetBundle>;
+
+			if (abr != null && abr.IsCompletedSuccessfully)
+			{
+				Debug.Assert(Operation == null);
+				Debug.Assert(_assetName != null);
+
+				Operation = abr.Result.LoadAssetAsync(_assetName);
+				Start();
+			}
+			else
+			{
+				base.Invoke(op);
+			}
 		}
 
 		#endregion

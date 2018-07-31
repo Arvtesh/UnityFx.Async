@@ -13,14 +13,14 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private readonly AsyncOperation _op;
+		private AsyncOperation _op;
 
 		#endregion
 
 		#region interface
 
 		/// <summary>
-		/// Gets the underlying <see cref="AsyncOperation"/> instance.
+		/// Gets or sets the underlying <see cref="AsyncOperation"/> instance.
 		/// </summary>
 		public AsyncOperation Operation
 		{
@@ -28,6 +28,17 @@ namespace UnityFx.Async
 			{
 				return _op;
 			}
+			protected set
+			{
+				_op = value;
+			}
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncOperationResult"/> class.
+		/// </summary>
+		protected AsyncOperationResult()
+		{
 		}
 
 		/// <summary>
@@ -57,13 +68,15 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		protected override void OnStarted()
 		{
+			Debug.Assert(_op != null);
+
 			if (_op.isDone)
 			{
 				TrySetCompleted(true);
 			}
 			else
 			{
-#if UNITY_2017_2_OR_NEWER || UNITY_2018
+#if UNITY_2017_2_OR_NEWER
 
 				// Starting with Unity 2017.2 there is AsyncOperation.completed event
 				_op.completed += o => TrySetCompleted();

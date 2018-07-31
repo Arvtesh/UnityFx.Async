@@ -13,14 +13,14 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private readonly AsyncOperation _op;
+		private AsyncOperation _op;
 
 		#endregion
 
 		#region interface
 
 		/// <summary>
-		/// Gets the underlying <see cref="AsyncOperation"/> instance.
+		/// Gets or sets the underlying <see cref="AsyncOperation"/> instance.
 		/// </summary>
 		public AsyncOperation Operation
 		{
@@ -28,6 +28,17 @@ namespace UnityFx.Async
 			{
 				return _op;
 			}
+			protected set
+			{
+				_op = value;
+			}
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncOperationResult{T}"/> class.
+		/// </summary>
+		protected AsyncOperationResult()
+		{
 		}
 
 		/// <summary>
@@ -51,18 +62,6 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncOperationResult{T}"/> class.
-		/// </summary>
-		/// <param name="op">Source web request.</param>
-		/// <param name="asyncCallback">User-defined completion callback.</param>
-		/// <param name="userState">User-defined data.</param>
-		protected AsyncOperationResult(AsyncOperation op, AsyncCallback asyncCallback, object userState)
-			: base(asyncCallback, userState)
-		{
-			_op = op;
-		}
-
-		/// <summary>
 		/// Called when the source <see cref="AsyncOperation"/> is completed.
 		/// </summary>
 		protected abstract T GetResult(AsyncOperation op);
@@ -74,13 +73,15 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		protected override void OnStarted()
 		{
+			Debug.Assert(_op != null);
+
 			if (_op.isDone)
 			{
 				OnSetCompleted(_op);
 			}
 			else
 			{
-#if UNITY_2017_2_OR_NEWER || UNITY_2018
+#if UNITY_2017_2_OR_NEWER
 
 				// Starting with Unity 2017.2 there is AsyncOperation.completed event
 				_op.completed += OnSetCompleted;
@@ -96,6 +97,11 @@ namespace UnityFx.Async
 		/// <inheritdoc/>
 		protected override float GetProgress()
 		{
+			if (_op == null)
+			{
+				return 0;
+			}
+
 			return _op.progress;
 		}
 
@@ -113,6 +119,10 @@ namespace UnityFx.Async
 			catch (Exception e)
 			{
 				TrySetException(e);
+			}
+			finally
+			{
+				_op = null;
 			}
 		}
 

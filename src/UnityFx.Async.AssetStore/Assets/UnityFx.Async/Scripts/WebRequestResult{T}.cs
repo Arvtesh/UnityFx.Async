@@ -4,15 +4,13 @@
 using System;
 using System.Text;
 using UnityEngine;
-#if UNITY_5_4_OR_NEWER || UNITY_2017 || UNITY_2018
+#if UNITY_5_4_OR_NEWER
 using UnityEngine.Networking;
-#elif UNITY_5_2_OR_NEWER
-using UnityEngine.Experimental.Networking;
 #endif
 
 namespace UnityFx.Async
 {
-#if UNITY_5_2_OR_NEWER || UNITY_5_3_OR_NEWER || UNITY_2017 || UNITY_2018
+#if UNITY_5_4_OR_NEWER
 
 	/// <summary>
 	/// A wrapper for <see cref="UnityWebRequest"/> with result value.
@@ -56,8 +54,8 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="request">Source web request.</param>
 		public WebRequestResult(UnityWebRequest request)
-			: this(request, null)
 		{
+			_request = request;
 		}
 
 		/// <summary>
@@ -68,11 +66,6 @@ namespace UnityFx.Async
 		public WebRequestResult(UnityWebRequest request, object userState)
 			: base(null, userState)
 		{
-			if (request == null)
-			{
-				throw new ArgumentNullException("request");
-			}
-
 			_request = request;
 		}
 
@@ -81,34 +74,7 @@ namespace UnityFx.Async
 		/// </summary>
 		protected virtual T GetResult(UnityWebRequest request)
 		{
-			if (request.downloadHandler is DownloadHandlerAssetBundle)
-			{
-				return ((DownloadHandlerAssetBundle)request.downloadHandler).assetBundle as T;
-			}
-			else if (request.downloadHandler is DownloadHandlerTexture)
-			{
-				return ((DownloadHandlerTexture)request.downloadHandler).texture as T;
-			}
-			else if (request.downloadHandler is DownloadHandlerAudioClip)
-			{
-				return ((DownloadHandlerAudioClip)request.downloadHandler).audioClip as T;
-			}
-#if !UNITY_5
-			else if (request.downloadHandler is DownloadHandlerMovieTexture)
-			{
-				return ((DownloadHandlerMovieTexture)request.downloadHandler).movieTexture as T;
-			}
-#endif
-			else if (typeof(T) == typeof(byte[]))
-			{
-				return request.downloadHandler.data as T;
-			}
-			else if (typeof(T) != typeof(object))
-			{
-				return request.downloadHandler.text as T;
-			}
-
-			return null;
+			return AsyncUtility.GetResult<T>(request);
 		}
 
 		#endregion
@@ -135,7 +101,7 @@ namespace UnityFx.Async
 			}
 			else if (_request.isModifiable)
 			{
-#if UNITY_2017_2_OR_NEWER || UNITY_2018
+#if UNITY_2017_2_OR_NEWER
 				_op = _request.SendWebRequest();
 #else
 				_op = _request.Send();

@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
 -----------------------
+## [0.9.5] - unreleased
+
+### Added
+- Added `IAsyncOperation.Id` property for easy operation identification.
+- Added `AsyncUtility.GetText` and `AsyncUtility.GetBytes` helpers.
+- Added `ToTask` extensions for `AsyncOperation`/`UnityWebRequest`/`WWW`.
+- `AsyncResult` now implements `AsyncContinuation` to enable easy operation chaining.
+
+### Fixed
+- Fixed compile warnings for Unity 2018.2.
+
+### Removed
+- Removed `ToAsyncXxx` extension methods for `WWW` and `UnityWebRequest`.
+- Removed `MovieTexture` related methods for Unity 2018.2 (the class is deprecated now).
+- Removed `IAsyncSchedulable` interface (it was just another form of `IAsyncContinuation`).
+
+-----------------------
 ## [0.9.4] - 2018.07.10
 
 ### Added
