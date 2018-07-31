@@ -57,7 +57,10 @@ namespace UnityFx.Async
 		private const int _optionsMask = 0x70000000;
 		private const int _optionsOffset = 28;
 
+		private static int _idCounter;
+
 		private readonly object _asyncState;
+		private int _id;
 		private Exception _exception;
 		private EventWaitHandle _waitHandle;
 		private volatile int _flags;
@@ -616,6 +619,25 @@ namespace UnityFx.Async
 			}
 		}
 
+		/// <summary>
+		/// Gets a unique ID for an <see cref="AsyncResult"/> instance.
+		/// </summary>
+		/// <remarks>
+		/// This method should be used by all <see cref="IAsyncOperation"/> implementation for generating value of the <see cref="IAsyncOperation.Id"/> property.
+		/// </remarks>
+		public static int GetNewId()
+		{
+			var result = 0;
+
+			do
+			{
+				result = Interlocked.Increment(ref _idCounter);
+			}
+			while (result == 0);
+
+			return result;
+		}
+
 		#endregion
 
 		#region virtual interface
@@ -932,6 +954,24 @@ namespace UnityFx.Async
 		#region IAsyncOperation
 
 		/// <summary>
+		/// Gets a unique ID for the operation instance.
+		/// </summary>
+		/// <value>Unique non-zero identifier of the operation instance.</value>
+		public int Id
+		{
+			get
+			{
+				if (_id == 0)
+				{
+					var newId = GetNewId();
+					Interlocked.CompareExchange(ref _id, newId, 0);
+				}
+
+				return _id;
+			}
+		}
+
+		/// <summary>
 		/// Gets the operation progress in range [0, 1].
 		/// </summary>
 		/// <value>Progress of the operation in range [0, 1].</value>
@@ -1159,37 +1199,23 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region Object
-
-		/// <inheritdoc/>
-		public override string ToString()
-		{
-			return GetType().Name;
-		}
-
-		#endregion
-
 		#region implementation
 
 		private string DebuggerDisplay
 		{
 			get
 			{
-				var result = ToString();
 				var status = Status;
-				var state = status.ToString();
+				var result = string.Format("Id = {0}, Status = {1}", Id.ToString(CultureInfo.InvariantCulture), status.ToString());
 
 				if (status == AsyncOperationStatus.Running)
 				{
-					state += " (" + ((int)(GetProgress() * 100)).ToString(CultureInfo.InvariantCulture) + "%)";
+					result += " (" + ((int)(GetProgress() * 100)).ToString(CultureInfo.InvariantCulture) + "%)";
 				}
 				else if ((status == AsyncOperationStatus.Faulted || status == AsyncOperationStatus.Canceled) && _exception != null)
 				{
-					state += " (" + _exception.GetType().Name + ')';
+					result += " (" + _exception.GetType().Name + ')';
 				}
-
-				result += ": ";
-				result += state;
 
 				if (IsDisposed)
 				{
