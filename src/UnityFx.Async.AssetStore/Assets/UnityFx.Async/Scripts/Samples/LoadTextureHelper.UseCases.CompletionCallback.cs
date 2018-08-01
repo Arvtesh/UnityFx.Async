@@ -17,7 +17,7 @@ namespace UnityFx.Async.Samples
 				if (op.IsCompletedSuccessfully)
 				{
 					var texture = (op as IAsyncOperation<Texture2D>).Result;
-					Debug.Log("Yay!");
+					Debug.Log("Yay! Texture " + texture.name + " loaded.");
 				}
 				else if (op.IsFaulted)
 				{

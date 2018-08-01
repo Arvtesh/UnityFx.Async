@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace UnityFx.Async
 {
+	using Debug = System.Diagnostics.Debug;
+
 	/// <summary>
 	/// A wrapper for <see cref="AssetBundleRequest"/> with result value.
 	/// </summary>
