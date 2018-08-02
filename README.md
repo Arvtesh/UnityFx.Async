@@ -515,15 +515,12 @@ Please see the links below for extended information on the product:
 - [Unity coroutines](https://docs.unity3d.com/Manual/Coroutines.html).
 
 ## Contributing
-
 Please see [contributing guide](.github/CONTRIBUTING.md) for details.
 
 ## Versioning
-
 The project uses [SemVer](https://semver.org/) versioning pattern. For the versions available, see [tags in this repository](https://github.com/Arvtesh/UnityFx.Async/tags).
 
 ## License
-
 Please see the [![license](https://img.shields.io/github/license/Arvtesh/UnityFx.Async.svg)](LICENSE.md) for details.
 
 ## Acknowledgments
