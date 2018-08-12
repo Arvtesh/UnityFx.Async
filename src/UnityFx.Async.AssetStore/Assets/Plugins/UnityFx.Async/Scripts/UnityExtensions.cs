@@ -347,6 +347,98 @@ namespace UnityFx.Async
 
 		#endregion
 
+		#region Animation
+
+		/// <summary>
+		/// Plays an animation without any blending.
+		/// </summary>
+		/// <param name="anim">Target animation instance.</param>
+		/// <param name="mode">The mode which lets you choose how this animation will affect others already playing.</param>
+		/// <returns>An asynchronous operation that can be used to track the animation progress.</returns>
+		public static IAsyncOperation PlayAsync(this Animation anim, PlayMode mode)
+		{
+			if (anim.clip)
+			{
+				var result = new Helpers.PlayAnimationResult(anim, anim.clip.name, mode, AsyncUtility.GetUpdateSource());
+				result.Start();
+				return result;
+			}
+
+			return AsyncResult.CanceledOperation;
+		}
+
+		/// <summary>
+		/// Plays an animation without any blending.
+		/// </summary>
+		/// <param name="anim">Target animation instance.</param>
+		/// <param name="animation">Name of the animation to play.</param>
+		/// <param name="mode">The mode which lets you choose how this animation will affect others already playing.</param>
+		/// <returns>An asynchronous operation that can be used to track the animation progress.</returns>
+		public static IAsyncOperation PlayAsync(this Animation anim, string animation, PlayMode mode)
+		{
+			var result = new Helpers.PlayAnimationResult(anim, animation, mode, AsyncUtility.GetUpdateSource());
+			result.Start();
+			return result;
+		}
+
+		#endregion
+
+		#region Animator
+
+		/// <summary>
+		/// Plays an animator state.
+		/// </summary>
+		/// <param name="anim">Target animator instance.</param>
+		/// <param name="stateName">The state name.</param>
+		/// <param name="layer">The layer index. If layer is -1, it plays the first state with the given state name.</param>
+		/// <returns>An asynchronous operation that can be used to track the animation progress.</returns>
+		public static IAsyncOperation PlayAsync(this Animator anim, string stateName, int layer)
+		{
+			var result = new Helpers.PlayAnimatorResult(anim, stateName, layer, AsyncUtility.GetUpdateSource());
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Plays an animator state.
+		/// </summary>
+		/// <param name="anim">Target animator instance.</param>
+		/// <param name="stateName">The state name.</param>
+		/// <returns>An asynchronous operation that can be used to track the animation progress.</returns>
+		public static IAsyncOperation PlayAsync(this Animator anim, string stateName)
+		{
+			var result = new Helpers.PlayAnimatorResult(anim, stateName, -1, AsyncUtility.GetUpdateSource());
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Waits until current animation completes.
+		/// </summary>
+		/// <param name="anim">Target animator instance.</param>
+		/// <param name="layer">The layer index.</param>
+		/// <returns>An asynchronous operation that can be used to track the animation progress.</returns>
+		public static IAsyncOperation WaitAsync(this Animator anim, int layer)
+		{
+			var result = new Helpers.WaitAnimatorResult(anim, layer, AsyncUtility.GetUpdateSource());
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Waits until current animation completes.
+		/// </summary>
+		/// <param name="anim">Target animator instance.</param>
+		/// <returns>An asynchronous operation that can be used to track the animation progress.</returns>
+		public static IAsyncOperation WaitAsync(this Animator anim)
+		{
+			var result = new Helpers.WaitAnimatorResult(anim, 0, AsyncUtility.GetUpdateSource());
+			result.Start();
+			return result;
+		}
+
+		#endregion
+
 		#region implementation
 
 #if NET_4_6 || NET_STANDARD_2_0
