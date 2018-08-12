@@ -249,7 +249,7 @@ namespace UnityFx.Async
 #else
 
 			var www = new WWW(url);
-			var result = new WwwResult<AssetBundle>(www);
+			var result = new Helpers.WwwResult<AssetBundle>(www);
 
 #endif
 
@@ -278,7 +278,7 @@ namespace UnityFx.Async
 #else
 
 			var www = WWW.LoadFromCacheOrDownload(url, hash);
-			var result = new WwwResult<AssetBundle>(www);
+			var result = new Helpers.WwwResult<AssetBundle>(www);
 
 #endif
 
@@ -308,7 +308,7 @@ namespace UnityFx.Async
 #else
 
 			var www = WWW.LoadFromCacheOrDownload(url, hash, crc);
-			var result = new WwwResult<AssetBundle>(www);
+			var result = new Helpers.WwwResult<AssetBundle>(www);
 
 #endif
 
@@ -336,7 +336,7 @@ namespace UnityFx.Async
 #else
 
 			var www = new WWW(url);
-			var result = new WwwResult<AudioClip>(www);
+			var result = new Helpers.WwwResult<AudioClip>(www);
 
 #endif
 
@@ -365,7 +365,7 @@ namespace UnityFx.Async
 #else
 
 			var www = new WWW(url);
-			var result = new WwwResult<AudioClip>(www);
+			var result = new Helpers.WwwResult<AudioClip>(www);
 
 #endif
 
@@ -393,7 +393,7 @@ namespace UnityFx.Async
 #else
 
 			var www = new WWW(url);
-			var result = new WwwResult<Texture2D>(www);
+			var result = new Helpers.WwwResult<Texture2D>(www);
 
 #endif
 
@@ -422,7 +422,7 @@ namespace UnityFx.Async
 #else
 
 			var www = new WWW(url);
-			var result = new WwwResult<Texture2D>(www);
+			var result = new Helpers.WwwResult<Texture2D>(www);
 
 #endif
 
@@ -442,12 +442,12 @@ namespace UnityFx.Async
 #if UNITY_2017_1_OR_NEWER
 
 			var webRequest = UnityWebRequestMultimedia.GetMovieTexture(url);
-			var result = new WebRequestResult<MovieTexture>(webRequest);
+			var result = new Helpers.WebRequestResult<MovieTexture>(webRequest);
 
 #else
 
 			var www = new WWW(url);
-			var result = new WwwResult<MovieTexture>(www);
+			var result = new Helpers.WwwResult<MovieTexture>(www);
 
 #endif
 
