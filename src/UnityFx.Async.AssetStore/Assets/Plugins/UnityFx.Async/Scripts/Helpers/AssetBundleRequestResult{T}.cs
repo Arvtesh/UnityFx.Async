@@ -4,7 +4,7 @@
 using System;
 using UnityEngine;
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Helpers
 {
 	using Debug = System.Diagnostics.Debug;
 

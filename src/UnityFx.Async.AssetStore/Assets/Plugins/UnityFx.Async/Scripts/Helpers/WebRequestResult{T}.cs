@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 #endif
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Helpers
 {
 #if UNITY_5_4_OR_NEWER
 

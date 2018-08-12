@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Helpers
 {
 	/// <summary>
 	/// Represents a web request error.

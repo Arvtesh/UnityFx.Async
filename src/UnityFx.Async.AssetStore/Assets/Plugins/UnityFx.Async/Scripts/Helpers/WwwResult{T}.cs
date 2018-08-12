@@ -5,7 +5,7 @@ using System;
 using System.Text;
 using UnityEngine;
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Helpers
 {
 	/// <summary>
 	/// A wrapper for <see cref="WWW"/> with result value.

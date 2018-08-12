@@ -193,12 +193,12 @@ namespace UnityFx.Async
 #if UNITY_5_4_OR_NEWER
 
 			var webRequest = UnityWebRequest.Get(url);
-			var result = new WebRequestResult<string>(webRequest);
+			var result = new Helpers.WebRequestResult<string>(webRequest);
 
 #else
 
 			var www = new WWW(url);
-			var result = new WwwResult<string>(www);
+			var result = new Helpers.WwwResult<string>(www);
 
 #endif
 
@@ -216,12 +216,12 @@ namespace UnityFx.Async
 #if UNITY_5_4_OR_NEWER
 
 			var webRequest = UnityWebRequest.Get(url);
-			var result = new WebRequestResult<byte[]>(webRequest);
+			var result = new Helpers.WebRequestResult<byte[]>(webRequest);
 
 #else
 
 			var www = new WWW(url);
-			var result = new WwwResult<byte[]>(www);
+			var result = new Helpers.WwwResult<byte[]>(www);
 
 #endif
 
@@ -239,12 +239,12 @@ namespace UnityFx.Async
 #if UNITY_2018_1_OR_NEWER
 
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url);
-			var result = new WebRequestResult<AssetBundle>(webRequest);
+			var result = new Helpers.WebRequestResult<AssetBundle>(webRequest);
 
 #elif UNITY_5_4_OR_NEWER
 
 			var webRequest = UnityWebRequest.GetAssetBundle(url);
-			var result = new WebRequestResult<AssetBundle>(webRequest);
+			var result = new Helpers.WebRequestResult<AssetBundle>(webRequest);
 
 #else
 
@@ -268,12 +268,12 @@ namespace UnityFx.Async
 #if UNITY_2018_1_OR_NEWER
 
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, 0);
-			var result = new WebRequestResult<AssetBundle>(webRequest);
+			var result = new Helpers.WebRequestResult<AssetBundle>(webRequest);
 
 #elif UNITY_5_4_OR_NEWER
 
 			var webRequest = UnityWebRequest.GetAssetBundle(url, hash, 0);
-			var result = new WebRequestResult<AssetBundle>(webRequest);
+			var result = new Helpers.WebRequestResult<AssetBundle>(webRequest);
 
 #else
 
@@ -298,12 +298,12 @@ namespace UnityFx.Async
 #if UNITY_2018_1_OR_NEWER
 
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, crc);
-			var result = new WebRequestResult<AssetBundle>(webRequest);
+			var result = new Helpers.WebRequestResult<AssetBundle>(webRequest);
 
 #elif UNITY_5_4_OR_NEWER
 
 			var webRequest = UnityWebRequest.GetAssetBundle(url, hash, crc);
-			var result = new WebRequestResult<AssetBundle>(webRequest);
+			var result = new Helpers.WebRequestResult<AssetBundle>(webRequest);
 
 #else
 
@@ -326,12 +326,12 @@ namespace UnityFx.Async
 #if UNITY_2017_1_OR_NEWER
 
 			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.UNKNOWN);
-			var result = new WebRequestResult<AudioClip>(webRequest);
+			var result = new Helpers.WebRequestResult<AudioClip>(webRequest);
 
 #elif UNITY_5_4_OR_NEWER
 
 			var webRequest = UnityWebRequest.GetAudioClip(url, AudioType.UNKNOWN);
-			var result = new WebRequestResult<AudioClip>(webRequest);
+			var result = new Helpers.WebRequestResult<AudioClip>(webRequest);
 
 #else
 
@@ -355,12 +355,12 @@ namespace UnityFx.Async
 #if UNITY_2017_1_OR_NEWER
 
 			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, audioType);
-			var result = new WebRequestResult<AudioClip>(webRequest);
+			var result = new Helpers.WebRequestResult<AudioClip>(webRequest);
 
 #elif UNITY_5_4_OR_NEWER
 
 			var webRequest = UnityWebRequest.GetAudioClip(url, audioType);
-			var result = new WebRequestResult<AudioClip>(webRequest);
+			var result = new Helpers.WebRequestResult<AudioClip>(webRequest);
 
 #else
 
@@ -383,12 +383,12 @@ namespace UnityFx.Async
 #if UNITY_2017_1_OR_NEWER
 
 			var webRequest = UnityWebRequestTexture.GetTexture(url, false);
-			var result = new WebRequestResult<Texture2D>(webRequest);
+			var result = new Helpers.WebRequestResult<Texture2D>(webRequest);
 
 #elif UNITY_5_4_OR_NEWER
 
 			var webRequest = UnityWebRequest.GetTexture(url);
-			var result = new WebRequestResult<Texture2D>(webRequest);
+			var result = new Helpers.WebRequestResult<Texture2D>(webRequest);
 
 #else
 
@@ -412,12 +412,12 @@ namespace UnityFx.Async
 #if UNITY_2017_1_OR_NEWER
 
 			var webRequest = UnityWebRequestTexture.GetTexture(url, nonReadable);
-			var result = new WebRequestResult<Texture2D>(webRequest);
+			var result = new Helpers.WebRequestResult<Texture2D>(webRequest);
 
 #elif UNITY_5_4_OR_NEWER
 
 			var webRequest = UnityWebRequest.GetTexture(url, nonReadable);
-			var result = new WebRequestResult<Texture2D>(webRequest);
+			var result = new Helpers.WebRequestResult<Texture2D>(webRequest);
 
 #else
 

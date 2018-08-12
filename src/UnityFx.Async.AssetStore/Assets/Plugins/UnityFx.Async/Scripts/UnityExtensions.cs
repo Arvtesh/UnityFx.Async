@@ -33,7 +33,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				var result = new AsyncOperationResult(op);
+				var result = new Helpers.AsyncOperationResult(op);
 				result.Start();
 				return result;
 			}
@@ -45,7 +45,7 @@ namespace UnityFx.Async
 		/// <param name="op">The source operation.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this ResourceRequest op) where T : UnityEngine.Object
 		{
-			var result = new ResourceRequestResult<T>(op);
+			var result = new Helpers.ResourceRequestResult<T>(op);
 			result.Start();
 			return result;
 		}
@@ -56,7 +56,7 @@ namespace UnityFx.Async
 		/// <param name="op">The source operation.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this AssetBundleRequest op) where T : UnityEngine.Object
 		{
-			var result = new AssetBundleRequestResult<T>(op);
+			var result = new Helpers.AssetBundleRequestResult<T>(op);
 			result.Start();
 			return result;
 		}
@@ -161,7 +161,7 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static IAsyncOperation ToAsync(this UnityWebRequest request)
 		{
-			var result = new WebRequestResult<object>(request);
+			var result = new Helpers.WebRequestResult<object>(request);
 			result.Start();
 			return result;
 		}
@@ -172,7 +172,7 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this UnityWebRequest request) where T : class
 		{
-			var result = new WebRequestResult<T>(request);
+			var result = new Helpers.WebRequestResult<T>(request);
 			result.Start();
 			return result;
 		}
@@ -259,7 +259,7 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static IAsyncOperation ToAsync(this WWW request)
 		{
-			var result = new WwwResult<object>(request);
+			var result = new Helpers.WwwResult<object>(request);
 			result.Start();
 			return result;
 		}
@@ -270,7 +270,7 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this WWW request) where T : class
 		{
-			var result = new WwwResult<T>(request);
+			var result = new Helpers.WwwResult<T>(request);
 			result.Start();
 			return result;
 		}
@@ -363,7 +363,7 @@ namespace UnityFx.Async
 				if (request.isHttpError || request.isNetworkError)
 #endif
 				{
-					tcs.TrySetException(new WebRequestException(request.error, request.responseCode));
+					tcs.TrySetException(new Helpers.WebRequestException(request.error, request.responseCode));
 				}
 				else if (request.downloadHandler != null)
 				{
@@ -394,7 +394,7 @@ namespace UnityFx.Async
 				}
 				else
 				{
-					tcs.TrySetException(new WebRequestException(www.error));
+					tcs.TrySetException(new Helpers.WebRequestException(www.error));
 				}
 			}
 			catch (Exception e)
