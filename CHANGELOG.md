@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 -----------------------
 ## [0.9.6] - unreleased
 
+### Added
+- Added `Play`/`Wait` extension methods for `Animation` and `Animator`.
+
+### Changed
+- Moved the package content to Plugins folder and remove assembly definition file.
+
 -----------------------
 ## [0.9.5] - 2018.07.31
 
