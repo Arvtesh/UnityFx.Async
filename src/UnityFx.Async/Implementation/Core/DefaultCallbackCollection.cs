@@ -3,13 +3,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 
 namespace UnityFx.Async
 {
-	internal class CallbackCollection
+	/// <summary>
+	/// A default implementation of <see cref="IAsyncCallbackCollection"/>. The implementation assumes that in most cases
+	/// there are 3 or less completion callbacks and 1 or less progress callbacks. A <see cref="SynchronizationContext"/>
+	/// instance is stored for each callback.
+	/// </summary>
+	internal class DefaultCallbackCollection : IAsyncCallbackCollection
 	{
 		#region data
 
@@ -39,19 +43,25 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public CallbackCollection(IAsyncOperation op)
+		public DefaultCallbackCollection(IAsyncOperation op)
 		{
 			_op = op;
 		}
 
-		public CallbackCollection(IAsyncOperation op, object callback, SynchronizationContext syncContext)
+		public DefaultCallbackCollection(IAsyncOperation op, object callback, SynchronizationContext syncContext)
 		{
 			_op = op;
 			_completionCallback1 = new CallbackData(callback, syncContext);
 		}
 
+		#endregion
+
+		#region IAsyncCallbackCollection
+
 		public void AddCompletionCallback(object callback, SynchronizationContext syncContext)
 		{
+			Debug.Assert(callback != null);
+
 			var newCallback = new CallbackData(callback, syncContext);
 
 			if (_completionCallback1.Callback == null)
@@ -84,6 +94,8 @@ namespace UnityFx.Async
 
 		public void AddProgressCallback(object callback, SynchronizationContext syncContext)
 		{
+			Debug.Assert(callback != null);
+
 			var newCallback = new CallbackData(callback, syncContext);
 
 			if (_progressCallback1.Callback == null)
