@@ -728,10 +728,10 @@ namespace UnityFx.Async
 			{
 				if (oldValue != null)
 				{
-					return new DefaultCallbackCollection(this, oldValue, syncContext);
+					return new MultiContextCallbackCollection(this, oldValue, syncContext);
 				}
 
-				return new DefaultCallbackCollection(this);
+				return new MultiContextCallbackCollection(this);
 			}
 		}
 

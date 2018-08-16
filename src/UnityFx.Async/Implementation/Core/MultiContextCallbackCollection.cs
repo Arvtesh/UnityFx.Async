@@ -9,25 +9,13 @@ using System.Threading;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// A default implementation of <see cref="IAsyncCallbackCollection"/>. The implementation assumes that in most cases
+	/// An implementation of <see cref="IAsyncCallbackCollection"/>. The implementation assumes that in most cases
 	/// there are 3 or less completion callbacks and 1 or less progress callbacks. A <see cref="SynchronizationContext"/>
 	/// instance is stored for each callback.
 	/// </summary>
-	internal class DefaultCallbackCollection : IAsyncCallbackCollection
+	internal class MultiContextCallbackCollection : IAsyncCallbackCollection
 	{
 		#region data
-
-		private struct CallbackData
-		{
-			public readonly object Callback;
-			public readonly SynchronizationContext SyncContext;
-
-			public CallbackData(object callback, SynchronizationContext syncContext)
-			{
-				Callback = callback;
-				SyncContext = syncContext;
-			}
-		}
 
 		private readonly IAsyncOperation _op;
 
@@ -43,12 +31,12 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public DefaultCallbackCollection(IAsyncOperation op)
+		public MultiContextCallbackCollection(IAsyncOperation op)
 		{
 			_op = op;
 		}
 
-		public DefaultCallbackCollection(IAsyncOperation op, object callback, SynchronizationContext syncContext)
+		public MultiContextCallbackCollection(IAsyncOperation op, object callback, SynchronizationContext syncContext)
 		{
 			_op = op;
 			_completionCallback1 = new CallbackData(callback, syncContext);
