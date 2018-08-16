@@ -37,6 +37,16 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
+		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
+		public AsyncResult(AsyncCallback asyncCallback, object asyncState)
+			: base(asyncCallback, asyncState)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// </summary>
 		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
 		public AsyncResult(AsyncCreationOptions options)
 			: base(options)
@@ -46,10 +56,10 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
-		/// <param name="asyncCallback">User-defined completion callback.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
 		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
-		public AsyncResult(AsyncCallback asyncCallback, object asyncState)
-			: base(asyncCallback, asyncState)
+		public AsyncResult(AsyncCreationOptions options, object asyncState)
+			: base(options, asyncState)
 		{
 		}
 
@@ -77,30 +87,9 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
 		/// <param name="status">Status value of the operation.</param>
-		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
-		public AsyncResult(AsyncOperationStatus status, AsyncCreationOptions options)
-			: base(status, options)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
-		/// </summary>
-		/// <param name="status">Status value of the operation.</param>
 		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
 		public AsyncResult(AsyncOperationStatus status, object asyncState)
 			: base(status, asyncState)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
-		/// </summary>
-		/// <param name="status">Status value of the operation.</param>
-		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
-		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
-		public AsyncResult(AsyncOperationStatus status, AsyncCreationOptions options, object asyncState)
-			: base(status, options, asyncState)
 		{
 		}
 
@@ -112,6 +101,27 @@ namespace UnityFx.Async
 		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
 		public AsyncResult(AsyncOperationStatus status, AsyncCallback asyncCallback, object asyncState)
 			: base(status, asyncCallback, asyncState)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// </summary>
+		/// <param name="status">Status value of the operation.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncResult(AsyncOperationStatus status, AsyncCreationOptions options)
+			: base(status, options)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
+		/// </summary>
+		/// <param name="status">Status value of the operation.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
+		public AsyncResult(AsyncOperationStatus status, AsyncCreationOptions options, object asyncState)
+			: base(status, options, asyncState)
 		{
 		}
 
