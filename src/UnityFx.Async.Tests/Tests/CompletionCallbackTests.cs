@@ -54,11 +54,13 @@ namespace UnityFx.Async
 			Assert.True(callbackCalled);
 		}
 
-		[Fact]
-		public async Task TryAddCompletionCallback_IsThreadSafe()
+		[Theory]
+		[InlineData(AsyncCreationOptions.None)]
+		[InlineData(AsyncCreationOptions.UseSharedSynchronizationContext)]
+		public async Task TryAddCompletionCallback_IsThreadSafe(AsyncCreationOptions creationOptions)
 		{
 			// Arrange
-			var op = new AsyncCompletionSource();
+			var op = new AsyncCompletionSource(creationOptions);
 			var counter = 0;
 			var d = new Action<IAsyncOperation>(CompletionCallback);
 
@@ -141,7 +143,7 @@ namespace UnityFx.Async
 		}
 
 		[Fact]
-		public async Task TryAddCompletionCallback_ContinuationsAreRunOnCorrectSynchronozationContext()
+		public async Task TryAddCompletionCallback_ContinuationsRunOnCorrectSynchronozationContext()
 		{
 			// Arrange
 			var op = new AsyncCompletionSource();

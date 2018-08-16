@@ -88,7 +88,7 @@ namespace UnityFx.Async
 			}
 			set
 			{
-				_defaultFlags = (int)value >> _optionsOffset;
+				_defaultFlags = (int)value << _optionsOffset;
 			}
 		}
 

@@ -59,6 +59,39 @@ namespace UnityFx.Async
 		}
 
 		[Theory]
+		[InlineData(AsyncCreationOptions.None)]
+		[InlineData(AsyncCreationOptions.RunContinuationsAsynchronously)]
+		[InlineData(AsyncCreationOptions.SuppressCancellation)]
+		[InlineData(AsyncCreationOptions.UseSharedSynchronizationContext)]
+		[InlineData(AsyncCreationOptions.RunContinuationsAsynchronously | AsyncCreationOptions.SuppressCancellation)]
+		[InlineData(AsyncCreationOptions.RunContinuationsAsynchronously | AsyncCreationOptions.SuppressCancellation | AsyncCreationOptions.UseSharedSynchronizationContext)]
+		public void Constructor_AppliesDefaultCreationOptions(AsyncCreationOptions defaultOptions)
+		{
+			// Arrange
+			var options = AsyncCreationOptions.RunContinuationsAsynchronously;
+			AsyncResult.DefaultCreationOptions = defaultOptions;
+
+			// Act
+			var op = new AsyncResult(options);
+			var op2 = new AsyncResult(options, null);
+			var op3 = new AsyncResult(options, null, null);
+			var op4 = new AsyncResult(AsyncOperationStatus.Running, options);
+			var op5 = new AsyncResult(AsyncOperationStatus.Faulted, options, null);
+			var op6 = new AsyncResult(AsyncOperationStatus.Scheduled, options, null, null);
+
+			// Revert the default value
+			AsyncResult.DefaultCreationOptions = AsyncCreationOptions.None;
+
+			// Assert
+			Assert.Equal(defaultOptions | options, op.CreationOptions);
+			Assert.Equal(defaultOptions | options, op2.CreationOptions);
+			Assert.Equal(defaultOptions | options, op3.CreationOptions);
+			Assert.Equal(defaultOptions | options, op4.CreationOptions);
+			Assert.Equal(defaultOptions | options, op5.CreationOptions);
+			Assert.Equal(defaultOptions | options, op6.CreationOptions);
+		}
+
+		[Theory]
 		[InlineData(AsyncOperationStatus.Created, AsyncCreationOptions.None)]
 		[InlineData(AsyncOperationStatus.Scheduled, AsyncCreationOptions.RunContinuationsAsynchronously)]
 		[InlineData(AsyncOperationStatus.Running, AsyncCreationOptions.SuppressCancellation)]
