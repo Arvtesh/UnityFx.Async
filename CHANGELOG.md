@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 
 ### Added
 - Added `Play`/`Wait` extension methods for `Animation` and `Animator`.
+- Added `AsyncCreationOptions.UseSharedSynchronizationContext` creation option that allows using a shared synchronization context for the operation continuations.
+- Added `AsyncResult.DefaultCreationOptions` static property to set options used by all operations.
+- Added `AsyncResult.SharedSynchronizationContext` static property to be used by continuations if `AsyncCreationOptions.UseSharedSynchronizationContext` option is set.
 
 ### Changed
 - Moved the package content to Plugins folder and remove assembly definition file.
