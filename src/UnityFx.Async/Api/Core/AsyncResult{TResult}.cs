@@ -56,11 +56,11 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
 		/// <param name="asyncCallback">User-defined completion callback.</param>
 		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
-		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
-		public AsyncResult(AsyncCallback asyncCallback, object asyncState, AsyncCreationOptions options)
-			: base(asyncCallback, asyncState, options)
+		public AsyncResult(AsyncCreationOptions options, AsyncCallback asyncCallback, object asyncState)
+			: base(options, asyncCallback, asyncState)
 		{
 		}
 
@@ -97,10 +97,10 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
 		/// <param name="status">Status value of the operation.</param>
-		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
 		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
-		public AsyncResult(AsyncOperationStatus status, object asyncState, AsyncCreationOptions options)
-			: base(status, asyncState, options)
+		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
+		public AsyncResult(AsyncOperationStatus status, AsyncCreationOptions options, object asyncState)
+			: base(status, options, asyncState)
 		{
 		}
 
@@ -119,11 +119,11 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class.
 		/// </summary>
 		/// <param name="status">Status value of the operation.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
 		/// <param name="asyncCallback">User-defined completion callback.</param>
 		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
-		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
-		public AsyncResult(AsyncOperationStatus status, AsyncCallback asyncCallback, object asyncState, AsyncCreationOptions options)
-			: base(status, asyncCallback, asyncState, options)
+		public AsyncResult(AsyncOperationStatus status, AsyncCreationOptions options, AsyncCallback asyncCallback, object asyncState)
+			: base(status, options, asyncCallback, asyncState)
 		{
 		}
 
