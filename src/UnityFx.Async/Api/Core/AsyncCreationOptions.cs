@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Threading;
 
 namespace UnityFx.Async
 {
@@ -25,6 +26,11 @@ namespace UnityFx.Async
 		/// <summary>
 		/// If set cancelling the operation has no effect (silently ignored).
 		/// </summary>
-		SuppressCancellation = AsyncResult.OptionSuppressCancellation
+		SuppressCancellation = AsyncResult.OptionSuppressCancellation,
+
+		/// <summary>
+		/// If set all continuations will execute on synchronization context specified by <see cref="AsyncResult.SharedSynchronizationContext"/>.
+		/// </summary>
+		UseSharedSynchronizationContext = AsyncResult.OptionUseSharedSynchronizationContext
 	}
 }

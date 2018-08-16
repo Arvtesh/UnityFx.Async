@@ -15,12 +15,29 @@ namespace UnityFx.Async
 		#region data
 
 		private static readonly object _callbackCompletionSentinel = new object();
+		private static SynchronizationContext _sharedContext;
 
 		private volatile object _callback;
 
 		#endregion
 
-		#region internals
+		#region interface
+
+		/// <summary>
+		/// Gets or sets shared <see cref="SynchronizationContext"/> instance used for continuations if the corresponding
+		/// operation was created with <see cref="AsyncCreationOptions.UseSharedSynchronizationContext"/>.
+		/// </summary>
+		public static SynchronizationContext SharedSynchronizationContext
+		{
+			get
+			{
+				return _sharedContext;
+			}
+			set
+			{
+				_sharedContext = value;
+			}
+		}
 
 		/// <summary>
 		/// Adds a completion callback for <c>await</c> implementation.
@@ -501,6 +518,8 @@ namespace UnityFx.Async
 
 		private bool TryAddCallback(object callbackToAdd, SynchronizationContext syncContext, bool completionCallback)
 		{
+			Debug.Assert(callbackToAdd != null);
+
 			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
 			var oldValue = _callback;
 
@@ -516,12 +535,12 @@ namespace UnityFx.Async
 					{
 						if (syncContext != null)
 						{
-							newValue = CreateCallbackCallection(callbackToAdd, syncContext);
+							newValue = CreateCallbackCollection(callbackToAdd, syncContext);
 						}
 					}
 					else
 					{
-						var newList = CreateCallbackCallection(null, null);
+						var newList = CreateCallbackCollection(null, null);
 						newList.AddProgressCallback(callbackToAdd, syncContext);
 						newValue = newList;
 					}
@@ -538,7 +557,7 @@ namespace UnityFx.Async
 				// Logic for the case where we were previously storing a single callback.
 				if (oldValue != _callbackCompletionSentinel && !(oldValue is IAsyncCallbackCollection))
 				{
-					var newList = CreateCallbackCallection(oldValue, null);
+					var newList = CreateCallbackCollection(oldValue, null);
 					Interlocked.CompareExchange(ref _callback, newList, oldValue);
 
 					// We might be racing against another thread converting the single into a list,
@@ -576,6 +595,8 @@ namespace UnityFx.Async
 
 		private bool TryRemoveCallback(object callbackToRemove)
 		{
+			Debug.Assert(callbackToRemove != null);
+
 			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
 			var value = _callback;
 
@@ -587,7 +608,7 @@ namespace UnityFx.Async
 				{
 					// This is not a list. If we have a single object (the one we want to remove) we try to replace it with an empty list.
 					// Note we cannot go back to a null state, since it will mess up the TryAddCallback() logic.
-					if (Interlocked.CompareExchange(ref _callback, CreateCallbackCallection(null, null), callbackToRemove) == callbackToRemove)
+					if (Interlocked.CompareExchange(ref _callback, CreateCallbackCollection(null, null), callbackToRemove) == callbackToRemove)
 					{
 						return true;
 					}
@@ -666,6 +687,8 @@ namespace UnityFx.Async
 
 		private void InvokeProgressCallback(object callback, SynchronizationContext syncContext)
 		{
+			Debug.Assert(callback != null);
+
 			if (syncContext == null || syncContext == SynchronizationContext.Current)
 			{
 				CallbackUtility.InvokeProgressCallback(this, callback);
@@ -678,6 +701,8 @@ namespace UnityFx.Async
 
 		private void InvokeCompletionCallback(object continuation, SynchronizationContext syncContext)
 		{
+			Debug.Assert(continuation != null);
+
 			if ((_flags & _flagRunContinuationsAsynchronously) != 0)
 			{
 				CallbackUtility.InvokeCompletionCallbackAsync(this, continuation, syncContext);
@@ -692,14 +717,22 @@ namespace UnityFx.Async
 			}
 		}
 
-		private IAsyncCallbackCollection CreateCallbackCallection(object oldValue, SynchronizationContext syncContext)
+		private IAsyncCallbackCollection CreateCallbackCollection(object oldValue, SynchronizationContext syncContext)
 		{
-			if (oldValue != null)
+			// NOTE: Ignore syncContext if UseSharedSynchronizationContext flag is set.
+			if ((_flags & _flagUseSharedSynchronizationContext) != 0)
 			{
-				return new DefaultCallbackCollection(this, oldValue, syncContext);
+				return new SingleContextCallbackCollection(this, oldValue, _sharedContext);
 			}
+			else
+			{
+				if (oldValue != null)
+				{
+					return new DefaultCallbackCollection(this, oldValue, syncContext);
+				}
 
-			return new DefaultCallbackCollection(this);
+				return new DefaultCallbackCollection(this);
+			}
 		}
 
 		#endregion

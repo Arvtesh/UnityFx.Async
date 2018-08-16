@@ -52,11 +52,13 @@ namespace UnityFx.Async
 		private const int _flagDoNotDispose = OptionDoNotDispose << _optionsOffset;
 		private const int _flagRunContinuationsAsynchronously = OptionRunContinuationsAsynchronously << _optionsOffset;
 		private const int _flagSuppressCancellation = OptionSuppressCancellation << _optionsOffset;
+		private const int _flagUseSharedSynchronizationContext = OptionUseSharedSynchronizationContext << _optionsOffset;
 
 		private const int _statusMask = 0x0000000f;
 		private const int _optionsMask = 0x70000000;
 		private const int _optionsOffset = 28;
 
+		private static int _defaultFlags;
 		private static int _idCounter;
 
 		private readonly object _asyncState;
@@ -70,9 +72,31 @@ namespace UnityFx.Async
 		#region interface
 
 		/// <summary>
+		/// Gets or sets default creation options value applied to all operations. This value is combined with any options passed to the operation constructor.
+		/// </summary>
+		/// <remarks>
+		/// One can assign <see cref="AsyncCreationOptions.UseSharedSynchronizationContext"/> value to this property and set <see cref="SharedSynchronizationContext"/>
+		/// to force all <see cref="AsyncResult"/> continuations to be invoked on the same synchronization context.
+		/// </remarks>
+		/// <value>Creation options applied to all operations.</value>
+		/// <seealso cref="CreationOptions"/>
+		public static AsyncCreationOptions DefaultCreationOptions
+		{
+			get
+			{
+				return (AsyncCreationOptions)(_defaultFlags >> _optionsOffset);
+			}
+			set
+			{
+				_defaultFlags = (int)value >> _optionsOffset;
+			}
+		}
+
+		/// <summary>
 		/// Gets the <see cref="AsyncCreationOptions"/> used to create this operation.
 		/// </summary>
 		/// <value>The operation creation options.</value>
+		/// <seealso cref="DefaultCreationOptions"/>
 		public AsyncCreationOptions CreationOptions => (AsyncCreationOptions)(_flags >> _optionsOffset);
 
 		/// <summary>
@@ -92,6 +116,7 @@ namespace UnityFx.Async
 		/// </summary>
 		public AsyncResult()
 		{
+			_flags = _defaultFlags;
 		}
 
 		/// <summary>
@@ -110,6 +135,7 @@ namespace UnityFx.Async
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
 		public AsyncResult(AsyncCallback asyncCallback, object asyncState)
 		{
+			_flags = _defaultFlags;
 			_asyncState = asyncState;
 			_callback = asyncCallback;
 		}
@@ -208,11 +234,11 @@ namespace UnityFx.Async
 
 			if (_exception is OperationCanceledException)
 			{
-				_flags = StatusCanceled | _flagCompletedSynchronously;
+				_flags = StatusCanceled | _flagCompletedSynchronously | _defaultFlags;
 			}
 			else
 			{
-				_flags = StatusFaulted | _flagCompletedSynchronously;
+				_flags = StatusFaulted | _flagCompletedSynchronously | _defaultFlags;
 			}
 
 			_callback = _callbackCompletionSentinel;
@@ -251,11 +277,11 @@ namespace UnityFx.Async
 
 			if (_exception.InnerException is OperationCanceledException)
 			{
-				_flags = StatusCanceled | _flagCompletedSynchronously;
+				_flags = StatusCanceled | _flagCompletedSynchronously | _defaultFlags;
 			}
 			else
 			{
-				_flags = StatusFaulted | _flagCompletedSynchronously;
+				_flags = StatusFaulted | _flagCompletedSynchronously | _defaultFlags;
 			}
 
 			_callback = _callbackCompletionSentinel;
@@ -756,6 +782,7 @@ namespace UnityFx.Async
 		internal const int OptionDoNotDispose = 1;
 		internal const int OptionRunContinuationsAsynchronously = 2;
 		internal const int OptionSuppressCancellation = 4;
+		internal const int OptionUseSharedSynchronizationContext = 8;
 
 		/// <summary>
 		/// Special status setter for <see cref="AsyncOperationStatus.Scheduled"/> and <see cref="AsyncOperationStatus.Running"/>.
@@ -1240,11 +1267,11 @@ namespace UnityFx.Async
 			if ((flags & _statusMask) > StatusRunning)
 			{
 				_callback = _callbackCompletionSentinel;
-				_flags = flags | _flagCompletedSynchronously;
+				_flags = flags | _flagCompletedSynchronously | _defaultFlags;
 			}
 			else
 			{
-				_flags = flags;
+				_flags = flags | _defaultFlags;
 			}
 		}
 
