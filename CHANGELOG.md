@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `AsyncResult.SharedSynchronizationContext` static property to be used by continuations if `AsyncCreationOptions.UseSharedSynchronizationContext` option is set.
 
 ### Changed
+- Changed `AsyncResult` constructors argument order to avoid ambiguity in some cases.
 - Moved the package content to Plugins folder and remove assembly definition file.
 
 -----------------------
