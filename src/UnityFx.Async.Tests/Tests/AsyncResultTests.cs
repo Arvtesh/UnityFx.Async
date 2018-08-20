@@ -670,7 +670,7 @@ namespace UnityFx.Async
 		[InlineData(AsyncOperationStatus.RanToCompletion, false)]
 		[InlineData(AsyncOperationStatus.Faulted, false)]
 		[InlineData(AsyncOperationStatus.Canceled, false)]
-		public void MoveNext_ReturnsCorrentValue(AsyncOperationStatus status, bool expectedResult)
+		public void MoveNext_ReturnsCorrectValue(AsyncOperationStatus status, bool expectedResult)
 		{
 			// Arrange
 			var op = new AsyncResult(status);
