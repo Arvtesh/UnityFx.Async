@@ -15,6 +15,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ### Changed
 - Changed `AsyncResult` constructors argument order to avoid ambiguity in some cases.
 - Moved the package content to Plugins folder and remove assembly definition file.
+- Moved web request related helpers from `AsyncUtility` to `AsyncWww` class.
+- Changed `AsyncUtility.SendToMainThread`, `AsyncUtility.PostToMainThread` and `AsyncUtility.InvokeOnMainThread` implementation to use `ConcurrentQueue` for net46+ to avoid unnesesary locks.
 
 -----------------------
 ## [0.9.5] - 2018.07.31
