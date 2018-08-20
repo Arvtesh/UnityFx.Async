@@ -4,6 +4,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+#if !NET_2_0 && !NET_2_0_SUBSET
+using System.Collections.Concurrent;
+#endif
 using System.Threading;
 using UnityEngine;
 #if UNITY_5_4_OR_NEWER
@@ -416,7 +419,11 @@ namespace UnityFx.Async
 
 			private SynchronizationContext _context;
 			private SynchronizationContext _mainThreadContext;
+#if NET_2_0 || NET_2_0_SUBSET
 			private Queue<InvokeResult> _actionQueue;
+#else
+			private ConcurrentQueue<InvokeResult> _actionQueue;
+#endif
 
 			#endregion
 
@@ -515,10 +522,18 @@ namespace UnityFx.Async
 				{
 					using (var asyncResult = new InvokeResult(d, state))
 					{
+#if NET_2_0 || NET_2_0_SUBSET
+
 						lock (_actionQueue)
 						{
 							_actionQueue.Enqueue(asyncResult);
 						}
+
+#else
+
+						_actionQueue.Enqueue(asyncResult);
+
+#endif
 
 						asyncResult.Wait();
 					}
@@ -539,10 +554,18 @@ namespace UnityFx.Async
 
 				var asyncResult = new InvokeResult(d, state);
 
+#if NET_2_0 || NET_2_0_SUBSET
+
 				lock (_actionQueue)
 				{
 					_actionQueue.Enqueue(asyncResult);
 				}
+
+#else
+
+				_actionQueue.Enqueue(asyncResult);
+
+#endif
 
 				return asyncResult;
 			}
@@ -579,7 +602,15 @@ namespace UnityFx.Async
 					_mainThreadContext = currentContext;
 				}
 
+#if NET_2_0 || NET_2_0_SUBSET
+
 				_actionQueue = new Queue<InvokeResult>();
+
+#else
+
+				_actionQueue = new ConcurrentQueue<InvokeResult>();
+
+#endif
 			}
 
 			private void Update()
@@ -649,6 +680,8 @@ namespace UnityFx.Async
 					}
 				}
 
+#if NET_2_0 || NET_2_0_SUBSET
+
 				if (_actionQueue.Count > 0)
 				{
 					lock (_actionQueue)
@@ -670,6 +703,24 @@ namespace UnityFx.Async
 						}
 					}
 				}
+
+#else
+
+				while (_actionQueue.TryDequeue(out var invokeResult))
+				{
+					try
+					{
+						invokeResult.Start();
+						invokeResult.SetCompleted();
+					}
+					catch (Exception e)
+					{
+						invokeResult.SetException(e);
+						Debug.LogException(e, this);
+					}
+				}
+
+#endif
 			}
 
 			private void LateUpdate()
@@ -719,10 +770,14 @@ namespace UnityFx.Async
 					SynchronizationContext.SetSynchronizationContext(null);
 				}
 
+#if NET_2_0 || NET_2_0_SUBSET
+
 				lock (_actionQueue)
 				{
 					_actionQueue.Clear();
 				}
+
+#endif
 
 				_mainThreadContext = null;
 				_context = null;
