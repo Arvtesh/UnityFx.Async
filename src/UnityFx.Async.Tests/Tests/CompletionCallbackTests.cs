@@ -56,7 +56,6 @@ namespace UnityFx.Async
 
 		[Theory]
 		[InlineData(AsyncCreationOptions.None)]
-		[InlineData(AsyncCreationOptions.UseSharedSynchronizationContext)]
 		public async Task TryAddCompletionCallback_IsThreadSafe(AsyncCreationOptions creationOptions)
 		{
 			// Arrange

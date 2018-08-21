@@ -24,8 +24,7 @@ namespace UnityFx.Async
 		#region interface
 
 		/// <summary>
-		/// Gets or sets shared <see cref="SynchronizationContext"/> instance used for continuations if the corresponding
-		/// operation was created with <see cref="AsyncCreationOptions.UseSharedSynchronizationContext"/>.
+		/// Gets or sets shared <see cref="SynchronizationContext"/> instance used for continuations.
 		/// </summary>
 		public static SynchronizationContext SharedSynchronizationContext
 		{
@@ -694,20 +693,12 @@ namespace UnityFx.Async
 
 		private IAsyncCallbackCollection CreateCallbackCollection(object oldValue, SynchronizationContext syncContext)
 		{
-			// NOTE: Ignore syncContext if UseSharedSynchronizationContext flag is set.
-			if ((_flags & _flagUseSharedSynchronizationContext) != 0)
+			if (oldValue != null)
 			{
-				return new SingleContextCallbackCollection(this, oldValue, _sharedContext);
+				return new MultiContextCallbackCollection(this, oldValue, syncContext);
 			}
-			else
-			{
-				if (oldValue != null)
-				{
-					return new MultiContextCallbackCollection(this, oldValue, syncContext);
-				}
 
-				return new MultiContextCallbackCollection(this);
-			}
+			return new MultiContextCallbackCollection(this);
 		}
 
 		#endregion

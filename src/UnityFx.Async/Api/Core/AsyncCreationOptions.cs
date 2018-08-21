@@ -26,11 +26,6 @@ namespace UnityFx.Async
 		/// <summary>
 		/// If set cancelling the operation has no effect (silently ignored).
 		/// </summary>
-		SuppressCancellation = AsyncResult.OptionSuppressCancellation,
-
-		/// <summary>
-		/// If set all continuations will execute on synchronization context specified by <see cref="AsyncResult.SharedSynchronizationContext"/>.
-		/// </summary>
-		UseSharedSynchronizationContext = AsyncResult.OptionUseSharedSynchronizationContext
+		SuppressCancellation = AsyncResult.OptionSuppressCancellation
 	}
 }
