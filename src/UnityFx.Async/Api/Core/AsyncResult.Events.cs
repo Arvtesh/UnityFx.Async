@@ -87,10 +87,7 @@ namespace UnityFx.Async
 			}
 			remove
 			{
-				if (value != null)
-				{
-					TryRemoveCallback(value);
-				}
+				TryRemoveCallback(value);
 			}
 		}
 
@@ -125,10 +122,7 @@ namespace UnityFx.Async
 			}
 			remove
 			{
-				if (value != null)
-				{
-					TryRemoveCallback(value);
-				}
+				TryRemoveCallback(value);
 			}
 		}
 
@@ -218,12 +212,7 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if <paramref name="action"/> was removed; <see langword="false"/> otherwise.</returns>
 		public bool RemoveCompletionCallback(Action<IAsyncOperation> action)
 		{
-			if (action != null)
-			{
-				return TryRemoveCallback(action);
-			}
-
-			return false;
+			return TryRemoveCallback(action);
 		}
 
 		/// <summary>
@@ -312,12 +301,7 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if <paramref name="continuation"/> was removed; <see langword="false"/> otherwise.</returns>
 		public bool RemoveCompletionCallback(IAsyncContinuation continuation)
 		{
-			if (continuation != null)
-			{
-				return TryRemoveCallback(continuation);
-			}
-
-			return false;
+			return TryRemoveCallback(continuation);
 		}
 
 		/// <summary>
@@ -406,12 +390,7 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if <paramref name="action"/> was removed; <see langword="false"/> otherwise.</returns>
 		public bool RemoveProgressCallback(Action<float> action)
 		{
-			if (action != null)
-			{
-				return TryRemoveCallback(action);
-			}
-
-			return false;
+			return TryRemoveCallback(action);
 		}
 
 #if !NET35
@@ -502,12 +481,7 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if <paramref name="callback"/> was removed; <see langword="false"/> otherwise.</returns>
 		public bool RemoveProgressCallback(IProgress<float> callback)
 		{
-			if (callback != null)
-			{
-				return TryRemoveCallback(callback);
-			}
-
-			return false;
+			return TryRemoveCallback(callback);
 		}
 
 #endif
@@ -595,42 +569,43 @@ namespace UnityFx.Async
 
 		private bool TryRemoveCallback(object callbackToRemove)
 		{
-			Debug.Assert(callbackToRemove != null);
-
-			// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
-			var value = _callback;
-
-			if (value != _callbackCompletionSentinel)
+			if (callbackToRemove != null)
 			{
-				var list = value as IAsyncCallbackCollection;
+				// NOTE: The code below is adapted from https://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs.
+				var value = _callback;
 
-				if (list == null)
+				if (value != _callbackCompletionSentinel)
 				{
-					// This is not a list. If we have a single object (the one we want to remove) we try to replace it with an empty list.
-					// Note we cannot go back to a null state, since it will mess up the TryAddCallback() logic.
-					if (Interlocked.CompareExchange(ref _callback, CreateCallbackCollection(null, null), callbackToRemove) == callbackToRemove)
-					{
-						return true;
-					}
-					else
-					{
-						// If we fail it means that either TryAddContinuation won the race condition and _callback is now a List
-						// that contains the element we want to remove. Or it set the _callbackCompletionSentinel.
-						// So we should try to get a list one more time.
-						list = _callback as IAsyncCallbackCollection;
-					}
-				}
+					var list = value as IAsyncCallbackCollection;
 
-				// If list is null it means _callbackCompletionSentinel has been set already and there is nothing else to do.
-				if (list != null)
-				{
-					lock (list)
+					if (list == null)
 					{
-						// There is a small chance that the operation completed since we took a local snapshot into
-						// list. In that case, just return; we don't want to be manipulating the callback list as it is being processed.
-						if (_callback != _callbackCompletionSentinel)
+						// This is not a list. If we have a single object (the one we want to remove) we try to replace it with an empty list.
+						// Note we cannot go back to a null state, since it will mess up the TryAddCallback() logic.
+						if (Interlocked.CompareExchange(ref _callback, CreateCallbackCollection(null, null), callbackToRemove) == callbackToRemove)
 						{
-							return list.Remove(callbackToRemove);
+							return true;
+						}
+						else
+						{
+							// If we fail it means that either TryAddContinuation won the race condition and _callback is now a List
+							// that contains the element we want to remove. Or it set the _callbackCompletionSentinel.
+							// So we should try to get a list one more time.
+							list = _callback as IAsyncCallbackCollection;
+						}
+					}
+
+					// If list is null it means _callbackCompletionSentinel has been set already and there is nothing else to do.
+					if (list != null)
+					{
+						lock (list)
+						{
+							// There is a small chance that the operation completed since we took a local snapshot into
+							// list. In that case, just return; we don't want to be manipulating the callback list as it is being processed.
+							if (_callback != _callbackCompletionSentinel)
+							{
+								return list.Remove(callbackToRemove);
+							}
 						}
 					}
 				}
