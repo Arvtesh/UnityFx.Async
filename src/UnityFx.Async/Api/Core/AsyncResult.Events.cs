@@ -65,7 +65,7 @@ namespace UnityFx.Async
 
 				if (!TryAddCallback(value, syncContext, false))
 				{
-					InvokeProgressCallback(value, syncContext);
+					CallbackUtility.InvokeProgressCallback(this, value, syncContext);
 				}
 			}
 			remove
@@ -336,7 +336,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(action, syncContext))
 			{
-				InvokeProgressCallback(action, syncContext);
+				CallbackUtility.InvokeProgressCallback(this, action, syncContext);
 			}
 		}
 
@@ -427,7 +427,7 @@ namespace UnityFx.Async
 		{
 			if (!TryAddProgressCallback(callback, syncContext))
 			{
-				InvokeProgressCallback(callback, syncContext);
+				CallbackUtility.InvokeProgressCallback(this, callback, syncContext);
 			}
 		}
 
@@ -518,7 +518,7 @@ namespace UnityFx.Async
 				if (oldValue != _callbackCompletionSentinel && !(oldValue is IAsyncCallbackCollection))
 				{
 					var newList = CreateCallbackCollection();
-					newList.AddCompletionCallback(callbackToAdd, null);
+					newList.AddCompletionCallback(oldValue, null);
 					Interlocked.CompareExchange(ref _callback, newList, oldValue);
 
 					// We might be racing against another thread converting the single into a list,
@@ -605,18 +605,11 @@ namespace UnityFx.Async
 		{
 			var value = _callback;
 
-			if (value != null)
+			if (value is IAsyncCallbackCollection callbackList)
 			{
-				if (value is IAsyncCallbackCollection callbackList)
+				lock (callbackList)
 				{
-					lock (callbackList)
-					{
-						callbackList.InvokeProgressCallbacks();
-					}
-				}
-				else
-				{
-					CallbackUtility.InvokeProgressCallback(this, value);
+					callbackList.InvokeProgressCallbacks();
 				}
 			}
 		}
@@ -644,20 +637,6 @@ namespace UnityFx.Async
 				{
 					CallbackUtility.InvokeCompletionCallback(this, value);
 				}
-			}
-		}
-
-		private void InvokeProgressCallback(object callback, SynchronizationContext syncContext)
-		{
-			Debug.Assert(callback != null);
-
-			if (syncContext == null || syncContext == SynchronizationContext.Current)
-			{
-				CallbackUtility.InvokeProgressCallback(this, callback);
-			}
-			else
-			{
-				syncContext.Post(args => CallbackUtility.InvokeProgressCallback(this, args), callback);
 			}
 		}
 

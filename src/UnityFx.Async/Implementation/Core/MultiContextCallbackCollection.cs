@@ -36,12 +36,6 @@ namespace UnityFx.Async
 			_op = op;
 		}
 
-		public MultiContextCallbackCollection(IAsyncOperation op, object callback, SynchronizationContext syncContext)
-		{
-			_op = op;
-			_completionCallback1 = new CallbackData(callback, syncContext);
-		}
-
 		#endregion
 
 		#region IAsyncCallbackCollection
@@ -163,37 +157,37 @@ namespace UnityFx.Async
 		{
 			if (_progressCallback1.Callback != null)
 			{
-				InvokeProgressCallback(_progressCallback1);
+				CallbackUtility.InvokeProgressCallback(_op, _progressCallback1.Callback, _progressCallback1.SyncContext);
 			}
 
 			if (_progressCallbacks != null)
 			{
 				foreach (var item in _progressCallbacks)
 				{
-					InvokeProgressCallback(item);
+					CallbackUtility.InvokeProgressCallback(_op, item.Callback, item.SyncContext);
 				}
 			}
 
 			if (_completionCallback1.Callback != null)
 			{
-				Invoke(_completionCallback1, invokeAsync);
+				CallbackUtility.InvokeCompletionCallback(_op, _completionCallback1.Callback, _completionCallback1.SyncContext, invokeAsync);
 			}
 
 			if (_completionCallback2.Callback != null)
 			{
-				Invoke(_completionCallback2, invokeAsync);
+				CallbackUtility.InvokeCompletionCallback(_op, _completionCallback2.Callback, _completionCallback2.SyncContext, invokeAsync);
 			}
 
 			if (_completionCallback3.Callback != null)
 			{
-				Invoke(_completionCallback3, invokeAsync);
+				CallbackUtility.InvokeCompletionCallback(_op, _completionCallback3.Callback, _completionCallback3.SyncContext, invokeAsync);
 			}
 
 			if (_completionCallbacks != null)
 			{
 				foreach (var item in _completionCallbacks)
 				{
-					Invoke(item, invokeAsync);
+					CallbackUtility.InvokeCompletionCallback(_op, item.Callback, item.SyncContext, invokeAsync);
 				}
 			}
 		}
@@ -202,14 +196,14 @@ namespace UnityFx.Async
 		{
 			if (_progressCallback1.Callback != null)
 			{
-				InvokeProgressCallback(_progressCallback1);
+				CallbackUtility.InvokeProgressCallback(_op, _progressCallback1.Callback, _progressCallback1.SyncContext);
 			}
 
 			if (_progressCallbacks != null)
 			{
 				foreach (var item in _progressCallbacks)
 				{
-					InvokeProgressCallback(item);
+					CallbackUtility.InvokeProgressCallback(_op, item.Callback, item.SyncContext);
 				}
 			}
 		}
@@ -217,67 +211,6 @@ namespace UnityFx.Async
 		#endregion
 
 		#region implementation
-
-		private void Invoke(CallbackData callbackData, bool invokeAsync)
-		{
-			var syncContext = callbackData.SyncContext;
-
-			if (invokeAsync)
-			{
-				if (syncContext != null)
-				{
-					syncContext.Post(InvokeInline, callbackData.Callback);
-				}
-				else
-				{
-					syncContext = SynchronizationContext.Current;
-
-					if (syncContext != null)
-					{
-						syncContext.Post(InvokeInline, callbackData.Callback);
-					}
-					else
-					{
-						ThreadPool.QueueUserWorkItem(InvokeInline, callbackData.Callback);
-					}
-				}
-			}
-			else if (syncContext == null || syncContext == SynchronizationContext.Current)
-			{
-				InvokeInline(callbackData.Callback);
-			}
-			else
-			{
-				syncContext.Post(InvokeInline, callbackData.Callback);
-			}
-		}
-
-		private void InvokeProgressCallback(CallbackData callbackData)
-		{
-			var syncContext = callbackData.SyncContext;
-
-			if (syncContext == null || syncContext == SynchronizationContext.Current)
-			{
-				InvokeProgressChangedInline(callbackData.Callback);
-			}
-			else
-			{
-				syncContext.Post(InvokeProgressChangedInline, callbackData.Callback);
-			}
-		}
-
-		private void InvokeInline(object callback)
-		{
-			Debug.Assert(callback != null);
-			CallbackUtility.InvokeCompletionCallback(_op, callback);
-		}
-
-		private void InvokeProgressChangedInline(object callback)
-		{
-			Debug.Assert(callback != null);
-			CallbackUtility.InvokeProgressCallback(_op, callback);
-		}
-
 		#endregion
 	}
 }
