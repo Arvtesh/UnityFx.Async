@@ -15,28 +15,12 @@ namespace UnityFx.Async
 		#region data
 
 		private static readonly object _callbackCompletionSentinel = new object();
-		private static SynchronizationContext _sharedContext;
 
 		private volatile object _callback;
 
 		#endregion
 
 		#region interface
-
-		/// <summary>
-		/// Gets or sets shared <see cref="SynchronizationContext"/> instance used for continuations.
-		/// </summary>
-		public static SynchronizationContext SharedSynchronizationContext
-		{
-			get
-			{
-				return _sharedContext;
-			}
-			set
-			{
-				_sharedContext = value;
-			}
-		}
 
 		/// <summary>
 		/// Adds a completion callback for <c>await</c> implementation.
@@ -508,12 +492,15 @@ namespace UnityFx.Async
 					{
 						if (syncContext != null)
 						{
-							newValue = CreateCallbackCollection(callbackToAdd, syncContext);
+							var newList = CreateCallbackCollection();
+							newList.AddCompletionCallback(callbackToAdd, syncContext);
+							newValue = newList;
 						}
 					}
 					else
 					{
-						var newList = CreateCallbackCollection(null, null);
+						// Always create a collection instance for progress callbacks.
+						var newList = CreateCallbackCollection();
 						newList.AddProgressCallback(callbackToAdd, syncContext);
 						newValue = newList;
 					}
@@ -530,7 +517,8 @@ namespace UnityFx.Async
 				// Logic for the case where we were previously storing a single callback.
 				if (oldValue != _callbackCompletionSentinel && !(oldValue is IAsyncCallbackCollection))
 				{
-					var newList = CreateCallbackCollection(oldValue, null);
+					var newList = CreateCallbackCollection();
+					newList.AddCompletionCallback(callbackToAdd, null);
 					Interlocked.CompareExchange(ref _callback, newList, oldValue);
 
 					// We might be racing against another thread converting the single into a list,
@@ -581,7 +569,7 @@ namespace UnityFx.Async
 					{
 						// This is not a list. If we have a single object (the one we want to remove) we try to replace it with an empty list.
 						// Note we cannot go back to a null state, since it will mess up the TryAddCallback() logic.
-						if (Interlocked.CompareExchange(ref _callback, CreateCallbackCollection(null, null), callbackToRemove) == callbackToRemove)
+						if (Interlocked.CompareExchange(ref _callback, CreateCallbackCollection(), callbackToRemove) == callbackToRemove)
 						{
 							return true;
 						}
@@ -691,13 +679,8 @@ namespace UnityFx.Async
 			}
 		}
 
-		private IAsyncCallbackCollection CreateCallbackCollection(object oldValue, SynchronizationContext syncContext)
+		private IAsyncCallbackCollection CreateCallbackCollection()
 		{
-			if (oldValue != null)
-			{
-				return new MultiContextCallbackCollection(this, oldValue, syncContext);
-			}
-
 			return new MultiContextCallbackCollection(this);
 		}
 
