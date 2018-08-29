@@ -8,7 +8,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 
 ### Added
 - Added `Play`/`Wait` extension methods for `Animation` and `Animator`.
-- Added `AsyncResult.SharedSynchronizationContext` static property.
 
 ### Changed
 - Changed `AsyncResult` constructors argument order to avoid ambiguity in some cases.
