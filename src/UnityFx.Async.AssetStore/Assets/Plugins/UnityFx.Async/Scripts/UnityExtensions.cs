@@ -33,7 +33,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				var result = new AsyncOperationResult(op);
+				var result = new Helpers.AsyncOperationResult(op);
 				result.Start();
 				return result;
 			}
@@ -45,7 +45,7 @@ namespace UnityFx.Async
 		/// <param name="op">The source operation.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this ResourceRequest op) where T : UnityEngine.Object
 		{
-			var result = new ResourceRequestResult<T>(op);
+			var result = new Helpers.ResourceRequestResult<T>(op);
 			result.Start();
 			return result;
 		}
@@ -56,7 +56,7 @@ namespace UnityFx.Async
 		/// <param name="op">The source operation.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this AssetBundleRequest op) where T : UnityEngine.Object
 		{
-			var result = new AssetBundleRequestResult<T>(op);
+			var result = new Helpers.AssetBundleRequestResult<T>(op);
 			result.Start();
 			return result;
 		}
@@ -161,7 +161,7 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static IAsyncOperation ToAsync(this UnityWebRequest request)
 		{
-			var result = new WebRequestResult<object>(request);
+			var result = new Helpers.WebRequestResult<object>(request);
 			result.Start();
 			return result;
 		}
@@ -172,7 +172,7 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this UnityWebRequest request) where T : class
 		{
-			var result = new WebRequestResult<T>(request);
+			var result = new Helpers.WebRequestResult<T>(request);
 			result.Start();
 			return result;
 		}
@@ -259,7 +259,7 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static IAsyncOperation ToAsync(this WWW request)
 		{
-			var result = new WwwResult<object>(request);
+			var result = new Helpers.WwwResult<object>(request);
 			result.Start();
 			return result;
 		}
@@ -270,7 +270,7 @@ namespace UnityFx.Async
 		/// <param name="request">The source web request.</param>
 		public static IAsyncOperation<T> ToAsync<T>(this WWW request) where T : class
 		{
-			var result = new WwwResult<T>(request);
+			var result = new Helpers.WwwResult<T>(request);
 			result.Start();
 			return result;
 		}
@@ -347,6 +347,98 @@ namespace UnityFx.Async
 
 		#endregion
 
+		#region Animation
+
+		/// <summary>
+		/// Plays an animation without any blending.
+		/// </summary>
+		/// <param name="anim">Target animation instance.</param>
+		/// <param name="mode">The mode which lets you choose how this animation will affect others already playing.</param>
+		/// <returns>An asynchronous operation that can be used to track the animation progress.</returns>
+		public static IAsyncOperation PlayAsync(this Animation anim, PlayMode mode)
+		{
+			if (anim.clip)
+			{
+				var result = new Helpers.PlayAnimationResult(anim, anim.clip.name, mode, AsyncUtility.GetUpdateSource());
+				result.Start();
+				return result;
+			}
+
+			return AsyncResult.CanceledOperation;
+		}
+
+		/// <summary>
+		/// Plays an animation without any blending.
+		/// </summary>
+		/// <param name="anim">Target animation instance.</param>
+		/// <param name="animation">Name of the animation to play.</param>
+		/// <param name="mode">The mode which lets you choose how this animation will affect others already playing.</param>
+		/// <returns>An asynchronous operation that can be used to track the animation progress.</returns>
+		public static IAsyncOperation PlayAsync(this Animation anim, string animation, PlayMode mode)
+		{
+			var result = new Helpers.PlayAnimationResult(anim, animation, mode, AsyncUtility.GetUpdateSource());
+			result.Start();
+			return result;
+		}
+
+		#endregion
+
+		#region Animator
+
+		/// <summary>
+		/// Plays an animator state.
+		/// </summary>
+		/// <param name="anim">Target animator instance.</param>
+		/// <param name="stateName">The state name.</param>
+		/// <param name="layer">The layer index. If layer is -1, it plays the first state with the given state name.</param>
+		/// <returns>An asynchronous operation that can be used to track the animation progress.</returns>
+		public static IAsyncOperation PlayAsync(this Animator anim, string stateName, int layer)
+		{
+			var result = new Helpers.PlayAnimatorResult(anim, stateName, layer, AsyncUtility.GetUpdateSource());
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Plays an animator state.
+		/// </summary>
+		/// <param name="anim">Target animator instance.</param>
+		/// <param name="stateName">The state name.</param>
+		/// <returns>An asynchronous operation that can be used to track the animation progress.</returns>
+		public static IAsyncOperation PlayAsync(this Animator anim, string stateName)
+		{
+			var result = new Helpers.PlayAnimatorResult(anim, stateName, -1, AsyncUtility.GetUpdateSource());
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Waits until current animation completes.
+		/// </summary>
+		/// <param name="anim">Target animator instance.</param>
+		/// <param name="layer">The layer index.</param>
+		/// <returns>An asynchronous operation that can be used to track the animation progress.</returns>
+		public static IAsyncOperation WaitAsync(this Animator anim, int layer)
+		{
+			var result = new Helpers.WaitAnimatorResult(anim, layer, AsyncUtility.GetUpdateSource());
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Waits until current animation completes.
+		/// </summary>
+		/// <param name="anim">Target animator instance.</param>
+		/// <returns>An asynchronous operation that can be used to track the animation progress.</returns>
+		public static IAsyncOperation WaitAsync(this Animator anim)
+		{
+			var result = new Helpers.WaitAnimatorResult(anim, 0, AsyncUtility.GetUpdateSource());
+			result.Start();
+			return result;
+		}
+
+		#endregion
+
 		#region implementation
 
 #if NET_4_6 || NET_STANDARD_2_0
@@ -363,11 +455,11 @@ namespace UnityFx.Async
 				if (request.isHttpError || request.isNetworkError)
 #endif
 				{
-					tcs.TrySetException(new WebRequestException(request.error, request.responseCode));
+					tcs.TrySetException(new Helpers.WebRequestException(request.error, request.responseCode));
 				}
 				else if (request.downloadHandler != null)
 				{
-					var result = AsyncUtility.GetResult<T>(request);
+					var result = AsyncWww.GetResult<T>(request);
 					tcs.TrySetResult(result);
 				}
 				else
@@ -389,12 +481,12 @@ namespace UnityFx.Async
 			{
 				if (string.IsNullOrEmpty(www.error))
 				{
-					var result = AsyncUtility.GetResult<T>(www);
+					var result = AsyncWww.GetResult<T>(www);
 					tcs.TrySetResult(result);
 				}
 				else
 				{
-					tcs.TrySetException(new WebRequestException(www.error));
+					tcs.TrySetException(new Helpers.WebRequestException(www.error));
 				}
 			}
 			catch (Exception e)

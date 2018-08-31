@@ -16,64 +16,68 @@ namespace UnityFx.Async
 		[Fact]
 		public void DefaultConstructor_SetsStatusToCreated()
 		{
-			// Act
+			// Arrange/Act
 			var op = new AsyncResult();
 
 			// Assert
 			AssertNotCompleted(op, AsyncOperationStatus.Created);
 		}
 
-		[Fact]
-		public void Constructor_SetsStatusToScheduled()
+		[Theory]
+		[InlineData(AsyncOperationStatus.Created)]
+		[InlineData(AsyncOperationStatus.Scheduled)]
+		[InlineData(AsyncOperationStatus.Running)]
+		public void Constructor_SetsCorrectStatus(AsyncOperationStatus status)
 		{
-			// Act
-			var op = new AsyncResult(AsyncOperationStatus.Scheduled);
+			// Arrange/Act
+			var op = new AsyncResult(status);
+			var op2 = new AsyncResult(status, null, null);
 
 			// Assert
-			AssertNotCompleted(op, AsyncOperationStatus.Scheduled);
+			AssertNotCompleted(op, status);
+			AssertNotCompleted(op2, status);
 		}
 
-		[Fact]
-		public void Constructor_SetsStatusToRunning()
+		[Theory]
+		[InlineData(AsyncOperationStatus.RanToCompletion)]
+		[InlineData(AsyncOperationStatus.Faulted)]
+		[InlineData(AsyncOperationStatus.Canceled)]
+		public void Constructor_SetsCorrectCompletionStatus(AsyncOperationStatus status)
 		{
-			// Act
-			var op = new AsyncResult(AsyncOperationStatus.Running);
+			// Arrange/Act
+			var op = new AsyncResult(status);
+			var op2 = new AsyncResult(status, null);
+			var op3 = new AsyncResult(status, null, null);
 
 			// Assert
-			AssertNotCompleted(op, AsyncOperationStatus.Running);
-		}
-
-		[Fact]
-		public void Constructor_SetsStatusToCompleted()
-		{
-			// Act
-			var op = new AsyncResult(AsyncOperationStatus.RanToCompletion);
-
-			// Assert
-			AssertCompleted(op);
+			AssertCompleted(op, status);
 			Assert.True(op.CompletedSynchronously);
+			AssertCompleted(op2, status);
+			Assert.True(op2.CompletedSynchronously);
+			AssertCompleted(op3, status);
+			Assert.True(op3.CompletedSynchronously);
 		}
 
-		[Fact]
-		public void Constructor_SetsStatusToFaulted()
+		[Theory]
+		[InlineData(AsyncOperationStatus.Created, AsyncCreationOptions.None)]
+		[InlineData(AsyncOperationStatus.Scheduled, AsyncCreationOptions.RunContinuationsAsynchronously)]
+		[InlineData(AsyncOperationStatus.Running, AsyncCreationOptions.SuppressCancellation)]
+		[InlineData(AsyncOperationStatus.Faulted, AsyncCreationOptions.RunContinuationsAsynchronously)]
+		[InlineData(AsyncOperationStatus.Canceled, AsyncCreationOptions.RunContinuationsAsynchronously | AsyncCreationOptions.SuppressCancellation)]
+		public void Constructor_SetsCorrectStatusAndOptions(AsyncOperationStatus status, AsyncCreationOptions options)
 		{
-			// Act
-			var op = new AsyncResult(AsyncOperationStatus.Faulted);
+			// Arrange/Act
+			var op = new AsyncResult(status, options);
+			var op2 = new AsyncResult(status, options, null);
+			var op3 = new AsyncResult(status, options, null, null);
 
 			// Assert
-			AssertFaulted(op);
-			Assert.True(op.CompletedSynchronously);
-		}
-
-		[Fact]
-		public void Constructor_SetsStatusToCanceled()
-		{
-			// Act
-			var op = new AsyncResult(AsyncOperationStatus.Canceled);
-
-			// Assert
-			AssertCanceled(op);
-			Assert.True(op.CompletedSynchronously);
+			Assert.Equal(status, op.Status);
+			Assert.Equal(options, op.CreationOptions);
+			Assert.Equal(status, op2.Status);
+			Assert.Equal(options, op2.CreationOptions);
+			Assert.Equal(status, op3.Status);
+			Assert.Equal(options, op3.CreationOptions);
 		}
 
 		[Fact]
@@ -84,10 +88,14 @@ namespace UnityFx.Async
 
 			// Act
 			var op = new AsyncResult(null, state);
+			var op2 = new AsyncResult(AsyncOperationStatus.Scheduled, state);
+			var op3 = new AsyncResult(AsyncCreationOptions.RunContinuationsAsynchronously, state);
+			var op4 = new AsyncResult(AsyncOperationStatus.Faulted, AsyncCreationOptions.SuppressCancellation, state);
 
 			// Assert
-			AssertNotCompleted(op, AsyncOperationStatus.Created);
 			Assert.Equal(state, op.AsyncState);
+			Assert.Equal(state, op2.AsyncState);
+			Assert.Equal(state, op3.AsyncState);
 		}
 
 		#endregion
@@ -628,7 +636,7 @@ namespace UnityFx.Async
 		[InlineData(AsyncOperationStatus.RanToCompletion, false)]
 		[InlineData(AsyncOperationStatus.Faulted, false)]
 		[InlineData(AsyncOperationStatus.Canceled, false)]
-		public void MoveNext_ReturnsCorrentValue(AsyncOperationStatus status, bool expectedResult)
+		public void MoveNext_ReturnsCorrectValue(AsyncOperationStatus status, bool expectedResult)
 		{
 			// Arrange
 			var op = new AsyncResult(status);
@@ -697,22 +705,40 @@ namespace UnityFx.Async
 		private void AssertCompleted(IAsyncOperation op)
 		{
 			Assert.Equal(AsyncOperationStatus.RanToCompletion, op.Status);
+			Assert.Null(op.Exception);
 			Assert.True(op.IsCompleted);
 			Assert.True(op.IsCompletedSuccessfully);
 			Assert.False(op.IsCanceled);
 			Assert.False(op.IsFaulted);
-			Assert.Null(op.Exception);
+		}
+
+		private void AssertCompleted(IAsyncOperation op, AsyncOperationStatus status)
+		{
+			if (status == AsyncOperationStatus.RanToCompletion)
+			{
+				Assert.Null(op.Exception);
+			}
+			else
+			{
+				Assert.NotNull(op.Exception);
+			}
+
+			Assert.True(op.IsCompleted);
+			Assert.Equal(status == AsyncOperationStatus.RanToCompletion, op.IsCompletedSuccessfully);
+			Assert.Equal(status == AsyncOperationStatus.Faulted, op.IsFaulted);
+			Assert.Equal(status == AsyncOperationStatus.Canceled, op.IsCanceled);
+			Assert.Equal(status, op.Status);
 		}
 
 		private void AssertCompletedWithResult<T>(IAsyncOperation<T> op, T result)
 		{
 			Assert.Equal(AsyncOperationStatus.RanToCompletion, op.Status);
 			Assert.Equal(result, op.Result);
+			Assert.Null(op.Exception);
 			Assert.True(op.IsCompleted);
 			Assert.True(op.IsCompletedSuccessfully);
 			Assert.False(op.IsCanceled);
 			Assert.False(op.IsFaulted);
-			Assert.Null(op.Exception);
 		}
 
 		private void AssertCanceled(IAsyncOperation op, OperationCanceledException e)
@@ -728,6 +754,7 @@ namespace UnityFx.Async
 		private void AssertCanceled(IAsyncOperation op)
 		{
 			Assert.Equal(AsyncOperationStatus.Canceled, op.Status);
+			Assert.IsType<OperationCanceledException>(op.Exception);
 			Assert.True(op.IsCompleted);
 			Assert.True(op.IsCanceled);
 			Assert.False(op.IsCompletedSuccessfully);
