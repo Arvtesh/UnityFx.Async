@@ -76,15 +76,21 @@ namespace UnityFx.Async
 		public AsyncCreationOptions CreationOptions => (AsyncCreationOptions)(_flags >> _optionsOffset);
 
 		/// <summary>
+		/// Gets a value indicating whether the operation has been started.
+		/// </summary>
+		/// <value>A value indicating whether the operation has been started.</value>
+		public bool IsStarted => (_flags & _statusMask) >= StatusRunning;
+
+		/// <summary>
 		/// Gets a value indicating whether the operation instance is disposed.
 		/// </summary>
-		/// <value>The disposed flag.</value>
+		/// <value>A value indicating whether the operation is disposed.</value>
 		protected bool IsDisposed => (_flags & _flagDisposed) != 0;
 
 		/// <summary>
 		/// Gets a value indicating whether the operation cancellation was requested.
 		/// </summary>
-		/// <value>The cancellation request flag.</value>
+		/// <value>A value indicating whether the operation cancellation was requested.</value>
 		protected bool IsCancellationRequested => (_flags & _flagCancellationRequested) != 0;
 
 		/// <summary>
