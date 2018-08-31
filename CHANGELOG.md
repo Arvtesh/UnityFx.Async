@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Moved the package content to Plugins folder and remove assembly definition file.
 - Moved web request related helpers from `AsyncUtility` to `AsyncWww` class.
 - Changed `AsyncUtility.SendToMainThread`, `AsyncUtility.PostToMainThread` and `AsyncUtility.InvokeOnMainThread` implementation to use `ConcurrentQueue` for net46+ to avoid unnesesary locks.
+- Changed interface of `AsyncResultQueue`.
 
 ### Removed
 - Removed `IAsyncOperationEvents.TryAddCompletionCallback` and `IAsyncOperationEvents.TryAddProgressCallback` methods. These methods are not needed in 99% of cases and may lead to logic errors in multi-threaded environment.
