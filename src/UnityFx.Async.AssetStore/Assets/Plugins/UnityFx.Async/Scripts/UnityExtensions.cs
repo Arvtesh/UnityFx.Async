@@ -459,7 +459,7 @@ namespace UnityFx.Async
 				}
 				else if (request.downloadHandler != null)
 				{
-					var result = AsyncUtility.GetResult<T>(request);
+					var result = AsyncWww.GetResult<T>(request);
 					tcs.TrySetResult(result);
 				}
 				else
@@ -481,7 +481,7 @@ namespace UnityFx.Async
 			{
 				if (string.IsNullOrEmpty(www.error))
 				{
-					var result = AsyncUtility.GetResult<T>(www);
+					var result = AsyncWww.GetResult<T>(www);
 					tcs.TrySetResult(result);
 				}
 				else

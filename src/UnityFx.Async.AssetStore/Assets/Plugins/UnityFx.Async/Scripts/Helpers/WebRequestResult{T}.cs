@@ -74,7 +74,7 @@ namespace UnityFx.Async.Helpers
 		/// </summary>
 		protected virtual T GetResult(UnityWebRequest request)
 		{
-			return AsyncUtility.GetResult<T>(request);
+			return AsyncWww.GetResult<T>(request);
 		}
 
 		#endregion

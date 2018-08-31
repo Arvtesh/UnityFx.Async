@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class AsyncCompletionSource
    | Asynchronous Operations for Unity ">
-    <meta name="generator" content="docfx 2.31.0.0">
+    <meta name="generator" content="docfx 2.37.2.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
@@ -22,7 +22,7 @@
     
     
   </head>
-  <body data-spy="scroll" data-target="#affix">
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
       <header>
         
@@ -89,6 +89,7 @@
     <div><a class="xref" href="UnityFx.Async.IAsyncCancellable.html">IAsyncCancellable</a></div>
     <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iasyncresult">IAsyncResult</a></div>
     <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    <div><a class="xref" href="UnityFx.Async.IAsyncContinuation.html">IAsyncContinuation</a></div>
     <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerator">IEnumerator</a></div>
     <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html">IAsyncCompletionSource</a></div>
   </div>
@@ -122,10 +123,19 @@
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TrySetCompleted_System_Boolean_">AsyncResult.TrySetCompleted(Boolean)</a>
     </div>
     <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryReportProgress">AsyncResult.TryReportProgress()</a>
+    </div>
+    <div>
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_ThrowIfNonSuccess">AsyncResult.ThrowIfNonSuccess()</a>
     </div>
     <div>
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_ThrowIfDisposed">AsyncResult.ThrowIfDisposed()</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_GetNewId">AsyncResult.GetNewId()</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_OnProgressChanged">AsyncResult.OnProgressChanged()</a>
     </div>
     <div>
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_OnStatusChanged_UnityFx_Async_AsyncOperationStatus_">AsyncResult.OnStatusChanged(AsyncOperationStatus)</a>
@@ -138,6 +148,9 @@
     </div>
     <div>
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Dispose_System_Boolean_">AsyncResult.Dispose(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Id">AsyncResult.Id</a>
     </div>
     <div>
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Progress">AsyncResult.Progress</a>
@@ -156,6 +169,9 @@
     </div>
     <div>
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_IsCanceled">AsyncResult.IsCanceled</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Invoke_UnityFx_Async_IAsyncOperation_">AsyncResult.Invoke(IAsyncOperation)</a>
     </div>
     <div>
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Cancel">AsyncResult.Cancel()</a>
@@ -185,43 +201,76 @@
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Dispose">AsyncResult.Dispose()</a>
     </div>
     <div>
-      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_ToString">AsyncResult.ToString()</a>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_ProgressChanged">AsyncResult.ProgressChanged</a>
     </div>
     <div>
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Completed">AsyncResult.Completed</a>
     </div>
     <div>
-      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_AddContinuation_UnityFx_Async_AsyncOperationCallback_">AsyncResult.AddContinuation(AsyncOperationCallback)</a>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_AddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__">AsyncResult.AddCompletionCallback(Action&lt;IAsyncOperation&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryAddContinuation_UnityFx_Async_AsyncOperationCallback_">AsyncResult.TryAddContinuation(AsyncOperationCallback)</a>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryAddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__">AsyncResult.TryAddCompletionCallback(Action&lt;IAsyncOperation&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_AddContinuation_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext_">AsyncResult.AddContinuation(AsyncOperationCallback, SynchronizationContext)</a>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_AddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__System_Threading_SynchronizationContext_">AsyncResult.AddCompletionCallback(Action&lt;IAsyncOperation&gt;, SynchronizationContext)</a>
     </div>
     <div>
-      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryAddContinuation_UnityFx_Async_AsyncOperationCallback_System_Threading_SynchronizationContext_">AsyncResult.TryAddContinuation(AsyncOperationCallback, SynchronizationContext)</a>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryAddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__System_Threading_SynchronizationContext_">AsyncResult.TryAddCompletionCallback(Action&lt;IAsyncOperation&gt;, SynchronizationContext)</a>
     </div>
     <div>
-      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_RemoveContinuation_UnityFx_Async_AsyncOperationCallback_">AsyncResult.RemoveContinuation(AsyncOperationCallback)</a>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_RemoveCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__">AsyncResult.RemoveCompletionCallback(Action&lt;IAsyncOperation&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_AddContinuation_UnityFx_Async_IAsyncContinuation_">AsyncResult.AddContinuation(IAsyncContinuation)</a>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_AddCompletionCallback_UnityFx_Async_IAsyncContinuation_">AsyncResult.AddCompletionCallback(IAsyncContinuation)</a>
     </div>
     <div>
-      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryAddContinuation_UnityFx_Async_IAsyncContinuation_">AsyncResult.TryAddContinuation(IAsyncContinuation)</a>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryAddCompletionCallback_UnityFx_Async_IAsyncContinuation_">AsyncResult.TryAddCompletionCallback(IAsyncContinuation)</a>
     </div>
     <div>
-      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_AddContinuation_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_">AsyncResult.AddContinuation(IAsyncContinuation, SynchronizationContext)</a>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_AddCompletionCallback_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_">AsyncResult.AddCompletionCallback(IAsyncContinuation, SynchronizationContext)</a>
     </div>
     <div>
-      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryAddContinuation_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_">AsyncResult.TryAddContinuation(IAsyncContinuation, SynchronizationContext)</a>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryAddCompletionCallback_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_">AsyncResult.TryAddCompletionCallback(IAsyncContinuation, SynchronizationContext)</a>
     </div>
     <div>
-      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_RemoveContinuation_UnityFx_Async_IAsyncContinuation_">AsyncResult.RemoveContinuation(IAsyncContinuation)</a>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_RemoveCompletionCallback_UnityFx_Async_IAsyncContinuation_">AsyncResult.RemoveCompletionCallback(IAsyncContinuation)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_AddProgressCallback_System_Action_System_Single__">AsyncResult.AddProgressCallback(Action&lt;Single&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryAddProgressCallback_System_Action_System_Single__">AsyncResult.TryAddProgressCallback(Action&lt;Single&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_AddProgressCallback_System_Action_System_Single__System_Threading_SynchronizationContext_">AsyncResult.AddProgressCallback(Action&lt;Single&gt;, SynchronizationContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryAddProgressCallback_System_Action_System_Single__System_Threading_SynchronizationContext_">AsyncResult.TryAddProgressCallback(Action&lt;Single&gt;, SynchronizationContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_RemoveProgressCallback_System_Action_System_Single__">AsyncResult.RemoveProgressCallback(Action&lt;Single&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_AddProgressCallback_System_IProgress_System_Single__">AsyncResult.AddProgressCallback(IProgress&lt;Single&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryAddProgressCallback_System_IProgress_System_Single__">AsyncResult.TryAddProgressCallback(IProgress&lt;Single&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_AddProgressCallback_System_IProgress_System_Single__System_Threading_SynchronizationContext_">AsyncResult.AddProgressCallback(IProgress&lt;Single&gt;, SynchronizationContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryAddProgressCallback_System_IProgress_System_Single__System_Threading_SynchronizationContext_">AsyncResult.TryAddProgressCallback(IProgress&lt;Single&gt;, SynchronizationContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_RemoveProgressCallback_System_IProgress_System_Single__">AsyncResult.RemoveProgressCallback(IProgress&lt;Single&gt;)</a>
     </div>
     <div>
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_CompletedOperation">AsyncResult.CompletedOperation</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_FaultedOperation">AsyncResult.FaultedOperation</a>
     </div>
     <div>
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_CanceledOperation">AsyncResult.CanceledOperation</a>
@@ -272,7 +321,16 @@
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_FromAction_System_Action_">AsyncResult.FromAction(Action)</a>
     </div>
     <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_FromAction__1_System_Action___0____0_">AsyncResult.FromAction&lt;T&gt;(Action&lt;T&gt;, T)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_FromAction_System_Threading_SendOrPostCallback_System_Object_">AsyncResult.FromAction(SendOrPostCallback, Object)</a>
+    </div>
+    <div>
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_FromAction__1_System_Func___0__">AsyncResult.FromAction&lt;TResult&gt;(Func&lt;TResult&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_FromAction__2_System_Func___0___1____0_">AsyncResult.FromAction&lt;T, TResult&gt;(Func&lt;T, TResult&gt;, T)</a>
     </div>
     <div>
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_FromTask_System_Threading_Tasks_Task_">AsyncResult.FromTask(Task)</a>
@@ -294,6 +352,12 @@
     </div>
     <div>
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Delay_System_Int32_UnityFx_Async_IAsyncUpdateSource_">AsyncResult.Delay(Int32, IAsyncUpdateSource)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Delay_System_Single_">AsyncResult.Delay(Single)</a>
+    </div>
+    <div>
+      <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Delay_System_Single_UnityFx_Async_IAsyncUpdateSource_">AsyncResult.Delay(Single, IAsyncUpdateSource)</a>
     </div>
     <div>
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Delay_System_TimeSpan_">AsyncResult.Delay(TimeSpan)</a>
@@ -368,29 +432,32 @@
       <a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_WhenAny__1___0___">AsyncResult.WhenAny&lt;T&gt;(T[])</a>
     </div>
     <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
     </div>
     <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
     </div>
     <div>
-      <span class="xref">System.Object.GetHashCode()</span>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
     </div>
     <div>
-      <span class="xref">System.Object.GetType()</span>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
     </div>
     <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
     </div>
     <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="UnityFx.Async.html">UnityFx.Async</a></h6>
   <h6><strong>Assembly</strong>: UnityFx.Async.dll</h6>
   <h5 id="UnityFx_Async_AsyncCompletionSource_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class AsyncCompletionSource : AsyncResult, IAsyncOperation, IAsyncOperationEvents, IAsyncCancellable, IAsyncResult, IDisposable, IEnumerator, IAsyncCompletionSource</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class AsyncCompletionSource : AsyncResult, IAsyncOperation, IAsyncOperationEvents, IAsyncCancellable, IAsyncResult, IDisposable, IAsyncContinuation, IEnumerator, IAsyncCompletionSource</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -935,6 +1002,12 @@
   <div class="markdown level1 remarks"><p>Make sure that each method call returns a value greater or equal to the previous. It is important for
 progress reporting consistency.</p>
 </div>
+  <h5 id="UnityFx_Async_AsyncCompletionSource_GetProgress_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_Progress">Progress</a></div>
+      <div><a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_OnProgressChanged">OnProgressChanged</a>()</div>
+      <div><a class="xref" href="UnityFx.Async.AsyncResult.html#UnityFx_Async_AsyncResult_TryReportProgress">TryReportProgress</a>()</div>
+  </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncCompletionSource_OnCancel.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncCompletionSource.OnCancel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
@@ -944,7 +1017,7 @@ progress reporting consistency.</p>
   </span>
   <a id="UnityFx_Async_AsyncCompletionSource_OnCancel_" data-uid="UnityFx.Async.AsyncCompletionSource.OnCancel*"></a>
   <h4 id="UnityFx_Async_AsyncCompletionSource_OnCancel" data-uid="UnityFx.Async.AsyncCompletionSource.OnCancel">OnCancel()</h4>
-  <div class="markdown level1 summary"><p>Called when the operation cancellation has been requested. Default implementation throws <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a>.</p>
+  <div class="markdown level1 summary"><p>Called when the operation cancellation has been requested. Default implementation does nothing.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1046,7 +1119,7 @@ progress reporting consistency.</p>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncCompletionSource_TrySetCanceled.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncCompletionSource.TrySetCanceled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncCompletionSource.cs/#L233">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncCompletionSource.cs/#L234">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncCompletionSource_TrySetCanceled_" data-uid="UnityFx.Async.AsyncCompletionSource.TrySetCanceled*"></a>
   <h4 id="UnityFx_Async_AsyncCompletionSource_TrySetCanceled" data-uid="UnityFx.Async.AsyncCompletionSource.TrySetCanceled">TrySetCanceled()</h4>
@@ -1092,7 +1165,7 @@ progress reporting consistency.</p>
   <h5 id="UnityFx_Async_AsyncCompletionSource_TrySetCanceled_seealso">See Also</h5>
   <div class="seealso">
       <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetException_System_Exception_">TrySetException</a>(<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a>)</div>
-      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__">TrySetExceptions</a>(<span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a>&gt;)</div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__">TrySetExceptions</a>(<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a>&gt;)</div>
       <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetCompleted">TrySetCompleted</a>()</div>
   </div>
   <span class="small pull-right mobile-hide">
@@ -1100,7 +1173,7 @@ progress reporting consistency.</p>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncCompletionSource_TrySetCompleted.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncCompletionSource.TrySetCompleted%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncCompletionSource.cs/#L236">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncCompletionSource.cs/#L237">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncCompletionSource_TrySetCompleted_" data-uid="UnityFx.Async.AsyncCompletionSource.TrySetCompleted*"></a>
   <h4 id="UnityFx_Async_AsyncCompletionSource_TrySetCompleted" data-uid="UnityFx.Async.AsyncCompletionSource.TrySetCompleted">TrySetCompleted()</h4>
@@ -1147,7 +1220,7 @@ progress reporting consistency.</p>
   <div class="seealso">
       <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetCanceled">TrySetCanceled</a>()</div>
       <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetException_System_Exception_">TrySetException</a>(<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a>)</div>
-      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__">TrySetExceptions</a>(<span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a>&gt;)</div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__">TrySetExceptions</a>(<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a>&gt;)</div>
       <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetProgress_System_Single_">TrySetProgress</a>(<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a>)</div>
   </div>
   <span class="small pull-right mobile-hide">
@@ -1155,7 +1228,7 @@ progress reporting consistency.</p>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncCompletionSource_TrySetException_System_Exception_.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncCompletionSource.TrySetException(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncCompletionSource.cs/#L239">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncCompletionSource.cs/#L240">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncCompletionSource_TrySetException_" data-uid="UnityFx.Async.AsyncCompletionSource.TrySetException*"></a>
   <h4 id="UnityFx_Async_AsyncCompletionSource_TrySetException_System_Exception_" data-uid="UnityFx.Async.AsyncCompletionSource.TrySetException(System.Exception)">TrySetException(Exception)</h4>
@@ -1223,7 +1296,7 @@ progress reporting consistency.</p>
   </table>
   <h5 id="UnityFx_Async_AsyncCompletionSource_TrySetException_System_Exception__seealso">See Also</h5>
   <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__">TrySetExceptions</a>(<span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a>&gt;)</div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__">TrySetExceptions</a>(<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a>&gt;)</div>
       <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetCanceled">TrySetCanceled</a>()</div>
       <div><a class="xref" href="UnityFx.Async.IAsyncCompletionSource.html#UnityFx_Async_IAsyncCompletionSource_TrySetCompleted">TrySetCompleted</a>()</div>
   </div>
@@ -1232,7 +1305,7 @@ progress reporting consistency.</p>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncCompletionSource.TrySetExceptions(System.Collections.Generic.IEnumerable%7BSystem.Exception%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncCompletionSource.cs/#L242">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Core/AsyncCompletionSource.cs/#L243">View Source</a>
   </span>
   <a id="UnityFx_Async_AsyncCompletionSource_TrySetExceptions_" data-uid="UnityFx.Async.AsyncCompletionSource.TrySetExceptions*"></a>
   <h4 id="UnityFx_Async_AsyncCompletionSource_TrySetExceptions_System_Collections_Generic_IEnumerable_System_Exception__" data-uid="UnityFx.Async.AsyncCompletionSource.TrySetExceptions(System.Collections.Generic.IEnumerable{System.Exception})">TrySetExceptions(IEnumerable&lt;Exception&gt;)</h4>
@@ -1254,7 +1327,7 @@ progress reporting consistency.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a>&gt;</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a>&gt;</td>
         <td><span class="parametername">exceptions</span></td>
         <td><p>Exceptions that caused the operation to end prematurely.</p>
 </td>
@@ -1502,6 +1575,9 @@ progress reporting consistency.</p>
       <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
   </div>
   <div>
+      <a class="xref" href="UnityFx.Async.IAsyncContinuation.html">IAsyncContinuation</a>
+  </div>
+  <div>
       <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerator">System.Collections.IEnumerator</a>
   </div>
   <div>
@@ -1531,6 +1607,12 @@ progress reporting consistency.</p>
   </div>
   <div>
       <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ContinueWith__1_UnityFx_Async_IAsyncOperation_System_Func_UnityFx_Async_IAsyncOperation_System_Object___0__System_Object_UnityFx_Async_AsyncContinuationOptions_">AsyncExtensions.ContinueWith&lt;TResult&gt;(IAsyncOperation, Func&lt;IAsyncOperation, Object, TResult&gt;, Object, AsyncContinuationOptions)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ThrowIfNonSuccess_UnityFx_Async_IAsyncOperation_">AsyncExtensions.ThrowIfNonSuccess(IAsyncOperation)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ToEnum_System_IAsyncResult_">AsyncExtensions.ToEnum(IAsyncResult)</a>
   </div>
   <div>
       <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_SpinUntilCompleted_System_IAsyncResult_">AsyncExtensions.SpinUntilCompleted(IAsyncResult)</a>

@@ -16,7 +16,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Adds a new completion callback.
 		/// </summary>
-		/// <param name="callback">The callback instance to add. Types allowed: <see cref="IAsyncContinuation"/>, <see cref="Action{IAsyncOperation}"/>, <see cref="Action"/>, <see cref="AsyncCallback"/>, <see cref="AsyncCompletedEventHandler"/>.</param>
+		/// <param name="callback">The callback instance to add.</param>
 		/// <param name="syncContext">A synchronization context to invoke callback on or <see langword="null"/>.</param>
 		/// <seealso cref="AddProgressCallback(object, SynchronizationContext)"/>
 		void AddCompletionCallback(object callback, SynchronizationContext syncContext);
@@ -24,7 +24,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Adds a new progress callback.
 		/// </summary>
-		/// <param name="callback">The callback instance to add. Types allowed: <see cref="Action{float}"/>, <see cref="ProgressChangedEventHandler"/>.</param>
+		/// <param name="callback">The callback instance to add.</param>
 		/// <param name="syncContext">A synchronization context to invoke callback on or <see langword="null"/>.</param>
 		/// <seealso cref="AddCompletionCallback(object, SynchronizationContext)"/>
 		void AddProgressCallback(object callback, SynchronizationContext syncContext);
