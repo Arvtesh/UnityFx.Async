@@ -5,7 +5,7 @@ Channel  | UnityFx.Async |
 AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/master?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/master) [![AppVeyor tests](https://img.shields.io/appveyor/tests/Arvtesh/unityFx-async.svg)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/build/tests)
 NuGet | [![NuGet](https://img.shields.io/nuget/v/UnityFx.Async.svg)](https://www.nuget.org/packages/UnityFx.Async)
 Github | [![GitHub release](https://img.shields.io/github/release/Arvtesh/UnityFx.Async.svg?logo=github)](https://github.com/Arvtesh/UnityFx.Async/releases)
-Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v0.9.5-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
+Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v0.9.6-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
 
 **If you enjoy using the library - please, [rate and review](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696) it on the Asset Store!**
 
@@ -156,7 +156,7 @@ catch (Exception e)
 ```
 In fact the only notable difference from synchronous implementation is usage of the mentioned `async` and `await` keywords. It's worth mentioning that a lot of hidden work is done by both the C# compliter and asynchronous operation to allow this.
 
-*UnityFx.Async* supports all of the asynchronous programming approaches described.
+*UnityFx.Async* supports all the asynchronous programming approaches described.
 
 ## Using the library
 Reference the DLL and import the namespace:
@@ -166,22 +166,26 @@ using UnityFx.Async.Promises;   // For promises-specific stuff.
 ```
 Create an operation instance like this:
 ```csharp
-var op = new AsyncCompletionSource<string>();
+var acs = new AsyncCompletionSource<string>();
+var op = acs.Operation;
 ```
 The type of the operation should reflect its result type. In this case we create a special kind of operation - a completion source, that incapsulates both producer and consumer interfaces (consumer side is represented via `IAsyncOperation` / `IAsyncOperation<TResult>` interfaces and producer side is `IAsyncCompletionSource` / `IAsyncCompletionSource<TResult>`, `AsyncCompletionSource` implements both of the interfaces).
 
-While operation is running its progress can be set like this:
+While operation is running its progress can be set via `IAsyncCompletionSource` like this:
 ```csharp
-op.SetProgress(progressValue);
+acs.SetProgress(progressValue);
 ```
 
-Upon completion of an asynchronous operation transition it to one of the final states (`RanToCompletion`, `Faulted` or `Canceled`):
+Cancellation can be requested for any operation at any time (note that this call just *requests* cancellation, specific operation implementation may decide to postpone or even ignore it):
 ```csharp
-op.SetResult(resultValue);
+op.Cancel();
 ```
-Or, if the operation has failed:
+
+Upon completion an asynchronous operation transitions to one of the final states (`RanToCompletion`, `Faulted` or `Canceled`):
 ```csharp
-op.SetException(ex);
+acs.SetResult(resultValue);  // Sets result value and transitions to RanToCompletion state.
+acs.SetException(ex);        // Transitions the operation to Faulted state.
+acs.SetCanceled();           // Transitions the operation to Canceled state.
 ```
 
 To see it in context, here is an example of a function that downloads text from URL using [UnityWebRequest](https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html):
