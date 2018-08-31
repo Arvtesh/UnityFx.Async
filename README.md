@@ -294,7 +294,7 @@ DownloadTextAsync("http://www.google.com")
     .Then(text => ExtractFirstUrl(text))
     .Rebind(url => new Url(url));
 ```
-`ContinueWith()` and `Finally()` delegates get called independently of the antecedent operation result. `ContinueWith()` also define overloads accepting `AsyncContinuationOptions` argument that allows to customize its behaviour. Note that `ContinueWith()` is analog to the corresponding [Task method](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.continuewith) and not a part of the JS promise pattern:
+`ContinueWith()` and `Finally()` delegates get called independently of the antecedent operation result. `ContinueWith()` also define overloads accepting `AsyncContinuationOptions` argument that allows to customize its behaviour. Note that `ContinueWith()` matches the corresponding [Task method](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.continuewith) and is not a part of the JS promise pattern:
 ```csharp
 DownloadTextAsync("http://www.google.com")
     .ContinueWith(op => Debug.Log("1"))
@@ -329,43 +329,43 @@ finally
 ### Cancellation
 All library operations can be cancelled using `Cancel()` method:
 ```csharp
-op.Cancel();    // attempts to cancel an operation
+op.Cancel();    // Attempts to cancel an operation.
 ```
-Or with `WithCancellation()` extension:
+Or with `WithCancellation()` extension (if [CancellationToken](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken) is needed):
 ```csharp
 DownloadTextAsync("http://www.google.com")
     .Then(text => ExtractFirstParagraph(text))
     .WithCancellation(cancellationToken);
 ```
-If the [token](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken) passed to `WithCancellation()` is cancelled, the target operation is cancelled as well (and that means cancelling all chained operations) as soon as possible. Cancellation might not be instant (depends on specific operation implementation). Also, please note that not all operations might support cancellation; in this case `Cancel()` will throw `NotSupportedException`.
+If the [token](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken) passed to `WithCancellation()` is cancelled, the target operation is cancelled as well (and that means cancelling all chained operations) as soon as possible. Cancellation might not be instant (depends on specific operation implementation). Also, please note that not all operations might support cancellation; in this case `Cancel()` might just do nothing.
 
 ### Progress reporting
 Library operations support progress reporting via exposing `IAsyncOperation.Progress` property and progress reporting events:
 ```csharp
-var progress = op.Progress;  // gets an operation progress as a float value in range [0, 1]
+var progress = op.Progress;  // Gets an operation progress as a float value in range [0, 1].
 
-// subscribe to progress changed event
+// Subscribe to progress changed event.
 op.ProgressChanged += (sender, args) =>
 {
     Debug.Log("Progress = " + args.ProgressPercentage);
 }
 
-// add progress changed delegate
+// Add progress changed delegate.
 op.AddProgressCallback(op =>
 {
     Debug.Log("Progress = " + op.Progress);
 });
 ```
-There is `AsyncResult.GetProgress()` virtual method that is called when a progress values is requested. Finally there are producer-side methods like `AsyncCompletionSource.TrySetProgress()` that can set the progress value.
+There is `AsyncResult.GetProgress()` virtual method that is called when a progress values is requested. Finally there are producer-side methods like `AsyncCompletionSource.SetProgress()` that can set the progress value.
 
 ### Synchronization context capturing
 The default behaviour of all library methods is to capture current [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) and try to schedule continuations on it. If there is no synchronization context attached to current thread, continuations are executed on a thread that initiated an operation completion. The same behaviour applies to `async` / `await` implementation unless explicitly overriden with `ConfigureAwait()`:
 ```csharp
 // thread1
 await DownloadTextAsync("http://www.google.com");
-// Back on thread1
+// Back on thread1.
 await DownloadTextAsync("http://www.yahoo.com").ConfigureAwait(false);
-// Most likely some other thread
+// Most likely some other thread.
 ```
 
 ### Completion callbacks
@@ -405,7 +405,7 @@ All operations implement [IDisposable](https://docs.microsoft.com/en-us/dotnet/a
 Please note that `Dispose()` implementation is NOT thread-safe and can only be called after an operation has completed (the same restrictions apply to [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)).
 
 ### Completed asynchronous operations
-There are a number of helper methods for creating completed operations:
+There are a number of helper methods and properties for creating completed operations:
 ```csharp
 var op1 = AsyncResult.CompletedOperation;
 var op2 = AsyncResult.CanceledOperation;
@@ -431,10 +431,10 @@ var op5 = unityWWW.ToAsync();
 
 ### Creating own asynchronous operations
 Most common way of creating own asynchronous operation is instantiating `AsyncCompletionSource` instance and call `SetResult()` / `SetException()` / `SetCanceled()` when done. Still there are cases when more control is required. For this purpose the library provides two public extendable implementations for asynchronous operations:
-* `AsyncResult`: a generic asynchronous operation without a result value.
+* `AsyncResult`: an asynchronous operation without a result value.
 * `AsyncResult<TResult>`: an asynchronous operation with a result value.
 
-The sample code below demostrates creating a delay operation:
+The sample code below demostrates creating a delay operation (in fact library provides one, this is just a simplified example):
 ```csharp
 public class TimerDelayResult : AsyncResult
 {
@@ -471,6 +471,27 @@ public class TimerDelayResult : AsyncResult
         base.Dispose(disposing);
     }
 }
+```
+
+### Unity3d helpers
+The library consists of 3 major parts:
+* Core tools (defined in `UnityFx.Async.dll` assembly, do not depend on Unity3d);
+* Unity3d-specific tools (defined as a collection of C# scripts located in `Assets/Plugins/UnityFx.Async` if installed as an Asset Store package, require Unity3d to compile/execute).
+* Unity3d samples (defined as a collection of C# scripts located in `Assets/UnityFx.Async` if installed as an Asset Store package, require Unity3d to compile/execute).
+
+Everything described before (unless specified otherwise) does not require Unity and can be used in any application. The Unity-specific stuff is located in 3 classes:
+* `AsyncUtility`. Defines helper methods for accessing main thread in Unity, running coroutines without actually using a `MonoBehaviour` and waiting for native Unity asynchronous operations outside of coroutines.
+* `AsyncWww`. Defines web request related helpers.
+* `UnityExtensions`. Defines extensions for native Unity classes (like `AsyncOperation` and `UnityWebRequest`).
+
+For example, one can throw a few lines of code to be executed on a main thread using:
+```csharp
+// Sends a delegate to the main thread and blocks calling thread until it is executed.
+AsyncUtility.SendToMainThread(args => Debug.Log("On the main thread."), null);
+// Posts a delegate to the main thread and returns immediately. Returns an asynchronous operation that can be used to track the delegate execution.
+AsyncUtility.PostToMainThread(args => Debug.Log("On the main thread."), null);
+// If calling thread is the main thread executes the delegate synchronously, otherwise posts it to the main thread. Returns an asynchronous operation that can be used to track the delegate execution.
+AsyncUtility.InvokeOnMainThread(args => Debug.Log("On the main thread."), null);
 ```
 
 ## Comparison to .NET Tasks
