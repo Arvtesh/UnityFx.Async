@@ -143,6 +143,11 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(op));
 			}
 
+			if (op.IsStarted)
+			{
+				return false;
+			}
+
 			if (_maxOpsSize > 0 && _ops.Count >= _maxOpsSize)
 			{
 				return false;
@@ -153,17 +158,15 @@ namespace UnityFx.Async
 				_completionCallback = OnCompletedCallback;
 			}
 
-			if (op.TryAddCompletionCallback(_completionCallback, _syncContext))
+			op.AddCompletionCallback(_completionCallback, _syncContext);
+
+			lock (_ops)
 			{
-				lock (_ops)
-				{
-					_ops.Add(op);
-					TryStart(op);
-					return true;
-				}
+				_ops.Add(op);
+				TryStart(op);
 			}
 
-			return false;
+			return true;
 		}
 
 		/// <summary>
