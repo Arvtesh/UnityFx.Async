@@ -3,6 +3,9 @@
 
 using System;
 using System.Collections;
+#if !NET35
+using System.Collections.Concurrent;
+#endif
 using System.Collections.Generic;
 using System.Threading;
 
@@ -18,9 +21,9 @@ namespace UnityFx.Async
 	/// <threadsafety static="true" instance="true"/>
 	/// <seealso cref="AsyncResult"/>
 #if NET35
-	public class AsyncResultQueue<T> : ICollection<T> where T : AsyncResult
+	public class AsyncResultQueue<T> : IEnumerable<T>, IAsyncCancellable where T : AsyncResult
 #else
-	public class AsyncResultQueue<T> : ICollection<T>, IReadOnlyCollection<T> where T : AsyncResult
+	public class AsyncResultQueue<T> : IReadOnlyCollection<T>, IAsyncCancellable where T : AsyncResult
 #endif
 	{
 		#region data
@@ -29,7 +32,11 @@ namespace UnityFx.Async
 
 		private int _maxOpsSize = 0;
 		private bool _suspended;
+#if NET35
 		private List<T> _ops = new List<T>();
+#else
+		private ConcurrentQueue<T> _ops = new ConcurrentQueue<T>();
+#endif
 		private SendOrPostCallback _startCallback;
 		private Action<IAsyncOperation> _completionCallback;
 
@@ -38,20 +45,21 @@ namespace UnityFx.Async
 		#region interface
 
 		/// <summary>
-		/// Raised when the queue becomes emtpy.
-		/// </summary>
-		/// <seealso cref="OnEmpty"/>
-		/// <seealso cref="IsEmpty"/>
-		public event EventHandler Empty;
-
-		/// <summary>
 		/// Gets a value indicating whether the queue is empty.
 		/// </summary>
 		/// <value>The empty flag.</value>
-		/// <seealso cref="OnEmpty"/>
-		/// <seealso cref="Empty"/>
 		/// <seealso cref="Count"/>
-		public bool IsEmpty => _ops.Count == 0;
+		public bool IsEmpty
+		{
+			get
+			{
+#if NET35
+				return _ops.Count == 0;
+#else
+				return _ops.IsEmpty;
+#endif
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets maximum queue size. Default is 0 (no constraints).
@@ -105,10 +113,14 @@ namespace UnityFx.Async
 		{
 			get
 			{
+#if NET35
 				lock (_ops)
 				{
 					return _ops.Count > 0 ? _ops[0] : null;
 				}
+#else
+				return _ops.TryPeek(out var result) ? result : null;
+#endif
 			}
 		}
 
@@ -133,10 +145,9 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="op">The operation to enqueue.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="op"/> is <see langword="null"/>.</exception>
-		/// <seealso cref="Add(T)"/>
-		/// <seealso cref="Remove(T)"/>
+		/// <exception cref="InvalidOperationException">Thrown if the operatinon is started.</exception>
 		/// <seealso cref="Clear"/>
-		public bool TryAdd(T op)
+		public bool Add(T op)
 		{
 			if (op == null)
 			{
@@ -145,7 +156,7 @@ namespace UnityFx.Async
 
 			if (op.IsStarted)
 			{
-				return false;
+				throw new InvalidOperationException();
 			}
 
 			if (_maxOpsSize > 0 && _ops.Count >= _maxOpsSize)
@@ -160,130 +171,26 @@ namespace UnityFx.Async
 
 			op.AddCompletionCallback(_completionCallback, _syncContext);
 
+#if NET35
 			lock (_ops)
 			{
 				_ops.Add(op);
 				TryStart(op);
 			}
+#else
+			_ops.Enqueue(op);
+			TryStart(op);
+#endif
 
 			return true;
 		}
 
 		/// <summary>
-		/// Removes all operations from the queue and return them.
+		/// Removes all elements from the collection.
 		/// </summary>
-		/// <seealso cref="Remove(T)"/>
-		public T[] Release()
-		{
-			lock (_ops)
-			{
-				if (_ops.Count > 0)
-				{
-					var result = new T[_ops.Count];
-
-					for (var i = 0; i < result.Length; ++i)
-					{
-						var op = _ops[i];
-						op.RemoveCompletionCallback(_completionCallback);
-						result[i] = op;
-					}
-
-					_ops.Clear();
-					OnEmpty();
-					return result;
-				}
-
-				return new T[0];
-			}
-		}
-
-		/// <summary>
-		/// Returns the queue snapshot as array.
-		/// </summary>
-		/// <returns>An array containing the queue snapshot.</returns>
-		public T[] ToArray()
-		{
-			lock (_ops)
-			{
-				return _ops.ToArray();
-			}
-		}
-
-		/// <summary>
-		/// Called when the operation should be started.
-		/// </summary>
-		/// <param name="op">The operation to start.</param>
-		protected virtual void OnStart(T op)
-		{
-			op.TrySetRunning();
-		}
-
-		/// <summary>
-		/// Called when the queue becomes empty.
-		/// </summary>
-		/// <seealso cref="Empty"/>
-		/// <seealso cref="IsEmpty"/>
-		protected virtual void OnEmpty()
-		{
-			Empty?.Invoke(this, EventArgs.Empty);
-		}
-
-		#endregion
-
-		#region ICollection
-
-		/// <inheritdoc/>
-		public int Count => _ops.Count;
-
-		/// <inheritdoc/>
-		public bool IsReadOnly => false;
-
-		/// <inheritdoc/>
-		public void Add(T op)
-		{
-			if (!TryAdd(op))
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		/// <inheritdoc/>
-		public bool Remove(T op)
-		{
-			lock (_ops)
-			{
-				if (_ops.Remove(op))
-				{
-					op.RemoveCompletionCallback(_completionCallback);
-					TryStart(null);
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		/// <inheritdoc/>
-		public bool Contains(T item)
-		{
-			lock (_ops)
-			{
-				return _ops.Contains(item);
-			}
-		}
-
-		/// <inheritdoc/>
-		public void CopyTo(T[] array, int arrayIndex)
-		{
-			lock (_ops)
-			{
-				_ops.CopyTo(array, arrayIndex);
-			}
-		}
-
-		/// <inheritdoc/>
 		public void Clear()
 		{
+#if NET35
 			lock (_ops)
 			{
 				foreach (var op in _ops)
@@ -293,11 +200,84 @@ namespace UnityFx.Async
 
 				_ops.Clear();
 			}
+#else
+			while (_ops.TryDequeue(out var op))
+			{
+				op.RemoveCompletionCallback(_completionCallback);
+			}
+#endif
+		}
+
+		/// <summary>
+		/// Copies the collection elements to an array.
+		/// </summary>
+		public void CopyTo(T[] array, int arrayIndex)
+		{
+#if NET35
+			lock (_ops)
+			{
+				_ops.CopyTo(array, arrayIndex);
+			}
+#else
+			_ops.CopyTo(array, arrayIndex);
+#endif
+		}
+
+		/// <summary>
+		/// Returns the queue snapshot as array.
+		/// </summary>
+		/// <returns>An array containing the queue snapshot.</returns>
+		public T[] ToArray()
+		{
+#if NET35
+			lock (_ops)
+			{
+				return _ops.ToArray();
+			}
+#else
+			return _ops.ToArray();
+#endif
 		}
 
 		#endregion
 
+		#region IAsyncCancellable
+
+		/// <inheritdoc/>
+		public void Cancel()
+		{
+#if NET35
+			lock (_ops)
+			{
+				foreach (var op in _ops)
+				{
+					op.RemoveCompletionCallback(_completionCallback);
+					op.Cancel();
+				}
+
+				_ops.Clear();
+			}
+#else
+			while (_ops.TryDequeue(out var op))
+			{
+				op.RemoveCompletionCallback(_completionCallback);
+				op.Cancel();
+			}
+#endif
+		}
+
+		#endregion
+
+		#region IReadOnlyCollection
+
+		/// <inheritdoc/>
+		public int Count => _ops.Count;
+
+		#endregion
+
 		#region IEnumerable
+
+#if NET35
 
 		private class Enumerator : IEnumerator<T>
 		{
@@ -343,6 +323,22 @@ namespace UnityFx.Async
 			return new Enumerator(_ops);
 		}
 
+#else
+
+		/// <inheritdoc/>
+		public IEnumerator<T> GetEnumerator()
+		{
+			return _ops.GetEnumerator();
+		}
+
+		/// <inheritdoc/>
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return _ops.GetEnumerator();
+		}
+
+#endif
+
 		#endregion
 
 		#region implementation
@@ -373,6 +369,7 @@ namespace UnityFx.Async
 			{
 				op?.TrySetScheduled();
 
+#if NET35
 				while (_ops.Count > 0)
 				{
 					var firstOp = _ops[0];
@@ -383,35 +380,49 @@ namespace UnityFx.Async
 					}
 					else
 					{
-						OnStart(firstOp);
+						firstOp.TrySetRunning();
 						break;
 					}
 				}
-
-				if (_ops.Count == 0)
+#else
+				while (_ops.TryPeek(out var firstOp))
 				{
-					OnEmpty();
+					if (firstOp.IsCompleted)
+					{
+						_ops.TryDequeue(out firstOp);
+					}
+					else
+					{
+						firstOp.TrySetRunning();
+						break;
+					}
 				}
+#endif
 			}
 		}
 
 		private void OnStartCallback(object args)
 		{
+#if NET35
 			lock (_ops)
 			{
 				TryStartUnsafe(args as T);
 			}
+#else
+			TryStartUnsafe(args as T);
+#endif
 		}
 
 		private void OnCompletedCallback(IAsyncOperation op)
 		{
+#if NET35
 			lock (_ops)
 			{
-				if (_ops.Remove(op as T))
-				{
-					TryStartUnsafe(null);
-				}
+				TryStartUnsafe(null);
 			}
+#else
+			TryStartUnsafe(null);
+#endif
 		}
 
 		#endregion
