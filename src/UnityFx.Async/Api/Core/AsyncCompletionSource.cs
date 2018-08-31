@@ -30,28 +30,9 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncCompletionSource"/> class.
 		/// </summary>
-		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
-		public AsyncCompletionSource(AsyncCreationOptions options)
-			: base(options)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncCompletionSource"/> class.
-		/// </summary>
 		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
 		public AsyncCompletionSource(object asyncState)
 			: base(default(AsyncCallback), asyncState)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncCompletionSource"/> class.
-		/// </summary>
-		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
-		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
-		public AsyncCompletionSource(object asyncState, AsyncCreationOptions options)
-			: base(default(AsyncCallback), asyncState, options)
 		{
 		}
 
@@ -68,11 +49,30 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncCompletionSource"/> class.
 		/// </summary>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncCompletionSource(AsyncCreationOptions options)
+			: base(options)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncCompletionSource"/> class.
+		/// </summary>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
+		public AsyncCompletionSource(AsyncCreationOptions options, object asyncState)
+			: base(options, null, asyncState)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncCompletionSource"/> class.
+		/// </summary>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
 		/// <param name="asyncCallback">User-defined completion callback.</param>
 		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
-		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
-		public AsyncCompletionSource(AsyncCallback asyncCallback, object asyncState, AsyncCreationOptions options)
-			: base(asyncCallback, asyncState, options)
+		public AsyncCompletionSource(AsyncCreationOptions options, AsyncCallback asyncCallback, object asyncState)
+			: base(options, asyncCallback, asyncState)
 		{
 		}
 
@@ -89,30 +89,9 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncCompletionSource"/> class.
 		/// </summary>
 		/// <param name="status">Initial value of the <see cref="AsyncResult.Status"/> property.</param>
-		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
-		public AsyncCompletionSource(AsyncOperationStatus status, AsyncCreationOptions options)
-			: base(status, options)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncCompletionSource"/> class.
-		/// </summary>
-		/// <param name="status">Initial value of the <see cref="AsyncResult.Status"/> property.</param>
 		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
 		public AsyncCompletionSource(AsyncOperationStatus status, object asyncState)
 			: base(status, asyncState)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncCompletionSource"/> class.
-		/// </summary>
-		/// <param name="status">Initial value of the <see cref="AsyncResult.Status"/> property.</param>
-		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
-		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
-		public AsyncCompletionSource(AsyncOperationStatus status, object asyncState, AsyncCreationOptions options)
-			: base(status, asyncState, options)
 		{
 		}
 
@@ -131,11 +110,32 @@ namespace UnityFx.Async
 		/// Initializes a new instance of the <see cref="AsyncCompletionSource"/> class.
 		/// </summary>
 		/// <param name="status">Initial value of the <see cref="AsyncResult.Status"/> property.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		public AsyncCompletionSource(AsyncOperationStatus status, AsyncCreationOptions options)
+			: base(status, options)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncCompletionSource"/> class.
+		/// </summary>
+		/// <param name="status">Initial value of the <see cref="AsyncResult.Status"/> property.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
+		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
+		public AsyncCompletionSource(AsyncOperationStatus status, AsyncCreationOptions options, object asyncState)
+			: base(status, options, asyncState)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncCompletionSource"/> class.
+		/// </summary>
+		/// <param name="status">Initial value of the <see cref="AsyncResult.Status"/> property.</param>
+		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
 		/// <param name="asyncCallback">User-defined completion callback.</param>
 		/// <param name="asyncState">User-defined data returned by <see cref="IAsyncResult.AsyncState"/>.</param>
-		/// <param name="options">The <see cref="AsyncCreationOptions"/> used to customize the operation's behavior.</param>
-		public AsyncCompletionSource(AsyncOperationStatus status, AsyncCallback asyncCallback, object asyncState, AsyncCreationOptions options)
-			: base(status, asyncCallback, asyncState, options)
+		public AsyncCompletionSource(AsyncOperationStatus status, AsyncCreationOptions options, AsyncCallback asyncCallback, object asyncState)
+			: base(status, options, asyncCallback, asyncState)
 		{
 		}
 

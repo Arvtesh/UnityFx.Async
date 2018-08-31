@@ -5,7 +5,7 @@ using System;
 using System.Text;
 using UnityEngine;
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Helpers
 {
 	/// <summary>
 	/// A wrapper for <see cref="WWW"/> with result value.
@@ -68,7 +68,7 @@ namespace UnityFx.Async
 		/// </summary>
 		protected virtual T GetResult(WWW request)
 		{
-			return AsyncUtility.GetResult<T>(request);
+			return AsyncWww.GetResult<T>(request);
 		}
 
 		#endregion

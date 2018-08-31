@@ -4,8 +4,10 @@
 using System;
 using UnityEngine;
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Helpers
 {
+	using Debug = System.Diagnostics.Debug;
+
 	/// <summary>
 	/// A wrapper for <see cref="AssetBundleRequest"/> with result value.
 	/// </summary>

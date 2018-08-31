@@ -12,53 +12,39 @@ namespace UnityFx.Async
 	public class CompletionCallbackTests
 	{
 		[Fact]
-		public void TryAddCompletionCallback_FailsIfOperationIsCompleted()
-		{
-			// Arrange
-			var op = new AsyncCompletionSource();
-			op.SetCanceled();
-
-			// Act
-			var result = op.TryAddCompletionCallback(_ => { }, null);
-
-			// Assert
-			Assert.False(result);
-		}
-
-		[Fact]
-		public void TryAddCompletionCallback_FailsIfOperationIsCompletedSynchronously()
+		public void AddCompletionCallback_ExecutesCallbackIfOperationIsCompleted()
 		{
 			// Arrange
 			var op = AsyncResult.CompletedOperation;
+			var continuation = Substitute.For<IAsyncContinuation>();
 
 			// Act
-			var result = op.TryAddCompletionCallback(_ => { }, null);
+			op.AddCompletionCallback(continuation);
 
 			// Assert
-			Assert.False(result);
+			continuation.Received(1).Invoke(op);
 		}
 
 		[Fact]
-		public async Task TryAddCompletionCallback_ExecutesWhenOperationCompletes()
+		public void AddCompletionCallback_ExecutesCallbackIfOperationIsCompleted2()
 		{
 			// Arrange
-			var op = AsyncResult.Delay(1);
+			var op = AsyncResult.CompletedOperation;
 			var callbackCalled = false;
 
-			op.TryAddCompletionCallback(_ => callbackCalled = true, null);
-
 			// Act
-			await op;
+			op.AddCompletionCallback(_ => callbackCalled = true, null);
 
 			// Assert
 			Assert.True(callbackCalled);
 		}
 
-		[Fact]
-		public async Task TryAddCompletionCallback_IsThreadSafe()
+		[Theory]
+		[InlineData(AsyncCreationOptions.None)]
+		public async Task AddCompletionCallback_IsThreadSafe(AsyncCreationOptions creationOptions)
 		{
 			// Arrange
-			var op = new AsyncCompletionSource();
+			var op = new AsyncCompletionSource(creationOptions);
 			var counter = 0;
 			var d = new Action<IAsyncOperation>(CompletionCallback);
 
@@ -71,7 +57,7 @@ namespace UnityFx.Async
 			{
 				for (var i = 0; i < 10000; ++i)
 				{
-					op.TryAddCompletionCallback(d);
+					op.AddCompletionCallback(d);
 				}
 			}
 
@@ -98,12 +84,12 @@ namespace UnityFx.Async
 		}
 
 		[Fact]
-		public void TryAddContinuation_ExecutesWhenOperationCompletes()
+		public void AddCompletionCallback_ExecutesWhenOperationCompletes()
 		{
 			// Arrange
 			var op = new AsyncCompletionSource();
 			var continuation = Substitute.For<IAsyncContinuation>();
-			op.TryAddCompletionCallback(continuation);
+			op.AddCompletionCallback(continuation);
 
 			// Act
 			op.SetCompleted();
@@ -113,7 +99,23 @@ namespace UnityFx.Async
 		}
 
 		[Fact]
-		public void AddContinuation_ExecutesIfOperationIsCompletedSynchronously()
+		public async Task AddCompletionCallback_ExecutesWhenOperationCompletes2()
+		{
+			// Arrange
+			var op = AsyncResult.Delay(1);
+			var callbackCalled = false;
+
+			op.AddCompletionCallback(_ => callbackCalled = true, null);
+
+			// Act
+			await op;
+
+			// Assert
+			Assert.True(callbackCalled);
+		}
+
+		[Fact]
+		public void AddCompletionCallback_ExecutesIfOperationIsCompletedSynchronously()
 		{
 			// Arrange
 			var op = AsyncResult.CompletedOperation;
@@ -127,7 +129,7 @@ namespace UnityFx.Async
 		}
 
 		[Fact]
-		public void AddCompletionCallback_ExecutesIfOperationIsCompletedSynchronously()
+		public void AddCompletionCallback_ExecutesIfOperationIsCompletedSynchronously2()
 		{
 			// Arrange
 			var op = AsyncResult.CanceledOperation;
@@ -141,7 +143,7 @@ namespace UnityFx.Async
 		}
 
 		[Fact]
-		public async Task TryAddCompletionCallback_ContinuationsAreRunOnCorrectSynchronozationContext()
+		public async Task AddCompletionCallback_ContinuationsRunOnCorrectSynchronozationContext()
 		{
 			// Arrange
 			var op = new AsyncCompletionSource();
@@ -150,8 +152,8 @@ namespace UnityFx.Async
 			var tid = 0;
 			var tidActual = 0;
 
-			op.TryAddCompletionCallback(_ => { }, sc);
-			op2.TryAddCompletionCallback(_ => tidActual = Thread.CurrentThread.ManagedThreadId, null);
+			op.AddCompletionCallback(_ => { }, sc);
+			op2.AddCompletionCallback(_ => tidActual = Thread.CurrentThread.ManagedThreadId, null);
 
 			// Act
 			await Task.Run(() => op.SetCompleted());

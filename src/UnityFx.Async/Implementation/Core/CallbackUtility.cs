@@ -17,6 +17,9 @@ namespace UnityFx.Async
 
 		public static void InvokeCompletionCallback(IAsyncOperation op, object continuation)
 		{
+			Debug.Assert(op != null);
+			Debug.Assert(continuation != null);
+
 			switch (continuation)
 			{
 				case IAsyncContinuation c:
@@ -41,8 +44,51 @@ namespace UnityFx.Async
 			}
 		}
 
+		public static void InvokeCompletionCallback(IAsyncOperation op, object continuation, SynchronizationContext syncContext, bool invokeAsync)
+		{
+			Debug.Assert(op != null);
+			Debug.Assert(continuation != null);
+
+			void InvokeInline(object callback)
+			{
+				InvokeCompletionCallback(op, callback);
+			}
+
+			if (invokeAsync)
+			{
+				if (syncContext != null)
+				{
+					syncContext.Post(InvokeInline, continuation);
+				}
+				else
+				{
+					syncContext = SynchronizationContext.Current;
+
+					if (syncContext != null)
+					{
+						syncContext.Post(InvokeInline, continuation);
+					}
+					else
+					{
+						ThreadPool.QueueUserWorkItem(InvokeInline, continuation);
+					}
+				}
+			}
+			else if (syncContext == null || syncContext == SynchronizationContext.Current)
+			{
+				InvokeCompletionCallback(op, continuation);
+			}
+			else
+			{
+				syncContext.Post(InvokeInline, continuation);
+			}
+		}
+
 		public static void InvokeCompletionCallbackAsync(IAsyncOperation op, object continuation, SynchronizationContext syncContext)
 		{
+			Debug.Assert(op != null);
+			Debug.Assert(continuation != null);
+
 			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
 			{
 				syncContext.Post(args => InvokeCompletionCallback(op, args), continuation);
@@ -55,6 +101,9 @@ namespace UnityFx.Async
 
 		public static void InvokeProgressCallback(IAsyncOperation op, object callback)
 		{
+			Debug.Assert(op != null);
+			Debug.Assert(callback != null);
+
 			switch (callback)
 			{
 #if !NET35
@@ -70,6 +119,21 @@ namespace UnityFx.Async
 				case ProgressChangedEventHandler ph:
 					ph.Invoke(op, new ProgressChangedEventArgs((int)(op.Progress * 100), op.AsyncState));
 					break;
+			}
+		}
+
+		public static void InvokeProgressCallback(IAsyncOperation op, object callback, SynchronizationContext syncContext)
+		{
+			Debug.Assert(op != null);
+			Debug.Assert(callback != null);
+
+			if (syncContext == null || syncContext == SynchronizationContext.Current)
+			{
+				InvokeProgressCallback(op, callback);
+			}
+			else
+			{
+				syncContext.Post(args => InvokeProgressCallback(op, args), callback);
 			}
 		}
 

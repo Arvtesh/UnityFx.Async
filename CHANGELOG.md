@@ -4,7 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
 -----------------------
-## [0.9.5] - unreleased
+## [0.9.6] - unreleased
+
+### Added
+- Added `Play`/`Wait` extension methods for `Animation` and `Animator`.
+- Added `AsyncResult.IsStarted` helper property.
+
+### Changed
+- Changed `AsyncResult` constructors argument order to avoid ambiguity in some cases.
+- Moved the package content to Plugins folder and remove assembly definition file.
+- Moved web request related helpers from `AsyncUtility` to `AsyncWww` class.
+- Changed `AsyncUtility.SendToMainThread`, `AsyncUtility.PostToMainThread` and `AsyncUtility.InvokeOnMainThread` implementation to use `ConcurrentQueue` for net46+ to avoid unnesesary locks.
+- Changed interface of `AsyncResultQueue`.
+
+### Removed
+- Removed `IAsyncOperationEvents.TryAddCompletionCallback` and `IAsyncOperationEvents.TryAddProgressCallback` methods. These methods are not needed in 99% of cases and may lead to logic errors in multi-threaded environment.
+
+-----------------------
+## [0.9.5] - 2018.07.31
 
 ### Added
 - Added `IAsyncOperation.Id` property for easy operation identification.

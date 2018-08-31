@@ -4,7 +4,7 @@
 using System;
 using UnityEngine;
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Helpers
 {
 	/// <summary>
 	/// A wrapper for <see cref="AssetBundleCreateRequest"/>.

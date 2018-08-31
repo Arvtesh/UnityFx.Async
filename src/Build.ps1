@@ -73,8 +73,8 @@ function _PublishAssetStorePackage
 	$filesToPublish = (Join-Path $scriptPath "UnityFx.Async.AssetStore\Assets\*")
 	$binToPublish =(Join-Path $binPath (Join-Path $targetFramework "\*")) 
 	$publishPath = (Join-Path $assetStorePath (Join-Path $targetFramework "Assets"))
-	$publishPath2 = (Join-Path $publishPath "UnityFx.Async")
-	$publishBinPath = (Join-Path $publishPath "UnityFx.Async\Bin")
+	$publishPath2 = (Join-Path $publishPath "Plugins\UnityFx.Async")
+	$publishBinPath = (Join-Path $publishPath "Plugins\UnityFx.Async\Bin")
 	
 	New-Item $publishBinPath -ItemType Directory
 	Copy-Item -Path $filesToPublish -Destination $publishPath -Force -Recurse
