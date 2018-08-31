@@ -4,7 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
 -----------------------
-## [0.9.6] - unreleased
+## [0.9.7] - unreleased
+
+-----------------------
+## [0.9.6] - 2018.08.31
 
 ### Added
 - Added `Play`/`Wait` extension methods for `Animation` and `Animator`.
