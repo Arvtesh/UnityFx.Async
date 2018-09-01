@@ -388,6 +388,35 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/>. The method calls <see cref="TrySetException(Exception)"/>
+		/// passing a new <see cref="System.Exception"/> instance with the specified <paramref name="message"/>.
+		/// </summary>
+		/// <param name="message">An exception message.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="message"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetException(Exception)"/>
+		protected internal bool TrySetException(string message)
+		{
+			return TrySetException(new Exception(message), false);
+		}
+
+		/// <summary>
+		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/>. The method calls <see cref="TrySetException(Exception, bool)"/>
+		/// passing a new <see cref="System.Exception"/> instance with the specified <paramref name="message"/>.
+		/// </summary>
+		/// <param name="message">An exception message.</param>
+		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="message"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="TrySetException(Exception, bool)"/>
+		protected internal bool TrySetException(string message, bool completedSynchronously)
+		{
+			return TrySetException(new Exception(message), completedSynchronously);
+		}
+
+		/// <summary>
 		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> (or <see cref="AsyncOperationStatus.Canceled"/>
 		/// if the exception is <see cref="OperationCanceledException"/>) state.
 		/// </summary>

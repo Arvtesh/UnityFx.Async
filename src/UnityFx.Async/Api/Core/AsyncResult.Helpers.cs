@@ -141,11 +141,39 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Creates a <see cref="IAsyncOperation"/> that has completed with the specified error message.
+		/// </summary>
+		/// <param name="message">An exception message.</param>
+		/// <returns>A faulted operation.</returns>
+		/// <seealso cref="FromException(System.Exception)"/>
+		/// <seealso cref="FromCanceled()"/>
+		/// <seealso cref="FromResult{T}(T)"/>
+		public static AsyncResult FromException(string message)
+		{
+			return new AsyncResult(new Exception(message), null);
+		}
+
+		/// <summary>
+		/// Creates a <see cref="IAsyncOperation"/> that has completed with a specified error message.
+		/// </summary>
+		/// <param name="message">An exception message.</param>
+		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
+		/// <returns>A faulted operation.</returns>
+		/// <seealso cref="FromException(System.Exception, object)"/>
+		/// <seealso cref="FromCanceled(object)"/>
+		/// <seealso cref="FromResult{T}(T, object)"/>
+		public static AsyncResult FromException(string message, object asyncState)
+		{
+			return new AsyncResult(new Exception(message), asyncState);
+		}
+
+		/// <summary>
 		/// Creates a <see cref="IAsyncOperation"/> that has completed with a specified exception.
 		/// </summary>
 		/// <param name="exception">The exception to complete the operation with.</param>
 		/// <returns>A faulted operation.</returns>
 		/// <seealso cref="FromException(System.Exception, object)"/>
+		/// <seealso cref="FromException(string)"/>
 		/// <seealso cref="FromExceptions(IEnumerable{System.Exception})"/>
 		/// <seealso cref="FromCanceled()"/>
 		/// <seealso cref="FromResult{T}(T)"/>
@@ -161,6 +189,7 @@ namespace UnityFx.Async
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
 		/// <returns>A faulted operation.</returns>
 		/// <seealso cref="FromException(System.Exception)"/>
+		/// <seealso cref="FromException(string, object)"/>
 		/// <seealso cref="FromExceptions(IEnumerable{System.Exception}, object)"/>
 		/// <seealso cref="FromCanceled(object)"/>
 		/// <seealso cref="FromResult{T}(T, object)"/>
@@ -199,10 +228,38 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Creates a <see cref="IAsyncOperation{TResult}"/> that has completed with a specified error message.
+		/// </summary>
+		/// <param name="message">An exception message.</param>
+		/// <returns>A faulted operation.</returns>
+		/// <seealso cref="FromException{T}(System.Exception)"/>
+		/// <seealso cref="FromCanceled{T}()"/>
+		/// <seealso cref="FromResult{T}(T)"/>
+		public static AsyncResult<T> FromException<T>(string message)
+		{
+			return new AsyncResult<T>(new Exception(message), null);
+		}
+
+		/// <summary>
+		/// Creates a <see cref="IAsyncOperation{TResult}"/> that has completed with a specified error message.
+		/// </summary>
+		/// <param name="message">An exception message.</param>
+		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
+		/// <returns>A faulted operation.</returns>
+		/// <seealso cref="FromException{T}(System.Exception, object)"/>
+		/// <seealso cref="FromCanceled{T}(object)"/>
+		/// <seealso cref="FromResult{T}(T, object)"/>
+		public static AsyncResult<T> FromException<T>(string message, object asyncState)
+		{
+			return new AsyncResult<T>(new Exception(message), asyncState);
+		}
+
+		/// <summary>
 		/// Creates a <see cref="IAsyncOperation{TResult}"/> that has completed with a specified exception.
 		/// </summary>
 		/// <param name="exception">The exception to complete the operation with.</param>
 		/// <returns>A faulted operation.</returns>
+		/// <seealso cref="FromException(string)"/>
 		/// <seealso cref="FromException{T}(System.Exception, object)"/>
 		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception})"/>
 		/// <seealso cref="FromCanceled{T}()"/>
@@ -218,6 +275,7 @@ namespace UnityFx.Async
 		/// <param name="exception">The exception to complete the operation with.</param>
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
 		/// <returns>A faulted operation.</returns>
+		/// <seealso cref="FromException(string, object)"/>
 		/// <seealso cref="FromException{T}(System.Exception)"/>
 		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception}, object)"/>
 		/// <seealso cref="FromCanceled{T}(object)"/>

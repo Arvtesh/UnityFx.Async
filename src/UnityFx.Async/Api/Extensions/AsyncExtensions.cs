@@ -315,6 +315,76 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Attempts to transition the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="completionSource">The completion source instance.</param>
+		/// <param name="message">An exception message.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="message"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="SetException(IAsyncCompletionSource, Exception)"/>
+		/// <seealso cref="SetCanceled(IAsyncCompletionSource)"/>
+		/// <seealso cref="SetCompleted(IAsyncCompletionSource)"/>
+		public static bool TrySetException(this IAsyncCompletionSource completionSource, string message)
+		{
+			return completionSource.TrySetException(new Exception(message));
+		}
+
+		/// <summary>
+		/// Attempts to transition the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="completionSource">The completion source instance.</param>
+		/// <param name="message">An exception message.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="message"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
+		/// <seealso cref="SetException{TResult}(IAsyncCompletionSource{TResult}, Exception)"/>
+		/// <seealso cref="SetCanceled{TResult}(IAsyncCompletionSource{TResult})"/>
+		/// <seealso cref="SetResult{TResult}(IAsyncCompletionSource{TResult}, TResult)"/>
+		public static bool TrySetException<TResult>(this IAsyncCompletionSource<TResult> completionSource, string message)
+		{
+			return completionSource.TrySetException(new Exception(message));
+		}
+
+		/// <summary>
+		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="completionSource">The completion source instance.</param>
+		/// <param name="message">An exception message.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="message"/> is <see langword="null"/>.</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetException(IAsyncCompletionSource, Exception)"/>
+		/// <seealso cref="SetCanceled(IAsyncCompletionSource)"/>
+		/// <seealso cref="SetCompleted(IAsyncCompletionSource)"/>
+		public static void SetException(this IAsyncCompletionSource completionSource, string message)
+		{
+			if (!completionSource.TrySetException(new Exception(message)))
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
+		/// Transitions the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
+		/// </summary>
+		/// <param name="completionSource">The completion source instance.</param>
+		/// <param name="message">An exception message.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="message"/> is <see langword="null"/>.</exception>
+		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
+		/// <seealso cref="SetException{TResult}(IAsyncCompletionSource{TResult}, Exception)"/>
+		/// <seealso cref="SetCanceled{TResult}(IAsyncCompletionSource{TResult})"/>
+		/// <seealso cref="SetResult{TResult}(IAsyncCompletionSource{TResult}, TResult)"/>
+		public static void SetException<TResult>(this IAsyncCompletionSource<TResult> completionSource, string message)
+		{
+			if (!completionSource.TrySetException(new Exception(message)))
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		/// <summary>
 		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
 		/// </summary>
 		/// <param name="completionSource">The completion source instance.</param>
