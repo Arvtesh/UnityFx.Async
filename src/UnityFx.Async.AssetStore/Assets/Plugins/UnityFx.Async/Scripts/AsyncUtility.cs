@@ -4,7 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-#if !NET_2_0 && !NET_2_0_SUBSET
+#if NET_4_6 || NET_STANDARD_2_0
 using System.Collections.Concurrent;
 #endif
 using System.Threading;
@@ -419,10 +419,10 @@ namespace UnityFx.Async
 
 			private SynchronizationContext _context;
 			private SynchronizationContext _mainThreadContext;
-#if NET_2_0 || NET_2_0_SUBSET
-			private Queue<InvokeResult> _actionQueue;
-#else
+#if NET_4_6 || NET_STANDARD_2_0
 			private ConcurrentQueue<InvokeResult> _actionQueue;
+#else
+			private Queue<InvokeResult> _actionQueue;
 #endif
 
 			#endregion
@@ -602,14 +602,10 @@ namespace UnityFx.Async
 					_mainThreadContext = currentContext;
 				}
 
-#if NET_2_0 || NET_2_0_SUBSET
-
-				_actionQueue = new Queue<InvokeResult>();
-
-#else
-
+#if NET_4_6 || NET_STANDARD_2_0
 				_actionQueue = new ConcurrentQueue<InvokeResult>();
-
+#else
+				_actionQueue = new Queue<InvokeResult>();
 #endif
 			}
 
@@ -680,7 +676,25 @@ namespace UnityFx.Async
 					}
 				}
 
-#if NET_2_0 || NET_2_0_SUBSET
+#if NET_4_6 || NET_STANDARD_2_0
+
+				InvokeResult invokeResult;
+
+				while (_actionQueue.TryDequeue(out invokeResult))
+				{
+					try
+					{
+						invokeResult.Start();
+						invokeResult.SetCompleted();
+					}
+					catch (Exception e)
+					{
+						invokeResult.SetException(e);
+						Debug.LogException(e, this);
+					}
+				}
+
+#else
 
 				if (_actionQueue.Count > 0)
 				{
@@ -701,22 +715,6 @@ namespace UnityFx.Async
 								Debug.LogException(e, this);
 							}
 						}
-					}
-				}
-
-#else
-
-				while (_actionQueue.TryDequeue(out var invokeResult))
-				{
-					try
-					{
-						invokeResult.Start();
-						invokeResult.SetCompleted();
-					}
-					catch (Exception e)
-					{
-						invokeResult.SetException(e);
-						Debug.LogException(e, this);
 					}
 				}
 
@@ -769,15 +767,6 @@ namespace UnityFx.Async
 				{
 					SynchronizationContext.SetSynchronizationContext(null);
 				}
-
-#if NET_2_0 || NET_2_0_SUBSET
-
-				lock (_actionQueue)
-				{
-					_actionQueue.Clear();
-				}
-
-#endif
 
 				_mainThreadContext = null;
 				_context = null;
