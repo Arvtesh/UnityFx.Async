@@ -116,7 +116,15 @@ namespace UnityFx.Async.Helpers
 			try
 			{
 				var result = GetResult(op);
-				TrySetResult(result);
+
+				if (result != null)
+				{
+					TrySetResult(result);
+				}
+				else
+				{
+					throw new NullReferenceException();
+				}
 			}
 			catch (Exception e)
 			{
