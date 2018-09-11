@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnityFx.Async.Tests", "Unit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnityFx.Async.AssetStore", "UnityFx.Async.AssetStore\UnityFx.Async.AssetStore.csproj", "{6ACDE97B-C722-4135-894A-340F2213514D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityFx.Async.Benchmarks", "UnityFx.Async.Benchmarks\UnityFx.Async.Benchmarks.csproj", "{EFDC8AF7-6B25-468E-ACDC-4B19AD78940E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{6ACDE97B-C722-4135-894A-340F2213514D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6ACDE97B-C722-4135-894A-340F2213514D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6ACDE97B-C722-4135-894A-340F2213514D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFDC8AF7-6B25-468E-ACDC-4B19AD78940E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFDC8AF7-6B25-468E-ACDC-4B19AD78940E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFDC8AF7-6B25-468E-ACDC-4B19AD78940E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFDC8AF7-6B25-468E-ACDC-4B19AD78940E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
