@@ -10,8 +10,10 @@ namespace UnityFx.Async.Benchmarks
 	{
 		public static void Main(string[] args)
 		{
-			//BenchmarkRunner.Run<ConstructorBenchmarks>();
-			BenchmarkRunner.Run<ContinueWithBenchmarks>();
+			var config = new Config();
+			BenchmarkRunner.Run<ConstructorBenchmarks>(config);
+			BenchmarkRunner.Run<ThenBenchmarks>(config);
+			BenchmarkRunner.Run<CallbackBenchmarks>(config);
 		}
 	}
 }

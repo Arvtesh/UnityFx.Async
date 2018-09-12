@@ -2,8 +2,8 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
-using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
+using RSG;
 
 namespace UnityFx.Async.Benchmarks
 {
@@ -13,28 +13,22 @@ namespace UnityFx.Async.Benchmarks
 		private readonly AsyncCallback _asyncCallback = op => { };
 		private readonly Action _action = () => { };
 
-		[Benchmark]
-		public object CreateAsync()
+		[Benchmark(Baseline = true)]
+		public object Create_Baseline()
 		{
-			return new AsyncResult(_asyncCallback, null);
+			return new Action(_action);
 		}
 
 		[Benchmark]
-		public object CreateAsyncCompletionSource()
+		public object Create_Async()
 		{
-			return new AsyncCompletionSource<object>();
+			return new AsyncResult();
 		}
 
 		[Benchmark]
-		public object CreateTask()
+		public object Create_RsgPromise()
 		{
-			return new Task(_action);
-		}
-
-		[Benchmark]
-		public object CreateTaskCompletionSource()
-		{
-			return new TaskCompletionSource<object>();
+			return new Promise();
 		}
 	}
 }

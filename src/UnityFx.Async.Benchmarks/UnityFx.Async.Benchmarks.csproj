@@ -12,6 +12,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="BenchmarkDotNet" Version="0.11.1" />
+		<PackageReference Include="RSG.Promise" Version="3.0.1" />
 	</ItemGroup>
 
 </Project>
