@@ -280,7 +280,7 @@ namespace UnityFx.Async
 			{
 				if (!IsCompleted)
 				{
-					throw new InvalidOperationException(Constants.ErrorResultNotAvailable);
+					throw new InvalidOperationException(Messages.FormatError_OperationResultIsNotAvailable());
 				}
 
 				ThrowIfNonSuccess();

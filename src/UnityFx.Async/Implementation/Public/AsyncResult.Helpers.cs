@@ -627,7 +627,7 @@ namespace UnityFx.Async
 		{
 			if (millisecondsDelay < Timeout.Infinite)
 			{
-				throw new ArgumentOutOfRangeException(nameof(millisecondsDelay), millisecondsDelay, Constants.ErrorValueIsLessThanZero);
+				throw new ArgumentOutOfRangeException(nameof(millisecondsDelay), millisecondsDelay, Messages.FormatError_ValueIsLessThanZero());
 			}
 
 			if (millisecondsDelay == 0)
@@ -666,7 +666,7 @@ namespace UnityFx.Async
 
 			if (millisecondsDelay < Timeout.Infinite)
 			{
-				throw new ArgumentOutOfRangeException(nameof(millisecondsDelay), millisecondsDelay, Constants.ErrorValueIsLessThanZero);
+				throw new ArgumentOutOfRangeException(nameof(millisecondsDelay), millisecondsDelay, Messages.FormatError_ValueIsLessThanZero());
 			}
 
 			if (millisecondsDelay == 0)
@@ -726,7 +726,7 @@ namespace UnityFx.Async
 
 			if (secondsDelay < Timeout.Infinite)
 			{
-				throw new ArgumentOutOfRangeException(nameof(secondsDelay), secondsDelay, Constants.ErrorValueIsLessThanZero);
+				throw new ArgumentOutOfRangeException(nameof(secondsDelay), secondsDelay, Messages.FormatError_ValueIsLessThanZero());
 			}
 
 			if (secondsDelay == 0)
@@ -841,12 +841,12 @@ namespace UnityFx.Async
 
 			if (millisecondsRetryDelay < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay), millisecondsRetryDelay, Constants.ErrorValueIsLessThanZero);
+				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay), millisecondsRetryDelay, Messages.FormatError_ValueIsLessThanZero());
 			}
 
 			if (maxRetryCount < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, Constants.ErrorValueIsLessThanZero);
+				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, Messages.FormatError_ValueIsLessThanZero());
 			}
 
 			var result = new TimerRetryResult<VoidResult>(opFactory, millisecondsRetryDelay, maxRetryCount);
@@ -879,12 +879,12 @@ namespace UnityFx.Async
 
 			if (millisecondsRetryDelay < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay), millisecondsRetryDelay, Constants.ErrorValueIsLessThanZero);
+				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay), millisecondsRetryDelay, Messages.FormatError_ValueIsLessThanZero());
 			}
 
 			if (maxRetryCount < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, Constants.ErrorValueIsLessThanZero);
+				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, Messages.FormatError_ValueIsLessThanZero());
 			}
 
 			var result = new UpdatableRetryResult<VoidResult>(opFactory, millisecondsRetryDelay, maxRetryCount, updateSource);
@@ -1014,12 +1014,12 @@ namespace UnityFx.Async
 
 			if (millisecondsRetryDelay < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay), millisecondsRetryDelay, Constants.ErrorValueIsLessThanZero);
+				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay), millisecondsRetryDelay, Messages.FormatError_ValueIsLessThanZero());
 			}
 
 			if (maxRetryCount < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, Constants.ErrorValueIsLessThanZero);
+				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, Messages.FormatError_ValueIsLessThanZero());
 			}
 
 			var result = new TimerRetryResult<TResult>(opFactory, millisecondsRetryDelay, maxRetryCount);
@@ -1052,12 +1052,12 @@ namespace UnityFx.Async
 
 			if (millisecondsRetryDelay < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay), millisecondsRetryDelay, Constants.ErrorValueIsLessThanZero);
+				throw new ArgumentOutOfRangeException(nameof(millisecondsRetryDelay), millisecondsRetryDelay, Messages.FormatError_ValueIsLessThanZero());
 			}
 
 			if (maxRetryCount < 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, Constants.ErrorValueIsLessThanZero);
+				throw new ArgumentOutOfRangeException(nameof(maxRetryCount), maxRetryCount, Messages.FormatError_ValueIsLessThanZero());
 			}
 
 			var result = new UpdatableRetryResult<TResult>(opFactory, millisecondsRetryDelay, maxRetryCount, updateSource);
@@ -1165,7 +1165,7 @@ namespace UnityFx.Async
 			{
 				if (op == null)
 				{
-					throw new ArgumentException(Constants.ErrorListElementIsNull, nameof(ops));
+					throw new ArgumentException(Messages.FormatError_ListElementIsNull(), nameof(ops));
 				}
 
 				opList.Add(op);
@@ -1201,7 +1201,7 @@ namespace UnityFx.Async
 			{
 				if (op == null)
 				{
-					throw new ArgumentException(Constants.ErrorListElementIsNull, nameof(ops));
+					throw new ArgumentException(Messages.FormatError_ListElementIsNull(), nameof(ops));
 				}
 
 				opList.Add(op);
@@ -1242,7 +1242,7 @@ namespace UnityFx.Async
 			{
 				if (ops[i] == null)
 				{
-					throw new ArgumentException(Constants.ErrorListElementIsNull, nameof(ops));
+					throw new ArgumentException(Messages.FormatError_ListElementIsNull(), nameof(ops));
 				}
 
 				opArray[i] = ops[i];
@@ -1278,7 +1278,7 @@ namespace UnityFx.Async
 			{
 				if (ops[i] == null)
 				{
-					throw new ArgumentException(Constants.ErrorListElementIsNull, nameof(ops));
+					throw new ArgumentException(Messages.FormatError_ListElementIsNull(), nameof(ops));
 				}
 
 				opArray[i] = ops[i];
@@ -1312,7 +1312,7 @@ namespace UnityFx.Async
 			{
 				if (op == null)
 				{
-					throw new ArgumentException(Constants.ErrorListElementIsNull, nameof(ops));
+					throw new ArgumentException(Messages.FormatError_ListElementIsNull(), nameof(ops));
 				}
 
 				opList.Add(op);
@@ -1320,7 +1320,7 @@ namespace UnityFx.Async
 
 			if (opList.Count == 0)
 			{
-				throw new ArgumentException(Constants.ErrorListIsEmpty, nameof(ops));
+				throw new ArgumentException(Messages.FormatError_ListIsEmpty(), nameof(ops));
 			}
 
 			return new WhenAnyResult<T>(opList.ToArray());
@@ -1343,7 +1343,7 @@ namespace UnityFx.Async
 
 			if (ops.Length == 0)
 			{
-				throw new ArgumentException(Constants.ErrorListIsEmpty, nameof(ops));
+				throw new ArgumentException(Messages.FormatError_ListIsEmpty(), nameof(ops));
 			}
 
 			var opArray = new T[ops.Length];
@@ -1352,7 +1352,7 @@ namespace UnityFx.Async
 			{
 				if (ops[i] == null)
 				{
-					throw new ArgumentException(Constants.ErrorListElementIsNull, nameof(ops));
+					throw new ArgumentException(Messages.FormatError_ListElementIsNull(), nameof(ops));
 				}
 
 				opArray[i] = ops[i];

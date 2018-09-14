@@ -216,7 +216,7 @@ namespace UnityFx.Async
 		{
 			if (progress < 0 || progress > 1)
 			{
-				throw new ArgumentOutOfRangeException(nameof(progress), progress, Constants.ErrorInvalidProgress);
+				throw new ArgumentOutOfRangeException(nameof(progress), progress, Messages.FormatError_InvalidProgress());
 			}
 
 			ThrowIfDisposed();

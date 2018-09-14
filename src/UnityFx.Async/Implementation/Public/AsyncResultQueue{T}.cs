@@ -77,7 +77,7 @@ namespace UnityFx.Async
 			{
 				if (value < 0)
 				{
-					throw new ArgumentOutOfRangeException(nameof(MaxCount), value, Constants.ErrorValueIsLessThanZero);
+					throw new ArgumentOutOfRangeException(nameof(MaxCount), value, Messages.FormatError_ValueIsLessThanZero());
 				}
 
 				_maxOpsSize = value;

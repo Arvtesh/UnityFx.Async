@@ -110,7 +110,7 @@ namespace UnityFx.Async
 				}
 				else
 				{
-					throw new InvalidOperationException("Invalid delegate type.");
+					throw new InvalidOperationException(Messages.FormatError_InvalidDelegateType(_opFactory.GetType()));
 				}
 
 				_op.AddCompletionCallback(this);
@@ -141,7 +141,7 @@ namespace UnityFx.Async
 			else
 			{
 				// NOTE: should not get here.
-				TrySetException(new Exception(Constants.ErrorMaxNumberOrRetries));
+				TrySetException(new Exception(Messages.FormatError_MaxNumberOrRetriesReached(_maxRetryCount)));
 			}
 		}
 

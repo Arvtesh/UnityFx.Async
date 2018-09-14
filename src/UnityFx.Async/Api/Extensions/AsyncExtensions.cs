@@ -102,7 +102,7 @@ namespace UnityFx.Async
 		{
 			if (millisecondsTimeout < -1)
 			{
-				throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout), millisecondsTimeout, Constants.ErrorInvalidTimeout);
+				throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout), millisecondsTimeout, Messages.FormatError_InvalidTimeout());
 			}
 
 			if (millisecondsTimeout == Timeout.Infinite)
@@ -127,7 +127,7 @@ namespace UnityFx.Async
 
 			if (totalMilliseconds < -1 || totalMilliseconds > int.MaxValue)
 			{
-				throw new ArgumentOutOfRangeException(nameof(timeout), timeout, Constants.ErrorInvalidTimeout);
+				throw new ArgumentOutOfRangeException(nameof(timeout), timeout, Messages.FormatError_InvalidTimeout());
 			}
 
 			if (totalMilliseconds == Timeout.Infinite)
@@ -172,7 +172,7 @@ namespace UnityFx.Async
 		{
 			if (millisecondsTimeout < -1)
 			{
-				throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout), millisecondsTimeout, Constants.ErrorInvalidTimeout);
+				throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout), millisecondsTimeout, Messages.FormatError_InvalidTimeout());
 			}
 
 			if (millisecondsTimeout == Timeout.Infinite)
@@ -199,7 +199,7 @@ namespace UnityFx.Async
 
 			if (totalMilliseconds < -1 || totalMilliseconds > int.MaxValue)
 			{
-				throw new ArgumentOutOfRangeException(nameof(timeout), timeout, Constants.ErrorInvalidTimeout);
+				throw new ArgumentOutOfRangeException(nameof(timeout), timeout, Messages.FormatError_InvalidTimeout());
 			}
 
 			if (totalMilliseconds == Timeout.Infinite)
@@ -259,7 +259,7 @@ namespace UnityFx.Async
 		{
 			if (!completionSource.TrySetProgress(progress))
 			{
-				throw new InvalidOperationException();
+				throw new InvalidOperationException(Messages.FormatError_OperationStateCannotBeChanged());
 			}
 		}
 
@@ -276,7 +276,7 @@ namespace UnityFx.Async
 		{
 			if (!completionSource.TrySetProgress(progress))
 			{
-				throw new InvalidOperationException();
+				throw new InvalidOperationException(Messages.FormatError_OperationStateCannotBeChanged());
 			}
 		}
 
@@ -293,7 +293,7 @@ namespace UnityFx.Async
 		{
 			if (!completionSource.TrySetCanceled())
 			{
-				throw new InvalidOperationException();
+				throw new InvalidOperationException(Messages.FormatError_OperationStateCannotBeChanged());
 			}
 		}
 
@@ -310,7 +310,7 @@ namespace UnityFx.Async
 		{
 			if (!completionSource.TrySetCanceled())
 			{
-				throw new InvalidOperationException();
+				throw new InvalidOperationException(Messages.FormatError_OperationStateCannotBeChanged());
 			}
 		}
 
@@ -361,7 +361,7 @@ namespace UnityFx.Async
 		{
 			if (!completionSource.TrySetException(new Exception(message)))
 			{
-				throw new InvalidOperationException();
+				throw new InvalidOperationException(Messages.FormatError_OperationStateCannotBeChanged());
 			}
 		}
 
@@ -380,7 +380,7 @@ namespace UnityFx.Async
 		{
 			if (!completionSource.TrySetException(new Exception(message)))
 			{
-				throw new InvalidOperationException();
+				throw new InvalidOperationException(Messages.FormatError_OperationStateCannotBeChanged());
 			}
 		}
 
@@ -399,7 +399,7 @@ namespace UnityFx.Async
 		{
 			if (!completionSource.TrySetException(exception))
 			{
-				throw new InvalidOperationException();
+				throw new InvalidOperationException(Messages.FormatError_OperationStateCannotBeChanged());
 			}
 		}
 
@@ -418,7 +418,7 @@ namespace UnityFx.Async
 		{
 			if (!completionSource.TrySetException(exception))
 			{
-				throw new InvalidOperationException();
+				throw new InvalidOperationException(Messages.FormatError_OperationStateCannotBeChanged());
 			}
 		}
 
@@ -437,7 +437,7 @@ namespace UnityFx.Async
 		{
 			if (!completionSource.TrySetExceptions(exceptions))
 			{
-				throw new InvalidOperationException();
+				throw new InvalidOperationException(Messages.FormatError_OperationStateCannotBeChanged());
 			}
 		}
 
@@ -456,7 +456,7 @@ namespace UnityFx.Async
 		{
 			if (!completionSource.TrySetExceptions(exceptions))
 			{
-				throw new InvalidOperationException();
+				throw new InvalidOperationException(Messages.FormatError_OperationStateCannotBeChanged());
 			}
 		}
 
@@ -473,7 +473,7 @@ namespace UnityFx.Async
 		{
 			if (!completionSource.TrySetCompleted())
 			{
-				throw new InvalidOperationException();
+				throw new InvalidOperationException(Messages.FormatError_OperationStateCannotBeChanged());
 			}
 		}
 
@@ -491,7 +491,7 @@ namespace UnityFx.Async
 		{
 			if (!completionSource.TrySetResult(result))
 			{
-				throw new InvalidOperationException();
+				throw new InvalidOperationException(Messages.FormatError_OperationStateCannotBeChanged());
 			}
 		}
 

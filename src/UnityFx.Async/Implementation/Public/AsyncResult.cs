@@ -542,7 +542,7 @@ namespace UnityFx.Async
 			{
 				if (e == null)
 				{
-					throw new ArgumentException(Constants.ErrorListElementIsNull, nameof(exceptions));
+					throw new ArgumentException(Messages.FormatError_ListElementIsNull(), nameof(exceptions));
 				}
 
 				list.Add(e);
@@ -550,7 +550,7 @@ namespace UnityFx.Async
 
 			if (list.Count == 0)
 			{
-				throw new ArgumentException(Constants.ErrorListIsEmpty, nameof(exceptions));
+				throw new ArgumentException(Messages.FormatError_ListIsEmpty(), nameof(exceptions));
 			}
 
 			if (TryReserveCompletion())
@@ -1251,7 +1251,7 @@ namespace UnityFx.Async
 		{
 			if (!IsCompleted)
 			{
-				throw new InvalidOperationException(Constants.ErrorOperationIsNotCompleted);
+				throw new InvalidOperationException(Messages.FormatError_OperationIsNotCompleted());
 			}
 
 			Dispose(true);
