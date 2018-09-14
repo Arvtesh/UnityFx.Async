@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 -----------------------
 ## [0.9.7] - unreleased
 
+### Added
+- Added convenience overloads for `SetException`-like methods accepting as error message string.
+- Added allocation optimizations for single-threaded applications (particularly for Unity3d). See `AsyncResult.DefaultSynchronizationContext` for more info.
+- Added performance benchmarks.
+
+### Fixed
+- Fixed error handling in `AsyncOperationResult`.
+
+### Removed
+- Removed Asset Store samples.
+
 -----------------------
 ## [0.9.6] - 2018.08.31
 
