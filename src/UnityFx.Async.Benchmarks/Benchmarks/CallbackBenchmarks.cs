@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using BenchmarkDotNet.Attributes;
 
@@ -19,13 +20,13 @@ namespace UnityFx.Async.Benchmarks
 		public int N { get; set; }
 
 		[Benchmark(Baseline = true)]
-		public void Add_Baseline()
+		public void Add_List()
 		{
-			var action = new Action<IAsyncOperation>(_action);
+			var list = new List<Action<IAsyncOperation>>(N);
 
 			for (var i = 0; i < N; i++)
 			{
-				action += _action;
+				list.Add(_action);
 			}
 		}
 

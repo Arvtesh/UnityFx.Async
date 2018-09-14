@@ -2,6 +2,8 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using BenchmarkDotNet.Attributes;
 using RSG;
 using UnityFx.Async.Promises;
@@ -17,13 +19,13 @@ namespace UnityFx.Async.Benchmarks
 		public int N { get; set; }
 
 		[Benchmark(Baseline = true)]
-		public void Then_Baseline()
+		public void Then_List()
 		{
-			var action = new Action(_action);
+			var list = new List<Action>(N);
 
 			for (var i = 0; i < N; i++)
 			{
-				action += _action;
+				list.Add(_action);
 			}
 		}
 

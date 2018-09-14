@@ -14,9 +14,9 @@ namespace UnityFx.Async.Benchmarks
 		private readonly Action _action = () => { };
 
 		[Benchmark(Baseline = true)]
-		public object Create_Baseline()
+		public object Create_object()
 		{
-			return new Action(_action);
+			return new object();
 		}
 
 		[Benchmark]
