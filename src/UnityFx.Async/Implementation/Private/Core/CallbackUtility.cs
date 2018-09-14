@@ -84,21 +84,6 @@ namespace UnityFx.Async
 			}
 		}
 
-		public static void InvokeCompletionCallbackAsync(IAsyncOperation op, object continuation, SynchronizationContext syncContext)
-		{
-			Debug.Assert(op != null);
-			Debug.Assert(continuation != null);
-
-			if (syncContext != null && syncContext.GetType() != typeof(SynchronizationContext))
-			{
-				syncContext.Post(args => InvokeCompletionCallback(op, args), continuation);
-			}
-			else
-			{
-				ThreadPool.QueueUserWorkItem(args => InvokeCompletionCallback(op, args), continuation);
-			}
-		}
-
 		public static void InvokeProgressCallback(IAsyncOperation op, object callback)
 		{
 			Debug.Assert(op != null);
@@ -137,6 +122,9 @@ namespace UnityFx.Async
 			}
 		}
 
+		#endregion
+
+		#region implementation
 		#endregion
 	}
 }

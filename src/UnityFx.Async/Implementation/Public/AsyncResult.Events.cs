@@ -13,11 +13,6 @@ namespace UnityFx.Async
 	partial class AsyncResult
 	{
 		#region data
-
-		private static readonly object _callbackCompletionSentinel = new object();
-
-		private volatile object _callback;
-
 		#endregion
 
 		#region interface
@@ -100,7 +95,8 @@ namespace UnityFx.Async
 
 				if (!TryAddCallback(value, syncContext, true))
 				{
-					InvokeCompletionCallback(value, syncContext);
+					var invokeAsync = (_flags & _flagRunContinuationsAsynchronously) != 0;
+					CallbackUtility.InvokeCompletionCallback(this, value, syncContext, invokeAsync);
 				}
 			}
 			remove
@@ -148,7 +144,8 @@ namespace UnityFx.Async
 
 			if (!TryAddCallback(action, syncContext, true))
 			{
-				InvokeCompletionCallback(action, syncContext);
+				var invokeAsync = (_flags & _flagRunContinuationsAsynchronously) != 0;
+				CallbackUtility.InvokeCompletionCallback(this, action, syncContext, invokeAsync);
 			}
 		}
 
@@ -201,7 +198,8 @@ namespace UnityFx.Async
 
 			if (!TryAddCallback(continuation, syncContext, true))
 			{
-				InvokeCompletionCallback(continuation, syncContext);
+				var invokeAsync = (_flags & _flagRunContinuationsAsynchronously) != 0;
+				CallbackUtility.InvokeCompletionCallback(this, continuation, syncContext, invokeAsync);
 			}
 		}
 
@@ -348,9 +346,19 @@ namespace UnityFx.Async
 					{
 						if (syncContext != null)
 						{
-							var newList = CreateCallbackCollection();
-							newList.AddCompletionCallback(callbackToAdd, syncContext);
-							newValue = newList;
+							// An optimization for single-threaded applications (Unity as an instance):
+							// in most cases we expect continuations to run on _defaultContext, and if it
+							// is the case we just set a flag instead of allocating callback callection.
+							if (syncContext == _defaultContext)
+							{
+								TrySetFlag(_flagContinueOnDefaultContext);
+							}
+							else
+							{
+								var newList = CreateCallbackCollection();
+								newList.AddCompletionCallback(callbackToAdd, syncContext);
+								newValue = newList;
+							}
 						}
 					}
 					else
@@ -477,6 +485,7 @@ namespace UnityFx.Async
 			if (value != null)
 			{
 				var invokeAsync = (_flags & _flagRunContinuationsAsynchronously) != 0;
+				var continueOnDefaultContext = (_flags & _flagContinueOnDefaultContext) != 0;
 
 				if (value is IAsyncCallbackCollection callbackList)
 				{
@@ -485,32 +494,11 @@ namespace UnityFx.Async
 						callbackList.Invoke(invokeAsync);
 					}
 				}
-				else if (invokeAsync)
-				{
-					CallbackUtility.InvokeCompletionCallbackAsync(this, value, SynchronizationContext.Current);
-				}
 				else
 				{
-					CallbackUtility.InvokeCompletionCallback(this, value);
+					var syncContext = continueOnDefaultContext ? _defaultContext : SynchronizationContext.Current;
+					CallbackUtility.InvokeCompletionCallback(this, value, syncContext, invokeAsync);
 				}
-			}
-		}
-
-		private void InvokeCompletionCallback(object continuation, SynchronizationContext syncContext)
-		{
-			Debug.Assert(continuation != null);
-
-			if ((_flags & _flagRunContinuationsAsynchronously) != 0)
-			{
-				CallbackUtility.InvokeCompletionCallbackAsync(this, continuation, syncContext);
-			}
-			else if (syncContext == null || syncContext == SynchronizationContext.Current)
-			{
-				CallbackUtility.InvokeCompletionCallback(this, continuation);
-			}
-			else
-			{
-				syncContext.Post(args => CallbackUtility.InvokeCompletionCallback(this, args), continuation);
 			}
 		}
 

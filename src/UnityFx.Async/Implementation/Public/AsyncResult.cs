@@ -48,6 +48,7 @@ namespace UnityFx.Async
 		private const int _flagCompletedSynchronously = _flagCompleted | _flagCompletionReserved | _flagSynchronous;
 		private const int _flagCancellationRequested = 0x00100000;
 		private const int _flagDisposed = 0x00200000;
+		private const int _flagContinueOnDefaultContext = 0x00400000;
 
 		private const int _flagDoNotDispose = OptionDoNotDispose << _optionsOffset;
 		private const int _flagRunContinuationsAsynchronously = OptionRunContinuationsAsynchronously << _optionsOffset;
@@ -57,17 +58,31 @@ namespace UnityFx.Async
 		private const int _optionsMask = 0x78000000;
 		private const int _optionsOffset = 27;
 
+		private static readonly object _callbackCompletionSentinel = new object();
 		private static int _idCounter;
+		private static SynchronizationContext _defaultContext;
 
 		private readonly object _asyncState;
 		private int _id;
 		private Exception _exception;
 		private EventWaitHandle _waitHandle;
 		private volatile int _flags;
+		private volatile object _callback;
 
 		#endregion
 
 		#region interface
+
+		/// <summary>
+		/// Gets or sets a reference to <see cref="SynchronizationContext"/> that is used for majority of continuations.
+		/// </summary>
+		/// <remarks>
+		/// This property is supposed to be used as allocation optimization in applications working mostly with single
+		/// <see cref="SynchronizationContext"/> instance (single thread) such as Unity3d applications. It should be
+		/// set to main thread context is most cases.
+		/// </remarks>
+		/// <value>An instance of <see cref="SynchronizationContext"/> that is used as default one. Initial value is <see langword="null"/>.</value>
+		public static SynchronizationContext DefaultSynchronizationContext { get => _defaultContext; set => _defaultContext = value; }
 
 		/// <summary>
 		/// Gets the <see cref="AsyncCreationOptions"/> used to create this operation.

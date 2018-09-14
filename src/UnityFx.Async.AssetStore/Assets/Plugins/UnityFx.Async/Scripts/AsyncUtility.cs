@@ -607,6 +607,9 @@ namespace UnityFx.Async
 #else
 				_actionQueue = new Queue<InvokeResult>();
 #endif
+
+				// Set main thread context as default for all continuations. This saves allocations in many cases.
+				AsyncResult.DefaultSynchronizationContext = _mainThreadContext;
 			}
 
 			private void Update()
