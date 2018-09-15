@@ -31,11 +31,4 @@
 		<AdditionalFiles Include="../CodingConventions/Common/stylecop.json" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Content Include="README.txt">
-			<Pack>true</Pack>
-			<PackagePath>README.txt</PackagePath>
-		</Content>
-	</ItemGroup>
-
 </Project>
