@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net35;net46;netstandard2.0</TargetFrameworks>
-		<Description>Task-like asynchronous operations for Unity3d.</Description>
+		<Description>Task-like asynchronous operations (promises) for Unity3d.</Description>
 		<Company />
 		<Authors>Alexander Bogarsukov</Authors>
 		<Copyright>Alexander Bogarsukov</Copyright>
