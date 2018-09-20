@@ -6,7 +6,7 @@ using System;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// An updatable object.
+	/// Defines an updatable entity.
 	/// </summary>
 	/// <seealso cref="IAsyncUpdateSource"/>
 	public interface IAsyncUpdatable

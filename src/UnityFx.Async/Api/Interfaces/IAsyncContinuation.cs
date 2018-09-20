@@ -9,8 +9,8 @@ namespace UnityFx.Async
 	/// A generic non-delegate continuation.
 	/// </summary>
 	/// <remarks>
-	/// This interface allows us to combine functionality and reduce allocations. It especially useful for implementing custom
-	/// continuation operations.
+	/// This interface is a great helper for combining functionality and reducing number of allocations.
+	/// It is especially useful for implementing custom continuation operations.
 	/// </remarks>
 	/// <seealso cref="IAsyncOperation"/>
 	/// <seealso cref="AsyncContinuationOptions"/>

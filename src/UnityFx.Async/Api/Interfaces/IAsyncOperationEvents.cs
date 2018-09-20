@@ -8,7 +8,7 @@ using System.Threading;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Manages events and callbacks of <see cref="IAsyncOperation"/>.
+	/// Defines completion/progress callbacks for <see cref="IAsyncOperation"/>.
 	/// </summary>
 	/// <seealso cref="IAsyncOperation"/>
 	public interface IAsyncOperationEvents
