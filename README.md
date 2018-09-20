@@ -37,6 +37,37 @@ The table below summarizes differences berween *UnityFx.Async* and other popular
 | Minimum operation data size for 32-bit systems (in bytes) | 32+ | 36+ | 40+ |
 | Minimum number of allocations per continuation | ~1 | 5+ | 2+ |
 
+The table below shows preformance benchmarks for typical promise use-case compared to adding elements to a standard `List` collection:
+```csharp
+op.Then(() => { /* N = 1*/ })
+  .Then(() => { /* N = 2*/ })
+  // ...
+  .Then(() => { /* N = max*/ });
+```
+``` ini
+BenchmarkDotNet=v0.11.1, OS=Windows 8.1 (6.3.9600.0)
+Intel Core i5-4670 CPU 3.40GHz (Haswell), 1 CPU, 4 logical and 4 physical cores
+Frequency=3312640 Hz, Resolution=301.8740 ns, Timer=TSC
+  [Host]     : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3163.0
+  DefaultJob : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3163.0
+```
+|            Method | N |      Mean | Scaled | Allocated |
+|------------------ |-- |----------:|-------:|----------:|
+|     **Then_List** | **1** |  **15.74 ns** |   **1.00** |      **72 B** |
+|        Then_Async | 1 |  48.04 ns |   3.05 |     152 B |
+|   Then_RsgPromise | 1 | 112.18 ns |   7.13 |     552 B |
+|     **Then_List** | **2** |  **20.97 ns** |  **1.00** |       **80 B** |
+|        Then_Async | 2 |  93.97 ns |   4.48 |     248 B |
+|   Then_RsgPromise | 2 | 230.64 ns |  11.00 |    1040 B |
+|     **Then_List** | **4** |  **31.44 ns** |   **1.00** |      **96 B** |
+|        Then_Async | 4 | 190.19 ns |   6.05 |     440 B |
+|   Then_RsgPromise | 4 | 439.00 ns |  13.96 |    2016 B |
+|     **Then_List** | **8** |  **51.18 ns** |   **1.00** |     **128 B** |
+|        Then_Async | 8 | 361.37 ns |   7.06 |     824 B |
+|   Then_RsgPromise | 8 | 859.40 ns |  16.79 |    3968 B |
+
+As you can see, *UnityFx.Async* operations perform quite nice compared to the main competitor ([C-Sharp-Promise](https://github.com/Real-Serious-Games/C-Sharp-Promise)).
+
 ## Getting Started
 ### Prerequisites
 You may need the following software installed in order to build/use the library:
