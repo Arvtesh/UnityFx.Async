@@ -7,6 +7,7 @@ using System.Collections.Generic;
 #if NET_4_6 || NET_STANDARD_2_0
 using System.Collections.Concurrent;
 #endif
+using System.Runtime.CompilerServices;
 using System.Threading;
 using UnityEngine;
 #if UNITY_5_4_OR_NEWER
@@ -29,6 +30,7 @@ namespace UnityFx.Async
 		private static Queue<InvokeResult> _actionQueue;
 #endif
 		private static GameObject _go;
+		private static AsyncRootBehaviour _rootBehaviour;
 
 		#endregion
 
@@ -267,14 +269,9 @@ namespace UnityFx.Async
 		/// <seealso cref="StopAllCoroutines"/>
 		public static void StopCoroutine(Coroutine coroutine)
 		{
-			if (coroutine != null)
+			if (coroutine != null && _rootBehaviour)
 			{
-				var runner = TryGetRootBehaviour();
-
-				if (runner)
-				{
-					runner.StopCoroutine(coroutine);
-				}
+				_rootBehaviour.StopCoroutine(coroutine);
 			}
 		}
 
@@ -287,14 +284,9 @@ namespace UnityFx.Async
 		/// <seealso cref="StopAllCoroutines"/>
 		public static void StopCoroutine(IEnumerator enumerator)
 		{
-			if (enumerator != null)
+			if (enumerator != null && _rootBehaviour)
 			{
-				var runner = TryGetRootBehaviour();
-
-				if (runner)
-				{
-					runner.StopCoroutine(enumerator);
-				}
+				_rootBehaviour.StopCoroutine(enumerator);
 			}
 		}
 
@@ -306,11 +298,9 @@ namespace UnityFx.Async
 		/// <seealso cref="StopCoroutine(IEnumerator)"/>
 		public static void StopAllCoroutines()
 		{
-			var runner = TryGetRootBehaviour();
-
-			if (runner)
+			if (_rootBehaviour)
 			{
-				runner.StopAllCoroutines();
+				_rootBehaviour.StopAllCoroutines();
 			}
 		}
 
@@ -708,37 +698,27 @@ namespace UnityFx.Async
 			}
 		}
 
-		private static AsyncRootBehaviour TryGetRootBehaviour()
-		{
-			var go = GetRootGo();
-
-			if (go)
-			{
-				var runner = go.GetComponent<AsyncRootBehaviour>();
-
-				if (runner)
-				{
-					return runner;
-				}
-			}
-
-			return null;
-		}
-
+#if !NET35
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		private static AsyncRootBehaviour GetRootBehaviour()
 		{
+			if (ReferenceEquals(_rootBehaviour, null))
+			{
+				InitRootBehaviour();
+			}
+
+			return _rootBehaviour;
+		}
+
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		private static void InitRootBehaviour()
+		{
 			var go = GetRootGo();
 
 			if (go)
 			{
-				var runner = go.GetComponent<AsyncRootBehaviour>();
-
-				if (!runner)
-				{
-					runner = go.AddComponent<AsyncRootBehaviour>();
-				}
-
-				return runner;
+				_rootBehaviour = go.AddComponent<AsyncRootBehaviour>();
 			}
 			else
 			{
