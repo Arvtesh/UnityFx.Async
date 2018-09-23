@@ -22,6 +22,12 @@ namespace UnityFx.Async
 	{
 		#region data
 
+		private static SynchronizationContext _mainThreadContext;
+#if NET_4_6 || NET_STANDARD_2_0
+		private static ConcurrentQueue<InvokeResult> _actionQueue;
+#else
+		private static Queue<InvokeResult> _actionQueue;
+#endif
 		private static GameObject _go;
 
 		#endregion
@@ -45,14 +51,6 @@ namespace UnityFx.Async
 			}
 
 			return _go;
-		}
-
-		/// <summary>
-		/// Initializes the utilities. If skipped the utilities are lazily initialized.
-		/// </summary>
-		public static void Initialize()
-		{
-			GetRootBehaviour();
 		}
 
 		/// <summary>
@@ -109,7 +107,35 @@ namespace UnityFx.Async
 		/// <seealso cref="InvokeOnMainThread(SendOrPostCallback, object)"/>
 		public static void SendToMainThread(SendOrPostCallback d, object state)
 		{
-			GetRootBehaviour().Send(d, state);
+			if (d == null)
+			{
+				throw new ArgumentNullException("d");
+			}
+
+			if (_mainThreadContext == SynchronizationContext.Current)
+			{
+				d.Invoke(state);
+			}
+			else
+			{
+				using (var asyncResult = new InvokeResult(d, state))
+				{
+#if NET_2_0 || NET_2_0_SUBSET
+
+					lock (_actionQueue)
+					{
+						_actionQueue.Enqueue(asyncResult);
+					}
+
+#else
+
+					_actionQueue.Enqueue(asyncResult);
+
+#endif
+
+					asyncResult.Wait();
+				}
+			}
 		}
 
 		/// <summary>
@@ -122,7 +148,27 @@ namespace UnityFx.Async
 		/// <seealso cref="InvokeOnMainThread(SendOrPostCallback, object)"/>
 		public static IAsyncOperation PostToMainThread(SendOrPostCallback d, object state)
 		{
-			return GetRootBehaviour().Post(d, state);
+			if (d == null)
+			{
+				throw new ArgumentNullException("d");
+			}
+
+			var asyncResult = new InvokeResult(d, state);
+
+#if NET_2_0 || NET_2_0_SUBSET
+
+			lock (_actionQueue)
+			{
+				_actionQueue.Enqueue(asyncResult);
+			}
+
+#else
+
+			_actionQueue.Enqueue(asyncResult);
+
+#endif
+
+			return asyncResult;
 		}
 
 		/// <summary>
@@ -135,7 +181,14 @@ namespace UnityFx.Async
 		/// <seealso cref="PostToMainThread(SendOrPostCallback, object)"/>
 		public static IAsyncOperation InvokeOnMainThread(SendOrPostCallback d, object state)
 		{
-			return GetRootBehaviour().Invoke(d, state);
+			if (_mainThreadContext == SynchronizationContext.Current)
+			{
+				return AsyncResult.FromAction(d, state);
+			}
+			else
+			{
+				return PostToMainThread(d, state);
+			}
 		}
 
 		/// <summary>
@@ -144,7 +197,7 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if current thread is Unity main thread; <see langword="false"/> otherwise.</returns>
 		public static bool IsMainThread()
 		{
-			return GetRootBehaviour().MainThreadContext == SynchronizationContext.Current;
+			return _mainThreadContext == SynchronizationContext.Current;
 		}
 
 		/// <summary>
@@ -353,57 +406,6 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		private sealed class InvokeResult : AsyncResult
-		{
-			private readonly SendOrPostCallback _callback;
-
-			public InvokeResult(SendOrPostCallback d, object asyncState)
-				: base(AsyncOperationStatus.Scheduled, asyncState)
-			{
-				_callback = d;
-			}
-
-			public void SetCompleted()
-			{
-				TrySetCompleted();
-			}
-
-			public void SetException(Exception e)
-			{
-				TrySetException(e);
-			}
-
-			protected override void OnStarted()
-			{
-				_callback.Invoke(AsyncState);
-			}
-		}
-
-		private sealed class MainThreadSynchronizationContext : SynchronizationContext
-		{
-			private readonly AsyncRootBehaviour _scheduler;
-
-			public MainThreadSynchronizationContext(AsyncRootBehaviour scheduler)
-			{
-				_scheduler = scheduler;
-			}
-
-			public override SynchronizationContext CreateCopy()
-			{
-				return new MainThreadSynchronizationContext(_scheduler);
-			}
-
-			public override void Send(SendOrPostCallback d, object state)
-			{
-				_scheduler.Send(d, state);
-			}
-
-			public override void Post(SendOrPostCallback d, object state)
-			{
-				_scheduler.Post(d, state);
-			}
-		}
-
 		private sealed class AsyncRootBehaviour : MonoBehaviour
 		{
 			#region data
@@ -417,25 +419,9 @@ namespace UnityFx.Async
 			private AsyncUpdateSource _eofUpdateSource;
 			private WaitForEndOfFrame _eof;
 
-			private SynchronizationContext _context;
-			private SynchronizationContext _mainThreadContext;
-#if NET_4_6 || NET_STANDARD_2_0
-			private ConcurrentQueue<InvokeResult> _actionQueue;
-#else
-			private Queue<InvokeResult> _actionQueue;
-#endif
-
 			#endregion
 
 			#region interface
-
-			public SynchronizationContext MainThreadContext
-			{
-				get
-				{
-					return _mainThreadContext;
-				}
-			}
 
 			public IAsyncUpdateSource UpdateSource
 			{
@@ -502,115 +488,9 @@ namespace UnityFx.Async
 				_ops.Add(op, cb);
 			}
 
-			public void Send(SendOrPostCallback d, object state)
-			{
-				if (d == null)
-				{
-					throw new ArgumentNullException("d");
-				}
-
-				if (!this)
-				{
-					throw new ObjectDisposedException(GetType().Name);
-				}
-
-				if (_mainThreadContext == SynchronizationContext.Current)
-				{
-					d.Invoke(state);
-				}
-				else
-				{
-					using (var asyncResult = new InvokeResult(d, state))
-					{
-#if NET_2_0 || NET_2_0_SUBSET
-
-						lock (_actionQueue)
-						{
-							_actionQueue.Enqueue(asyncResult);
-						}
-
-#else
-
-						_actionQueue.Enqueue(asyncResult);
-
-#endif
-
-						asyncResult.Wait();
-					}
-				}
-			}
-
-			public IAsyncOperation Post(SendOrPostCallback d, object state)
-			{
-				if (d == null)
-				{
-					throw new ArgumentNullException("d");
-				}
-
-				if (!this)
-				{
-					throw new ObjectDisposedException(GetType().Name);
-				}
-
-				var asyncResult = new InvokeResult(d, state);
-
-#if NET_2_0 || NET_2_0_SUBSET
-
-				lock (_actionQueue)
-				{
-					_actionQueue.Enqueue(asyncResult);
-				}
-
-#else
-
-				_actionQueue.Enqueue(asyncResult);
-
-#endif
-
-				return asyncResult;
-			}
-
-			public IAsyncOperation Invoke(SendOrPostCallback d, object state)
-			{
-				if (_mainThreadContext == SynchronizationContext.Current)
-				{
-					return AsyncResult.FromAction(d, state);
-				}
-				else
-				{
-					return Post(d, state);
-				}
-			}
-
 			#endregion
 
 			#region MonoBehavoiur
-
-			private void Awake()
-			{
-				var currentContext = SynchronizationContext.Current;
-
-				if (currentContext == null)
-				{
-					var context = new MainThreadSynchronizationContext(this);
-					SynchronizationContext.SetSynchronizationContext(context);
-					_context = context;
-					_mainThreadContext = context;
-				}
-				else
-				{
-					_mainThreadContext = currentContext;
-				}
-
-#if NET_4_6 || NET_STANDARD_2_0
-				_actionQueue = new ConcurrentQueue<InvokeResult>();
-#else
-				_actionQueue = new Queue<InvokeResult>();
-#endif
-
-				// Set main thread context as default for all continuations. This saves allocations in many cases.
-				AsyncResult.DefaultSynchronizationContext = _mainThreadContext;
-			}
 
 			private void Update()
 			{
@@ -765,14 +645,6 @@ namespace UnityFx.Async
 					_eofUpdateSource.Dispose();
 					_eofUpdateSource = null;
 				}
-
-				if (_context != null && _context == SynchronizationContext.Current)
-				{
-					SynchronizationContext.SetSynchronizationContext(null);
-				}
-
-				_mainThreadContext = null;
-				_context = null;
 			}
 
 			#endregion
@@ -790,6 +662,50 @@ namespace UnityFx.Async
 			}
 
 			#endregion
+		}
+
+		private sealed class InvokeResult : AsyncResult
+		{
+			private readonly SendOrPostCallback _callback;
+
+			public InvokeResult(SendOrPostCallback d, object asyncState)
+				: base(AsyncOperationStatus.Scheduled, asyncState)
+			{
+				_callback = d;
+			}
+
+			public void SetCompleted()
+			{
+				TrySetCompleted();
+			}
+
+			public void SetException(Exception e)
+			{
+				TrySetException(e);
+			}
+
+			protected override void OnStarted()
+			{
+				_callback.Invoke(AsyncState);
+			}
+		}
+
+		private sealed class MainThreadSynchronizationContext : SynchronizationContext
+		{
+			public override SynchronizationContext CreateCopy()
+			{
+				return new MainThreadSynchronizationContext();
+			}
+
+			public override void Send(SendOrPostCallback d, object state)
+			{
+				SendToMainThread(d, state);
+			}
+
+			public override void Post(SendOrPostCallback d, object state)
+			{
+				PostToMainThread(d, state);
+			}
 		}
 
 		private static AsyncRootBehaviour TryGetRootBehaviour()
@@ -828,6 +744,31 @@ namespace UnityFx.Async
 			{
 				throw new ObjectDisposedException(RootGoName);
 			}
+		}
+
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+		private static void Initialize()
+		{
+			var context = SynchronizationContext.Current;
+
+			if (context == null)
+			{
+				context = new MainThreadSynchronizationContext();
+				SynchronizationContext.SetSynchronizationContext(context);
+			}
+
+			// Save the main thread context for future use.
+			_mainThreadContext = context;
+
+			// Initialize delayed action queue.
+#if NET_4_6 || NET_STANDARD_2_0
+			_actionQueue = new ConcurrentQueue<InvokeResult>();
+#else
+			_actionQueue = new Queue<InvokeResult>();
+#endif
+
+			// Set main thread context as default for all continuations. This saves allocations in many cases.
+			AsyncResult.DefaultSynchronizationContext = context;
 		}
 
 		#endregion
