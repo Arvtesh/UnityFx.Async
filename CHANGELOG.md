@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 
 ### Removed
 - Removed Asset Store samples.
+- Dropped Unity 5.0 support (the minimum version supported is now 5.4).
 
 -----------------------
 ## [0.9.6] - 2018.08.31
