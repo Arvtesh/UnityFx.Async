@@ -6,8 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 #if NET_4_6 || NET_STANDARD_2_0
 using System.Collections.Concurrent;
+using System.Runtime.ExceptionServices;
 #endif
-using System.Runtime.CompilerServices;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -44,12 +44,6 @@ namespace UnityFx.Async
 		/// </summary>
 		public static GameObject GetRootGo()
 		{
-			if (ReferenceEquals(_go, null))
-			{
-				_go = new GameObject(RootGoName);
-				GameObject.DontDestroyOnLoad(_go);
-			}
-
 			return _go;
 		}
 
@@ -61,7 +55,7 @@ namespace UnityFx.Async
 		/// <seealso cref="GetEndOfFrameUpdateSource"/>
 		public static IAsyncUpdateSource GetUpdateSource()
 		{
-			return GetRootBehaviour().UpdateSource;
+			return _rootBehaviour.UpdateSource;
 		}
 
 		/// <summary>
@@ -72,7 +66,7 @@ namespace UnityFx.Async
 		/// <seealso cref="GetEndOfFrameUpdateSource"/>
 		public static IAsyncUpdateSource GetLateUpdateSource()
 		{
-			return GetRootBehaviour().LateUpdateSource;
+			return _rootBehaviour.LateUpdateSource;
 		}
 
 		/// <summary>
@@ -83,7 +77,7 @@ namespace UnityFx.Async
 		/// <seealso cref="GetEndOfFrameUpdateSource"/>
 		public static IAsyncUpdateSource GetFixedUpdateSource()
 		{
-			return GetRootBehaviour().FixedUpdateSource;
+			return _rootBehaviour.FixedUpdateSource;
 		}
 
 		/// <summary>
@@ -94,7 +88,7 @@ namespace UnityFx.Async
 		/// <seealso cref="GetFixedUpdateSource"/>
 		public static IAsyncUpdateSource GetEndOfFrameUpdateSource()
 		{
-			return GetRootBehaviour().EofUpdateSource;
+			return _rootBehaviour.EofUpdateSource;
 		}
 
 		/// <summary>
@@ -118,23 +112,60 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				using (var asyncResult = new InvokeResult(d, state))
-				{
-#if NET_2_0 || NET_2_0_SUBSET
-
-					lock (_actionQueue)
+				var completed = false;
+				var exception = default(Exception);
+				var asyncResult = new InvokeResult(
+					args =>
 					{
-						_actionQueue.Enqueue(asyncResult);
-					}
+						try
+						{
+							d.Invoke(args);
+						}
+						catch (Exception e)
+						{
+							exception = e;
+						}
+						finally
+						{
+							completed = true;
+						}
+					},
+					state);
+
+#if NET_4_6 || NET_STANDARD_2_0
+
+				_actionQueue.Enqueue(asyncResult);
+
+				var sw = new SpinWait();
+
+				while (!completed)
+				{
+					sw.SpinOnce();
+				}
+
+				if (exception != null)
+				{
+					ExceptionDispatchInfo.Capture(exception).Throw();
+				}
 
 #else
 
+				lock (_actionQueue)
+				{
 					_actionQueue.Enqueue(asyncResult);
+				}
+
+				while (!completed)
+				{
+					Thread.SpinWait(1);
+				}
+
+				if (exception != null)
+				{
+					throw exception;
+				}
 
 #endif
-
-					asyncResult.Wait();
-				}
 			}
 		}
 
@@ -146,7 +177,7 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="d"/> is <see langword="null"/>.</exception>
 		/// <seealso cref="SendToMainThread(SendOrPostCallback, object)"/>
 		/// <seealso cref="InvokeOnMainThread(SendOrPostCallback, object)"/>
-		public static IAsyncOperation PostToMainThread(SendOrPostCallback d, object state)
+		public static void PostToMainThread(SendOrPostCallback d, object state)
 		{
 			if (d == null)
 			{
@@ -155,20 +186,18 @@ namespace UnityFx.Async
 
 			var asyncResult = new InvokeResult(d, state);
 
-#if NET_2_0 || NET_2_0_SUBSET
+#if NET_4_6 || NET_STANDARD_2_0
+
+			_actionQueue.Enqueue(asyncResult);
+
+#else
 
 			lock (_actionQueue)
 			{
 				_actionQueue.Enqueue(asyncResult);
 			}
 
-#else
-
-			_actionQueue.Enqueue(asyncResult);
-
 #endif
-
-			return asyncResult;
 		}
 
 		/// <summary>
@@ -179,15 +208,15 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="d"/> is <see langword="null"/>.</exception>
 		/// <seealso cref="SendToMainThread(SendOrPostCallback, object)"/>
 		/// <seealso cref="PostToMainThread(SendOrPostCallback, object)"/>
-		public static IAsyncOperation InvokeOnMainThread(SendOrPostCallback d, object state)
+		public static void InvokeOnMainThread(SendOrPostCallback d, object state)
 		{
 			if (_mainThreadContext == SynchronizationContext.Current)
 			{
-				return AsyncResult.FromAction(d, state);
+				d.Invoke(state);
 			}
 			else
 			{
-				return PostToMainThread(d, state);
+				PostToMainThread(d, state);
 			}
 		}
 
@@ -210,7 +239,7 @@ namespace UnityFx.Async
 		/// <seealso cref="Delay(TimeSpan)"/>
 		public static IAsyncOperation Delay(int millisecondsDelay)
 		{
-			return AsyncResult.Delay(millisecondsDelay, GetRootBehaviour().UpdateSource);
+			return AsyncResult.Delay(millisecondsDelay, _rootBehaviour.UpdateSource);
 		}
 
 		/// <summary>
@@ -223,7 +252,7 @@ namespace UnityFx.Async
 		/// <seealso cref="Delay(TimeSpan)"/>
 		public static IAsyncOperation Delay(float secondsDelay)
 		{
-			return AsyncResult.Delay(secondsDelay, GetRootBehaviour().UpdateSource);
+			return AsyncResult.Delay(secondsDelay, _rootBehaviour.UpdateSource);
 		}
 
 		/// <summary>
@@ -236,7 +265,7 @@ namespace UnityFx.Async
 		/// <seealso cref="Delay(float)"/>
 		public static IAsyncOperation Delay(TimeSpan delay)
 		{
-			return AsyncResult.Delay(delay, GetRootBehaviour().UpdateSource);
+			return AsyncResult.Delay(delay, _rootBehaviour.UpdateSource);
 		}
 
 		/// <summary>
@@ -255,7 +284,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException("enumerator");
 			}
 
-			return GetRootBehaviour().StartCoroutine(enumerator);
+			return _rootBehaviour.StartCoroutine(enumerator);
 		}
 
 		/// <summary>
@@ -361,7 +390,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException("completionCallback");
 			}
 
-			GetRootBehaviour().AddCompletionCallback(request, completionCallback);
+			_rootBehaviour.AddCompletionCallback(request, completionCallback);
 		}
 
 		/// <summary>
@@ -383,7 +412,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException("completionCallback");
 			}
 
-			GetRootBehaviour().AddCompletionCallback(request, completionCallback);
+			_rootBehaviour.AddCompletionCallback(request, completionCallback);
 		}
 
 		#endregion
@@ -547,16 +576,7 @@ namespace UnityFx.Async
 
 				while (_actionQueue.TryDequeue(out invokeResult))
 				{
-					try
-					{
-						invokeResult.Start();
-						invokeResult.SetCompleted();
-					}
-					catch (Exception e)
-					{
-						invokeResult.SetException(e);
-						Debug.LogException(e, this);
-					}
+					invokeResult.Invoke(this);
 				}
 
 #else
@@ -567,18 +587,7 @@ namespace UnityFx.Async
 					{
 						while (_actionQueue.Count > 0)
 						{
-							var asyncResult = _actionQueue.Dequeue();
-
-							try
-							{
-								asyncResult.Start();
-								asyncResult.SetCompleted();
-							}
-							catch (Exception e)
-							{
-								asyncResult.SetException(e);
-								Debug.LogException(e, this);
-							}
+							_actionQueue.Dequeue().Invoke(this);
 						}
 					}
 				}
@@ -646,29 +655,27 @@ namespace UnityFx.Async
 			#endregion
 		}
 
-		private sealed class InvokeResult : AsyncResult
+		private struct InvokeResult
 		{
 			private readonly SendOrPostCallback _callback;
+			private readonly object _userState;
 
-			public InvokeResult(SendOrPostCallback d, object asyncState)
-				: base(AsyncOperationStatus.Scheduled, asyncState)
+			public InvokeResult(SendOrPostCallback d, object userState)
 			{
 				_callback = d;
+				_userState = userState;
 			}
 
-			public void SetCompleted()
+			public void Invoke(UnityEngine.Object context)
 			{
-				TrySetCompleted();
-			}
-
-			public void SetException(Exception e)
-			{
-				TrySetException(e);
-			}
-
-			protected override void OnStarted()
-			{
-				_callback.Invoke(AsyncState);
+				try
+				{
+					_callback.Invoke(_userState);
+				}
+				catch (Exception e)
+				{
+					Debug.LogException(e, context);
+				}
 			}
 		}
 
@@ -690,34 +697,6 @@ namespace UnityFx.Async
 			}
 		}
 
-#if !NET35
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
-		private static AsyncRootBehaviour GetRootBehaviour()
-		{
-			if (ReferenceEquals(_rootBehaviour, null))
-			{
-				InitRootBehaviour();
-			}
-
-			return _rootBehaviour;
-		}
-
-		[MethodImpl(MethodImplOptions.NoInlining)]
-		private static void InitRootBehaviour()
-		{
-			var go = GetRootGo();
-
-			if (go)
-			{
-				_rootBehaviour = go.AddComponent<AsyncRootBehaviour>();
-			}
-			else
-			{
-				throw new ObjectDisposedException(RootGoName);
-			}
-		}
-
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 		private static void Initialize()
 		{
@@ -732,6 +711,9 @@ namespace UnityFx.Async
 			// Save the main thread context for future use.
 			_mainThreadContext = context;
 
+			// Set main thread context as default for all continuations. This saves allocations in many cases.
+			AsyncResult.DefaultSynchronizationContext = context;
+
 			// Initialize delayed action queue.
 #if NET_4_6 || NET_STANDARD_2_0
 			_actionQueue = new ConcurrentQueue<InvokeResult>();
@@ -739,8 +721,10 @@ namespace UnityFx.Async
 			_actionQueue = new Queue<InvokeResult>();
 #endif
 
-			// Set main thread context as default for all continuations. This saves allocations in many cases.
-			AsyncResult.DefaultSynchronizationContext = context;
+			// Initialize library components.
+			_go = new GameObject(RootGoName);
+			_rootBehaviour = _go.AddComponent<AsyncRootBehaviour>();
+			GameObject.DontDestroyOnLoad(_go);
 		}
 
 		#endregion
