@@ -10,9 +10,7 @@ using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using UnityEngine;
-#if UNITY_5_4_OR_NEWER
 using UnityEngine.Networking;
-#endif
 
 namespace UnityFx.Async
 {
@@ -343,8 +341,6 @@ namespace UnityFx.Async
 			}
 		}
 
-#if UNITY_5_4_OR_NEWER
-
 		/// <summary>
 		/// Register a completion callback for the specified <see cref="UnityWebRequest"/> instance.
 		/// </summary>
@@ -367,8 +363,6 @@ namespace UnityFx.Async
 
 			GetRootBehaviour().AddCompletionCallback(request, completionCallback);
 		}
-
-#endif
 
 		/// <summary>
 		/// Register a completion callback for the specified <see cref="WWW"/> instance.
@@ -500,7 +494,6 @@ namespace UnityFx.Async
 									item.Value();
 								}
 							}
-#if UNITY_5_4_OR_NEWER
 							else if (item.Key is UnityWebRequest)
 							{
 								var asyncOp = item.Key as UnityWebRequest;
@@ -511,7 +504,6 @@ namespace UnityFx.Async
 									item.Value();
 								}
 							}
-#endif
 							else if (item.Key is WWW)
 							{
 								var asyncOp = item.Key as WWW;

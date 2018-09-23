@@ -3,9 +3,7 @@
 
 using System;
 using UnityEngine;
-#if UNITY_5_4_OR_NEWER
 using UnityEngine.Networking;
-#endif
 
 namespace UnityFx.Async
 {
@@ -21,18 +19,8 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<string> GetText(string url)
 		{
-#if UNITY_5_4_OR_NEWER
-
 			var webRequest = UnityWebRequest.Get(url);
 			var result = new Helpers.WebRequestResult<string>(webRequest);
-
-#else
-
-			var www = new WWW(url);
-			var result = new Helpers.WwwResult<string>(www);
-
-#endif
-
 			result.Start();
 			return result;
 		}
@@ -44,18 +32,8 @@ namespace UnityFx.Async
 		/// <returns>An operation that can be used to track the download process.</returns>
 		public static IAsyncOperation<byte[]> GetBytes(string url)
 		{
-#if UNITY_5_4_OR_NEWER
-
 			var webRequest = UnityWebRequest.Get(url);
 			var result = new Helpers.WebRequestResult<byte[]>(webRequest);
-
-#else
-
-			var www = new WWW(url);
-			var result = new Helpers.WwwResult<byte[]>(www);
-
-#endif
-
 			result.Start();
 			return result;
 		}
@@ -72,15 +50,10 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url);
 			var result = new Helpers.WebRequestResult<AssetBundle>(webRequest);
 
-#elif UNITY_5_4_OR_NEWER
+#else
 
 			var webRequest = UnityWebRequest.GetAssetBundle(url);
 			var result = new Helpers.WebRequestResult<AssetBundle>(webRequest);
-
-#else
-
-			var www = new WWW(url);
-			var result = new Helpers.WwwResult<AssetBundle>(www);
 
 #endif
 
@@ -101,15 +74,10 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, 0);
 			var result = new Helpers.WebRequestResult<AssetBundle>(webRequest);
 
-#elif UNITY_5_4_OR_NEWER
+#else
 
 			var webRequest = UnityWebRequest.GetAssetBundle(url, hash, 0);
 			var result = new Helpers.WebRequestResult<AssetBundle>(webRequest);
-
-#else
-
-			var www = WWW.LoadFromCacheOrDownload(url, hash);
-			var result = new Helpers.WwwResult<AssetBundle>(www);
 
 #endif
 
@@ -131,15 +99,10 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, crc);
 			var result = new Helpers.WebRequestResult<AssetBundle>(webRequest);
 
-#elif UNITY_5_4_OR_NEWER
+#else
 
 			var webRequest = UnityWebRequest.GetAssetBundle(url, hash, crc);
 			var result = new Helpers.WebRequestResult<AssetBundle>(webRequest);
-
-#else
-
-			var www = WWW.LoadFromCacheOrDownload(url, hash, crc);
-			var result = new Helpers.WwwResult<AssetBundle>(www);
 
 #endif
 
@@ -159,15 +122,10 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.UNKNOWN);
 			var result = new Helpers.WebRequestResult<AudioClip>(webRequest);
 
-#elif UNITY_5_4_OR_NEWER
+#else
 
 			var webRequest = UnityWebRequest.GetAudioClip(url, AudioType.UNKNOWN);
 			var result = new Helpers.WebRequestResult<AudioClip>(webRequest);
-
-#else
-
-			var www = new WWW(url);
-			var result = new Helpers.WwwResult<AudioClip>(www);
 
 #endif
 
@@ -188,15 +146,10 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, audioType);
 			var result = new Helpers.WebRequestResult<AudioClip>(webRequest);
 
-#elif UNITY_5_4_OR_NEWER
+#else
 
 			var webRequest = UnityWebRequest.GetAudioClip(url, audioType);
 			var result = new Helpers.WebRequestResult<AudioClip>(webRequest);
-
-#else
-
-			var www = new WWW(url);
-			var result = new Helpers.WwwResult<AudioClip>(www);
 
 #endif
 
@@ -216,15 +169,10 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequestTexture.GetTexture(url, false);
 			var result = new Helpers.WebRequestResult<Texture2D>(webRequest);
 
-#elif UNITY_5_4_OR_NEWER
+#else
 
 			var webRequest = UnityWebRequest.GetTexture(url);
 			var result = new Helpers.WebRequestResult<Texture2D>(webRequest);
-
-#else
-
-			var www = new WWW(url);
-			var result = new Helpers.WwwResult<Texture2D>(www);
 
 #endif
 
@@ -245,15 +193,10 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequestTexture.GetTexture(url, nonReadable);
 			var result = new Helpers.WebRequestResult<Texture2D>(webRequest);
 
-#elif UNITY_5_4_OR_NEWER
+#else
 
 			var webRequest = UnityWebRequest.GetTexture(url, nonReadable);
 			var result = new Helpers.WebRequestResult<Texture2D>(webRequest);
-
-#else
-
-			var www = new WWW(url);
-			var result = new Helpers.WwwResult<Texture2D>(www);
 
 #endif
 
@@ -287,8 +230,6 @@ namespace UnityFx.Async
 		}
 
 #endif
-
-#if UNITY_5_4_OR_NEWER
 
 		/// <summary>
 		/// Returns result value of the specified <see cref="UnityWebRequest"/> instance.
@@ -331,8 +272,6 @@ namespace UnityFx.Async
 			return default(T);
 		}
 
-#endif
-
 		/// <summary>
 		/// Returns result value of the specified <see cref="WWW"/> instance.
 		/// </summary>
@@ -354,20 +293,12 @@ namespace UnityFx.Async
 			}
 			else if (typeof(T) == typeof(AudioClip))
 			{
-#if UNITY_5_4_OR_NEWER
 				return request.GetAudioClip() as T;
-#else
-				return request.audioClip as T;
-#endif
 			}
 #if !UNITY_2018_2_OR_NEWER
 			else if (typeof(T) == typeof(MovieTexture))
 			{
-#if UNITY_5_4_OR_NEWER
 				return request.GetMovieTexture() as T;
-#else
-				return request.movie as T;
-#endif
 			}
 #endif
 			else if (typeof(T) == typeof(byte[]))

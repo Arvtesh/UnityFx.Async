@@ -5,9 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
-#if UNITY_5_4_OR_NEWER
 using UnityEngine.Networking;
-#endif
 #if NET_4_6 || NET_STANDARD_2_0
 using System.Threading.Tasks;
 #endif
@@ -153,8 +151,6 @@ namespace UnityFx.Async
 
 		#region UnityWebRequest
 
-#if UNITY_5_4_OR_NEWER
-
 		/// <summary>
 		/// Creates an <see cref="IAsyncOperation"/> wrapper for the specified <see cref="UnityWebRequest"/>.
 		/// </summary>
@@ -244,8 +240,6 @@ namespace UnityFx.Async
 		{
 			return new UnityWebRequestAwaiter(op);
 		}
-
-#endif
 
 #endif
 
@@ -443,8 +437,6 @@ namespace UnityFx.Async
 
 #if NET_4_6 || NET_STANDARD_2_0
 
-#if UNITY_5_4_OR_NEWER
-
 		private static void OnTaskCompleted<T>(TaskCompletionSource<T> tcs, UnityWebRequest request) where T : class
 		{
 			try
@@ -472,8 +464,6 @@ namespace UnityFx.Async
 				tcs.TrySetException(e);
 			}
 		}
-
-#endif
 
 		private static void OnTaskCompleted<T>(TaskCompletionSource<T> tcs, WWW www) where T : class
 		{
