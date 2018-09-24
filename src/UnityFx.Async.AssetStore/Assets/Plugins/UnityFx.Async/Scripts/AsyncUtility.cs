@@ -22,11 +22,6 @@ namespace UnityFx.Async
 		#region data
 
 		private static SynchronizationContext _mainThreadContext;
-#if NET_4_6 || NET_STANDARD_2_0
-		private static ConcurrentQueue<InvokeResult> _actionQueue;
-#else
-		private static Queue<InvokeResult> _actionQueue;
-#endif
 		private static GameObject _go;
 		private static AsyncRootBehaviour _rootBehaviour;
 
@@ -101,72 +96,7 @@ namespace UnityFx.Async
 		/// <seealso cref="InvokeOnMainThread(SendOrPostCallback, object)"/>
 		public static void SendToMainThread(SendOrPostCallback d, object state)
 		{
-			if (d == null)
-			{
-				throw new ArgumentNullException("d");
-			}
-
-			if (_mainThreadContext == SynchronizationContext.Current)
-			{
-				d.Invoke(state);
-			}
-			else
-			{
-				var completed = false;
-				var exception = default(Exception);
-				var asyncResult = new InvokeResult(
-					args =>
-					{
-						try
-						{
-							d.Invoke(args);
-						}
-						catch (Exception e)
-						{
-							exception = e;
-						}
-						finally
-						{
-							completed = true;
-						}
-					},
-					state);
-
-#if NET_4_6 || NET_STANDARD_2_0
-
-				_actionQueue.Enqueue(asyncResult);
-
-				var sw = new SpinWait();
-
-				while (!completed)
-				{
-					sw.SpinOnce();
-				}
-
-				if (exception != null)
-				{
-					ExceptionDispatchInfo.Capture(exception).Throw();
-				}
-
-#else
-
-				lock (_actionQueue)
-				{
-					_actionQueue.Enqueue(asyncResult);
-				}
-
-				while (!completed)
-				{
-					Thread.SpinWait(1);
-				}
-
-				if (exception != null)
-				{
-					throw exception;
-				}
-
-#endif
-			}
+			_mainThreadContext.Send(d, state);
 		}
 
 		/// <summary>
@@ -179,25 +109,7 @@ namespace UnityFx.Async
 		/// <seealso cref="InvokeOnMainThread(SendOrPostCallback, object)"/>
 		public static void PostToMainThread(SendOrPostCallback d, object state)
 		{
-			if (d == null)
-			{
-				throw new ArgumentNullException("d");
-			}
-
-			var asyncResult = new InvokeResult(d, state);
-
-#if NET_4_6 || NET_STANDARD_2_0
-
-			_actionQueue.Enqueue(asyncResult);
-
-#else
-
-			lock (_actionQueue)
-			{
-				_actionQueue.Enqueue(asyncResult);
-			}
-
-#endif
+			_mainThreadContext.Post(d, state);
 		}
 
 		/// <summary>
@@ -216,7 +128,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				PostToMainThread(d, state);
+				_mainThreadContext.Post(d, state);
 			}
 		}
 
@@ -570,29 +482,10 @@ namespace UnityFx.Async
 					}
 				}
 
-#if NET_4_6 || NET_STANDARD_2_0
-
-				InvokeResult invokeResult;
-
-				while (_actionQueue.TryDequeue(out invokeResult))
+				if (_mainThreadContext is Helpers.MainThreadSynchronizationContext)
 				{
-					invokeResult.Invoke(this);
+					(_mainThreadContext as Helpers.MainThreadSynchronizationContext).Update(this);
 				}
-
-#else
-
-				if (_actionQueue.Count > 0)
-				{
-					lock (_actionQueue)
-					{
-						while (_actionQueue.Count > 0)
-						{
-							_actionQueue.Dequeue().Invoke(this);
-						}
-					}
-				}
-
-#endif
 			}
 
 			private void LateUpdate()
@@ -655,48 +548,6 @@ namespace UnityFx.Async
 			#endregion
 		}
 
-		private struct InvokeResult
-		{
-			private readonly SendOrPostCallback _callback;
-			private readonly object _userState;
-
-			public InvokeResult(SendOrPostCallback d, object userState)
-			{
-				_callback = d;
-				_userState = userState;
-			}
-
-			public void Invoke(UnityEngine.Object context)
-			{
-				try
-				{
-					_callback.Invoke(_userState);
-				}
-				catch (Exception e)
-				{
-					Debug.LogException(e, context);
-				}
-			}
-		}
-
-		private sealed class MainThreadSynchronizationContext : SynchronizationContext
-		{
-			public override SynchronizationContext CreateCopy()
-			{
-				return new MainThreadSynchronizationContext();
-			}
-
-			public override void Send(SendOrPostCallback d, object state)
-			{
-				SendToMainThread(d, state);
-			}
-
-			public override void Post(SendOrPostCallback d, object state)
-			{
-				PostToMainThread(d, state);
-			}
-		}
-
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 		private static void Initialize()
 		{
@@ -704,7 +555,8 @@ namespace UnityFx.Async
 
 			if (context == null)
 			{
-				context = new MainThreadSynchronizationContext();
+				// Create custom SynchronizationContext for the main thread.
+				context = new Helpers.MainThreadSynchronizationContext();
 				SynchronizationContext.SetSynchronizationContext(context);
 			}
 
@@ -713,13 +565,6 @@ namespace UnityFx.Async
 
 			// Set main thread context as default for all continuations. This saves allocations in many cases.
 			AsyncResult.DefaultSynchronizationContext = context;
-
-			// Initialize delayed action queue.
-#if NET_4_6 || NET_STANDARD_2_0
-			_actionQueue = new ConcurrentQueue<InvokeResult>();
-#else
-			_actionQueue = new Queue<InvokeResult>();
-#endif
 
 			// Initialize library components.
 			_go = new GameObject(RootGoName);
