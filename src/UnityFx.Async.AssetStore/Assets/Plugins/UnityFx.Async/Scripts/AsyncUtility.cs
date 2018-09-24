@@ -24,6 +24,7 @@ namespace UnityFx.Async
 		private static SynchronizationContext _mainThreadContext;
 		private static GameObject _go;
 		private static AsyncRootBehaviour _rootBehaviour;
+		private static SendOrPostCallback _actionCallback;
 
 		#endregion
 
@@ -89,9 +90,33 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Dispatches a synchronous message to the main thread.
 		/// </summary>
+		/// <param name="action">The delegate to invoke.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="SendToMainThread(SendOrPostCallback, object)"/>
+		/// <seealso cref="PostToMainThread(Action)"/>
+		/// <seealso cref="InvokeOnMainThread(Action)"/>
+		public static void SendToMainThread(Action action)
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			if (_actionCallback == null)
+			{
+				_actionCallback = ActionCallback;
+			}
+
+			_mainThreadContext.Send(_actionCallback, action);
+		}
+
+		/// <summary>
+		/// Dispatches a synchronous message to the main thread.
+		/// </summary>
 		/// <param name="d">The delegate to invoke.</param>
 		/// <param name="state">The object passed to the delegate.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="d"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="SendToMainThread(Action)"/>
 		/// <seealso cref="PostToMainThread(SendOrPostCallback, object)"/>
 		/// <seealso cref="InvokeOnMainThread(SendOrPostCallback, object)"/>
 		public static void SendToMainThread(SendOrPostCallback d, object state)
@@ -102,9 +127,33 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Dispatches an asynchronous message to the main thread.
 		/// </summary>
+		/// <param name="action">The delegate to invoke.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="PostToMainThread(SendOrPostCallback, object)"/>
+		/// <seealso cref="SendToMainThread(Action)"/>
+		/// <seealso cref="InvokeOnMainThread(Action)"/>
+		public static void PostToMainThread(Action action)
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			if (_actionCallback == null)
+			{
+				_actionCallback = ActionCallback;
+			}
+
+			_mainThreadContext.Post(_actionCallback, action);
+		}
+
+		/// <summary>
+		/// Dispatches an asynchronous message to the main thread.
+		/// </summary>
 		/// <param name="d">The delegate to invoke.</param>
 		/// <param name="state">The object passed to the delegate.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="d"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="PostToMainThread(Action)"/>
 		/// <seealso cref="SendToMainThread(SendOrPostCallback, object)"/>
 		/// <seealso cref="InvokeOnMainThread(SendOrPostCallback, object)"/>
 		public static void PostToMainThread(SendOrPostCallback d, object state)
@@ -115,15 +164,51 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Dispatches the specified delegate on the main thread.
 		/// </summary>
+		/// <param name="action">The delegate to invoke.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="InvokeOnMainThread(SendOrPostCallback, object)"/>
+		/// <seealso cref="SendToMainThread(Action)"/>
+		/// <seealso cref="PostToMainThread(Action)"/>
+		public static void InvokeOnMainThread(Action action)
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			if (_mainThreadContext == SynchronizationContext.Current)
+			{
+				action.Invoke();
+			}
+			else
+			{
+				if (_actionCallback == null)
+				{
+					_actionCallback = ActionCallback;
+				}
+
+				_mainThreadContext.Post(_actionCallback, action);
+			}
+		}
+
+		/// <summary>
+		/// Dispatches the specified delegate on the main thread.
+		/// </summary>
 		/// <param name="d">The delegate to invoke.</param>
 		/// <param name="state">The object passed to the delegate.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="d"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="InvokeOnMainThread(Action)"/>
 		/// <seealso cref="SendToMainThread(SendOrPostCallback, object)"/>
 		/// <seealso cref="PostToMainThread(SendOrPostCallback, object)"/>
 		public static void InvokeOnMainThread(SendOrPostCallback d, object state)
 		{
 			if (_mainThreadContext == SynchronizationContext.Current)
 			{
+				if (d == null)
+				{
+					throw new ArgumentNullException(nameof(d));
+				}
+
 				d.Invoke(state);
 			}
 			else
@@ -570,6 +655,11 @@ namespace UnityFx.Async
 			_go = new GameObject(RootGoName);
 			_rootBehaviour = _go.AddComponent<AsyncRootBehaviour>();
 			GameObject.DontDestroyOnLoad(_go);
+		}
+
+		private static void ActionCallback(object args)
+		{
+			((Action)args).Invoke();
 		}
 
 		#endregion
