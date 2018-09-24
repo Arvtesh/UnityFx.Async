@@ -244,6 +244,78 @@ namespace UnityFx.Async
 
 		#endregion
 
+		#region IAsyncOperationEvents
+
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is already completed the <paramref name="callback"/> is called synchronously.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="callback"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="op">The operation to schedule continuation for.</param>
+		/// <param name="callback">The callback to be executed when the operation has completed.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		public static void AddCompletionCallback(this IAsyncOperationEvents op, Action<IAsyncOperation> callback)
+		{
+			op.AddCompletionCallback(callback, SynchronizationContext.Current);
+		}
+
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is already completed the <paramref name="callback"/> is called synchronously.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="callback"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="op">The operation to schedule continuation for.</param>
+		/// <param name="callback">The callback to be executed when the operation has completed.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		public static void AddCompletionCallback(this IAsyncOperationEvents op, IAsyncContinuation callback)
+		{
+			op.AddCompletionCallback(callback, SynchronizationContext.Current);
+		}
+
+		/// <summary>
+		/// Adds a callback to be executed when the operation progress has changed. If the operation is already completed the <paramref name="callback"/> is called synchronously.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="callback"/> is invoked on a thread that registered the callback (if it has a <see cref="SynchronizationContext"/> attached).
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="op">The operation to schedule continuation for.</param>
+		/// <param name="callback">The callback to be executed when the operation progress has changed.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		public static void AddProgressCallback(this IAsyncOperationEvents op, Action<float> callback)
+		{
+			op.AddProgressCallback(callback, SynchronizationContext.Current);
+		}
+
+#if !NET35
+
+		/// <summary>
+		/// Adds a callback to be executed when the operation progress has changed. If the operation is already completed the <paramref name="callback"/> is called synchronously.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="callback"/> is invoked on a thread that registered the callback (if it has a <see cref="SynchronizationContext"/> attached).
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="op">The operation to schedule continuation for.</param>
+		/// <param name="callback">The callback to be executed when the operation progress has changed.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		public static void AddProgressCallback(this IAsyncOperationEvents op, IProgress<float> callback)
+		{
+			op.AddProgressCallback(callback, SynchronizationContext.Current);
+		}
+
+#endif
+
+		#endregion
+
 		#region IAsyncCompletionSource
 
 		/// <summary>
