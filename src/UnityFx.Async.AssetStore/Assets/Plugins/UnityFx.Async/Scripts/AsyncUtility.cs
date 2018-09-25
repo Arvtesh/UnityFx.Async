@@ -412,6 +412,22 @@ namespace UnityFx.Async
 			_rootBehaviour.AddCompletionCallback(request, completionCallback);
 		}
 
+		/// <summary>
+		/// Register a completion callback that is triggered on a specific time during next frame.
+		/// </summary>
+		/// <param name="callback">A delegate to be called on the next frame.</param>
+		/// <param name="timing">Time to call the <paramref name="callback"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		public static void AddFrameCallback(Action callback, FrameTiming timing)
+		{
+			if (callback == null)
+			{
+				throw new ArgumentNullException("callback");
+			}
+
+			_rootBehaviour.AddFrameCallback(callback, timing);
+		}
+
 		#endregion
 
 		#region implementation
@@ -428,6 +444,20 @@ namespace UnityFx.Async
 			private AsyncUpdateSource _fixedUpdateSource;
 			private AsyncUpdateSource _eofUpdateSource;
 			private WaitForEndOfFrame _eof;
+
+#if NET_4_6 || NET_STANDARD_2_0
+
+			private ConcurrentQueue<Action> _updateActions;
+			private ConcurrentQueue<Action> _lateUpdateActions;
+			private ConcurrentQueue<Action> _fixedUpdateActions;
+
+#else
+
+			private Queue<Action> _updateActions;
+			private Queue<Action> _lateUpdateActions;
+			private Queue<Action> _fixedUpdateActions;
+
+#endif
 
 			#endregion
 
@@ -496,6 +526,24 @@ namespace UnityFx.Async
 				}
 
 				_ops.Add(op, cb);
+			}
+
+			public void AddFrameCallback(Action callback, FrameTiming timing)
+			{
+				switch (timing)
+				{
+					case FrameTiming.FixedUpdate:
+						AddFrameCallback(ref _fixedUpdateActions, callback);
+						break;
+
+					case FrameTiming.Update:
+						AddFrameCallback(ref _updateActions, callback);
+						break;
+
+					case FrameTiming.LateUpdate:
+						AddFrameCallback(ref _lateUpdateActions, callback);
+						break;
+				}
 			}
 
 			#endregion
@@ -567,6 +615,11 @@ namespace UnityFx.Async
 					}
 				}
 
+				if (_updateActions != null)
+				{
+					InvokeFrameCallbacks(_updateActions, this);
+				}
+
 				if (_mainThreadContext is Helpers.MainThreadSynchronizationContext)
 				{
 					(_mainThreadContext as Helpers.MainThreadSynchronizationContext).Update(this);
@@ -579,6 +632,11 @@ namespace UnityFx.Async
 				{
 					_lateUpdateSource.OnNext(Time.deltaTime);
 				}
+
+				if (_lateUpdateActions != null)
+				{
+					InvokeFrameCallbacks(_lateUpdateActions, this);
+				}
 			}
 
 			private void FixedUpdate()
@@ -586,6 +644,11 @@ namespace UnityFx.Async
 				if (_fixedUpdateSource != null)
 				{
 					_fixedUpdateSource.OnNext(Time.fixedDeltaTime);
+				}
+
+				if (_fixedUpdateActions != null)
+				{
+					InvokeFrameCallbacks(_fixedUpdateActions, this);
 				}
 			}
 
@@ -619,6 +682,66 @@ namespace UnityFx.Async
 			#endregion
 
 			#region implementation
+
+#if NET_4_6 || NET_STANDARD_2_0
+
+			private static void AddFrameCallback(ref ConcurrentQueue<Action> actionQueue, Action callback)
+			{
+				Interlocked.CompareExchange(ref actionQueue, new ConcurrentQueue<Action>(), null);
+				actionQueue.Enqueue(callback);
+			}
+
+			private static void InvokeFrameCallbacks(ConcurrentQueue<Action> actionQueue, UnityEngine.Object context)
+			{
+				Action action;
+
+				while (actionQueue.TryDequeue(out action))
+				{
+					try
+					{
+						action.Invoke();
+					}
+					catch (Exception e)
+					{
+						Debug.LogException(e, context);
+					}
+				}
+			}
+
+#else
+
+			private void AddFrameCallback(ref Queue<Action> actionQueue, Action callback)
+			{
+				Interlocked.CompareExchange(ref actionQueue, new Queue<Action>(), null);
+
+				lock (actionQueue)
+				{
+					actionQueue.Enqueue(callback);
+				}
+			}
+
+			private static void InvokeFrameCallbacks(Queue<Action> actionQueue, UnityEngine.Object context)
+			{
+				if (actionQueue.Count > 0)
+				{
+					lock (actionQueue)
+					{
+						while (actionQueue.Count > 0)
+						{
+							try
+							{
+								actionQueue.Dequeue().Invoke();
+							}
+							catch (Exception e)
+							{
+								Debug.LogException(e, context);
+							}
+						}
+					}
+				}
+			}
+
+#endif
 
 			private IEnumerator EofEnumerator()
 			{
