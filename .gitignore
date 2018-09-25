@@ -7,6 +7,10 @@
 [Bb]uild/
 [Bb]uilds/
 
+# Unity sandbox
+/unity/Sandbox/Assets/Plugins/
+/unity/Sandbox/*.*
+
 # Visual Studio cache directory
 .vs/
 .vscode/
