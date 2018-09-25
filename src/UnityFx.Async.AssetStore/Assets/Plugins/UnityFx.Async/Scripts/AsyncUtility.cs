@@ -24,7 +24,6 @@ namespace UnityFx.Async
 		private static SynchronizationContext _mainThreadContext;
 		private static GameObject _go;
 		private static AsyncRootBehaviour _rootBehaviour;
-		private static SendOrPostCallback _actionCallback;
 
 		#endregion
 
@@ -97,17 +96,7 @@ namespace UnityFx.Async
 		/// <seealso cref="InvokeOnMainThread(Action)"/>
 		public static void SendToMainThread(Action action)
 		{
-			if (action == null)
-			{
-				throw new ArgumentNullException(nameof(action));
-			}
-
-			if (_actionCallback == null)
-			{
-				_actionCallback = ActionCallback;
-			}
-
-			_mainThreadContext.Send(_actionCallback, action);
+			_mainThreadContext.Send(action);
 		}
 
 		/// <summary>
@@ -134,17 +123,7 @@ namespace UnityFx.Async
 		/// <seealso cref="InvokeOnMainThread(Action)"/>
 		public static void PostToMainThread(Action action)
 		{
-			if (action == null)
-			{
-				throw new ArgumentNullException(nameof(action));
-			}
-
-			if (_actionCallback == null)
-			{
-				_actionCallback = ActionCallback;
-			}
-
-			_mainThreadContext.Post(_actionCallback, action);
+			_mainThreadContext.Post(action);
 		}
 
 		/// <summary>
@@ -171,24 +150,7 @@ namespace UnityFx.Async
 		/// <seealso cref="PostToMainThread(Action)"/>
 		public static void InvokeOnMainThread(Action action)
 		{
-			if (action == null)
-			{
-				throw new ArgumentNullException(nameof(action));
-			}
-
-			if (_mainThreadContext == SynchronizationContext.Current)
-			{
-				action.Invoke();
-			}
-			else
-			{
-				if (_actionCallback == null)
-				{
-					_actionCallback = ActionCallback;
-				}
-
-				_mainThreadContext.Post(_actionCallback, action);
-			}
+			_mainThreadContext.Invoke(action);
 		}
 
 		/// <summary>
@@ -202,19 +164,7 @@ namespace UnityFx.Async
 		/// <seealso cref="PostToMainThread(SendOrPostCallback, object)"/>
 		public static void InvokeOnMainThread(SendOrPostCallback d, object state)
 		{
-			if (_mainThreadContext == SynchronizationContext.Current)
-			{
-				if (d == null)
-				{
-					throw new ArgumentNullException(nameof(d));
-				}
-
-				d.Invoke(state);
-			}
-			else
-			{
-				_mainThreadContext.Post(d, state);
-			}
+			_mainThreadContext.Invoke(d, state);
 		}
 
 		/// <summary>
@@ -778,11 +728,6 @@ namespace UnityFx.Async
 			_go = new GameObject(RootGoName);
 			_rootBehaviour = _go.AddComponent<AsyncRootBehaviour>();
 			GameObject.DontDestroyOnLoad(_go);
-		}
-
-		private static void ActionCallback(object args)
-		{
-			((Action)args).Invoke();
 		}
 
 		#endregion

@@ -17,6 +17,8 @@ namespace UnityFx.Async
 	{
 		#region data
 
+		private static SendOrPostCallback _actionCallback;
+
 #if !NET35
 
 		private static Action<object> _cancelHandler;
@@ -241,6 +243,99 @@ namespace UnityFx.Async
 		}
 
 #endif
+
+		#endregion
+
+		#region SynchronizationContext
+
+		/// <summary>
+		/// Dispatches an synchronous message to a synchronization context.
+		/// </summary>
+		/// <param name="context">The target context.</param>
+		/// <param name="action">The delegate to invoke.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		public static void Send(this SynchronizationContext context, Action action)
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			if (_actionCallback == null)
+			{
+				_actionCallback = ActionCallback;
+			}
+
+			context.Post(_actionCallback, action);
+		}
+
+		/// <summary>
+		/// Dispatches an asynchronous message to a synchronization context.
+		/// </summary>
+		/// <param name="context">The target context.</param>
+		/// <param name="action">The delegate to invoke.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		public static void Post(this SynchronizationContext context, Action action)
+		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+
+			if (_actionCallback == null)
+			{
+				_actionCallback = ActionCallback;
+			}
+
+			context.Post(_actionCallback, action);
+		}
+
+		/// <summary>
+		/// Dispatches a message to a synchronization context.
+		/// </summary>
+		/// <param name="context">The target context.</param>
+		/// <param name="action">The delegate to invoke.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
+		public static void Invoke(this SynchronizationContext context, Action action)
+		{
+			if (context == SynchronizationContext.Current)
+			{
+				if (action == null)
+				{
+					throw new ArgumentNullException(nameof(action));
+				}
+
+				action.Invoke();
+			}
+			else
+			{
+				context.Post(_actionCallback, action);
+			}
+		}
+
+		/// <summary>
+		/// Dispatches a message to a synchronization context.
+		/// </summary>
+		/// <param name="context">The target context.</param>
+		/// <param name="d">The delegate to invoke.</param>
+		/// <param name="state">User-defined state.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="d"/> is <see langword="null"/>.</exception>
+		public static void Invoke(this SynchronizationContext context, SendOrPostCallback d, object state)
+		{
+			if (context == SynchronizationContext.Current)
+			{
+				if (d == null)
+				{
+					throw new ArgumentNullException(nameof(d));
+				}
+
+				d.Invoke(state);
+			}
+			else
+			{
+				context.Post(d, state);
+			}
+		}
 
 		#endregion
 
@@ -637,6 +732,11 @@ namespace UnityFx.Async
 #endif
 
 			return true;
+		}
+
+		private static void ActionCallback(object args)
+		{
+			((Action)args).Invoke();
 		}
 
 		#endregion
