@@ -343,20 +343,7 @@ namespace UnityFx.Async
 
 		private static void SetAwaitContinuation(IAsyncOperation op, Action continuation, AsyncCallbackOptions options)
 		{
-			SynchronizationContext syncContext;
-
-			if (options == AsyncCallbackOptions.ExecuteOnCapturedContext)
-			{
-				syncContext = SynchronizationContext.Current;
-			}
-			else if (options == AsyncCallbackOptions.ExecuteOnDefaultContext)
-			{
-				syncContext = AsyncResult.DefaultSynchronizationContext;
-			}
-			else
-			{
-				syncContext = null;
-			}
+			var syncContext = GetContext(options);
 
 			if (op is AsyncResult ar)
 			{

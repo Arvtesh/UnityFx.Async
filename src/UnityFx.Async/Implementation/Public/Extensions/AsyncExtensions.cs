@@ -342,7 +342,8 @@ namespace UnityFx.Async
 		#region IAsyncOperationEvents
 
 		/// <summary>
-		/// Adds a completion callback to be executed after the operation has completed. If the operation is already completed the <paramref name="callback"/> is called synchronously.
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is already completed
+		/// the <paramref name="callback"/> is called synchronously.
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="callback"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
@@ -358,7 +359,26 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Adds a completion callback to be executed after the operation has completed. If the operation is already completed the <paramref name="callback"/> is called synchronously.
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is already completed
+		/// the <paramref name="callback"/> is invoked on a context specified via <paramref name="options"/>.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified.
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="op">The operation to schedule continuation for.</param>
+		/// <param name="callback">The callback to be executed when the operation has completed.</param>
+		/// <param name="options">The callback options.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		public static void AddCompletionCallback(this IAsyncOperationEvents op, Action<IAsyncOperation> callback, AsyncCallbackOptions options)
+		{
+			op.AddCompletionCallback(callback, GetContext(options));
+		}
+
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is already completed
+		/// the <paramref name="callback"/> is called synchronously.
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="callback"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
@@ -374,7 +394,26 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Adds a callback to be executed when the operation progress has changed. If the operation is already completed the <paramref name="callback"/> is called synchronously.
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is already completed
+		/// the <paramref name="callback"/> is invoked on a context specified via <paramref name="options"/>.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified.
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="op">The operation to schedule continuation for.</param>
+		/// <param name="callback">The callback to be executed when the operation has completed.</param>
+		/// <param name="options">The callback options.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		public static void AddCompletionCallback(this IAsyncOperationEvents op, IAsyncContinuation callback, AsyncCallbackOptions options)
+		{
+			op.AddCompletionCallback(callback, GetContext(options));
+		}
+
+		/// <summary>
+		/// Adds a callback to be executed when the operation progress has changed. If the operation is already completed
+		/// the <paramref name="callback"/> is called synchronously.
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="callback"/> is invoked on a thread that registered the callback (if it has a <see cref="SynchronizationContext"/> attached).
@@ -389,10 +428,29 @@ namespace UnityFx.Async
 			op.AddProgressCallback(callback, SynchronizationContext.Current);
 		}
 
+		/// <summary>
+		/// Adds a callback to be executed when the operation progress has changed. If the operation is already completed
+		/// the <paramref name="callback"/> is invoked on a context specified via <paramref name="options"/>.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified.
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="op">The operation to schedule continuation for.</param>
+		/// <param name="callback">The callback to be executed when the operation progress has changed.</param>
+		/// <param name="options">The callback options.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		public static void AddProgressCallback(this IAsyncOperationEvents op, Action<float> callback, AsyncCallbackOptions options)
+		{
+			op.AddProgressCallback(callback, GetContext(options));
+		}
+
 #if !NET35
 
 		/// <summary>
-		/// Adds a callback to be executed when the operation progress has changed. If the operation is already completed the <paramref name="callback"/> is called synchronously.
+		/// Adds a callback to be executed when the operation progress has changed. If the operation is already completed
+		/// the <paramref name="callback"/> is called synchronously.
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="callback"/> is invoked on a thread that registered the callback (if it has a <see cref="SynchronizationContext"/> attached).
@@ -405,6 +463,24 @@ namespace UnityFx.Async
 		public static void AddProgressCallback(this IAsyncOperationEvents op, IProgress<float> callback)
 		{
 			op.AddProgressCallback(callback, SynchronizationContext.Current);
+		}
+
+		/// <summary>
+		/// Adds a callback to be executed when the operation progress has changed. If the operation is already completed
+		/// the <paramref name="callback"/> is invoked on a context specified via <paramref name="options"/>.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified.
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="op">The operation to schedule continuation for.</param>
+		/// <param name="callback">The callback to be executed when the operation progress has changed.</param>
+		/// <param name="options">The callback options.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		public static void AddProgressCallback(this IAsyncOperationEvents op, IProgress<float> callback, AsyncCallbackOptions options)
+		{
+			op.AddProgressCallback(callback, GetContext(options));
 		}
 
 #endif
@@ -732,6 +808,26 @@ namespace UnityFx.Async
 #endif
 
 			return true;
+		}
+
+		private static SynchronizationContext GetContext(AsyncCallbackOptions options)
+		{
+			SynchronizationContext syncContext;
+
+			if (options == AsyncCallbackOptions.ExecuteOnCapturedContext)
+			{
+				syncContext = SynchronizationContext.Current;
+			}
+			else if (options == AsyncCallbackOptions.ExecuteOnDefaultContext)
+			{
+				syncContext = AsyncResult.DefaultSynchronizationContext;
+			}
+			else
+			{
+				syncContext = null;
+			}
+
+			return syncContext;
 		}
 
 		private static void ActionCallback(object args)
