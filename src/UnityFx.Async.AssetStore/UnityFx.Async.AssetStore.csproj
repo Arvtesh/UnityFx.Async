@@ -30,13 +30,13 @@
 
 	<ItemGroup>
 		<Reference Include="UnityEngine">
-			<HintPath>..\Dependencies\UnityEngine.dll</HintPath>
+			<HintPath>..\..\unity\Dependencies\UnityEngine.dll</HintPath>
 		</Reference>
 		<ProjectReference Include="..\UnityFx.Async\UnityFx.Async.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" PrivateAssets="All" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta009" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>

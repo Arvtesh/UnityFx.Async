@@ -91,7 +91,7 @@ namespace UnityFx.Async
 		/// Creates an awaitable that asynchronously yields back to the current context when awaited (works the same as <see cref="Task.Yield"/>).
 		/// </summary>
 		/// <returns>
-		/// A context that, when awaited, will asynchronously transition back into the current context at the 
+		/// A context that, when awaited, will asynchronously transition back into the current context at the
 		/// time of the await. If the current <see cref="SynchronizationContext"/> is non-<see langword="null"/>,
 		/// that is treated as the current context. Otherwise, the continuation is executed on the <see cref="ThreadPool"/>.
 		/// </returns>
