@@ -9,7 +9,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ### Added
 - Added convenience overloads for `SetException`-like methods accepting as error message string.
 - Added allocation optimizations for single-threaded applications (particularly for Unity3d). See `AsyncResult.DefaultSynchronizationContext` for more info.
+- Added new overloads for `ConfigureAwait` extensions accepting continuation options instead of boolean flag.
+- Added `SynchronizationContext` extension methods for `Send`/`Post` accepting `Action` as the delegate.
+- Added `AsyncResult.Yield` static method (workd exactly as `Task.Yield`).
+- Added `AsyncUtility.AddFrameCallback` helper for scheduling delegates for `MonoBehaviour` update loop.
 - Added performance benchmarks.
+
+### Changed
+- Moved several of `IAsyncOperationEvents` methods to the interface extensions.
 
 ### Fixed
 - Fixed error handling in `AsyncOperationResult`.
