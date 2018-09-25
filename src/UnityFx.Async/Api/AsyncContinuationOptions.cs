@@ -2,20 +2,18 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
-using System.Threading;
 
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Specifies behavior of an asynchronous opration continuation.
+	/// Specifies the behavior of an asynchronous operation continuation.
 	/// </summary>
-	/// <seealso cref="IAsyncContinuation"/>
 	[Flags]
 	public enum AsyncContinuationOptions
 	{
 		/// <summary>
-		/// When no continuation options are specified, specifies that default behavior should be used when executing a continuation.
-		/// I.e. continuation is scheduled оn the same <see cref="SynchronizationContext"/> that was active when the continuation was created.
+		/// When no continuation options are specified, default behavior should be used when executing a continuation.
+		/// I.e. continuation is executed on the same thread that scheduled it.
 		/// </summary>
 		None = 0,
 

@@ -23,15 +23,15 @@ namespace UnityFx.Async
 		public struct AsyncAwaiter : INotifyCompletion
 		{
 			private readonly IAsyncOperation _op;
-			private readonly bool _continueOnCapturedContext;
+			private readonly AsyncCallbackOptions _options;
 
 			/// <summary>
 			/// Initializes a new instance of the <see cref="AsyncAwaiter"/> struct.
 			/// </summary>
-			public AsyncAwaiter(IAsyncOperation op, bool continueOnCapturedContext)
+			public AsyncAwaiter(IAsyncOperation op, AsyncCallbackOptions options)
 			{
 				_op = op;
-				_continueOnCapturedContext = continueOnCapturedContext;
+				_options = options;
 			}
 
 			/// <summary>
@@ -54,7 +54,7 @@ namespace UnityFx.Async
 			/// <inheritdoc/>
 			public void OnCompleted(Action continuation)
 			{
-				SetAwaitContiniation(_op, continuation, _continueOnCapturedContext);
+				SetAwaitContinuation(_op, continuation, _options);
 			}
 		}
 
@@ -65,15 +65,15 @@ namespace UnityFx.Async
 		public struct AsyncAwaiter<T> : INotifyCompletion
 		{
 			private readonly IAsyncOperation<T> _op;
-			private readonly bool _continueOnCapturedContext;
+			private readonly AsyncCallbackOptions _options;
 
 			/// <summary>
 			/// Initializes a new instance of the <see cref="AsyncAwaiter{T}"/> struct.
 			/// </summary>
-			public AsyncAwaiter(IAsyncOperation<T> op, bool continueOnCapturedContext)
+			public AsyncAwaiter(IAsyncOperation<T> op, AsyncCallbackOptions options)
 			{
 				_op = op;
-				_continueOnCapturedContext = continueOnCapturedContext;
+				_options = options;
 			}
 
 			/// <summary>
@@ -99,7 +99,7 @@ namespace UnityFx.Async
 			/// <inheritdoc/>
 			public void OnCompleted(Action continuation)
 			{
-				SetAwaitContiniation(_op, continuation, _continueOnCapturedContext);
+				SetAwaitContinuation(_op, continuation, _options);
 			}
 		}
 
@@ -114,9 +114,9 @@ namespace UnityFx.Async
 			/// <summary>
 			/// Initializes a new instance of the <see cref="ConfiguredAsyncAwaitable"/> struct.
 			/// </summary>
-			public ConfiguredAsyncAwaitable(IAsyncOperation op, bool continueOnCapturedContext)
+			public ConfiguredAsyncAwaitable(IAsyncOperation op, AsyncCallbackOptions options)
 			{
-				_awaiter = new AsyncAwaiter(op, continueOnCapturedContext);
+				_awaiter = new AsyncAwaiter(op, options);
 			}
 
 			/// <summary>
@@ -136,9 +136,9 @@ namespace UnityFx.Async
 			/// <summary>
 			/// Initializes a new instance of the <see cref="ConfiguredAsyncAwaitable{T}"/> struct.
 			/// </summary>
-			public ConfiguredAsyncAwaitable(IAsyncOperation<T> op, bool continueOnCapturedContext)
+			public ConfiguredAsyncAwaitable(IAsyncOperation<T> op, AsyncCallbackOptions options)
 			{
-				_awaiter = new AsyncAwaiter<T>(op, continueOnCapturedContext);
+				_awaiter = new AsyncAwaiter<T>(op, options);
 			}
 
 			/// <summary>
@@ -154,7 +154,7 @@ namespace UnityFx.Async
 		/// <seealso cref="GetAwaiter{TResult}(IAsyncOperation{TResult})"/>
 		public static AsyncAwaiter GetAwaiter(this IAsyncOperation op)
 		{
-			return new AsyncAwaiter(op, true);
+			return new AsyncAwaiter(op, AsyncCallbackOptions.ExecuteOnCapturedContext);
 		}
 
 		/// <summary>
@@ -164,7 +164,7 @@ namespace UnityFx.Async
 		/// <seealso cref="GetAwaiter(IAsyncOperation)"/>
 		public static AsyncAwaiter<TResult> GetAwaiter<TResult>(this IAsyncOperation<TResult> op)
 		{
-			return new AsyncAwaiter<TResult>(op, true);
+			return new AsyncAwaiter<TResult>(op, AsyncCallbackOptions.ExecuteOnCapturedContext);
 		}
 
 		/// <summary>
@@ -175,7 +175,7 @@ namespace UnityFx.Async
 		/// <returns>An object used to await the operation.</returns>
 		public static ConfiguredAsyncAwaitable ConfigureAwait(this IAsyncOperation op, bool continueOnCapturedContext)
 		{
-			return new ConfiguredAsyncAwaitable(op, continueOnCapturedContext);
+			return new ConfiguredAsyncAwaitable(op, continueOnCapturedContext ? AsyncCallbackOptions.ExecuteOnCapturedContext : AsyncCallbackOptions.ExecuteSynchronously);
 		}
 
 		/// <summary>
@@ -186,7 +186,29 @@ namespace UnityFx.Async
 		/// <returns>An object used to await the operation.</returns>
 		public static ConfiguredAsyncAwaitable<TResult> ConfigureAwait<TResult>(this IAsyncOperation<TResult> op, bool continueOnCapturedContext)
 		{
-			return new ConfiguredAsyncAwaitable<TResult>(op, continueOnCapturedContext);
+			return new ConfiguredAsyncAwaitable<TResult>(op, continueOnCapturedContext ? AsyncCallbackOptions.ExecuteOnCapturedContext : AsyncCallbackOptions.ExecuteSynchronously);
+		}
+
+		/// <summary>
+		/// Configures an awaiter used to await this operation.
+		/// </summary>
+		/// <param name="op">The operation to await.</param>
+		/// <param name="continuationOptions">Specifies continuation options.</param>
+		/// <returns>An object used to await the operation.</returns>
+		public static ConfiguredAsyncAwaitable ConfigureAwait(this IAsyncOperation op, AsyncCallbackOptions continuationOptions)
+		{
+			return new ConfiguredAsyncAwaitable(op, continuationOptions);
+		}
+
+		/// <summary>
+		/// Configures an awaiter used to await this operation.
+		/// </summary>
+		/// <param name="op">The operation to await.</param>
+		/// <param name="continuationOptions">Specifies continuation options.</param>
+		/// <returns>An object used to await the operation.</returns>
+		public static ConfiguredAsyncAwaitable<TResult> ConfigureAwait<TResult>(this IAsyncOperation<TResult> op, AsyncCallbackOptions continuationOptions)
+		{
+			return new ConfiguredAsyncAwaitable<TResult>(op, continuationOptions);
 		}
 
 		#endregion
@@ -319,9 +341,22 @@ namespace UnityFx.Async
 
 		#region implementation
 
-		private static void SetAwaitContiniation(IAsyncOperation op, Action continuation, bool captureSynchronizationContext)
+		private static void SetAwaitContinuation(IAsyncOperation op, Action continuation, AsyncCallbackOptions options)
 		{
-			var syncContext = captureSynchronizationContext ? SynchronizationContext.Current : null;
+			SynchronizationContext syncContext;
+
+			if (options == AsyncCallbackOptions.ExecuteOnCapturedContext)
+			{
+				syncContext = SynchronizationContext.Current;
+			}
+			else if (options == AsyncCallbackOptions.ExecuteOnDefaultContext)
+			{
+				syncContext = AsyncResult.DefaultSynchronizationContext;
+			}
+			else
+			{
+				syncContext = null;
+			}
 
 			if (op is AsyncResult ar)
 			{
