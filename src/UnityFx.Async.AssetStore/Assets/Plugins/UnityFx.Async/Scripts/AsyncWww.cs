@@ -272,6 +272,8 @@ namespace UnityFx.Async
 			return default(T);
 		}
 
+#if !UNITY_2018_3_OR_NEWER
+
 		/// <summary>
 		/// Returns result value of the specified <see cref="WWW"/> instance.
 		/// </summary>
@@ -312,5 +314,7 @@ namespace UnityFx.Async
 
 			return null;
 		}
+
+#endif
 	}
 }

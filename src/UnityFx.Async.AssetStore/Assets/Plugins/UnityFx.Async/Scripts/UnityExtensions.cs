@@ -247,6 +247,8 @@ namespace UnityFx.Async
 
 		#region WWW
 
+#if !UNITY_2018_3_OR_NEWER
+
 		/// <summary>
 		/// Creates an <see cref="IAsyncOperation"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
@@ -337,6 +339,7 @@ namespace UnityFx.Async
 			return new WwwAwaiter(op);
 		}
 
+#endif
 #endif
 
 		#endregion
@@ -433,7 +436,7 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region implementation
+#region implementation
 
 #if NET_4_6 || NET_STANDARD_2_0
 
@@ -465,6 +468,8 @@ namespace UnityFx.Async
 			}
 		}
 
+#if !UNITY_2018_3_OR_NEWER
+
 		private static void OnTaskCompleted<T>(TaskCompletionSource<T> tcs, WWW www) where T : class
 		{
 			try
@@ -484,6 +489,8 @@ namespace UnityFx.Async
 				tcs.TrySetException(e);
 			}
 		}
+
+#endif
 
 #endif
 
