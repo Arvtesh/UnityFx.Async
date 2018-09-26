@@ -5,7 +5,7 @@ Channel  | UnityFx.Async |
 AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/master?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/master) [![AppVeyor tests](https://img.shields.io/appveyor/tests/Arvtesh/unityFx-async.svg)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/build/tests)
 NuGet | [![NuGet](https://img.shields.io/nuget/v/UnityFx.Async.svg)](https://www.nuget.org/packages/UnityFx.Async)
 Github | [![GitHub release](https://img.shields.io/github/release/Arvtesh/UnityFx.Async.svg?logo=github)](https://github.com/Arvtesh/UnityFx.Async/releases)
-Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v0.9.5-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
+Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v0.9.7-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
 
 **Required Unity 5.4 or higher.**
 
@@ -53,6 +53,9 @@ git submodule -q update --init
 ```
 ### Getting binaries
 The binaries are available as a [NuGet package](https://www.nuget.org/packages/UnityFx.Async). See [here](http://docs.nuget.org/docs/start-here/using-the-package-manager-console) for instructions on installing a package via nuget. One can also download them directly from [Github releases](https://github.com/Arvtesh/UnityFx.Async/releases). Unity3d users can import corresponding [Unity Asset Store package](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696) using the editor.
+
+### Unity dependencies
+The library core (`UnityFx.Async.dll`) does not depend on Unity and can be used in any .NET projects (via assembly or [NuGet](https://www.nuget.org/packages/UnityFx.Async) reference). All Unity-specific stuff depends on the core and is included in [Unity Asset Store package](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696).
 
 ## Understanding the concepts
 The topics below are just a quick summary of problems and the proposed solutions. For more details on the topic please see useful links at the end of this document.
