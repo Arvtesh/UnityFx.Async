@@ -1010,6 +1010,29 @@ namespace UnityFx.Async
 			return false;
 		}
 
+		/// <summary>
+		/// Returns a <see cref="SynchronizationContext"/> for the given options.
+		/// </summary>
+		internal static SynchronizationContext GetContext(AsyncCallbackOptions options)
+		{
+			SynchronizationContext syncContext;
+
+			if (options == AsyncCallbackOptions.ExecuteOnCapturedContext)
+			{
+				syncContext = SynchronizationContext.Current;
+			}
+			else if (options == AsyncCallbackOptions.ExecuteOnDefaultContext)
+			{
+				syncContext = _defaultContext;
+			}
+			else
+			{
+				syncContext = null;
+			}
+
+			return syncContext;
+		}
+
 		#endregion
 
 		#region IAsyncOperation
