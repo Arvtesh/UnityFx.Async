@@ -32,6 +32,10 @@ namespace UnityFx.Async
 			{
 				op.AddCompletionCallback(this, null);
 			}
+			else if ((options & AsyncContinuationOptions.ExecuteOnDefaultContext) != 0)
+			{
+				op.AddCompletionCallback(this, DefaultSynchronizationContext);
+			}
 			else
 			{
 				op.AddCompletionCallback(this);
