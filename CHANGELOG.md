@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `AsyncResult.Yield` static method (workd exactly as `Task.Yield`).
 - Added `AsyncUtility.AddFrameCallback` helper for scheduling delegates for `MonoBehaviour` update loop.
 - Added performance benchmarks.
+- Added sandbox Unity project.
 
 ### Changed
 - Moved several of `IAsyncOperationEvents` methods to the interface extensions.
@@ -24,6 +25,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ### Removed
 - Removed Asset Store samples.
 - Dropped Unity 5.0 support (the minimum version supported is now 5.4).
+- Dropped `WWW` support for Unity 2018.3+ (it has been deprecated in Unity).
 
 -----------------------
 ## [0.9.6] - 2018.08.31
