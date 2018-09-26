@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `SynchronizationContext` extension methods for `Send`/`Post` accepting `Action` as the delegate.
 - Added `AsyncResult.Yield` static method (workd exactly as `Task.Yield`).
 - Added `AsyncUtility.AddFrameCallback` helper for scheduling delegates for `MonoBehaviour` update loop.
+- Signed the assembly with a strong name.
 - Added performance benchmarks.
 - Added sandbox Unity project.
 
