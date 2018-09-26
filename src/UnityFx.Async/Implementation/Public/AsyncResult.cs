@@ -20,13 +20,13 @@ namespace UnityFx.Async
 	/// <remarks>
 	/// This class is the core entity of the library. In many aspects it mimics <c>Task</c>
 	/// interface and behaviour. For example, any <see cref="AsyncResult"/> instance can have any
-	/// number of continuations (added either explicitly via <c>TryAddCompletionCallback</c>
+	/// number of continuations (added either explicitly via <c>AddCompletionCallback</c>
 	/// call or implicitly using <c>async</c>/<c>await</c> keywords). These continuations can be
-	/// invoked on a captured <see cref="SynchronizationContext"/>. The class inherits <see cref="IAsyncResult"/>
-	/// and can be used to implement Asynchronous Programming Model (APM). There are operation
-	/// state accessors that can be used exactly like corresponding properties of <c>Task</c>.
-	/// While the class implements <see cref="IDisposable"/> disposing is only required
-	/// if <see cref="AsyncWaitHandle"/> property was used.
+	/// invoked on a an arbitrary <see cref="SynchronizationContext"/>. The class can be used to
+	/// implement Asynchronous Programming Model (APM). There are operation state accessors that
+	/// can be used exactly like corresponding properties of <c>Task</c>. While the class implements
+	/// <see cref="IDisposable"/> disposing is only required if <see cref="AsyncWaitHandle"/> property
+	/// was used.
 	/// </remarks>
 	/// <seealso href="http://www.what-could-possibly-go-wrong.com/promises-for-game-development/">Promises for game development</seealso>
 	/// <seealso href="https://blogs.msdn.microsoft.com/nikos/2011/03/14/how-to-implement-the-iasyncresult-design-pattern/">How to implement the IAsyncResult design pattern</seealso>
