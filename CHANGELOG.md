@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 
 ### Changed
 - Moved several of `IAsyncOperationEvents` methods to the interface extensions.
+- Simplified `AsyncLazy` interface.
 
 ### Fixed
 - Fixed error handling in `AsyncOperationResult`.
