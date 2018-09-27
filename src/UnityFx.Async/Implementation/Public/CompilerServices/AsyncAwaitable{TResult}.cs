@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Threading;
 
 namespace UnityFx.Async.CompilerServices
 {
@@ -19,9 +20,9 @@ namespace UnityFx.Async.CompilerServices
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncAwaitable{TResult}"/> struct.
 		/// </summary>
-		public AsyncAwaitable(IAsyncOperation<TResult> op, AsyncCallbackOptions options)
+		public AsyncAwaitable(IAsyncOperation<TResult> op, SynchronizationContext syncContext)
 		{
-			_awaiter = new AsyncAwaiter<TResult>(op, options);
+			_awaiter = new AsyncAwaiter<TResult>(op, syncContext);
 		}
 
 		/// <summary>

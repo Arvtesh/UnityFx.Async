@@ -78,8 +78,8 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <remarks>
 		/// This property is supposed to be used as allocation optimization in applications working mostly with single
-		/// <see cref="SynchronizationContext"/> instance (single thread) such as Unity3d applications. It should be
-		/// set to main thread context is most cases.
+		/// <see cref="SynchronizationContext"/> instance (such as Unity3d applications). Usually this should be set to
+		/// a context attached to the app UI thread.
 		/// </remarks>
 		/// <value>An instance of <see cref="SynchronizationContext"/> that is used as default one. Initial value is <see langword="null"/>.</value>
 		public static SynchronizationContext DefaultSynchronizationContext { get => _defaultContext; set => _defaultContext = value; }
@@ -1013,7 +1013,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns a <see cref="SynchronizationContext"/> for the given options.
 		/// </summary>
-		internal static SynchronizationContext GetContext(AsyncCallbackOptions options)
+		internal static SynchronizationContext GetSynchronizationContext(AsyncCallbackOptions options)
 		{
 			SynchronizationContext syncContext;
 

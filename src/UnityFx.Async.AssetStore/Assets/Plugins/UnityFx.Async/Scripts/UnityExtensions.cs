@@ -137,7 +137,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
+		/// Returns the operation awaiter. This method is intended for compiler use only.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
 		public static AsyncOperationAwaiter GetAwaiter(this AsyncOperation op)
@@ -233,7 +233,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
+		/// Returns the operation awaiter. This method is intended for compiler use only.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
 		public static UnityWebRequestAwaiter GetAwaiter(this UnityWebRequest op)
@@ -331,7 +331,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
+		/// Returns the operation awaiter. This method is intended for compiler use only.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
 		public static WwwAwaiter GetAwaiter(this WWW op)

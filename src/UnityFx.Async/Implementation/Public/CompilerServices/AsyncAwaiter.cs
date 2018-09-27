@@ -16,15 +16,24 @@ namespace UnityFx.Async.CompilerServices
 	public struct AsyncAwaiter : INotifyCompletion
 	{
 		private readonly IAsyncOperation _op;
-		private readonly AsyncCallbackOptions _options;
+		private readonly SynchronizationContext _syncContext;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncAwaiter"/> struct.
 		/// </summary>
-		public AsyncAwaiter(IAsyncOperation op, AsyncCallbackOptions options)
+		public AsyncAwaiter(IAsyncOperation op)
 		{
 			_op = op;
-			_options = options;
+			_syncContext = SynchronizationContext.Current;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AsyncAwaiter"/> struct.
+		/// </summary>
+		public AsyncAwaiter(IAsyncOperation op, SynchronizationContext syncContext)
+		{
+			_op = op;
+			_syncContext = syncContext;
 		}
 
 		/// <summary>
@@ -47,13 +56,11 @@ namespace UnityFx.Async.CompilerServices
 		/// <inheritdoc/>
 		public void OnCompleted(Action continuation)
 		{
-			SetAwaitContinuation(_op, continuation, _options);
+			SetAwaitContinuation(_op, continuation, _syncContext);
 		}
 
-		internal static void SetAwaitContinuation(IAsyncOperation op, Action continuation, AsyncCallbackOptions options)
+		internal static void SetAwaitContinuation(IAsyncOperation op, Action continuation, SynchronizationContext syncContext)
 		{
-			var syncContext = AsyncResult.GetContext(options);
-
 			if (op is AsyncResult ar)
 			{
 				ar.SetContinuationForAwait(continuation, syncContext);

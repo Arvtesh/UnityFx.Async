@@ -93,7 +93,7 @@ namespace UnityFx.Async
 		public CompilerServices.AsyncAwaiter GetAwaiter()
 		{
 			var op = StartOrUpdate();
-			return new CompilerServices.AsyncAwaiter(op, AsyncCallbackOptions.ExecuteOnCapturedContext);
+			return new CompilerServices.AsyncAwaiter(op);
 		}
 
 #endif

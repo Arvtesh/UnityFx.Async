@@ -373,7 +373,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public static void AddCompletionCallback(this IAsyncOperationEvents op, Action<IAsyncOperation> callback, AsyncCallbackOptions options)
 		{
-			op.AddCompletionCallback(callback, AsyncResult.GetContext(options));
+			op.AddCompletionCallback(callback, AsyncResult.GetSynchronizationContext(options));
 		}
 
 		/// <summary>
@@ -408,7 +408,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public static void AddCompletionCallback(this IAsyncOperationEvents op, IAsyncContinuation callback, AsyncCallbackOptions options)
 		{
-			op.AddCompletionCallback(callback, AsyncResult.GetContext(options));
+			op.AddCompletionCallback(callback, AsyncResult.GetSynchronizationContext(options));
 		}
 
 		/// <summary>
@@ -443,7 +443,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public static void AddProgressCallback(this IAsyncOperationEvents op, Action<float> callback, AsyncCallbackOptions options)
 		{
-			op.AddProgressCallback(callback, AsyncResult.GetContext(options));
+			op.AddProgressCallback(callback, AsyncResult.GetSynchronizationContext(options));
 		}
 
 #if !NET35
@@ -480,7 +480,7 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
 		public static void AddProgressCallback(this IAsyncOperationEvents op, IProgress<float> callback, AsyncCallbackOptions options)
 		{
-			op.AddProgressCallback(callback, AsyncResult.GetContext(options));
+			op.AddProgressCallback(callback, AsyncResult.GetSynchronizationContext(options));
 		}
 
 #endif
