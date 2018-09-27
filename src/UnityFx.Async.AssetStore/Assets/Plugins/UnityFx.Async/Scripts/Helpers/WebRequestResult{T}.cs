@@ -4,14 +4,10 @@
 using System;
 using System.Text;
 using UnityEngine;
-#if UNITY_5_4_OR_NEWER
 using UnityEngine.Networking;
-#endif
 
 namespace UnityFx.Async.Helpers
 {
-#if UNITY_5_4_OR_NEWER
-
 	/// <summary>
 	/// A wrapper for <see cref="UnityWebRequest"/> with result value.
 	/// </summary>
@@ -205,6 +201,4 @@ namespace UnityFx.Async.Helpers
 
 		#endregion
 	}
-
-#endif
 }

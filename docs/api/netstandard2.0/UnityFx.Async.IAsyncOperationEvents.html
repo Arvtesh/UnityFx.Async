@@ -73,7 +73,7 @@
   
   <h1 id="UnityFx_Async_IAsyncOperationEvents" data-uid="UnityFx.Async.IAsyncOperationEvents" class="text-break">Interface IAsyncOperationEvents
   </h1>
-  <div class="markdown level0 summary"><p>Manages events and callbacks of <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>.</p>
+  <div class="markdown level0 summary"><p>Defines completion/progress callbacks for <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="UnityFx.Async.html">UnityFx.Async</a></h6>
@@ -86,74 +86,10 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback(System.Action%7BUnityFx.Async.IAsyncOperation%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L54">View Source</a>
-  </span>
-  <a id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback*"></a>
-  <h4 id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__" data-uid="UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback(System.Action{UnityFx.Async.IAsyncOperation})">AddCompletionCallback(Action&lt;IAsyncOperation&gt;)</h4>
-  <div class="markdown level1 summary"><p>Adds a completion callback to be executed after the operation has completed. If the operation is already completed the <code data-dev-comment-type="paramref" class="paramref">callback</code> is called synchronously.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void AddCompletionCallback(Action&lt;IAsyncOperation&gt; callback)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>&gt;</td>
-        <td><span class="parametername">callback</span></td>
-        <td><p>The callback to be executed when the operation has completed.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation___remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>The <code data-dev-comment-type="paramref" class="paramref">callback</code> is invoked on a thread that registered the continuation (if it has a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a> attached).
-Throwing an exception from the callback might cause unspecified behaviour.</p>
-</div>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
-        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">callback</code> is <span class="xref">null</span>.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
-        <td><p>Thrown is the operation has been disposed.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation___seealso">See Also</h5>
-  <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__System_Threading_SynchronizationContext_">AddCompletionCallback(Action&lt;IAsyncOperation&gt;, SynchronizationContext)</a></div>
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__">RemoveCompletionCallback(Action&lt;IAsyncOperation&gt;)</a></div>
-  </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__System_Threading_SynchronizationContext_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback(System.Action%7BUnityFx.Async.IAsyncOperation%7D%2CSystem.Threading.SynchronizationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L71">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L56">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback*"></a>
   <h4 id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__System_Threading_SynchronizationContext_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback(System.Action{UnityFx.Async.IAsyncOperation},System.Threading.SynchronizationContext)">AddCompletionCallback(Action&lt;IAsyncOperation&gt;, SynchronizationContext)</h4>
@@ -216,79 +152,14 @@ Otherwise the callback is invoked on a thread that initiated the operation compl
   </table>
   <h5 id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__System_Threading_SynchronizationContext__seealso">See Also</h5>
   <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__">AddCompletionCallback(Action&lt;IAsyncOperation&gt;)</a></div>
       <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__">RemoveCompletionCallback(Action&lt;IAsyncOperation&gt;)</a></div>
-  </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_IAsyncContinuation_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback(UnityFx.Async.IAsyncContinuation)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L94">View Source</a>
-  </span>
-  <a id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback*"></a>
-  <h4 id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_IAsyncContinuation_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback(UnityFx.Async.IAsyncContinuation)">AddCompletionCallback(IAsyncContinuation)</h4>
-  <div class="markdown level1 summary"><p>Adds a completion callback to be executed after the operation has completed. If the operation is already completed the <code data-dev-comment-type="paramref" class="paramref">callback</code> is called synchronously.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void AddCompletionCallback(IAsyncContinuation callback)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="UnityFx.Async.IAsyncContinuation.html">IAsyncContinuation</a></td>
-        <td><span class="parametername">callback</span></td>
-        <td><p>The callback to be executed when the operation has completed.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_IAsyncContinuation__remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>The <code data-dev-comment-type="paramref" class="paramref">callback</code> is invoked on a thread that registered the continuation (if it has a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a> attached).
-Throwing an exception from the callback might cause unspecified behaviour.</p>
-</div>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
-        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">callback</code> is <span class="xref">null</span>.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
-        <td><p>Thrown is the operation has been disposed.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_IAsyncContinuation__seealso">See Also</h5>
-  <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_">AddCompletionCallback(IAsyncContinuation, SynchronizationContext)</a></div>
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_UnityFx_Async_IAsyncContinuation_">RemoveCompletionCallback(IAsyncContinuation)</a></div>
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback(UnityFx.Async.IAsyncContinuation%2CSystem.Threading.SynchronizationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L111">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L80">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback*"></a>
   <h4 id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddCompletionCallback(UnityFx.Async.IAsyncContinuation,System.Threading.SynchronizationContext)">AddCompletionCallback(IAsyncContinuation, SynchronizationContext)</h4>
@@ -351,79 +222,14 @@ Otherwise the callback is invoked on a thread that initiated the operation compl
   </table>
   <h5 id="UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext__seealso">See Also</h5>
   <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_IAsyncContinuation_">AddCompletionCallback(IAsyncContinuation)</a></div>
       <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_UnityFx_Async_IAsyncContinuation_">RemoveCompletionCallback(IAsyncContinuation)</a></div>
-  </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_Action_System_Single__.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.AddProgressCallback(System.Action%7BSystem.Single%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L134">View Source</a>
-  </span>
-  <a id="UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddProgressCallback*"></a>
-  <h4 id="UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_Action_System_Single__" data-uid="UnityFx.Async.IAsyncOperationEvents.AddProgressCallback(System.Action{System.Single})">AddProgressCallback(Action&lt;Single&gt;)</h4>
-  <div class="markdown level1 summary"><p>Adds a callback to be executed when the operation progress has changed. If the operation is already completed the <code data-dev-comment-type="paramref" class="paramref">callback</code> is called synchronously.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void AddProgressCallback(Action&lt;float&gt; callback)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a>&gt;</td>
-        <td><span class="parametername">callback</span></td>
-        <td><p>The callback to be executed when the operation progress has changed.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_Action_System_Single___remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>The <code data-dev-comment-type="paramref" class="paramref">callback</code> is invoked on a thread that registered the callback (if it has a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a> attached).
-Throwing an exception from the callback might cause unspecified behaviour.</p>
-</div>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
-        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">callback</code> is <span class="xref">null</span>.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
-        <td><p>Thrown is the operation has been disposed.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_Action_System_Single___seealso">See Also</h5>
-  <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_Action_System_Single__System_Threading_SynchronizationContext_">AddProgressCallback(Action&lt;Single&gt;, SynchronizationContext)</a></div>
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveProgressCallback_System_Action_System_Single__">RemoveProgressCallback(Action&lt;Single&gt;)</a></div>
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_Action_System_Single__System_Threading_SynchronizationContext_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.AddProgressCallback(System.Action%7BSystem.Single%7D%2CSystem.Threading.SynchronizationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L151">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L104">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddProgressCallback*"></a>
   <h4 id="UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_Action_System_Single__System_Threading_SynchronizationContext_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddProgressCallback(System.Action{System.Single},System.Threading.SynchronizationContext)">AddProgressCallback(Action&lt;Single&gt;, SynchronizationContext)</h4>
@@ -486,79 +292,14 @@ Otherwise the callback is invoked on a thread that initiated the operation.</p>
   </table>
   <h5 id="UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_Action_System_Single__System_Threading_SynchronizationContext__seealso">See Also</h5>
   <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_Action_System_Single__">AddProgressCallback(Action&lt;Single&gt;)</a></div>
       <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveProgressCallback_System_Action_System_Single__">RemoveProgressCallback(Action&lt;Single&gt;)</a></div>
-  </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_IProgress_System_Single__.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.AddProgressCallback(System.IProgress%7BSystem.Single%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L176">View Source</a>
-  </span>
-  <a id="UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddProgressCallback*"></a>
-  <h4 id="UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_IProgress_System_Single__" data-uid="UnityFx.Async.IAsyncOperationEvents.AddProgressCallback(System.IProgress{System.Single})">AddProgressCallback(IProgress&lt;Single&gt;)</h4>
-  <div class="markdown level1 summary"><p>Adds a callback to be executed when the operation progress has changed. If the operation is already completed the <code data-dev-comment-type="paramref" class="paramref">callback</code> is called synchronously.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void AddProgressCallback(IProgress&lt;float&gt; callback)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.IProgress</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a>&gt;</td>
-        <td><span class="parametername">callback</span></td>
-        <td><p>The callback to be executed when the operation progress has changed.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_IProgress_System_Single___remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>The <code data-dev-comment-type="paramref" class="paramref">callback</code> is invoked on a thread that registered the callback (if it has a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a> attached).
-Throwing an exception from the callback might cause unspecified behaviour.</p>
-</div>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
-        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">callback</code> is <span class="xref">null</span>.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
-        <td><p>Thrown is the operation has been disposed.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_IProgress_System_Single___seealso">See Also</h5>
-  <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_IProgress_System_Single__System_Threading_SynchronizationContext_">AddProgressCallback(IProgress&lt;Single&gt;, SynchronizationContext)</a></div>
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveProgressCallback_System_IProgress_System_Single__">RemoveProgressCallback(IProgress&lt;Single&gt;)</a></div>
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_IProgress_System_Single__System_Threading_SynchronizationContext_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.AddProgressCallback(System.IProgress%7BSystem.Single%7D%2CSystem.Threading.SynchronizationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L193">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L130">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddProgressCallback*"></a>
   <h4 id="UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_IProgress_System_Single__System_Threading_SynchronizationContext_" data-uid="UnityFx.Async.IAsyncOperationEvents.AddProgressCallback(System.IProgress{System.Single},System.Threading.SynchronizationContext)">AddProgressCallback(IProgress&lt;Single&gt;, SynchronizationContext)</h4>
@@ -621,7 +362,6 @@ Otherwise the callback is invoked on a thread that initiated the operation.</p>
   </table>
   <h5 id="UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_IProgress_System_Single__System_Threading_SynchronizationContext__seealso">See Also</h5>
   <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_IProgress_System_Single__">AddProgressCallback(IProgress&lt;Single&gt;)</a></div>
       <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveProgressCallback_System_IProgress_System_Single__">RemoveProgressCallback(IProgress&lt;Single&gt;)</a></div>
   </div>
   <span class="small pull-right mobile-hide">
@@ -629,7 +369,7 @@ Otherwise the callback is invoked on a thread that initiated the operation.</p>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.RemoveCompletionCallback(System.Action%7BUnityFx.Async.IAsyncOperation%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L80">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L64">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.RemoveCompletionCallback*"></a>
   <h4 id="UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__" data-uid="UnityFx.Async.IAsyncOperationEvents.RemoveCompletionCallback(System.Action{UnityFx.Async.IAsyncOperation})">RemoveCompletionCallback(Action&lt;IAsyncOperation&gt;)</h4>
@@ -676,7 +416,6 @@ Otherwise the callback is invoked on a thread that initiated the operation.</p>
   </table>
   <h5 id="UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation___seealso">See Also</h5>
   <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__">AddCompletionCallback(Action&lt;IAsyncOperation&gt;)</a></div>
       <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__System_Threading_SynchronizationContext_">AddCompletionCallback(Action&lt;IAsyncOperation&gt;, SynchronizationContext)</a></div>
   </div>
   <span class="small pull-right mobile-hide">
@@ -684,7 +423,7 @@ Otherwise the callback is invoked on a thread that initiated the operation.</p>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_UnityFx_Async_IAsyncContinuation_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.RemoveCompletionCallback(UnityFx.Async.IAsyncContinuation)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L120">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L88">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.RemoveCompletionCallback*"></a>
   <h4 id="UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_UnityFx_Async_IAsyncContinuation_" data-uid="UnityFx.Async.IAsyncOperationEvents.RemoveCompletionCallback(UnityFx.Async.IAsyncContinuation)">RemoveCompletionCallback(IAsyncContinuation)</h4>
@@ -731,7 +470,6 @@ Otherwise the callback is invoked on a thread that initiated the operation.</p>
   </table>
   <h5 id="UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_UnityFx_Async_IAsyncContinuation__seealso">See Also</h5>
   <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_IAsyncContinuation_">AddCompletionCallback(IAsyncContinuation)</a></div>
       <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_">AddCompletionCallback(IAsyncContinuation, SynchronizationContext)</a></div>
   </div>
   <span class="small pull-right mobile-hide">
@@ -739,7 +477,7 @@ Otherwise the callback is invoked on a thread that initiated the operation.</p>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_RemoveProgressCallback_System_Action_System_Single__.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.RemoveProgressCallback(System.Action%7BSystem.Single%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L160">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L112">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncOperationEvents_RemoveProgressCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.RemoveProgressCallback*"></a>
   <h4 id="UnityFx_Async_IAsyncOperationEvents_RemoveProgressCallback_System_Action_System_Single__" data-uid="UnityFx.Async.IAsyncOperationEvents.RemoveProgressCallback(System.Action{System.Single})">RemoveProgressCallback(Action&lt;Single&gt;)</h4>
@@ -786,7 +524,6 @@ Otherwise the callback is invoked on a thread that initiated the operation.</p>
   </table>
   <h5 id="UnityFx_Async_IAsyncOperationEvents_RemoveProgressCallback_System_Action_System_Single___seealso">See Also</h5>
   <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_Action_System_Single__">AddProgressCallback(Action&lt;Single&gt;)</a></div>
       <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_Action_System_Single__System_Threading_SynchronizationContext_">AddProgressCallback(Action&lt;Single&gt;, SynchronizationContext)</a></div>
   </div>
   <span class="small pull-right mobile-hide">
@@ -794,7 +531,7 @@ Otherwise the callback is invoked on a thread that initiated the operation.</p>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationEvents_RemoveProgressCallback_System_IProgress_System_Single__.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationEvents.RemoveProgressCallback(System.IProgress%7BSystem.Single%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L202">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationEvents.cs/#L138">View Source</a>
   </span>
   <a id="UnityFx_Async_IAsyncOperationEvents_RemoveProgressCallback_" data-uid="UnityFx.Async.IAsyncOperationEvents.RemoveProgressCallback*"></a>
   <h4 id="UnityFx_Async_IAsyncOperationEvents_RemoveProgressCallback_System_IProgress_System_Single__" data-uid="UnityFx.Async.IAsyncOperationEvents.RemoveProgressCallback(System.IProgress{System.Single})">RemoveProgressCallback(IProgress&lt;Single&gt;)</h4>
@@ -841,7 +578,6 @@ Otherwise the callback is invoked on a thread that initiated the operation.</p>
   </table>
   <h5 id="UnityFx_Async_IAsyncOperationEvents_RemoveProgressCallback_System_IProgress_System_Single___seealso">See Also</h5>
   <div class="seealso">
-      <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_IProgress_System_Single__">AddProgressCallback(IProgress&lt;Single&gt;)</a></div>
       <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_IProgress_System_Single__System_Threading_SynchronizationContext_">AddProgressCallback(IProgress&lt;Single&gt;, SynchronizationContext)</a></div>
   </div>
   <h3 id="events">Events
@@ -965,6 +701,31 @@ might cause unspecified behaviour.</p>
   <h5 id="UnityFx_Async_IAsyncOperationEvents_ProgressChanged_seealso">See Also</h5>
   <div class="seealso">
       <div><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_Completed">Completed</a></div>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperationEvents_System_Action_UnityFx_Async_IAsyncOperation__">AsyncExtensions.AddCompletionCallback(IAsyncOperationEvents, Action&lt;IAsyncOperation&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperationEvents_System_Action_UnityFx_Async_IAsyncOperation__UnityFx_Async_AsyncContinuationContext_">AsyncExtensions.AddCompletionCallback(IAsyncOperationEvents, Action&lt;IAsyncOperation&gt;, AsyncContinuationContext)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperationEvents_UnityFx_Async_IAsyncContinuation_">AsyncExtensions.AddCompletionCallback(IAsyncOperationEvents, IAsyncContinuation)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperationEvents_UnityFx_Async_IAsyncContinuation_UnityFx_Async_AsyncContinuationContext_">AsyncExtensions.AddCompletionCallback(IAsyncOperationEvents, IAsyncContinuation, AsyncContinuationContext)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddProgressCallback_UnityFx_Async_IAsyncOperationEvents_System_Action_System_Single__">AsyncExtensions.AddProgressCallback(IAsyncOperationEvents, Action&lt;Single&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddProgressCallback_UnityFx_Async_IAsyncOperationEvents_System_Action_System_Single__UnityFx_Async_AsyncContinuationContext_">AsyncExtensions.AddProgressCallback(IAsyncOperationEvents, Action&lt;Single&gt;, AsyncContinuationContext)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddProgressCallback_UnityFx_Async_IAsyncOperationEvents_System_IProgress_System_Single__">AsyncExtensions.AddProgressCallback(IAsyncOperationEvents, IProgress&lt;Single&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddProgressCallback_UnityFx_Async_IAsyncOperationEvents_System_IProgress_System_Single__UnityFx_Async_AsyncContinuationContext_">AsyncExtensions.AddProgressCallback(IAsyncOperationEvents, IProgress&lt;Single&gt;, AsyncContinuationContext)</a>
   </div>
   <h3 id="seealso">See Also</h3>
   <div class="seealso">

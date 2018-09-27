@@ -6,8 +6,13 @@ using System;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Represents the consumer side of an asynchronous operation. It is basically a disposable/hookable <see cref="IAsyncResult"/> with status information.
+	/// Represents the consumer side of an asynchronous operation (promise).
 	/// </summary>
+	/// <remarks>
+	/// The interface defines a read-only consumer side of an asynchronous operation. Basically
+	/// it provides the operation state information and completion/progress events. It is cancellable
+	/// so a cancellation request can be issued at any time (without any guarantees).
+	/// </remarks>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</seealso>
 	/// <seealso cref="IAsyncCompletionSource"/>
 	/// <seealso cref="IAsyncOperation{TResult}"/>

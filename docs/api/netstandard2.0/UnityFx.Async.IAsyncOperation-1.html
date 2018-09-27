@@ -73,7 +73,7 @@
   
   <h1 id="UnityFx_Async_IAsyncOperation_1" data-uid="UnityFx.Async.IAsyncOperation`1" class="text-break">Interface IAsyncOperation&lt;TResult&gt;
   </h1>
-  <div class="markdown level0 summary"><p>Represents the consumer side of an asynchronous operation. Extends an <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>
+  <div class="markdown level0 summary"><p>Represents the consumer side of an asynchronous operation. Extends <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>
 interface with a result value.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
@@ -107,16 +107,10 @@ interface with a result value.</p>
       <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_Completed">IAsyncOperationEvents.Completed</a>
     </div>
     <div>
-      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__">IAsyncOperationEvents.AddCompletionCallback(Action&lt;IAsyncOperation&gt;)</a>
-    </div>
-    <div>
       <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__System_Threading_SynchronizationContext_">IAsyncOperationEvents.AddCompletionCallback(Action&lt;IAsyncOperation&gt;, SynchronizationContext)</a>
     </div>
     <div>
       <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_System_Action_UnityFx_Async_IAsyncOperation__">IAsyncOperationEvents.RemoveCompletionCallback(Action&lt;IAsyncOperation&gt;)</a>
-    </div>
-    <div>
-      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_IAsyncContinuation_">IAsyncOperationEvents.AddCompletionCallback(IAsyncContinuation)</a>
     </div>
     <div>
       <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddCompletionCallback_UnityFx_Async_IAsyncContinuation_System_Threading_SynchronizationContext_">IAsyncOperationEvents.AddCompletionCallback(IAsyncContinuation, SynchronizationContext)</a>
@@ -125,16 +119,10 @@ interface with a result value.</p>
       <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveCompletionCallback_UnityFx_Async_IAsyncContinuation_">IAsyncOperationEvents.RemoveCompletionCallback(IAsyncContinuation)</a>
     </div>
     <div>
-      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_Action_System_Single__">IAsyncOperationEvents.AddProgressCallback(Action&lt;Single&gt;)</a>
-    </div>
-    <div>
       <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_Action_System_Single__System_Threading_SynchronizationContext_">IAsyncOperationEvents.AddProgressCallback(Action&lt;Single&gt;, SynchronizationContext)</a>
     </div>
     <div>
       <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_RemoveProgressCallback_System_Action_System_Single__">IAsyncOperationEvents.RemoveProgressCallback(Action&lt;Single&gt;)</a>
-    </div>
-    <div>
-      <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_IProgress_System_Single__">IAsyncOperationEvents.AddProgressCallback(IProgress&lt;Single&gt;)</a>
     </div>
     <div>
       <a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html#UnityFx_Async_IAsyncOperationEvents_AddProgressCallback_System_IProgress_System_Single__System_Threading_SynchronizationContext_">IAsyncOperationEvents.AddProgressCallback(IProgress&lt;Single&gt;, SynchronizationContext)</a>
@@ -181,7 +169,7 @@ interface with a result value.</p>
     <tbody>
       <tr>
         <td><span class="parametername">TResult</span></td>
-        <td><p>Type of th operation result value.</p>
+        <td><p>Type of the operation result value.</p>
 </td>
       </tr>
     </tbody>
@@ -319,6 +307,30 @@ Instead, attempting to access the property value throws an exception.</p>
       <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_WithCancellation_UnityFx_Async_IAsyncOperation_System_Threading_CancellationToken_">AsyncExtensions.WithCancellation(IAsyncOperation, CancellationToken)</a>
   </div>
   <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperationEvents_System_Action_UnityFx_Async_IAsyncOperation__">AsyncExtensions.AddCompletionCallback(IAsyncOperationEvents, Action&lt;IAsyncOperation&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperationEvents_System_Action_UnityFx_Async_IAsyncOperation__UnityFx_Async_AsyncContinuationContext_">AsyncExtensions.AddCompletionCallback(IAsyncOperationEvents, Action&lt;IAsyncOperation&gt;, AsyncContinuationContext)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperationEvents_UnityFx_Async_IAsyncContinuation_">AsyncExtensions.AddCompletionCallback(IAsyncOperationEvents, IAsyncContinuation)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperationEvents_UnityFx_Async_IAsyncContinuation_UnityFx_Async_AsyncContinuationContext_">AsyncExtensions.AddCompletionCallback(IAsyncOperationEvents, IAsyncContinuation, AsyncContinuationContext)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddProgressCallback_UnityFx_Async_IAsyncOperationEvents_System_Action_System_Single__">AsyncExtensions.AddProgressCallback(IAsyncOperationEvents, Action&lt;Single&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddProgressCallback_UnityFx_Async_IAsyncOperationEvents_System_Action_System_Single__UnityFx_Async_AsyncContinuationContext_">AsyncExtensions.AddProgressCallback(IAsyncOperationEvents, Action&lt;Single&gt;, AsyncContinuationContext)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddProgressCallback_UnityFx_Async_IAsyncOperationEvents_System_IProgress_System_Single__">AsyncExtensions.AddProgressCallback(IAsyncOperationEvents, IProgress&lt;Single&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddProgressCallback_UnityFx_Async_IAsyncOperationEvents_System_IProgress_System_Single__UnityFx_Async_AsyncContinuationContext_">AsyncExtensions.AddProgressCallback(IAsyncOperationEvents, IProgress&lt;Single&gt;, AsyncContinuationContext)</a>
+  </div>
+  <div>
       <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ToAsync__1_System_IObservable___0__">AsyncExtensions.ToAsync&lt;T&gt;(IObservable&lt;T&gt;)</a>
   </div>
   <div>
@@ -332,6 +344,12 @@ Instead, attempting to access the property value throws an exception.</p>
   </div>
   <div>
       <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ConfigureAwait__1_UnityFx_Async_IAsyncOperation___0__System_Boolean_">AsyncExtensions.ConfigureAwait&lt;TResult&gt;(IAsyncOperation&lt;TResult&gt;, Boolean)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ConfigureAwait_UnityFx_Async_IAsyncOperation_UnityFx_Async_AsyncContinuationContext_">AsyncExtensions.ConfigureAwait(IAsyncOperation, AsyncContinuationContext)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ConfigureAwait__1_UnityFx_Async_IAsyncOperation___0__UnityFx_Async_AsyncContinuationContext_">AsyncExtensions.ConfigureAwait&lt;TResult&gt;(IAsyncOperation&lt;TResult&gt;, AsyncContinuationContext)</a>
   </div>
   <div>
       <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_ToTask_UnityFx_Async_IAsyncOperation_">AsyncExtensions.ToTask(IAsyncOperation)</a>
