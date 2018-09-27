@@ -16,7 +16,7 @@ install:
   - cmd: git submodule -q update --init
 
 build_script:
-  - ps: .\build.ps1
+  - ps: .\src\build.ps1 Release
 
 artifacts:
   - path: .\bin\net35

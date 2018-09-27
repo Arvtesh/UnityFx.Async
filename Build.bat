@@ -1,1 +1,1 @@
-powershell .\Build.ps1
+powershell .\src\Build.ps1 Release

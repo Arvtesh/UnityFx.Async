@@ -69,18 +69,16 @@ function _PublishAssetStorePackage
 	param([string]$targetFramework)
 
 	$changelogPath = (Join-Path $scriptPath "..\CHANGELOG.md")
-	$readmePath = (Join-Path $scriptPath "UnityFx.Async\README.txt")
 	$filesToPublish = (Join-Path $scriptPath "UnityFx.Async.AssetStore\Assets\*")
-	$binToPublish =(Join-Path $binPath (Join-Path $targetFramework "\*")) 
+	$binToPublish =(Join-Path $binPath (Join-Path $targetFramework "\*"))
 	$publishPath = (Join-Path $assetStorePath (Join-Path $targetFramework "Assets"))
 	$publishPath2 = (Join-Path $publishPath "Plugins\UnityFx.Async")
 	$publishBinPath = (Join-Path $publishPath "Plugins\UnityFx.Async\Bin")
-	
+
 	New-Item $publishBinPath -ItemType Directory
 	Copy-Item -Path $filesToPublish -Destination $publishPath -Force -Recurse
 	Copy-Item -Path $binToPublish -Destination $publishBinPath -Force -Recurse
 	Copy-Item -Path $changelogPath -Destination $publishPath2 -Force
-	Copy-Item -Path $readmePath -Destination $publishPath2 -Force
 }
 
 _PublishAssetStorePackage "net35"

@@ -6,10 +6,10 @@ using System;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Represents the consumer side of an asynchronous operation. Extends an <see cref="IAsyncOperation"/>
+	/// Represents the consumer side of an asynchronous operation. Extends <see cref="IAsyncOperation"/>
 	/// interface with a result value.
 	/// </summary>
-	/// <typeparam name="TResult">Type of th operation result value.</typeparam>
+	/// <typeparam name="TResult">Type of the operation result value.</typeparam>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task-1">Task</seealso>
 	/// <seealso cref="IAsyncCompletionSource{TResult}"/>
 	/// <seealso cref="IAsyncOperation"/>

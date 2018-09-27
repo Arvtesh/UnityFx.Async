@@ -4,7 +4,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
 -----------------------
-## [0.9.6] - unreleased
+## [0.9.7] - 2018.09.27
+
+### Added
+- Added convenience overloads for `SetException`-like methods accepting as error message string.
+- Added allocation optimizations for single-threaded applications (particularly for Unity3d). See `AsyncResult.DefaultSynchronizationContext` for more info.
+- Added new overloads for `ConfigureAwait` extensions accepting continuation options instead of boolean flag.
+- Added `SynchronizationContext` extension methods for `Send`/`Post` accepting `Action` as the delegate.
+- Added `AsyncResult.Yield` static method (workd exactly as `Task.Yield`).
+- Added `AsyncUtility.AddFrameCallback` helper for scheduling delegates for `MonoBehaviour` update loop.
+- Signed the assembly with a strong name.
+- Added performance benchmarks.
+- Added sandbox Unity project.
+
+### Changed
+- Moved several of `IAsyncOperationEvents` methods to the interface extensions.
+- Simplified `AsyncLazy` interface.
+
+### Fixed
+- Fixed error handling in `AsyncOperationResult`.
+
+### Removed
+- Removed Asset Store samples.
+- Dropped Unity 5.0 support (the minimum version supported is now 5.4).
+- Dropped `WWW` support for Unity 2018.3+ (it has been deprecated in Unity).
+
+-----------------------
+## [0.9.6] - 2018.08.31
 
 ### Added
 - Added `Play`/`Wait` extension methods for `Animation` and `Animator`.
