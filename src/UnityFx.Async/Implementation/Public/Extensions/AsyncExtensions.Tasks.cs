@@ -62,22 +62,22 @@ namespace UnityFx.Async
 		/// Configures an awaiter used to await this operation.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
-		/// <param name="continuationOptions">Specifies continuation options.</param>
+		/// <param name="continuationContext">Specifies continuation options.</param>
 		/// <returns>An object that can be used to await the operation.</returns>
-		public static CompilerServices.AsyncAwaitable ConfigureAwait(this IAsyncOperation op, AsyncCallbackOptions continuationOptions)
+		public static CompilerServices.AsyncAwaitable ConfigureAwait(this IAsyncOperation op, AsyncContinuationContext continuationContext)
 		{
-			return new CompilerServices.AsyncAwaitable(op, AsyncResult.GetSynchronizationContext(continuationOptions));
+			return new CompilerServices.AsyncAwaitable(op, AsyncResult.GetSynchronizationContext(continuationContext));
 		}
 
 		/// <summary>
 		/// Configures an awaiter used to await this operation.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
-		/// <param name="continuationOptions">Specifies continuation options.</param>
+		/// <param name="continuationContext">Specifies continuation options.</param>
 		/// <returns>An object that can be used to await the operation.</returns>
-		public static CompilerServices.AsyncAwaitable<TResult> ConfigureAwait<TResult>(this IAsyncOperation<TResult> op, AsyncCallbackOptions continuationOptions)
+		public static CompilerServices.AsyncAwaitable<TResult> ConfigureAwait<TResult>(this IAsyncOperation<TResult> op, AsyncContinuationContext continuationContext)
 		{
-			return new CompilerServices.AsyncAwaitable<TResult>(op, AsyncResult.GetSynchronizationContext(continuationOptions));
+			return new CompilerServices.AsyncAwaitable<TResult>(op, AsyncResult.GetSynchronizationContext(continuationContext));
 		}
 
 		#endregion

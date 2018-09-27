@@ -1013,15 +1013,15 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns a <see cref="SynchronizationContext"/> for the given options.
 		/// </summary>
-		internal static SynchronizationContext GetSynchronizationContext(AsyncCallbackOptions options)
+		internal static SynchronizationContext GetSynchronizationContext(AsyncContinuationContext contextId)
 		{
 			SynchronizationContext syncContext;
 
-			if (options == AsyncCallbackOptions.ExecuteOnCapturedContext)
+			if (contextId == AsyncContinuationContext.Current)
 			{
 				syncContext = SynchronizationContext.Current;
 			}
-			else if (options == AsyncCallbackOptions.ExecuteOnDefaultContext)
+			else if (contextId == AsyncContinuationContext.Default)
 			{
 				syncContext = _defaultContext;
 			}
