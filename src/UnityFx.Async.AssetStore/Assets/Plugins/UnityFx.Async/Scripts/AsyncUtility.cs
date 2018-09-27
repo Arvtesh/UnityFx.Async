@@ -285,7 +285,6 @@ namespace UnityFx.Async
 		/// <param name="op">The request to register completion callback for.</param>
 		/// <param name="completionCallback">A delegate to be called when the <paramref name="op"/> has completed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="op"/> or <paramref name="completionCallback"/> is <see langword="null"/>.</exception>
-		/// <seealso cref="AddCompletionCallback(WWW, Action)"/>
 		public static void AddCompletionCallback(AsyncOperation op, Action completionCallback)
 		{
 			if (op == null)
@@ -311,7 +310,7 @@ namespace UnityFx.Async
 
 #else
 
-				GetRootBehaviour().AddCompletionCallback(op, completionCallback);
+				_rootBehaviour.AddCompletionCallback(op, completionCallback);
 
 #endif
 			}
@@ -324,7 +323,6 @@ namespace UnityFx.Async
 		/// <param name="completionCallback">A delegate to be called when the <paramref name="request"/> has completed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="request"/> or <paramref name="completionCallback"/> is <see langword="null"/>.</exception>
 		/// <seealso cref="AddCompletionCallback(AsyncOperation, Action)"/>
-		/// <seealso cref="AddCompletionCallback(WWW, Action)"/>
 		public static void AddCompletionCallback(UnityWebRequest request, Action completionCallback)
 		{
 			if (request == null)
@@ -339,6 +337,8 @@ namespace UnityFx.Async
 
 			_rootBehaviour.AddCompletionCallback(request, completionCallback);
 		}
+
+#if !UNITY_2018_3_OR_NEWER
 
 		/// <summary>
 		/// Register a completion callback for the specified <see cref="WWW"/> instance.
@@ -361,6 +361,8 @@ namespace UnityFx.Async
 
 			_rootBehaviour.AddCompletionCallback(request, completionCallback);
 		}
+
+#endif
 
 		/// <summary>
 		/// Register a completion callback that is triggered on a specific time during next frame.
@@ -528,6 +530,7 @@ namespace UnityFx.Async
 									item.Value();
 								}
 							}
+#if !UNITY_2018_3_OR_NEWER
 							else if (item.Key is WWW)
 							{
 								var asyncOp = item.Key as WWW;
@@ -538,6 +541,7 @@ namespace UnityFx.Async
 									item.Value();
 								}
 							}
+#endif
 						}
 					}
 					catch (Exception e)

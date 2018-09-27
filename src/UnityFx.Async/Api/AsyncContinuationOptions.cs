@@ -8,6 +8,7 @@ namespace UnityFx.Async
 	/// <summary>
 	/// Specifies the behavior of an asynchronous operation continuation.
 	/// </summary>
+	/// <seealso cref="AsyncContinuationContext"/>
 	[Flags]
 	public enum AsyncContinuationOptions
 	{

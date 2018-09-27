@@ -20,13 +20,13 @@ namespace UnityFx.Async
 	/// <remarks>
 	/// This class is the core entity of the library. In many aspects it mimics <c>Task</c>
 	/// interface and behaviour. For example, any <see cref="AsyncResult"/> instance can have any
-	/// number of continuations (added either explicitly via <c>TryAddCompletionCallback</c>
+	/// number of continuations (added either explicitly via <c>AddCompletionCallback</c>
 	/// call or implicitly using <c>async</c>/<c>await</c> keywords). These continuations can be
-	/// invoked on a captured <see cref="SynchronizationContext"/>. The class inherits <see cref="IAsyncResult"/>
-	/// and can be used to implement Asynchronous Programming Model (APM). There are operation
-	/// state accessors that can be used exactly like corresponding properties of <c>Task</c>.
-	/// While the class implements <see cref="IDisposable"/> disposing is only required
-	/// if <see cref="AsyncWaitHandle"/> property was used.
+	/// invoked on a an arbitrary <see cref="SynchronizationContext"/>. The class can be used to
+	/// implement Asynchronous Programming Model (APM). There are operation state accessors that
+	/// can be used exactly like corresponding properties of <c>Task</c>. While the class implements
+	/// <see cref="IDisposable"/> disposing is only required if <see cref="AsyncWaitHandle"/> property
+	/// was used.
 	/// </remarks>
 	/// <seealso href="http://www.what-could-possibly-go-wrong.com/promises-for-game-development/">Promises for game development</seealso>
 	/// <seealso href="https://blogs.msdn.microsoft.com/nikos/2011/03/14/how-to-implement-the-iasyncresult-design-pattern/">How to implement the IAsyncResult design pattern</seealso>
@@ -78,8 +78,8 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <remarks>
 		/// This property is supposed to be used as allocation optimization in applications working mostly with single
-		/// <see cref="SynchronizationContext"/> instance (single thread) such as Unity3d applications. It should be
-		/// set to main thread context is most cases.
+		/// <see cref="SynchronizationContext"/> instance (such as Unity3d applications). Usually this should be set to
+		/// a context attached to the app UI thread.
 		/// </remarks>
 		/// <value>An instance of <see cref="SynchronizationContext"/> that is used as default one. Initial value is <see langword="null"/>.</value>
 		public static SynchronizationContext DefaultSynchronizationContext { get => _defaultContext; set => _defaultContext = value; }
@@ -1008,6 +1008,29 @@ namespace UnityFx.Async
 			}
 
 			return false;
+		}
+
+		/// <summary>
+		/// Returns a <see cref="SynchronizationContext"/> for the given options.
+		/// </summary>
+		internal static SynchronizationContext GetSynchronizationContext(AsyncContinuationContext contextId)
+		{
+			SynchronizationContext syncContext;
+
+			if (contextId == AsyncContinuationContext.Current)
+			{
+				syncContext = SynchronizationContext.Current;
+			}
+			else if (contextId == AsyncContinuationContext.Default)
+			{
+				syncContext = _defaultContext;
+			}
+			else
+			{
+				syncContext = null;
+			}
+
+			return syncContext;
 		}
 
 		#endregion

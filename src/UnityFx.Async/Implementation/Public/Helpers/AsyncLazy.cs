@@ -49,27 +49,6 @@ namespace UnityFx.Async
 		public bool IsCanceled => _op?.IsCanceled ?? false;
 
 		/// <summary>
-		/// Gets the operation (might return <see langword="null"/>).
-		/// </summary>
-		public IAsyncOperation Operation => _op;
-
-		/// <summary>
-		/// Gets or sets the operation factory delegate.
-		/// </summary>
-		/// <exception cref="ArgumentNullException">Thrown if argument value is <see langword="null"/>.</exception>
-		public Func<IAsyncOperation> OperationFactory
-		{
-			get
-			{
-				return _opFactory;
-			}
-			set
-			{
-				_opFactory = value ?? throw new ArgumentNullException(nameof(value));
-			}
-		}
-
-		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncLazy"/> struct.
 		/// </summary>
 		/// <param name="opFactory">The delegate that is invoked to produce the lazily initialized operation when it is needed.</param>
@@ -83,7 +62,7 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Starts the operation or just updates its state.
 		/// </summary>
-		/// <exception cref="InvalidOperationException">Thrown if <see cref="OperationFactory"/> is <see langword="null"/>.</exception>
+		/// <exception cref="InvalidOperationException">Thrown if operation factory is <see langword="null"/>.</exception>
 		public IAsyncOperation StartOrUpdate()
 		{
 			if (_op != null)
@@ -99,17 +78,6 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Schedules a continuation to run after the lazy operation succeeds.
-		/// </summary>
-		/// <param name="continuation">A continuation to schedule after this operation completes.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="continuation"/> value is <see langword="null"/>.</exception>
-		/// <exception cref="InvalidOperationException">Thrown if <see cref="OperationFactory"/> is <see langword="null"/>.</exception>
-		public void Schedule(IAsyncContinuation continuation)
-		{
-			StartOrUpdate().AddCompletionCallback(continuation);
-		}
-
-		/// <summary>
 		/// Resets state of the instance to default.
 		/// </summary>
 		public void Reset()
@@ -117,13 +85,18 @@ namespace UnityFx.Async
 			_op = null;
 		}
 
+#if !NET35
+
 		/// <summary>
-		/// Implicit conversion to <see langword="bool"/>.
+		/// Returns the operation awaiter. This method is intended for compiler use only.
 		/// </summary>
-		public static implicit operator bool(AsyncLazy status)
+		public CompilerServices.AsyncAwaiter GetAwaiter()
 		{
-			return status.IsCompletedSuccessfully;
+			var op = StartOrUpdate();
+			return new CompilerServices.AsyncAwaiter(op);
 		}
+
+#endif
 
 		#endregion
 

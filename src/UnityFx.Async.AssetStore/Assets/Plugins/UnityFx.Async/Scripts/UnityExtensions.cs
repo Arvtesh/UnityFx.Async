@@ -137,7 +137,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
+		/// Returns the operation awaiter. This method is intended for compiler use only.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
 		public static AsyncOperationAwaiter GetAwaiter(this AsyncOperation op)
@@ -233,7 +233,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
+		/// Returns the operation awaiter. This method is intended for compiler use only.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
 		public static UnityWebRequestAwaiter GetAwaiter(this UnityWebRequest op)
@@ -246,6 +246,8 @@ namespace UnityFx.Async
 		#endregion
 
 		#region WWW
+
+#if !UNITY_2018_3_OR_NEWER
 
 		/// <summary>
 		/// Creates an <see cref="IAsyncOperation"/> wrapper for the specified <see cref="WWW"/>.
@@ -329,7 +331,7 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Returns the operation awaiter. This method is intended for compiler rather than use directly in code.
+		/// Returns the operation awaiter. This method is intended for compiler use only.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
 		public static WwwAwaiter GetAwaiter(this WWW op)
@@ -337,6 +339,7 @@ namespace UnityFx.Async
 			return new WwwAwaiter(op);
 		}
 
+#endif
 #endif
 
 		#endregion
@@ -433,7 +436,7 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region implementation
+#region implementation
 
 #if NET_4_6 || NET_STANDARD_2_0
 
@@ -465,6 +468,8 @@ namespace UnityFx.Async
 			}
 		}
 
+#if !UNITY_2018_3_OR_NEWER
+
 		private static void OnTaskCompleted<T>(TaskCompletionSource<T> tcs, WWW www) where T : class
 		{
 			try
@@ -484,6 +489,8 @@ namespace UnityFx.Async
 				tcs.TrySetException(e);
 			}
 		}
+
+#endif
 
 #endif
 

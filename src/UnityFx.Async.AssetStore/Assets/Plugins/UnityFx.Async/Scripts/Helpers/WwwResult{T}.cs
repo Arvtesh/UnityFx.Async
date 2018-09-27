@@ -7,6 +7,8 @@ using UnityEngine;
 
 namespace UnityFx.Async.Helpers
 {
+#if !UNITY_2018_3_OR_NEWER
+
 	/// <summary>
 	/// A wrapper for <see cref="WWW"/> with result value.
 	/// </summary>
@@ -155,4 +157,6 @@ namespace UnityFx.Async.Helpers
 
 		#endregion
 	}
+
+#endif
 }
