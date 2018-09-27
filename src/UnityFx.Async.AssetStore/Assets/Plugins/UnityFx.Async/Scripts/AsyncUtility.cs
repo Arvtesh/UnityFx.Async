@@ -310,7 +310,7 @@ namespace UnityFx.Async
 
 #else
 
-				GetRootBehaviour().AddCompletionCallback(op, completionCallback);
+				_rootBehaviour.AddCompletionCallback(op, completionCallback);
 
 #endif
 			}

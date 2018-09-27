@@ -293,6 +293,7 @@ namespace UnityFx.Async
 			{
 				return request.texture as T;
 			}
+#if UNITY_5_6_OR_NEWER
 			else if (typeof(T) == typeof(AudioClip))
 			{
 				return request.GetAudioClip() as T;
@@ -301,6 +302,16 @@ namespace UnityFx.Async
 			else if (typeof(T) == typeof(MovieTexture))
 			{
 				return request.GetMovieTexture() as T;
+			}
+#endif
+#else
+			else if (typeof(T) == typeof(AudioClip))
+			{
+				return request.audioClip as T;
+			}
+			else if (typeof(T) == typeof(MovieTexture))
+			{
+				return request.movie as T;
 			}
 #endif
 			else if (typeof(T) == typeof(byte[]))
