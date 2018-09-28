@@ -43,18 +43,14 @@ namespace UnityFx.Async
 
 		void IObserver<T>.OnNext(T value)
 		{
-			if (TrySetResult(value, false))
-			{
-				_subscription.Dispose();
-			}
+			_subscription.Dispose();
+			TrySetResult(value, false);
 		}
 
 		void IObserver<T>.OnError(Exception error)
 		{
-			if (TrySetException(error, false))
-			{
-				_subscription.Dispose();
-			}
+			_subscription.Dispose();
+			TrySetException(error, false);
 		}
 
 		void IObserver<T>.OnCompleted()

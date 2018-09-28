@@ -513,22 +513,22 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(task));
 			}
 
-			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
+			var result = new AsyncResult(AsyncOperationStatus.Running);
 
 			task.ContinueWith(
 				t =>
 				{
 					if (t.IsFaulted)
 					{
-						result.SetException(t.Exception);
+						result.TrySetException(t.Exception);
 					}
 					else if (t.IsCanceled)
 					{
-						result.SetCanceled();
+						result.TrySetCanceled();
 					}
 					else
 					{
-						result.SetCompleted();
+						result.TrySetCompleted();
 					}
 				},
 				TaskContinuationOptions.ExecuteSynchronously);
@@ -550,22 +550,22 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(task));
 			}
 
-			var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running);
+			var result = new AsyncResult<T>(AsyncOperationStatus.Running);
 
 			task.ContinueWith(
 				t =>
 				{
 					if (t.IsFaulted)
 					{
-						result.SetException(t.Exception);
+						result.TrySetException(t.Exception);
 					}
 					else if (t.IsCanceled)
 					{
-						result.SetCanceled();
+						result.TrySetCanceled();
 					}
 					else
 					{
-						result.SetResult(t.Result);
+						result.TrySetResult(t.Result);
 					}
 				},
 				TaskContinuationOptions.ExecuteSynchronously);
