@@ -7,7 +7,7 @@ NuGet | [![NuGet](https://img.shields.io/nuget/v/UnityFx.Async.svg)](https://www
 Github | [![GitHub release](https://img.shields.io/github/release/Arvtesh/UnityFx.Async.svg?logo=github)](https://github.com/Arvtesh/UnityFx.Async/releases)
 Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v0.9.7-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
 
-**Required Unity 5.4 or higher.**
+**Requires Unity 5.4 or higher.**
 
 **If you enjoy using the library - please, [rate and review](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696) it on the Asset Store!**
 
@@ -55,7 +55,7 @@ git submodule -q update --init
 The binaries are available as a [NuGet package](https://www.nuget.org/packages/UnityFx.Async). See [here](http://docs.nuget.org/docs/start-here/using-the-package-manager-console) for instructions on installing a package via nuget. One can also download them directly from [Github releases](https://github.com/Arvtesh/UnityFx.Async/releases). Unity3d users can import corresponding [Unity Asset Store package](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696) using the editor.
 
 ### Unity dependencies
-The library core (`UnityFx.Async.dll`) does not depend on Unity and can be used in any .NET projects (via assembly or [NuGet](https://www.nuget.org/packages/UnityFx.Async) reference). All Unity-specific stuff depends on the core and is included in [Unity Asset Store package](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696).
+The library core (`UnityFx.Async.dll`) does not depend on Unity and can be used in any .NET project (via assembly or [NuGet](https://www.nuget.org/packages/UnityFx.Async) reference). All Unity-specific stuff depends on the core and is included in [Asset Store package](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696).
 
 ## Understanding the concepts
 The topics below are just a quick summary of problems and the proposed solutions. For more details on the topic please see useful links at the end of this document.
@@ -439,7 +439,7 @@ Most common way of creating own asynchronous operation is instantiating `AsyncCo
 * `AsyncResult`: an asynchronous operation without a result value.
 * `AsyncResult<TResult>`: an asynchronous operation with a result value.
 
-The sample code below demostrates creating a delay operation (in fact library provides one, this is just a simplified example):
+The sample code below demostrates creating a delay operation (in fact the library provides one, this is just a simplified example):
 ```csharp
 public class TimerDelayResult : AsyncResult
 {
@@ -479,10 +479,9 @@ public class TimerDelayResult : AsyncResult
 ```
 
 ### Unity3d helpers
-The library consists of 3 major parts:
+As stated abovethe library include 2 main parts:
 * Core tools (defined in `UnityFx.Async.dll` assembly, do not depend on Unity3d);
-* Unity3d-specific tools (defined as a collection of C# scripts located in `Assets/Plugins/UnityFx.Async` if installed as an Asset Store package, require Unity3d to compile/execute).
-* Unity3d samples (defined as a collection of C# scripts located in `Assets/UnityFx.Async` if installed as an Asset Store package, require Unity3d to compile/execute).
+* Unity3d-specific tools (defined as a collection of C# scripts if installed as an Asset Store package, require Unity3d to compile/execute).
 
 Everything described before (unless specified otherwise) does not require Unity and can be used in any application. The Unity-specific stuff is located in 3 classes:
 * `AsyncUtility`. Defines helper methods for accessing main thread in Unity, running coroutines without actually using a `MonoBehaviour` and waiting for native Unity asynchronous operations outside of coroutines.
@@ -492,11 +491,11 @@ Everything described before (unless specified otherwise) does not require Unity 
 For example, one can throw a few lines of code to be executed on a main thread using:
 ```csharp
 // Sends a delegate to the main thread and blocks calling thread until it is executed.
-AsyncUtility.SendToMainThread(args => Debug.Log("On the main thread."), null);
+AsyncUtility.SendToMainThread(() => Debug.Log("On the main thread."));
 // Posts a delegate to the main thread and returns immediately. Returns an asynchronous operation that can be used to track the delegate execution.
-AsyncUtility.PostToMainThread(args => Debug.Log("On the main thread."), null);
+AsyncUtility.PostToMainThread(() => Debug.Log("On the main thread."));
 // If calling thread is the main thread executes the delegate synchronously, otherwise posts it to the main thread. Returns an asynchronous operation that can be used to track the delegate execution.
-AsyncUtility.InvokeOnMainThread(args => Debug.Log("On the main thread."), null);
+AsyncUtility.InvokeOnMainThread(() => Debug.Log("On the main thread."));
 ```
 
 ## Comparison to .NET Tasks
@@ -524,7 +523,7 @@ Please note that the library is NOT a replacement for [Tasks](https://docs.micro
 - An extendable [IAsyncResult](https://docs.microsoft.com/en-us/dotnet/api/system.iasyncresult) implementation is needed.
 
 ## Motivation
-The project was initially created to help author with his [Unity3d](https://unity3d.com) projects. Unity's [AsyncOperation](https://docs.unity3d.com/ScriptReference/AsyncOperation.html) and similar can only be used in coroutines, cannot be extended and mostly do not return result or error information, .NET 3.5 does not provide much help either and even with .NET 4.6 support compatibility requirements often do not allow using [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task). When I caught myself writing the same asynchronous operation wrappers in each project I decided to share my experience to the best of human kind.
+The project was initially created to help author with his [Unity3d](https://unity3d.com) projects. Unity's [AsyncOperation](https://docs.unity3d.com/ScriptReference/AsyncOperation.html) and similar can only be used in coroutines, cannot be extended and mostly do not return result or error information, .NET 3.5 does not provide much help either and even with .NET 4.6 support compatibility requirements often do not allow using [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) (and they are quite expensive). When I caught myself writing the same asynchronous operation wrappers in each project I decided to share my experience to the best of human kind.
 
 ## Documentation
 Please see the links below for extended information on the product:
@@ -554,7 +553,7 @@ The project uses [SemVer](https://semver.org/) versioning pattern. For the versi
 Please see the [![license](https://img.shields.io/github/license/Arvtesh/UnityFx.Async.svg)](LICENSE.md) for details.
 
 ## Acknowledgments
-Working on this project is a great experience. Please see below list of sources of my inspiration (in no particular order):
+Working on this project is a great experience. Please see below a list of my inspiration sources (in no particular order):
 * [.NET reference source](https://referencesource.microsoft.com/mscorlib/System/threading/Tasks/Task.cs.html). A great source of knowledge and good programming practices.
 * [C-Sharp-Promise](https://github.com/Real-Serious-Games/C-Sharp-Promise). Another great C# promise library with excellent documentation.
 * [UniRx](https://github.com/neuecc/UniRx). A deeply reworked [Rx.NET](https://github.com/Reactive-Extensions/Rx.NET) port to Unity.
