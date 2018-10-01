@@ -35,7 +35,7 @@ dotnet_csproj:
   version: '$(GitVersion_MajorMinorPatch)'
   package_version: '$(GitVersion_NuGetVersionV2)'
   assembly_version: '$(GitVersion_AssemblySemVer)'
-  file_version: '$(GitVersion_MajorMinorPatch).$(GitVersion_CommitsSinceVersionSource)'
+  file_version: '$(GitVersion_AssemblySemVer)'
   informational_version: '$(GitVersion_InformationalVersion)'
 
 deploy:
