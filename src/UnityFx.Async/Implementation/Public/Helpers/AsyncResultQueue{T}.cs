@@ -20,6 +20,7 @@ namespace UnityFx.Async
 	/// </remarks>
 	/// <threadsafety static="true" instance="true"/>
 	/// <seealso cref="AsyncResult"/>
+	[Obsolete]
 #if NET35
 	public class AsyncResultQueue<T> : IEnumerable<T>, IAsyncCancellable where T : AsyncResult
 #else
