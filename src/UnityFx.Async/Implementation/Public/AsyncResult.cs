@@ -721,6 +721,9 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Called when the progress value has changed. Default implementation does nothing.
 		/// </summary>
+		/// <remarks>
+		/// Throwing an exception in this method results in unspecified behaviour.
+		/// </remarks>
 		/// <seealso cref="Progress"/>
 		/// <seealso cref="GetProgress"/>
 		/// <seealso cref="TryReportProgress"/>
@@ -732,6 +735,9 @@ namespace UnityFx.Async
 		/// Called when the operation state has changed. Default implementation does nothing.
 		/// </summary>
 		/// <param name="status">The new status value.</param>
+		/// <remarks>
+		/// Throwing an exception in this method results in unspecified behaviour.
+		/// </remarks>
 		/// <seealso cref="Status"/>
 		/// <seealso cref="TrySetScheduled"/>
 		/// <seealso cref="TrySetRunning"/>
@@ -766,6 +772,9 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Called when the operation is completed. Default implementation does nothing.
 		/// </summary>
+		/// <remarks>
+		/// Throwing an exception in this method results in unspecified behaviour.
+		/// </remarks>
 		/// <seealso cref="OnStarted"/>
 		/// <seealso cref="Status"/>
 		/// <seealso cref="TrySetCanceled(bool)"/>
@@ -780,7 +789,7 @@ namespace UnityFx.Async
 		/// Releases unmanaged resources used by the object.
 		/// </summary>
 		/// <remarks>
-		/// Unlike most of the members of <see cref="AsyncResult"/>, this method is not thread-safe.
+		/// Unlike most of the members of <see cref="AsyncResult"/>, this method is not thread-safe. Do not throw exceptions in <see cref="Dispose(bool)"/>.
 		/// </remarks>
 		/// <param name="disposing">A <see langword="bool"/> value that indicates whether this method is being called due to a call to <see cref="Dispose()"/>.</param>
 		/// <seealso cref="Dispose()"/>
