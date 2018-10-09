@@ -1339,12 +1339,11 @@ namespace UnityFx.Async
 				OnProgressChanged();
 				OnStatusChanged(status);
 				OnCompleted();
-
-				InvokeCallbacks();
 			}
 			finally
 			{
 				_waitHandle?.Set();
+				InvokeCallbacks();
 			}
 		}
 
