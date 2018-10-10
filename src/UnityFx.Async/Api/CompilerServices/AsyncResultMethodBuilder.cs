@@ -22,15 +22,22 @@ namespace UnityFx.Async.CompilerServices
 	public struct AsyncResultMethodBuilder
 	{
 		private AsyncResult _op;
+		private Action _continuation;
 
-		/// <summary>
-		/// Initializes a new <see cref="AsyncResultMethodBuilder"/>.
-		/// </summary>
-		/// <returns>The initialized <see cref="AsyncResultMethodBuilder"/>.</returns>
-		[DebuggerHidden]
-		public static AsyncResultMethodBuilder Create()
+		internal class MoveNextRunner<TStateMachine> where TStateMachine : IAsyncStateMachine
 		{
-			return default(AsyncResultMethodBuilder);
+			private TStateMachine _stateMachine;
+
+			public void SetStateMachine(ref TStateMachine stateMachine)
+			{
+				_stateMachine = stateMachine;
+			}
+
+			[DebuggerHidden]
+			public void Run()
+			{
+				_stateMachine.MoveNext();
+			}
 		}
 
 		/// <summary>
@@ -43,6 +50,11 @@ namespace UnityFx.Async.CompilerServices
 		{
 			get
 			{
+				if (_continuation == null)
+				{
+					return AsyncResult.CompletedOperation;
+				}
+
 				if (_op == null)
 				{
 					_op = new AsyncResult();
@@ -60,7 +72,14 @@ namespace UnityFx.Async.CompilerServices
 		[DebuggerHidden]
 		public void SetResult()
 		{
-			throw new NotImplementedException();
+			if (_op == null)
+			{
+				_op = AsyncResult.CompletedOperation;
+			}
+			else if (!_op.TrySetCompleted())
+			{
+				throw new InvalidOperationException();
+			}
 		}
 
 		/// <summary>
@@ -73,7 +92,14 @@ namespace UnityFx.Async.CompilerServices
 		[DebuggerHidden]
 		public void SetException(Exception exception)
 		{
-			throw new NotImplementedException();
+			if (_op == null)
+			{
+				_op = AsyncResult.FromException(exception);
+			}
+			else if (!_op.TrySetException(exception))
+			{
+				throw new InvalidOperationException();
+			}
 		}
 
 		/// <summary>
@@ -84,7 +110,7 @@ namespace UnityFx.Async.CompilerServices
 		[DebuggerHidden]
 		public void Start<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
 		{
-			throw new NotImplementedException();
+			stateMachine.MoveNext();
 		}
 
 		/// <summary>
@@ -94,7 +120,6 @@ namespace UnityFx.Async.CompilerServices
 		[DebuggerHidden]
 		public void SetStateMachine(IAsyncStateMachine stateMachine)
 		{
-			throw new NotImplementedException();
 		}
 
 		/// <summary>
@@ -107,7 +132,20 @@ namespace UnityFx.Async.CompilerServices
 		[DebuggerHidden]
 		public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : INotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
-			throw new NotImplementedException();
+			// Box the stateMachine into MoveNextRunner on first await.
+			if (_continuation == null)
+			{
+				// MoveNextRunner acts as a heap-allocated shell of the state machine.
+				var runner = new MoveNextRunner<TStateMachine>();
+
+				// Create the continuation delegate.
+				_continuation = runner.Run;
+
+				// Copy the state machine into the runner (boxing). This should be done after _continuation is initialized.
+				runner.SetStateMachine(ref stateMachine);
+			}
+
+			awaiter.OnCompleted(_continuation);
 		}
 
 		/// <summary>
@@ -118,9 +156,27 @@ namespace UnityFx.Async.CompilerServices
 		/// <param name="awaiter">The awaiter passed by reference.</param>
 		/// <param name="stateMachine">The state machine passed by reference.</param>
 		[DebuggerHidden]
-		public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : INotifyCompletion where TStateMachine : IAsyncStateMachine
+		public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
-			throw new NotImplementedException();
+			// Box the stateMachine into MoveNextRunner on first await. See AwaitOnCompleted for detailed comments.
+			if (_continuation == null)
+			{
+				var runner = new MoveNextRunner<TStateMachine>();
+				_continuation = runner.Run;
+				runner.SetStateMachine(ref stateMachine);
+			}
+
+			awaiter.UnsafeOnCompleted(_continuation);
+		}
+
+		/// <summary>
+		/// Initializes a new <see cref="AsyncResultMethodBuilder"/>.
+		/// </summary>
+		/// <returns>The initialized <see cref="AsyncResultMethodBuilder"/>.</returns>
+		[DebuggerHidden]
+		public static AsyncResultMethodBuilder Create()
+		{
+			return default(AsyncResultMethodBuilder);
 		}
 	}
 

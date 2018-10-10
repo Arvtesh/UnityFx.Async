@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 #if !NET35
 using System.Runtime.ExceptionServices;
 #endif
@@ -38,6 +39,9 @@ namespace UnityFx.Async
 	/// <seealso cref="AsyncResult{T}"/>
 	/// <seealso cref="IAsyncResult"/>
 	[DebuggerDisplay("{DebuggerDisplay,nq}")]
+#if !NET35
+	[AsyncMethodBuilder(typeof(CompilerServices.AsyncResultMethodBuilder))]
+#endif
 	public partial class AsyncResult : IAsyncOperation, IAsyncContinuation, IEnumerator
 	{
 		#region data
