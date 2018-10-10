@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 -----------------------
 ## [0.9.8] - unreleased
 
+### Fixed
+- Fixed `AsyncResult` completion callbacks to be called event if `OnCompleted` throws.
+
+### Removed
+- Deprecated `AsyncResultQueue`.
+
 -----------------------
 ## [0.9.7] - 2018.09.27
 
