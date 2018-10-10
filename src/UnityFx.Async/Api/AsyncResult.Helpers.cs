@@ -623,7 +623,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(observable));
 			}
 
-			return new AsyncObservableResult<T>(observable);
+			return new FromObservableResult<T>(observable);
 		}
 
 #endif

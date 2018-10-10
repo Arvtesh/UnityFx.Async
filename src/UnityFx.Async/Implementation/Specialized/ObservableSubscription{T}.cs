@@ -7,7 +7,7 @@ namespace UnityFx.Async
 {
 #if !NET35
 
-	internal class AsyncObservableSubscription<T> : IAsyncContinuation, IDisposable
+	internal class ObservableSubscription<T> : IAsyncContinuation, IDisposable
 	{
 		#region data
 
@@ -18,7 +18,7 @@ namespace UnityFx.Async
 
 		#region interface
 
-		public AsyncObservableSubscription(IAsyncOperation<T> op, IObserver<T> observer)
+		public ObservableSubscription(IAsyncOperation<T> op, IObserver<T> observer)
 		{
 			_op = op;
 			_observer = observer;

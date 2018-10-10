@@ -7,7 +7,7 @@ namespace UnityFx.Async
 {
 #if !NET35
 
-	internal sealed class AsyncObservableResult<T> : AsyncResult<T>, IObserver<T>
+	internal sealed class FromObservableResult<T> : AsyncResult<T>, IObserver<T>
 	{
 		#region data
 
@@ -17,7 +17,7 @@ namespace UnityFx.Async
 
 		#region interface
 
-		internal AsyncObservableResult(IObservable<T> observable)
+		internal FromObservableResult(IObservable<T> observable)
 			: base(AsyncOperationStatus.Running)
 		{
 			_subscription = observable.Subscribe(this);

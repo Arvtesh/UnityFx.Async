@@ -17,7 +17,7 @@ namespace UnityFx.Async
 		/// <returns>Returns an <see cref="IAsyncOperation{T}"/> instance that can be used to track the observable.</returns>
 		public static IAsyncOperation<T> ToAsync<T>(this IObservable<T> observable)
 		{
-			return new AsyncObservableResult<T>(observable);
+			return new FromObservableResult<T>(observable);
 		}
 	}
 

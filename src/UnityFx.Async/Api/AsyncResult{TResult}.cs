@@ -308,7 +308,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(observer));
 			}
 
-			var result = new AsyncObservableSubscription<TResult>(this, observer);
+			var result = new ObservableSubscription<TResult>(this, observer);
 			AddCompletionCallback(result, null);
 			return result;
 		}
