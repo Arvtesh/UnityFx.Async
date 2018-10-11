@@ -18,12 +18,16 @@ namespace UnityFx.Async.CompilerServices
 	/// or else the copies may end up building distinct <see cref="AsyncResult{TResult}"/> instances.
 	/// </remarks>
 	/// <seealso cref="AsyncResultMethodBuilder"/>
-	/// <seealso cref="AsyncResultVoidMethodBuilder"/>
 	public struct AsyncResultMethodBuilder<TResult>
 	{
+		#region data
+
 		private AsyncResult<TResult> _op;
 		private Action _continuation;
-		private TResult _result;
+
+		#endregion
+
+		#region interface
 
 		/// <summary>
 		/// Gets the <see cref="AsyncResult{TResult}"/> for this builder.
@@ -35,11 +39,6 @@ namespace UnityFx.Async.CompilerServices
 		{
 			get
 			{
-				if (_continuation == null)
-				{
-					return GetTaskForResult(_result);
-				}
-
 				if (_op == null)
 				{
 					_op = new AsyncResult<TResult>();
@@ -58,11 +57,7 @@ namespace UnityFx.Async.CompilerServices
 		[DebuggerHidden]
 		public void SetResult(TResult result)
 		{
-			if (_continuation == null)
-			{
-				_result = result;
-			}
-			else if (_op == null)
+			if (_op == null)
 			{
 				_op = GetTaskForResult(result);
 			}
@@ -122,17 +117,9 @@ namespace UnityFx.Async.CompilerServices
 		[DebuggerHidden]
 		public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : INotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
-			// Box the stateMachine into MoveNextRunner on first await.
 			if (_continuation == null)
 			{
-				// MoveNextRunner acts as a heap-allocated shell of the state machine.
-				var runner = new AsyncResultMethodBuilder.MoveNextRunner<TStateMachine>();
-
-				// Create the continuation delegate.
-				_continuation = runner.Run;
-
-				// Copy the state machine into the runner (boxing). This should be done after _continuation is initialized.
-				runner.SetStateMachine(ref stateMachine);
+				OnFirstAwait(ref stateMachine);
 			}
 
 			awaiter.OnCompleted(_continuation);
@@ -148,12 +135,9 @@ namespace UnityFx.Async.CompilerServices
 		[DebuggerHidden]
 		public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
-			// Box the stateMachine into MoveNextRunner on first await. See AwaitOnCompleted for detailed comments.
 			if (_continuation == null)
 			{
-				var runner = new AsyncResultMethodBuilder.MoveNextRunner<TStateMachine>();
-				_continuation = runner.Run;
-				runner.SetStateMachine(ref stateMachine);
+				OnFirstAwait(ref stateMachine);
 			}
 
 			awaiter.UnsafeOnCompleted(_continuation);
@@ -169,10 +153,61 @@ namespace UnityFx.Async.CompilerServices
 			return default(AsyncResultMethodBuilder<TResult>);
 		}
 
+		#endregion
+
+		#region implementation
+
+		private class MoveNextRunner<TStateMachine> : AsyncResult<TResult> where TStateMachine : IAsyncStateMachine
+		{
+			private TStateMachine _stateMachine;
+
+			public MoveNextRunner()
+				: base(AsyncOperationStatus.Running)
+			{
+			}
+
+			public void SetStateMachine(ref TStateMachine stateMachine)
+			{
+				_stateMachine = stateMachine;
+			}
+
+			[DebuggerHidden]
+			public void Run()
+			{
+				Debug.Assert(!IsCompleted);
+				_stateMachine.MoveNext();
+			}
+		}
+
+		/// <summary>
+		/// First await handler. Boxes the <paramref name="stateMachine"/> and initializes continuation action.
+		/// </summary>
+		/// <typeparam name="TStateMachine">Type of the state machine instance.</typeparam>
+		/// <param name="stateMachine">The parent state machine.</param>
+		private void OnFirstAwait<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
+		{
+			// MoveNextRunner acts as a heap-allocated shell of the state machine + task.
+			var runner = new MoveNextRunner<TStateMachine>();
+
+			// Init all members references so they are shared between this instance and the boxed one.
+			_continuation = runner.Run;
+			_op = runner;
+
+			// Copy the state machine into the runner (boxing). This should be done after _continuation and _op is initialized.
+			runner.SetStateMachine(ref stateMachine);
+		}
+
+		/// <summary>
+		/// Gets a task matching the result value specified.
+		/// </summary>
+		/// <param name="result">The result value.</param>
+		/// <returns>The completed task.</returns>
 		private AsyncResult<TResult> GetTaskForResult(TResult result)
 		{
 			return AsyncResult.FromResult(result);
 		}
+
+		#endregion
 	}
 
 #endif

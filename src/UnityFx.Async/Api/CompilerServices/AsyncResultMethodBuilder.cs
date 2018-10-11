@@ -18,27 +18,16 @@ namespace UnityFx.Async.CompilerServices
 	/// or else the copies may end up building distinct <see cref="AsyncResult"/> instances.
 	/// </remarks>
 	/// <seealso cref="AsyncResultMethodBuilder{TResult}"/>
-	/// <seealso cref="AsyncResultVoidMethodBuilder"/>
 	public struct AsyncResultMethodBuilder
 	{
+		#region data
+
 		private AsyncResult _op;
 		private Action _continuation;
 
-		internal class MoveNextRunner<TStateMachine> where TStateMachine : IAsyncStateMachine
-		{
-			private TStateMachine _stateMachine;
+		#endregion
 
-			public void SetStateMachine(ref TStateMachine stateMachine)
-			{
-				_stateMachine = stateMachine;
-			}
-
-			[DebuggerHidden]
-			public void Run()
-			{
-				_stateMachine.MoveNext();
-			}
-		}
+		#region interface
 
 		/// <summary>
 		/// Gets the <see cref="AsyncResult"/> for this builder.
@@ -50,11 +39,7 @@ namespace UnityFx.Async.CompilerServices
 		{
 			get
 			{
-				if (_continuation == null)
-				{
-					return AsyncResult.CompletedOperation;
-				}
-
+				// Is this code really needed? _op should always be initialized when this is called.
 				if (_op == null)
 				{
 					_op = new AsyncResult();
@@ -69,6 +54,7 @@ namespace UnityFx.Async.CompilerServices
 		/// </summary>
 		/// <exception cref="InvalidOperationException">The builder is not initialized.</exception>
 		/// <exception cref="InvalidOperationException">The operation has already completed.</exception>
+		/// <seealso cref="SetException(Exception)"/>
 		[DebuggerHidden]
 		public void SetResult()
 		{
@@ -89,6 +75,7 @@ namespace UnityFx.Async.CompilerServices
 		/// <exception cref="ArgumentNullException">The <paramref name="exception"/> is <see langword="null"/>.</exception>
 		/// <exception cref="InvalidOperationException">The builder is not initialized.</exception>
 		/// <exception cref="InvalidOperationException">The operation has already completed.</exception>
+		/// <seealso cref="SetResult"/>
 		[DebuggerHidden]
 		public void SetException(Exception exception)
 		{
@@ -129,20 +116,13 @@ namespace UnityFx.Async.CompilerServices
 		/// <typeparam name="TStateMachine">Specifies the type of the state machine.</typeparam>
 		/// <param name="awaiter">The awaiter passed by reference.</param>
 		/// <param name="stateMachine">The state machine passed by reference.</param>
+		/// <seealso cref="AwaitUnsafeOnCompleted{TAwaiter, TStateMachine}(ref TAwaiter, ref TStateMachine)"/>
 		[DebuggerHidden]
 		public void AwaitOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : INotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
-			// Box the stateMachine into MoveNextRunner on first await.
 			if (_continuation == null)
 			{
-				// MoveNextRunner acts as a heap-allocated shell of the state machine.
-				var runner = new MoveNextRunner<TStateMachine>();
-
-				// Create the continuation delegate.
-				_continuation = runner.Run;
-
-				// Copy the state machine into the runner (boxing). This should be done after _continuation is initialized.
-				runner.SetStateMachine(ref stateMachine);
+				OnFirstAwait(ref stateMachine);
 			}
 
 			awaiter.OnCompleted(_continuation);
@@ -155,15 +135,13 @@ namespace UnityFx.Async.CompilerServices
 		/// <typeparam name="TStateMachine">Specifies the type of the state machine.</typeparam>
 		/// <param name="awaiter">The awaiter passed by reference.</param>
 		/// <param name="stateMachine">The state machine passed by reference.</param>
+		/// <seealso cref="AwaitOnCompleted{TAwaiter, TStateMachine}(ref TAwaiter, ref TStateMachine)"/>
 		[DebuggerHidden]
 		public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(ref TAwaiter awaiter, ref TStateMachine stateMachine) where TAwaiter : ICriticalNotifyCompletion where TStateMachine : IAsyncStateMachine
 		{
-			// Box the stateMachine into MoveNextRunner on first await. See AwaitOnCompleted for detailed comments.
 			if (_continuation == null)
 			{
-				var runner = new MoveNextRunner<TStateMachine>();
-				_continuation = runner.Run;
-				runner.SetStateMachine(ref stateMachine);
+				OnFirstAwait(ref stateMachine);
 			}
 
 			awaiter.UnsafeOnCompleted(_continuation);
@@ -178,6 +156,52 @@ namespace UnityFx.Async.CompilerServices
 		{
 			return default(AsyncResultMethodBuilder);
 		}
+
+		#endregion
+
+		#region implementation
+
+		private class MoveNextRunner<TStateMachine> : AsyncResult where TStateMachine : IAsyncStateMachine
+		{
+			private TStateMachine _stateMachine;
+
+			public MoveNextRunner()
+				: base(AsyncOperationStatus.Running)
+			{
+			}
+
+			public void SetStateMachine(ref TStateMachine stateMachine)
+			{
+				_stateMachine = stateMachine;
+			}
+
+			[DebuggerHidden]
+			public void Run()
+			{
+				Debug.Assert(!IsCompleted);
+				_stateMachine.MoveNext();
+			}
+		}
+
+		/// <summary>
+		/// First await handler. Boxes the <paramref name="stateMachine"/> and initializes continuation action.
+		/// </summary>
+		/// <typeparam name="TStateMachine">Type of the state machine instance.</typeparam>
+		/// <param name="stateMachine">The parent state machine.</param>
+		private void OnFirstAwait<TStateMachine>(ref TStateMachine stateMachine) where TStateMachine : IAsyncStateMachine
+		{
+			// MoveNextRunner acts as a heap-allocated shell of the state machine + task.
+			var runner = new MoveNextRunner<TStateMachine>();
+
+			// Init all members references so they are shared between this instance and the boxed one.
+			_continuation = runner.Run;
+			_op = new AsyncResult(AsyncOperationStatus.Running);
+
+			// Copy the state machine into the runner (boxing). This should be done after _continuation and _op is initialized.
+			runner.SetStateMachine(ref stateMachine);
+		}
+
+		#endregion
 	}
 
 #endif
