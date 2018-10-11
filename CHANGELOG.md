@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 -----------------------
 ## [0.9.8] - unreleased
 
+### Added
+- `AsyncResult` is now Task-like type and can be used as `async` methd result value (requires C# 7.2).
+
 ### Fixed
 - Fixed `AsyncResult` completion callbacks to be called event if `OnCompleted` throws.
 
