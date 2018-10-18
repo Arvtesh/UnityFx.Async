@@ -412,7 +412,7 @@ namespace UnityFx.Async
 			}
 			catch (Exception e)
 			{
-				return new AsyncResult(e, state);
+				return new AsyncResult(e, null);
 			}
 		}
 
@@ -440,7 +440,7 @@ namespace UnityFx.Async
 			}
 			catch (Exception e)
 			{
-				return new AsyncResult(e, state);
+				return new AsyncResult(e, null);
 			}
 		}
 
@@ -516,11 +516,11 @@ namespace UnityFx.Async
 			try
 			{
 				var result = action(state);
-				return new AsyncResult<TResult>(result, state);
+				return new AsyncResult<TResult>(result, null);
 			}
 			catch (Exception e)
 			{
-				return new AsyncResult<TResult>(e, state);
+				return new AsyncResult<TResult>(e, null);
 			}
 		}
 
