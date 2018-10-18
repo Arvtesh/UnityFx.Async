@@ -445,6 +445,33 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Creates a completed <see cref="IAsyncOperation"/> that represents result of the <paramref name="callback"/> specified.
+		/// </summary>
+		/// <param name="callback">The delegate to execute.</param>
+		/// <param name="args">Arguments of the <paramref name="callback"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <returns>A completed operation that represents the <paramref name="callback"/> result.</returns>
+		/// <seealso cref="FromAction(Action)"/>
+		/// <seealso cref="FromAction(SendOrPostCallback, object)"/>
+		public static AsyncResult<object> FromAction(Delegate callback, object[] args)
+		{
+			if (callback == null)
+			{
+				throw new ArgumentNullException(nameof(callback));
+			}
+
+			try
+			{
+				var result = callback.DynamicInvoke(args);
+				return new AsyncResult<object>(result, null);
+			}
+			catch (Exception e)
+			{
+				return new AsyncResult<object>(e, null);
+			}
+		}
+
+		/// <summary>
 		/// Creates a completed <see cref="IAsyncOperation{TResult}"/> that represents result of the <paramref name="action"/> specified.
 		/// </summary>
 		/// <param name="action">The delegate to execute.</param>
