@@ -31,11 +31,13 @@ The table below summarizes differences berween *UnityFx.Async* and other popular
 | .NET 3.5 compilance | ✔️ | ✔️ | -️️ |
 | Supports continuations | ✔️ | ✔️ | ✔️ |
 | Supports Unity coroutines | ️️✔️ | - | - |
-| Supports `async` / `await` | ✔️ | - | ✔️ |
-| Supports `promise`-like continuations | ✔️ | ✔️ | - |
+| Supports [async / await](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/index) | ✔️ | - | ✔️ |
+| Supports [promise](https://www.promisejs.org/)-like continuations | ✔️ | ✔️ | - |
 | Supports cancellation | ✔️ | -️ | ✔️ |
 | Supports progress reporting | ✔️ | ✔️ | ✔️ |
 | Supports child operations | - | - | ✔️ |
+| Supports [Task-like types](https://github.com/dotnet/roslyn/blob/master/docs/features/task-types.md) (requires C# 7.2) | ✔️ | - | ✔️ |
+| Supports [ExecutionContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.executioncontext) flow | - | - | ✔️ |
 | Minimum operation data size for 32-bit systems (in bytes) | 32+ | 36+ | 40+ |
 | Minimum number of allocations per continuation | ~1 | 5+ | 2+ |
 
