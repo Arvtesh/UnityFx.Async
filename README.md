@@ -11,6 +11,8 @@ Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io
 
 **If you enjoy using the library - please, [rate and review](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696) it on the Asset Store!**
 
+**Please ask any questions and leave feedback at the [Unity forums](https://forum.unity.com/threads/asynchronous-operations-for-unity-free.522989/).**
+
 ## Synopsis
 
 *UnityFx.Async* introduces effective and portable asynchronous operations that can be used very much like [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) in .NET or [Promises](https://developers.google.com/web/fundamentals/primers/promises) in JS. [AsyncResult](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncResult.html) class is an implementation of a generic asynchronous operation (aka `promise` or `future`). In many aspects it mimics [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) (for example, it can be used with `async`/`await` operators, supports continuations and synchronization context capturing) while maintaining Unity/net35 compatibility. It is a great foundation toolset for any Unity project.
