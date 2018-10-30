@@ -1309,9 +1309,9 @@ namespace UnityFx.Async
 				{
 					result += " (" + ((int)(GetProgress() * 100)).ToString(CultureInfo.InvariantCulture) + "%)";
 				}
-				else if ((status == AsyncOperationStatus.Faulted || status == AsyncOperationStatus.Canceled) && _exception != null)
+				else if (status == AsyncOperationStatus.Faulted || status == AsyncOperationStatus.Canceled)
 				{
-					result += " (" + _exception.GetType().Name + ')';
+					result += " (" + (_exception != null ? _exception.GetType().Name : "null") + ')';
 				}
 
 				if (IsDisposed)
@@ -1325,16 +1325,18 @@ namespace UnityFx.Async
 
 		private AsyncResult(int flags)
 		{
-			if (flags == StatusFaulted)
+			var status = flags & _statusMask;
+
+			if (status == StatusFaulted)
 			{
 				_exception = new Exception();
 			}
-			else if (flags == StatusCanceled)
+			else if (status == StatusCanceled)
 			{
 				_exception = new OperationCanceledException();
 			}
 
-			if ((flags & _statusMask) > StatusRunning)
+			if (status > StatusRunning)
 			{
 				_callback = _callbackCompletionSentinel;
 				_flags = flags | _flagCompletedSynchronously;

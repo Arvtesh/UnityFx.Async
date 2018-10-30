@@ -29,6 +29,24 @@ namespace UnityFx.Async.Promises
 		}
 
 		[Fact]
+		public async Task Catch_CalledIfThenFails()
+		{
+			// Arrange
+			var op = AsyncResult.Delay(10);
+			var thenOp = op.Then(() => AsyncResult.FaultedOperation);
+			var catchCalled = false;
+			var catchOp = thenOp.Catch(e => catchCalled = true);
+
+			// Act
+			await catchOp;
+
+			// Assert
+			Assert.True(thenOp.IsFaulted);
+			Assert.True(catchOp.IsCompletedSuccessfully);
+			Assert.True(catchCalled);
+		}
+
+		[Fact]
 		public async Task Then_NotCalledIfPreviousThenThrows()
 		{
 			// Arrange
