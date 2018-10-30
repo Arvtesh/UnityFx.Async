@@ -24,6 +24,7 @@ namespace UnityFx.Async.Promises
 
 			// Assert
 			Assert.True(thenOp.IsFaulted);
+			Assert.IsType<Exception>(thenOp.Exception);
 			Assert.True(catchOp.IsCompletedSuccessfully);
 			Assert.True(catchCalled);
 		}
@@ -42,6 +43,7 @@ namespace UnityFx.Async.Promises
 
 			// Assert
 			Assert.True(thenOp.IsFaulted);
+			Assert.IsType<Exception>(thenOp.Exception);
 			Assert.True(catchOp.IsCompletedSuccessfully);
 			Assert.True(catchCalled);
 		}
@@ -52,6 +54,28 @@ namespace UnityFx.Async.Promises
 			// Arrange
 			var op = AsyncResult.Delay(10);
 			var thenOp = op.Then(() => throw new Exception());
+			var thenCalled = false;
+			var thenOp2 = thenOp.Then(() => thenCalled = true);
+			var catchCalled = false;
+			var catchOp = thenOp2.Catch(e => catchCalled = true);
+
+			// Act
+			await catchOp;
+
+			// Assert
+			Assert.True(thenOp.IsFaulted);
+			Assert.True(thenOp2.IsFaulted);
+			Assert.True(catchOp.IsCompletedSuccessfully);
+			Assert.True(catchCalled);
+			Assert.False(thenCalled);
+		}
+
+		[Fact]
+		public async Task Then_NotCalledIfPreviousThenFails()
+		{
+			// Arrange
+			var op = AsyncResult.Delay(10);
+			var thenOp = op.Then(() => AsyncResult.FaultedOperation);
 			var thenCalled = false;
 			var thenOp2 = thenOp.Then(() => thenCalled = true);
 			var catchCalled = false;
