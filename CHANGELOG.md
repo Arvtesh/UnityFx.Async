@@ -8,12 +8,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 
 ### Added
 - `AsyncResult` is now Task-like type and can be used as `async` methd result value (requires C# 7.2).
+- Added new `AsyncResult.FromAction` overloads.
 
 ### Fixed
 - Fixed `AsyncResult` completion callbacks to be called event if `OnCompleted` throws.
+- Fixed exception not been set for `AsyncResult.FaultedOperation` and `AsyncResult.CanceledOperation`.
+- Disabled `MovieTexture` helpers for iOS/Android (as it is not supported on mobiles).
 
 ### Removed
-- Deprecated `AsyncResultQueue`.
+- Removed `AsyncResultQueue`.
 
 -----------------------
 ## [0.9.7] - 2018.09.27
