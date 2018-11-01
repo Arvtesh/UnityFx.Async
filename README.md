@@ -5,7 +5,7 @@ Channel  | UnityFx.Async |
 AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/master?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/master) [![AppVeyor tests](https://img.shields.io/appveyor/tests/Arvtesh/unityFx-async.svg)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/build/tests)
 NuGet | [![NuGet](https://img.shields.io/nuget/v/UnityFx.Async.svg)](https://www.nuget.org/packages/UnityFx.Async)
 Github | [![GitHub release](https://img.shields.io/github/release/Arvtesh/UnityFx.Async.svg?logo=github)](https://github.com/Arvtesh/UnityFx.Async/releases)
-Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v0.9.7-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
+Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v0.9.8-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
 
 **Requires Unity 5.4 or higher.**
 
@@ -29,8 +29,8 @@ The table below summarizes differences berween *UnityFx.Async* and other popular
 | Stat | UnityFx.Async | [C-Sharp-Promise](https://github.com/Real-Serious-Games/C-Sharp-Promise) | [TPL](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-parallel-library-tpl) |
 | :--- | :---: | :---: | :---: |
 | Thread-safe | ✔️ | - | ✔️ |
-| Can capture synchronization context | ✔️ | - | ✔️ |
 | .NET 3.5 compilance | ✔️ | ✔️ | -️️ |
+| Supports [SynchronizationContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.synchronizationcontext) capturing | ✔️ | - | ✔️ |
 | Supports continuations | ✔️ | ✔️ | ✔️ |
 | Supports Unity coroutines | ️️✔️ | - | - |
 | Supports [async / await](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/index) | ✔️ | - | ✔️ |
@@ -519,7 +519,6 @@ TPL | UnityFx.Async | Notes
 &#45; | [IAsyncCancellable](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.IAsyncCancellable.html) | A cancellable operation.
 &#45; | [IAsyncContinuation](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.IAsyncContinuation.html) | A generic non-delegate operation continuation.
 &#45; | [IAsyncUpdatable](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.IAsyncUpdatable.html), [IAsyncUpdateSource](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.IAsyncUpdateSource.html) | A consumer and provider sides for frame update notifications.
-&#45; | [AsyncResultQueue&lt;T&gt;](https://arvtesh.github.io/UnityFx.Async/api/netstandard2.0/UnityFx.Async.AsyncResultQueue-1.html) | A FIFO queue of asynchronous operations executed sequentially.
 
 Please note that the library is NOT a replacement for [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) or [TPL](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-parallel-library-tpl). As a general rule it is recommended to use [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) and only switch to *UnityFx.Async* if one of the following applies:
 - .NET 3.5/[Unity3d](https://unity3d.com) compatibility is required.
