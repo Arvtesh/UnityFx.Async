@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 
 ### Removed
 - Removed `AsyncResultQueue`.
+- Removed `AsyncLazy`.
 
 -----------------------
 ## [0.9.7] - 2018.09.27
