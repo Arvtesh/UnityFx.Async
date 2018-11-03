@@ -2,8 +2,6 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
-using System.Diagnostics;
-using System.Threading;
 
 namespace UnityFx.Async
 {

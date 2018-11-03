@@ -34,7 +34,7 @@ namespace UnityFx.Async.Extensions
 		/// has been reached.</returns>
 		public static IAsyncOperation<int> ReadAsync(this Stream stream, byte[] buffer, int offset, int count)
 		{
-			var op = new ReadResult(stream);
+			var op = new ApmResult<Stream, int>(stream);
 			stream.BeginRead(buffer, offset, count, OnReadCompleted, op);
 			return op;
 		}
@@ -55,7 +55,7 @@ namespace UnityFx.Async.Extensions
 		/// <returns>An <see cref="IAsyncOperation"/> that represents the asynchronous write operation.</returns>
 		public static IAsyncOperation WriteAsync(this Stream stream, byte[] buffer, int offset, int count)
 		{
-			var op = new WriteResult(stream);
+			var op = new ApmResult<Stream, VoidResult>(stream);
 			stream.BeginWrite(buffer, offset, count, OnWriteCompleted, op);
 			return op;
 		}
@@ -64,59 +64,33 @@ namespace UnityFx.Async.Extensions
 
 		#region implementation
 
-		private class ReadResult : AsyncResult<int>
+		private static void OnReadCompleted(IAsyncResult asyncResult)
 		{
-			private readonly Stream _stream;
+			var op = (ApmResult<Stream, int>)asyncResult.AsyncState;
 
-			public ReadResult(Stream stream)
-				: base(AsyncOperationStatus.Running)
+			try
 			{
+				op.TrySetResult(op.Source.EndRead(asyncResult));
 			}
-
-			public void SetCompleted(IAsyncResult op)
+			catch (Exception e)
 			{
-				try
-				{
-					TrySetResult(_stream.EndRead(op));
-				}
-				catch (Exception e)
-				{
-					TrySetException(e);
-				}
+				op.TrySetException(e);
 			}
 		}
 
-		private static void OnReadCompleted(IAsyncResult op)
+		private static void OnWriteCompleted(IAsyncResult asyncResult)
 		{
-			((ReadResult)op.AsyncState).SetCompleted(op);
-		}
+			var op = (ApmResult<Stream, VoidResult>)asyncResult.AsyncState;
 
-		private class WriteResult : AsyncResult
-		{
-			private readonly Stream _stream;
-
-			public WriteResult(Stream stream)
-				: base(AsyncOperationStatus.Running)
+			try
 			{
+				op.Source.EndWrite(asyncResult);
+				op.TrySetCompleted();
 			}
-
-			public void SetCompleted(IAsyncResult op)
+			catch (Exception e)
 			{
-				try
-				{
-					_stream.EndWrite(op);
-					TrySetCompleted();
-				}
-				catch (Exception e)
-				{
-					TrySetException(e);
-				}
+				op.TrySetException(e);
 			}
-		}
-
-		private static void OnWriteCompleted(IAsyncResult op)
-		{
-			((WriteResult)op.AsyncState).SetCompleted(op);
 		}
 
 		#endregion
