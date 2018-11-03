@@ -7,8 +7,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ## [0.9.8] - unreleased
 
 ### Added
-- `AsyncResult` is now Task-like type and can be used as `async` methd result value (requires C# 7.2).
+- `AsyncResult` is now Task-like type and can be used as `async` method result value (requires C# 7.2).
 - Added new `AsyncResult.FromAction` overloads.
+- Added new `SynchronizationContext` extension methods (`PostAsync`, `InvokeAsync` etc).
+
+### Changed
+- Moved BCL extension methods to namespace `UnityFx.Async.Extensions` (previously they were in namespace `UnityFx.Async`).
 
 ### Fixed
 - Fixed `AsyncResult` completion callbacks to be called event if `OnCompleted` throws.
