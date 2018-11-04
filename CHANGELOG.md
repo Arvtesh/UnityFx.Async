@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - `AsyncResult` is now Task-like type and can be used as `async` method result value (requires C# 7.2).
 - Added new `AsyncResult.FromAction` overloads.
 - Added new `SynchronizationContext` extension methods (`PostAsync`, `InvokeAsync` etc).
+- Added extension methods for `Socket`, `WebRequest`, `Stream` BCL classes.
 
 ### Changed
 - Moved BCL extension methods to namespace `UnityFx.Async.Extensions` (previously they were in namespace `UnityFx.Async`).
