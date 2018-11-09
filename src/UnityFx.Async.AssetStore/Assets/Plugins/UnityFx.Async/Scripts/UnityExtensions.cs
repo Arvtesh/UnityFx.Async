@@ -120,7 +120,13 @@ namespace UnityFx.Async
 			/// Gets a value indicating whether the underlying operation is completed.
 			/// </summary>
 			/// <value>The operation completion flag.</value>
-			public bool IsCompleted => _op.isDone;
+			public bool IsCompleted
+			{
+				get
+				{
+					return _op.isDone;
+				}
+			}
 
 			/// <summary>
 			/// Returns the source result value.
@@ -216,7 +222,13 @@ namespace UnityFx.Async
 			/// Gets a value indicating whether the underlying operation is completed.
 			/// </summary>
 			/// <value>The operation completion flag.</value>
-			public bool IsCompleted => _op.isDone;
+			public bool IsCompleted
+			{
+				get
+				{
+					return _op.isDone;
+				}
+			}
 
 			/// <summary>
 			/// Returns the source result value.
@@ -314,7 +326,13 @@ namespace UnityFx.Async
 			/// Gets a value indicating whether the underlying operation is completed.
 			/// </summary>
 			/// <value>The operation completion flag.</value>
-			public bool IsCompleted => _op.isDone;
+			public bool IsCompleted
+			{
+				get
+				{
+					return _op.isDone;
+				}
+			}
 
 			/// <summary>
 			/// Returns the source result value.

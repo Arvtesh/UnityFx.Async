@@ -412,7 +412,7 @@ namespace UnityFx.Async
 			}
 			catch (Exception e)
 			{
-				return new AsyncResult(e, state);
+				return new AsyncResult(e, null);
 			}
 		}
 
@@ -440,7 +440,34 @@ namespace UnityFx.Async
 			}
 			catch (Exception e)
 			{
-				return new AsyncResult(e, state);
+				return new AsyncResult(e, null);
+			}
+		}
+
+		/// <summary>
+		/// Creates a completed <see cref="IAsyncOperation"/> that represents result of the <paramref name="callback"/> specified.
+		/// </summary>
+		/// <param name="callback">The delegate to execute.</param>
+		/// <param name="args">Arguments of the <paramref name="callback"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <returns>A completed operation that represents the <paramref name="callback"/> result.</returns>
+		/// <seealso cref="FromAction(Action)"/>
+		/// <seealso cref="FromAction(SendOrPostCallback, object)"/>
+		public static AsyncResult<object> FromAction(Delegate callback, object[] args)
+		{
+			if (callback == null)
+			{
+				throw new ArgumentNullException(nameof(callback));
+			}
+
+			try
+			{
+				var result = callback.DynamicInvoke(args);
+				return new AsyncResult<object>(result, null);
+			}
+			catch (Exception e)
+			{
+				return new AsyncResult<object>(e, null);
 			}
 		}
 
@@ -489,11 +516,11 @@ namespace UnityFx.Async
 			try
 			{
 				var result = action(state);
-				return new AsyncResult<TResult>(result, state);
+				return new AsyncResult<TResult>(result, null);
 			}
 			catch (Exception e)
 			{
-				return new AsyncResult<TResult>(e, state);
+				return new AsyncResult<TResult>(e, null);
 			}
 		}
 
@@ -513,22 +540,22 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(task));
 			}
 
-			var result = new AsyncCompletionSource(AsyncOperationStatus.Running);
+			var result = new AsyncResult(AsyncOperationStatus.Running);
 
 			task.ContinueWith(
 				t =>
 				{
 					if (t.IsFaulted)
 					{
-						result.SetException(t.Exception);
+						result.TrySetException(t.Exception);
 					}
 					else if (t.IsCanceled)
 					{
-						result.SetCanceled();
+						result.TrySetCanceled();
 					}
 					else
 					{
-						result.SetCompleted();
+						result.TrySetCompleted();
 					}
 				},
 				TaskContinuationOptions.ExecuteSynchronously);
@@ -550,22 +577,22 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(task));
 			}
 
-			var result = new AsyncCompletionSource<T>(AsyncOperationStatus.Running);
+			var result = new AsyncResult<T>(AsyncOperationStatus.Running);
 
 			task.ContinueWith(
 				t =>
 				{
 					if (t.IsFaulted)
 					{
-						result.SetException(t.Exception);
+						result.TrySetException(t.Exception);
 					}
 					else if (t.IsCanceled)
 					{
-						result.SetCanceled();
+						result.TrySetCanceled();
 					}
 					else
 					{
-						result.SetResult(t.Result);
+						result.TrySetResult(t.Result);
 					}
 				},
 				TaskContinuationOptions.ExecuteSynchronously);
@@ -623,7 +650,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(observable));
 			}
 
-			return new AsyncObservableResult<T>(observable);
+			return new FromObservableResult<T>(observable);
 		}
 
 #endif

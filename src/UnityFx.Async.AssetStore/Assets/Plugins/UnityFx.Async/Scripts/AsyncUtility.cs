@@ -11,6 +11,7 @@ using System.Runtime.ExceptionServices;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityFx.Async.Extensions;
 
 namespace UnityFx.Async
 {

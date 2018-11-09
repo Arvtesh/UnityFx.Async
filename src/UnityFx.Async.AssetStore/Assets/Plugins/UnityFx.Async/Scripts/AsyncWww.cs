@@ -204,7 +204,7 @@ namespace UnityFx.Async
 			return result;
 		}
 
-#if !UNITY_2018_2_OR_NEWER
+#if !UNITY_2018_2_OR_NEWER && !UNITY_IOS && !UNITY_ANDROID
 
 		/// <summary>
 		/// Creates an asyncronous operation optimized for downloading a <see cref="MovieTexture"/> via HTTP GET.
@@ -254,7 +254,7 @@ namespace UnityFx.Async
 			{
 				return ((DownloadHandlerAudioClip)request.downloadHandler).audioClip as T;
 			}
-#if !UNITY_5 && !UNITY_2018_2_OR_NEWER
+#if !UNITY_5 && !UNITY_2018_2_OR_NEWER && !UNITY_IOS && !UNITY_ANDROID
 			else if (request.downloadHandler is DownloadHandlerMovieTexture)
 			{
 				return ((DownloadHandlerMovieTexture)request.downloadHandler).movieTexture as T;
@@ -298,21 +298,24 @@ namespace UnityFx.Async
 			{
 				return request.GetAudioClip() as T;
 			}
-#if !UNITY_2018_2_OR_NEWER
-			else if (typeof(T) == typeof(MovieTexture))
-			{
-				return request.GetMovieTexture() as T;
-			}
-#endif
 #else
 			else if (typeof(T) == typeof(AudioClip))
 			{
 				return request.audioClip as T;
 			}
+#endif
+#if !UNITY_2018_2_OR_NEWER && !UNITY_IOS && !UNITY_ANDROID
+#if UNITY_5_6_OR_NEWER
+			else if (typeof(T) == typeof(MovieTexture))
+			{
+				return request.GetMovieTexture() as T;
+			}
+#else
 			else if (typeof(T) == typeof(MovieTexture))
 			{
 				return request.movie as T;
 			}
+#endif
 #endif
 			else if (typeof(T) == typeof(byte[]))
 			{
@@ -327,5 +330,5 @@ namespace UnityFx.Async
 		}
 
 #endif
+		}
 	}
-}
