@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 #if !NET35
 using System.Runtime.ExceptionServices;
 #endif
@@ -38,6 +39,9 @@ namespace UnityFx.Async
 	/// <seealso cref="AsyncResult{T}"/>
 	/// <seealso cref="IAsyncResult"/>
 	[DebuggerDisplay("{DebuggerDisplay,nq}")]
+#if !NET35
+	[AsyncMethodBuilder(typeof(CompilerServices.AsyncResultMethodBuilder))]
+#endif
 	public partial class AsyncResult : IAsyncOperation, IAsyncContinuation, IEnumerator
 	{
 		#region data
@@ -396,7 +400,7 @@ namespace UnityFx.Async
 			}
 			else if (!IsCompleted)
 			{
-				AsyncExtensions.SpinUntilCompleted(this);
+				SpinUntilCompleted();
 			}
 
 			return false;
@@ -497,7 +501,7 @@ namespace UnityFx.Async
 			}
 			else if (!IsCompleted)
 			{
-				AsyncExtensions.SpinUntilCompleted(this);
+				SpinUntilCompleted();
 			}
 
 			return false;
@@ -587,7 +591,7 @@ namespace UnityFx.Async
 			}
 			else if (!IsCompleted)
 			{
-				AsyncExtensions.SpinUntilCompleted(this);
+				SpinUntilCompleted();
 			}
 
 			return false;
@@ -621,7 +625,7 @@ namespace UnityFx.Async
 			}
 			else if (!IsCompleted)
 			{
-				AsyncExtensions.SpinUntilCompleted(this);
+				SpinUntilCompleted();
 			}
 
 			return false;
@@ -721,6 +725,9 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Called when the progress value has changed. Default implementation does nothing.
 		/// </summary>
+		/// <remarks>
+		/// Throwing an exception in this method results in unspecified behaviour.
+		/// </remarks>
 		/// <seealso cref="Progress"/>
 		/// <seealso cref="GetProgress"/>
 		/// <seealso cref="TryReportProgress"/>
@@ -732,6 +739,9 @@ namespace UnityFx.Async
 		/// Called when the operation state has changed. Default implementation does nothing.
 		/// </summary>
 		/// <param name="status">The new status value.</param>
+		/// <remarks>
+		/// Throwing an exception in this method results in unspecified behaviour.
+		/// </remarks>
 		/// <seealso cref="Status"/>
 		/// <seealso cref="TrySetScheduled"/>
 		/// <seealso cref="TrySetRunning"/>
@@ -766,6 +776,9 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Called when the operation is completed. Default implementation does nothing.
 		/// </summary>
+		/// <remarks>
+		/// Throwing an exception in this method results in unspecified behaviour.
+		/// </remarks>
 		/// <seealso cref="OnStarted"/>
 		/// <seealso cref="Status"/>
 		/// <seealso cref="TrySetCanceled(bool)"/>
@@ -780,7 +793,7 @@ namespace UnityFx.Async
 		/// Releases unmanaged resources used by the object.
 		/// </summary>
 		/// <remarks>
-		/// Unlike most of the members of <see cref="AsyncResult"/>, this method is not thread-safe.
+		/// Unlike most of the members of <see cref="AsyncResult"/>, this method is not thread-safe. Do not throw exceptions in <see cref="Dispose(bool)"/>.
 		/// </remarks>
 		/// <param name="disposing">A <see langword="bool"/> value that indicates whether this method is being called due to a call to <see cref="Dispose()"/>.</param>
 		/// <seealso cref="Dispose()"/>
@@ -1296,9 +1309,9 @@ namespace UnityFx.Async
 				{
 					result += " (" + ((int)(GetProgress() * 100)).ToString(CultureInfo.InvariantCulture) + "%)";
 				}
-				else if ((status == AsyncOperationStatus.Faulted || status == AsyncOperationStatus.Canceled) && _exception != null)
+				else if (status == AsyncOperationStatus.Faulted || status == AsyncOperationStatus.Canceled)
 				{
-					result += " (" + _exception.GetType().Name + ')';
+					result += " (" + (_exception != null ? _exception.GetType().Name : "null") + ')';
 				}
 
 				if (IsDisposed)
@@ -1312,16 +1325,18 @@ namespace UnityFx.Async
 
 		private AsyncResult(int flags)
 		{
-			if (flags == StatusFaulted)
+			var status = flags & _statusMask;
+
+			if (status == StatusFaulted)
 			{
 				_exception = new Exception();
 			}
-			else if (flags == StatusCanceled)
+			else if (status == StatusCanceled)
 			{
 				_exception = new OperationCanceledException();
 			}
 
-			if ((flags & _statusMask) > StatusRunning)
+			if (status > StatusRunning)
 			{
 				_callback = _callbackCompletionSentinel;
 				_flags = flags | _flagCompletedSynchronously;
@@ -1339,13 +1354,33 @@ namespace UnityFx.Async
 				OnProgressChanged();
 				OnStatusChanged(status);
 				OnCompleted();
-
-				InvokeCallbacks();
 			}
 			finally
 			{
 				_waitHandle?.Set();
+				InvokeCallbacks();
 			}
+		}
+
+		private void SpinUntilCompleted()
+		{
+#if NET35
+
+			while ((_flags & _flagCompleted) == 0)
+			{
+				Thread.SpinWait(1);
+			}
+
+#else
+
+			var sw = new SpinWait();
+
+			while ((_flags & _flagCompleted) == 0)
+			{
+				sw.SpinOnce();
+			}
+
+#endif
 		}
 
 		#endregion

@@ -1,0 +1,948 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class SynchronizationContextExtensions
+   | Asynchronous Operations for Unity </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class SynchronizationContextExtensions
+   | Asynchronous Operations for Unity ">
+    <meta name="generator" content="docfx 2.31.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions">
+  
+  
+  <h1 id="UnityFx_Async_Extensions_SynchronizationContextExtensions" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions" class="text-break">Class SynchronizationContextExtensions
+  </h1>
+  <div class="markdown level0 summary"><p>Extension methods for <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a>.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">SynchronizationContextExtensions</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="UnityFx.Async.Extensions.html">UnityFx.Async.Extensions</a></h6>
+  <h6><strong>Assembly</strong>: UnityFx.Async.dll</h6>
+  <h5 id="UnityFx_Async_Extensions_SynchronizationContextExtensions_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class SynchronizationContextExtensions</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Extensions_SynchronizationContextExtensions_Invoke_System_Threading_SynchronizationContext_System_Action_.md&amp;value=---%0Auid%3A%20UnityFx.Async.Extensions.SynchronizationContextExtensions.Invoke(System.Threading.SynchronizationContext%2CSystem.Action)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/SynchronizationContextExtensions.cs/#L177">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Extensions_SynchronizationContextExtensions_Invoke_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.Invoke*"></a>
+  <h4 id="UnityFx_Async_Extensions_SynchronizationContextExtensions_Invoke_System_Threading_SynchronizationContext_System_Action_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.Invoke(System.Threading.SynchronizationContext,System.Action)">Invoke(SynchronizationContext, Action)</h4>
+  <div class="markdown level1 summary"><p>Dispatches a message to a synchronization context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Invoke(this SynchronizationContext context, Action action)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The target context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.action">Action</a></td>
+        <td><span class="parametername">action</span></td>
+        <td><p>The delegate to invoke.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">action</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Extensions_SynchronizationContextExtensions_Invoke_System_Threading_SynchronizationContext_System_Threading_SendOrPostCallback_System_Object_.md&amp;value=---%0Auid%3A%20UnityFx.Async.Extensions.SynchronizationContextExtensions.Invoke(System.Threading.SynchronizationContext%2CSystem.Threading.SendOrPostCallback%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/SynchronizationContextExtensions.cs/#L220">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Extensions_SynchronizationContextExtensions_Invoke_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.Invoke*"></a>
+  <h4 id="UnityFx_Async_Extensions_SynchronizationContextExtensions_Invoke_System_Threading_SynchronizationContext_System_Threading_SendOrPostCallback_System_Object_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.Invoke(System.Threading.SynchronizationContext,System.Threading.SendOrPostCallback,System.Object)">Invoke(SynchronizationContext, SendOrPostCallback, Object)</h4>
+  <div class="markdown level1 summary"><p>Dispatches a message to a synchronization context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Invoke(this SynchronizationContext context, SendOrPostCallback d, object state)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The target context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.sendorpostcallback">SendOrPostCallback</a></td>
+        <td><span class="parametername">d</span></td>
+        <td><p>The delegate to invoke.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="parametername">state</span></td>
+        <td><p>User-defined state.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">d</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Extensions_SynchronizationContextExtensions_InvokeAsync_System_Threading_SynchronizationContext_System_Action_.md&amp;value=---%0Auid%3A%20UnityFx.Async.Extensions.SynchronizationContextExtensions.InvokeAsync(System.Threading.SynchronizationContext%2CSystem.Action)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/SynchronizationContextExtensions.cs/#L201">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Extensions_SynchronizationContextExtensions_InvokeAsync_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.InvokeAsync*"></a>
+  <h4 id="UnityFx_Async_Extensions_SynchronizationContextExtensions_InvokeAsync_System_Threading_SynchronizationContext_System_Action_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.InvokeAsync(System.Threading.SynchronizationContext,System.Action)">InvokeAsync(SynchronizationContext, Action)</h4>
+  <div class="markdown level1 summary"><p>Dispatches a message to a synchronization context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation InvokeAsync(this SynchronizationContext context, Action action)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The target context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.action">Action</a></td>
+        <td><span class="parametername">action</span></td>
+        <td><p>The delegate to invoke.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><p>An <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a> that can be used to track the operation status.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">action</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Extensions_SynchronizationContextExtensions_InvokeAsync_System_Threading_SynchronizationContext_System_Threading_SendOrPostCallback_System_Object_.md&amp;value=---%0Auid%3A%20UnityFx.Async.Extensions.SynchronizationContextExtensions.InvokeAsync(System.Threading.SynchronizationContext%2CSystem.Threading.SendOrPostCallback%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/SynchronizationContextExtensions.cs/#L245">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Extensions_SynchronizationContextExtensions_InvokeAsync_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.InvokeAsync*"></a>
+  <h4 id="UnityFx_Async_Extensions_SynchronizationContextExtensions_InvokeAsync_System_Threading_SynchronizationContext_System_Threading_SendOrPostCallback_System_Object_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.InvokeAsync(System.Threading.SynchronizationContext,System.Threading.SendOrPostCallback,System.Object)">InvokeAsync(SynchronizationContext, SendOrPostCallback, Object)</h4>
+  <div class="markdown level1 summary"><p>Dispatches a message to a synchronization context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation InvokeAsync(this SynchronizationContext context, SendOrPostCallback d, object state)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The target context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.sendorpostcallback">SendOrPostCallback</a></td>
+        <td><span class="parametername">d</span></td>
+        <td><p>The delegate to invoke.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="parametername">state</span></td>
+        <td><p>User-defined state.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><p>An <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a> that can be used to track the operation status.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">d</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Extensions_SynchronizationContextExtensions_InvokeAsync__1_System_Threading_SynchronizationContext_System_Func___0__.md&amp;value=---%0Auid%3A%20UnityFx.Async.Extensions.SynchronizationContextExtensions.InvokeAsync%60%601(System.Threading.SynchronizationContext%2CSystem.Func%7B%60%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/SynchronizationContextExtensions.cs/#L264">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Extensions_SynchronizationContextExtensions_InvokeAsync_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.InvokeAsync*"></a>
+  <h4 id="UnityFx_Async_Extensions_SynchronizationContextExtensions_InvokeAsync__1_System_Threading_SynchronizationContext_System_Func___0__" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.InvokeAsync``1(System.Threading.SynchronizationContext,System.Func{``0})">InvokeAsync&lt;T&gt;(SynchronizationContext, Func&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"><p>Dispatches a message to a synchronization context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation&lt;T&gt; InvokeAsync&lt;T&gt;(this SynchronizationContext context, Func&lt;T&gt; action)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The target context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;T&gt;</td>
+        <td><span class="parametername">action</span></td>
+        <td><p>The delegate to invoke.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation</a>&lt;T&gt;</td>
+        <td><p>An <a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation&lt;TResult&gt;</a> that can be used to track the operation status.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">action</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Extensions_SynchronizationContextExtensions_Post_System_Threading_SynchronizationContext_System_Action_.md&amp;value=---%0Auid%3A%20UnityFx.Async.Extensions.SynchronizationContextExtensions.Post(System.Threading.SynchronizationContext%2CSystem.Action)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/SynchronizationContextExtensions.cs/#L77">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Extensions_SynchronizationContextExtensions_Post_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.Post*"></a>
+  <h4 id="UnityFx_Async_Extensions_SynchronizationContextExtensions_Post_System_Threading_SynchronizationContext_System_Action_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.Post(System.Threading.SynchronizationContext,System.Action)">Post(SynchronizationContext, Action)</h4>
+  <div class="markdown level1 summary"><p>Dispatches an asynchronous message to a synchronization context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Post(this SynchronizationContext context, Action action)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The target context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.action">Action</a></td>
+        <td><span class="parametername">action</span></td>
+        <td><p>The delegate to invoke.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">action</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Extensions_SynchronizationContextExtensions_PostAsync_System_Threading_SynchronizationContext_System_Action_.md&amp;value=---%0Auid%3A%20UnityFx.Async.Extensions.SynchronizationContextExtensions.PostAsync(System.Threading.SynchronizationContext%2CSystem.Action)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/SynchronizationContextExtensions.cs/#L99">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Extensions_SynchronizationContextExtensions_PostAsync_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.PostAsync*"></a>
+  <h4 id="UnityFx_Async_Extensions_SynchronizationContextExtensions_PostAsync_System_Threading_SynchronizationContext_System_Action_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.PostAsync(System.Threading.SynchronizationContext,System.Action)">PostAsync(SynchronizationContext, Action)</h4>
+  <div class="markdown level1 summary"><p>Dispatches an asynchronous message to a synchronization context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation PostAsync(this SynchronizationContext context, Action action)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The target context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.action">Action</a></td>
+        <td><span class="parametername">action</span></td>
+        <td><p>The delegate to invoke.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><p>An <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a> that can be used to track the operation status.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">action</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Extensions_SynchronizationContextExtensions_PostAsync_System_Threading_SynchronizationContext_System_Threading_SendOrPostCallback_System_Object_.md&amp;value=---%0Auid%3A%20UnityFx.Async.Extensions.SynchronizationContextExtensions.PostAsync(System.Threading.SynchronizationContext%2CSystem.Threading.SendOrPostCallback%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/SynchronizationContextExtensions.cs/#L126">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Extensions_SynchronizationContextExtensions_PostAsync_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.PostAsync*"></a>
+  <h4 id="UnityFx_Async_Extensions_SynchronizationContextExtensions_PostAsync_System_Threading_SynchronizationContext_System_Threading_SendOrPostCallback_System_Object_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.PostAsync(System.Threading.SynchronizationContext,System.Threading.SendOrPostCallback,System.Object)">PostAsync(SynchronizationContext, SendOrPostCallback, Object)</h4>
+  <div class="markdown level1 summary"><p>Dispatches an asynchronous message to a synchronization context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation PostAsync(this SynchronizationContext context, SendOrPostCallback d, object state)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The target context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.sendorpostcallback">SendOrPostCallback</a></td>
+        <td><span class="parametername">d</span></td>
+        <td><p>The delegate to invoke.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="parametername">state</span></td>
+        <td><p>User-defined state.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><p>An <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a> that can be used to track the operation status.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">d</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Extensions_SynchronizationContextExtensions_PostAsync__1_System_Threading_SynchronizationContext_System_Func___0__.md&amp;value=---%0Auid%3A%20UnityFx.Async.Extensions.SynchronizationContextExtensions.PostAsync%60%601(System.Threading.SynchronizationContext%2CSystem.Func%7B%60%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/SynchronizationContextExtensions.cs/#L152">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Extensions_SynchronizationContextExtensions_PostAsync_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.PostAsync*"></a>
+  <h4 id="UnityFx_Async_Extensions_SynchronizationContextExtensions_PostAsync__1_System_Threading_SynchronizationContext_System_Func___0__" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.PostAsync``1(System.Threading.SynchronizationContext,System.Func{``0})">PostAsync&lt;T&gt;(SynchronizationContext, Func&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"><p>Dispatches an asynchronous message to a synchronization context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation&lt;T&gt; PostAsync&lt;T&gt;(this SynchronizationContext context, Func&lt;T&gt; action)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The target context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;T&gt;</td>
+        <td><span class="parametername">action</span></td>
+        <td><p>The delegate to invoke.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation</a>&lt;T&gt;</td>
+        <td><p>An <a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation&lt;TResult&gt;</a> that can be used to track the operation status.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">action</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Extensions_SynchronizationContextExtensions_Send_System_Threading_SynchronizationContext_System_Action_.md&amp;value=---%0Auid%3A%20UnityFx.Async.Extensions.SynchronizationContextExtensions.Send(System.Threading.SynchronizationContext%2CSystem.Action)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/SynchronizationContextExtensions.cs/#L30">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Extensions_SynchronizationContextExtensions_Send_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.Send*"></a>
+  <h4 id="UnityFx_Async_Extensions_SynchronizationContextExtensions_Send_System_Threading_SynchronizationContext_System_Action_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.Send(System.Threading.SynchronizationContext,System.Action)">Send(SynchronizationContext, Action)</h4>
+  <div class="markdown level1 summary"><p>Dispatches an synchronous message to a synchronization context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Send(this SynchronizationContext context, Action action)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The target context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.action">Action</a></td>
+        <td><span class="parametername">action</span></td>
+        <td><p>The delegate to invoke.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">action</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Extensions_SynchronizationContextExtensions_Send__1_System_Threading_SynchronizationContext_System_Func___0__.md&amp;value=---%0Auid%3A%20UnityFx.Async.Extensions.SynchronizationContextExtensions.Send%60%601(System.Threading.SynchronizationContext%2CSystem.Func%7B%60%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/SynchronizationContextExtensions.cs/#L52">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Extensions_SynchronizationContextExtensions_Send_" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.Send*"></a>
+  <h4 id="UnityFx_Async_Extensions_SynchronizationContextExtensions_Send__1_System_Threading_SynchronizationContext_System_Func___0__" data-uid="UnityFx.Async.Extensions.SynchronizationContextExtensions.Send``1(System.Threading.SynchronizationContext,System.Func{``0})">Send&lt;T&gt;(SynchronizationContext, Func&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"><p>Dispatches an synchronous message to a synchronization context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static T Send&lt;T&gt;(this SynchronizationContext context, Func&lt;T&gt; action)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The target context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;T&gt;</td>
+        <td><span class="parametername">action</span></td>
+        <td><p>The delegate to invoke.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><p>Returns result of the <code data-dev-comment-type="paramref" class="paramref">action</code> call.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">action</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Extensions_SynchronizationContextExtensions.md&amp;value=---%0Auid%3A%20UnityFx.Async.Extensions.SynchronizationContextExtensions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/SynchronizationContextExtensions.cs/#L13" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            Copyright (c) 2017-2018 Alexander Bogarsukov
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>
