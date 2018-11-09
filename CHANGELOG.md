@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
 -----------------------
-## [0.9.8] - unreleased
+## [0.9.8] - 2018.11.09
 
 ### Added
 - `AsyncResult` is now Task-like type and can be used as `async` method result value (requires C# 7.2).
