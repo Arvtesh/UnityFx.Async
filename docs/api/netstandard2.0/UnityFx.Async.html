@@ -100,18 +100,6 @@
 </section>
     <h3 id="structs">Structs
   </h3>
-      <h4><a class="xref" href="UnityFx.Async.AsyncExtensions.AsyncAwaiter.html">AsyncExtensions.AsyncAwaiter</a></h4>
-      <section><p>Provides an object that waits for the completion of an asynchronous operation. This type and its members are intended for compiler use only.</p>
-</section>
-      <h4><a class="xref" href="UnityFx.Async.AsyncExtensions.AsyncAwaiter-1.html">AsyncExtensions.AsyncAwaiter&lt;T&gt;</a></h4>
-      <section><p>Provides an object that waits for the completion of an asynchronous operation. This type and its members are intended for compiler use only.</p>
-</section>
-      <h4><a class="xref" href="UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable.html">AsyncExtensions.ConfiguredAsyncAwaitable</a></h4>
-      <section><p>Provides an awaitable object that allows for configured awaits on <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>. This type is intended for compiler use only.</p>
-</section>
-      <h4><a class="xref" href="UnityFx.Async.AsyncExtensions.ConfiguredAsyncAwaitable-1.html">AsyncExtensions.ConfiguredAsyncAwaitable&lt;T&gt;</a></h4>
-      <section><p>Provides an awaitable object that allows for configured awaits on <a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation&lt;TResult&gt;</a>. This type is intended for compiler use only.</p>
-</section>
       <h4><a class="xref" href="UnityFx.Async.AsyncLazy.html">AsyncLazy</a></h4>
       <section><p>A helper for lazy initialization.</p>
 </section>
@@ -130,25 +118,28 @@
       <section><p>A generic non-delegate continuation.</p>
 </section>
       <h4><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></h4>
-      <section><p>Represents the consumer side of an asynchronous operation. It is basically a disposable/hookable <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iasyncresult">IAsyncResult</a> with status information.</p>
+      <section><p>Represents the consumer side of an asynchronous operation (promise).</p>
 </section>
       <h4><a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation&lt;TResult&gt;</a></h4>
-      <section><p>Represents the consumer side of an asynchronous operation. Extends an <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>
+      <section><p>Represents the consumer side of an asynchronous operation. Extends <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>
 interface with a result value.</p>
 </section>
       <h4><a class="xref" href="UnityFx.Async.IAsyncOperationEvents.html">IAsyncOperationEvents</a></h4>
-      <section><p>Manages events and callbacks of <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>.</p>
+      <section><p>Defines completion/progress callbacks for <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>.</p>
 </section>
       <h4><a class="xref" href="UnityFx.Async.IAsyncUpdatable.html">IAsyncUpdatable</a></h4>
-      <section><p>An updatable object.</p>
+      <section><p>Defines an updatable entity.</p>
 </section>
       <h4><a class="xref" href="UnityFx.Async.IAsyncUpdateSource.html">IAsyncUpdateSource</a></h4>
       <section><p>A provider of update notifications.</p>
 </section>
     <h3 id="enums">Enums
   </h3>
+      <h4><a class="xref" href="UnityFx.Async.AsyncContinuationContext.html">AsyncContinuationContext</a></h4>
+      <section><p>Specifies the synchronization context to schedule continuation on.</p>
+</section>
       <h4><a class="xref" href="UnityFx.Async.AsyncContinuationOptions.html">AsyncContinuationOptions</a></h4>
-      <section><p>Specifies behavior of an asynchronous opration continuation.</p>
+      <section><p>Specifies the behavior of an asynchronous operation continuation.</p>
 </section>
       <h4><a class="xref" href="UnityFx.Async.AsyncCreationOptions.html">AsyncCreationOptions</a></h4>
       <section><p>Specifies flags that control optional behavior for the creation and execution of operations.</p>

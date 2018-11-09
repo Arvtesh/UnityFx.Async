@@ -400,7 +400,7 @@ namespace UnityFx.Async
 			}
 			else if (!IsCompleted)
 			{
-				AsyncExtensions.SpinUntilCompleted(this);
+				SpinUntilCompleted();
 			}
 
 			return false;
@@ -501,7 +501,7 @@ namespace UnityFx.Async
 			}
 			else if (!IsCompleted)
 			{
-				AsyncExtensions.SpinUntilCompleted(this);
+				SpinUntilCompleted();
 			}
 
 			return false;
@@ -591,7 +591,7 @@ namespace UnityFx.Async
 			}
 			else if (!IsCompleted)
 			{
-				AsyncExtensions.SpinUntilCompleted(this);
+				SpinUntilCompleted();
 			}
 
 			return false;
@@ -625,7 +625,7 @@ namespace UnityFx.Async
 			}
 			else if (!IsCompleted)
 			{
-				AsyncExtensions.SpinUntilCompleted(this);
+				SpinUntilCompleted();
 			}
 
 			return false;
@@ -1360,6 +1360,27 @@ namespace UnityFx.Async
 				_waitHandle?.Set();
 				InvokeCallbacks();
 			}
+		}
+
+		private void SpinUntilCompleted()
+		{
+#if NET35
+
+			while ((_flags & _flagCompleted) == 0)
+			{
+				Thread.SpinWait(1);
+			}
+
+#else
+
+			var sw = new SpinWait();
+
+			while ((_flags & _flagCompleted) == 0)
+			{
+				sw.SpinOnce();
+			}
+
+#endif
 		}
 
 		#endregion

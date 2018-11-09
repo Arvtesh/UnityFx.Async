@@ -4,16 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
 -----------------------
-## [0.9.8] - unreleased
+## [0.9.8] - 2018.11.09
 
 ### Added
-- `AsyncResult` is now Task-like type and can be used as `async` methd result value (requires C# 7.2).
+- `AsyncResult` is now Task-like type and can be used as `async` method result value (requires C# 7.2).
+- Added new `AsyncResult.FromAction` overloads.
+- Added new `SynchronizationContext` extension methods (`PostAsync`, `InvokeAsync` etc).
+- Added extension methods for `Socket`, `WebRequest`, `Stream` BCL classes.
+
+### Changed
+- Moved BCL extension methods to namespace `UnityFx.Async.Extensions` (previously they were in namespace `UnityFx.Async`).
 
 ### Fixed
 - Fixed `AsyncResult` completion callbacks to be called event if `OnCompleted` throws.
+- Fixed exception not been set for `AsyncResult.FaultedOperation` and `AsyncResult.CanceledOperation`.
+- Disabled `MovieTexture` helpers for iOS/Android (as it is not supported on mobiles).
 
 ### Removed
-- Deprecated `AsyncResultQueue`.
+- Removed `AsyncResultQueue`.
+- Removed `AsyncLazy`.
 
 -----------------------
 ## [0.9.7] - 2018.09.27

@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Struct AsyncExtensions.AsyncAwaiter
+    <title>Struct AsyncAwaiter
    | Asynchronous Operations for Unity </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Struct AsyncExtensions.AsyncAwaiter
+    <meta name="title" content="Struct AsyncAwaiter
    | Asynchronous Operations for Unity ">
     <meta name="generator" content="docfx 2.31.0.0">
     
@@ -68,10 +68,10 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="UnityFx.Async.AsyncExtensions.AsyncAwaiter">
+            <article class="content wrap" id="_content" data-uid="UnityFx.Async.CompilerServices.AsyncAwaiter">
   
   
-  <h1 id="UnityFx_Async_AsyncExtensions_AsyncAwaiter" data-uid="UnityFx.Async.AsyncExtensions.AsyncAwaiter" class="text-break">Struct AsyncExtensions.AsyncAwaiter
+  <h1 id="UnityFx_Async_CompilerServices_AsyncAwaiter" data-uid="UnityFx.Async.CompilerServices.AsyncAwaiter" class="text-break">Struct AsyncAwaiter
   </h1>
   <div class="markdown level0 summary"><p>Provides an object that waits for the completion of an asynchronous operation. This type and its members are intended for compiler use only.</p>
 </div>
@@ -101,9 +101,9 @@
       <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="UnityFx.Async.html">UnityFx.Async</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="UnityFx.Async.CompilerServices.html">UnityFx.Async.CompilerServices</a></h6>
   <h6><strong>Assembly</strong>: UnityFx.Async.dll</h6>
-  <h5 id="UnityFx_Async_AsyncExtensions_AsyncAwaiter_syntax">Syntax</h5>
+  <h5 id="UnityFx_Async_CompilerServices_AsyncAwaiter_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public struct AsyncAwaiter : INotifyCompletion</code></pre>
   </div>
@@ -111,19 +111,52 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncExtensions_AsyncAwaiter__ctor_UnityFx_Async_IAsyncOperation_System_Boolean_.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncExtensions.AsyncAwaiter.%23ctor(UnityFx.Async.IAsyncOperation%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_CompilerServices_AsyncAwaiter__ctor_UnityFx_Async_IAsyncOperation_.md&amp;value=---%0Auid%3A%20UnityFx.Async.CompilerServices.AsyncAwaiter.%23ctor(UnityFx.Async.IAsyncOperation)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/AsyncExtensions.Tasks.cs/#L31">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Implementation/Public/CompilerServices/AsyncAwaiter.cs/#L24">View Source</a>
   </span>
-  <a id="UnityFx_Async_AsyncExtensions_AsyncAwaiter__ctor_" data-uid="UnityFx.Async.AsyncExtensions.AsyncAwaiter.#ctor*"></a>
-  <h4 id="UnityFx_Async_AsyncExtensions_AsyncAwaiter__ctor_UnityFx_Async_IAsyncOperation_System_Boolean_" data-uid="UnityFx.Async.AsyncExtensions.AsyncAwaiter.#ctor(UnityFx.Async.IAsyncOperation,System.Boolean)">AsyncAwaiter(IAsyncOperation, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="UnityFx.Async.AsyncExtensions.AsyncAwaiter.html">AsyncExtensions.AsyncAwaiter</a> struct.</p>
+  <a id="UnityFx_Async_CompilerServices_AsyncAwaiter__ctor_" data-uid="UnityFx.Async.CompilerServices.AsyncAwaiter.#ctor*"></a>
+  <h4 id="UnityFx_Async_CompilerServices_AsyncAwaiter__ctor_UnityFx_Async_IAsyncOperation_" data-uid="UnityFx.Async.CompilerServices.AsyncAwaiter.#ctor(UnityFx.Async.IAsyncOperation)">AsyncAwaiter(IAsyncOperation)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="UnityFx.Async.CompilerServices.AsyncAwaiter.html">AsyncAwaiter</a> struct.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AsyncAwaiter(IAsyncOperation op, bool continueOnCapturedContext)</code></pre>
+    <pre><code class="lang-csharp hljs">public AsyncAwaiter(IAsyncOperation op)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><span class="parametername">op</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_CompilerServices_AsyncAwaiter__ctor_UnityFx_Async_IAsyncOperation_System_Threading_SynchronizationContext_.md&amp;value=---%0Auid%3A%20UnityFx.Async.CompilerServices.AsyncAwaiter.%23ctor(UnityFx.Async.IAsyncOperation%2CSystem.Threading.SynchronizationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Implementation/Public/CompilerServices/AsyncAwaiter.cs/#L33">View Source</a>
+  </span>
+  <a id="UnityFx_Async_CompilerServices_AsyncAwaiter__ctor_" data-uid="UnityFx.Async.CompilerServices.AsyncAwaiter.#ctor*"></a>
+  <h4 id="UnityFx_Async_CompilerServices_AsyncAwaiter__ctor_UnityFx_Async_IAsyncOperation_System_Threading_SynchronizationContext_" data-uid="UnityFx.Async.CompilerServices.AsyncAwaiter.#ctor(UnityFx.Async.IAsyncOperation,System.Threading.SynchronizationContext)">AsyncAwaiter(IAsyncOperation, SynchronizationContext)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="UnityFx.Async.CompilerServices.AsyncAwaiter.html">AsyncAwaiter</a> struct.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AsyncAwaiter(IAsyncOperation op, SynchronizationContext syncContext)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -141,8 +174,8 @@
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
-        <td><span class="parametername">continueOnCapturedContext</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">syncContext</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -151,13 +184,13 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncExtensions_AsyncAwaiter_IsCompleted.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncExtensions.AsyncAwaiter.IsCompleted%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_CompilerServices_AsyncAwaiter_IsCompleted.md&amp;value=---%0Auid%3A%20UnityFx.Async.CompilerServices.AsyncAwaiter.IsCompleted%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/AsyncExtensions.Tasks.cs/#L41">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Implementation/Public/CompilerServices/AsyncAwaiter.cs/#L43">View Source</a>
   </span>
-  <a id="UnityFx_Async_AsyncExtensions_AsyncAwaiter_IsCompleted_" data-uid="UnityFx.Async.AsyncExtensions.AsyncAwaiter.IsCompleted*"></a>
-  <h4 id="UnityFx_Async_AsyncExtensions_AsyncAwaiter_IsCompleted" data-uid="UnityFx.Async.AsyncExtensions.AsyncAwaiter.IsCompleted">IsCompleted</h4>
+  <a id="UnityFx_Async_CompilerServices_AsyncAwaiter_IsCompleted_" data-uid="UnityFx.Async.CompilerServices.AsyncAwaiter.IsCompleted*"></a>
+  <h4 id="UnityFx_Async_CompilerServices_AsyncAwaiter_IsCompleted" data-uid="UnityFx.Async.CompilerServices.AsyncAwaiter.IsCompleted">IsCompleted</h4>
   <div class="markdown level1 summary"><p>Gets a value indicating whether the underlying operation is completed.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -185,13 +218,13 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncExtensions_AsyncAwaiter_GetResult.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncExtensions.AsyncAwaiter.GetResult%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_CompilerServices_AsyncAwaiter_GetResult.md&amp;value=---%0Auid%3A%20UnityFx.Async.CompilerServices.AsyncAwaiter.GetResult%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/AsyncExtensions.Tasks.cs/#L46">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Implementation/Public/CompilerServices/AsyncAwaiter.cs/#L48">View Source</a>
   </span>
-  <a id="UnityFx_Async_AsyncExtensions_AsyncAwaiter_GetResult_" data-uid="UnityFx.Async.AsyncExtensions.AsyncAwaiter.GetResult*"></a>
-  <h4 id="UnityFx_Async_AsyncExtensions_AsyncAwaiter_GetResult" data-uid="UnityFx.Async.AsyncExtensions.AsyncAwaiter.GetResult">GetResult()</h4>
+  <a id="UnityFx_Async_CompilerServices_AsyncAwaiter_GetResult_" data-uid="UnityFx.Async.CompilerServices.AsyncAwaiter.GetResult*"></a>
+  <h4 id="UnityFx_Async_CompilerServices_AsyncAwaiter_GetResult" data-uid="UnityFx.Async.CompilerServices.AsyncAwaiter.GetResult">GetResult()</h4>
   <div class="markdown level1 summary"><p>Returns the source result value.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -201,13 +234,13 @@
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncExtensions_AsyncAwaiter_OnCompleted_System_Action_.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncExtensions.AsyncAwaiter.OnCompleted(System.Action)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_CompilerServices_AsyncAwaiter_OnCompleted_System_Action_.md&amp;value=---%0Auid%3A%20UnityFx.Async.CompilerServices.AsyncAwaiter.OnCompleted(System.Action)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/AsyncExtensions.Tasks.cs/#L55">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Implementation/Public/CompilerServices/AsyncAwaiter.cs/#L57">View Source</a>
   </span>
-  <a id="UnityFx_Async_AsyncExtensions_AsyncAwaiter_OnCompleted_" data-uid="UnityFx.Async.AsyncExtensions.AsyncAwaiter.OnCompleted*"></a>
-  <h4 id="UnityFx_Async_AsyncExtensions_AsyncAwaiter_OnCompleted_System_Action_" data-uid="UnityFx.Async.AsyncExtensions.AsyncAwaiter.OnCompleted(System.Action)">OnCompleted(Action)</h4>
+  <a id="UnityFx_Async_CompilerServices_AsyncAwaiter_OnCompleted_" data-uid="UnityFx.Async.CompilerServices.AsyncAwaiter.OnCompleted*"></a>
+  <h4 id="UnityFx_Async_CompilerServices_AsyncAwaiter_OnCompleted_System_Action_" data-uid="UnityFx.Async.CompilerServices.AsyncAwaiter.OnCompleted(System.Action)">OnCompleted(Action)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -247,10 +280,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_AsyncExtensions_AsyncAwaiter.md&amp;value=---%0Auid%3A%20UnityFx.Async.AsyncExtensions.AsyncAwaiter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_CompilerServices_AsyncAwaiter.md&amp;value=---%0Auid%3A%20UnityFx.Async.CompilerServices.AsyncAwaiter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Extensions/AsyncExtensions.Tasks.cs/#L23" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Implementation/Public/CompilerServices/AsyncAwaiter.cs/#L16" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

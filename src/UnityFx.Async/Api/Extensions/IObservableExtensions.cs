@@ -2,12 +2,17 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.ComponentModel;
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Extensions
 {
 #if !NET35
 
-	partial class AsyncExtensions
+	/// <summary>
+	/// Extension methods for <see cref="IObservable{T}"/>.
+	/// </summary>
+	[EditorBrowsable(EditorBrowsableState.Advanced)]
+	public static class IObservableExtensions
 	{
 		/// <summary>
 		/// Creates a <see cref="IAsyncOperation{T}"/> instance that can be used to track the source observable.
