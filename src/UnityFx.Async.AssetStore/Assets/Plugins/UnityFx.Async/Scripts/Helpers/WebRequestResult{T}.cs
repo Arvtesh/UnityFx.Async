@@ -186,6 +186,16 @@ namespace UnityFx.Async.Helpers
 				else if (_request.downloadHandler != null)
 				{
 					var result = GetResult(_request);
+
+					if (result != null)
+					{
+						TrySetResult(result);
+					}
+					else
+					{
+						throw new WebRequestException(string.Format("Failed to load {0} from URL: {1}.", typeof(T).Name, _request.url));
+					}
+
 					TrySetResult(result);
 				}
 				else

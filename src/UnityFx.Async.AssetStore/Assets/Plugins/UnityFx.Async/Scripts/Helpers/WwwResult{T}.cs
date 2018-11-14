@@ -142,7 +142,15 @@ namespace UnityFx.Async.Helpers
 				if (string.IsNullOrEmpty(_www.error))
 				{
 					var result = GetResult(_www);
-					TrySetResult(result);
+
+					if (result != null)
+					{
+						TrySetResult(result);
+					}
+					else
+					{
+						throw new WebRequestException(string.Format("Failed to load {0} from URL: {1}.", typeof(T).Name, _www.url));
+					}
 				}
 				else
 				{
