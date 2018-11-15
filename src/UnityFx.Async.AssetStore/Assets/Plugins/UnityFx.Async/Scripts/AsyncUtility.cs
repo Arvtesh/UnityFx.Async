@@ -390,7 +390,7 @@ namespace UnityFx.Async
 			#region data
 
 			private Dictionary<object, Action> _ops;
-			private List<object> _opsToRemove;
+			private List<KeyValuePair<object, Action>> _opsToRemove;
 
 			private AsyncUpdateSource _updateSource;
 			private AsyncUpdateSource _lateUpdateSource;
@@ -475,7 +475,7 @@ namespace UnityFx.Async
 				if (_ops == null)
 				{
 					_ops = new Dictionary<object, Action>();
-					_opsToRemove = new List<object>();
+					_opsToRemove = new List<KeyValuePair<object, Action>>();
 				}
 
 				_ops.Add(op, cb);
@@ -507,52 +507,51 @@ namespace UnityFx.Async
 			{
 				if (_ops != null && _ops.Count > 0)
 				{
-					try
+					foreach (var item in _ops)
 					{
-						foreach (var item in _ops)
+						if (item.Key is AsyncOperation)
 						{
-							if (item.Key is AsyncOperation)
-							{
-								var asyncOp = item.Key as AsyncOperation;
+							var asyncOp = item.Key as AsyncOperation;
 
-								if (asyncOp.isDone)
-								{
-									_opsToRemove.Add(asyncOp);
-									item.Value();
-								}
-							}
-							else if (item.Key is UnityWebRequest)
+							if (asyncOp.isDone)
 							{
-								var asyncOp = item.Key as UnityWebRequest;
-
-								if (asyncOp.isDone)
-								{
-									_opsToRemove.Add(asyncOp);
-									item.Value();
-								}
+								_opsToRemove.Add(item);
 							}
-#if !UNITY_2018_3_OR_NEWER
-							else if (item.Key is WWW)
-							{
-								var asyncOp = item.Key as WWW;
-
-								if (asyncOp.isDone)
-								{
-									_opsToRemove.Add(asyncOp);
-									item.Value();
-								}
-							}
-#endif
 						}
-					}
-					catch (Exception e)
-					{
-						Debug.LogException(e, this);
+						else if (item.Key is UnityWebRequest)
+						{
+							var asyncOp = item.Key as UnityWebRequest;
+
+							if (asyncOp.isDone)
+							{
+								_opsToRemove.Add(item);
+							}
+						}
+#if !UNITY_2018_3_OR_NEWER
+						else if (item.Key is WWW)
+						{
+							var asyncOp = item.Key as WWW;
+
+							if (asyncOp.isDone)
+							{
+								_opsToRemove.Add(item);
+							}
+						}
+#endif
 					}
 
 					foreach (var item in _opsToRemove)
 					{
-						_ops.Remove(item);
+						_ops.Remove(item.Key);
+
+						try
+						{
+							item.Value();
+						}
+						catch (Exception e)
+						{
+							Debug.LogException(e, this);
+						}
 					}
 
 					_opsToRemove.Clear();
