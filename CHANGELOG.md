@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
 -----------------------
+## [1.0.0] - unreleased
+
+### Added
+
+### Fixed
+- Fixed web requests `null` result in cases when downloaded file failed to open.
+- Fixed `AsyncUtility.AddCompletionCallback` exception when adding new callbacks from another callback.
+- Fixed `AsyncUpdateSource` implementation to allow adding listeners from a callback.
+
+### Removed
+
+-----------------------
 ## [0.9.8] - 2018.11.09
 
 ### Added
