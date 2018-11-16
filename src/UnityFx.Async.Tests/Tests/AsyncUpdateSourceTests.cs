@@ -91,6 +91,24 @@ namespace UnityFx.Async
 		}
 
 		[Fact]
+		public void AddListener_CanBeCalledFromUpdate()
+		{
+			// Arrange
+			var updateSource = new AsyncUpdateSource();
+			var observer = Substitute.For<IAsyncUpdatable>();
+
+			observer.When(x => x.Update(Arg.Any<float>())).Do(x => updateSource.AddListener(observer));
+			updateSource.AddListener(observer);
+
+			// Act
+			updateSource.OnNext(0);
+			updateSource.OnNext(0);
+
+			// Assert
+			observer.Received(3).Update(Arg.Any<float>());
+		}
+
+		[Fact]
 		public void RemoveListener_CanBeCalledFromUpdate()
 		{
 			// Arrange
@@ -106,6 +124,59 @@ namespace UnityFx.Async
 
 			// Assert
 			observer.Received(1).Update(Arg.Any<float>());
+		}
+
+		[Fact]
+		public void Subscribe_CanBeCalledFromOnNext()
+		{
+			// Arrange
+			var updateSource = new AsyncUpdateSource();
+			var observer = Substitute.For<IObserver<float>>();
+			var subscription = updateSource.Subscribe(observer);
+
+			observer.When(x => x.OnNext(Arg.Any<float>())).Do(x => updateSource.Subscribe(observer));
+
+			// Act
+			updateSource.OnNext(0);
+			updateSource.OnNext(0);
+
+			// Assert
+			observer.Received(3).OnNext(Arg.Any<float>());
+		}
+
+		[Fact]
+		public void Subscribe_CanBeCalledFromOnError()
+		{
+			// Arrange
+			var updateSource = new AsyncUpdateSource();
+			var observer = Substitute.For<IObserver<float>>();
+			var subscription = updateSource.Subscribe(observer);
+			var e = new Exception();
+
+			observer.When(x => x.OnError(e)).Do(x => updateSource.Subscribe(observer));
+
+			// Act
+			updateSource.OnError(e);
+
+			// Assert
+			observer.Received(1).OnError(e);
+		}
+
+		[Fact]
+		public void Subscribe_CanBeCalledFromOnCompleted()
+		{
+			// Arrange
+			var updateSource = new AsyncUpdateSource();
+			var observer = Substitute.For<IObserver<float>>();
+			var subscription = updateSource.Subscribe(observer);
+
+			observer.When(x => x.OnCompleted()).Do(x => updateSource.Subscribe(observer));
+
+			// Act
+			updateSource.OnCompleted();
+
+			// Assert
+			observer.Received(1).OnCompleted();
 		}
 
 		[Fact]
