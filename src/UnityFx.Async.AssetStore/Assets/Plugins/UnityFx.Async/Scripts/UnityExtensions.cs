@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -17,6 +18,103 @@ namespace UnityFx.Async
 	/// </summary>
 	public static class UnityExtensions
 	{
+		#region YieldInstruction
+
+#if NET_4_6 || NET_STANDARD_2_0
+
+		/// <summary>
+		/// Provides an object that waits for the completion of an <see cref="YieldInstruction"/>. This type and its members are intended for compiler use only.
+		/// </summary>
+		public class YieldInstructionAwaiter : IEnumerator, INotifyCompletion
+		{
+			private YieldInstruction _yieldValue;
+			private Action _callback;
+			private object _current;
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="YieldInstructionAwaiter"/> class.
+			/// </summary>
+			public YieldInstructionAwaiter(YieldInstruction op)
+			{
+				_yieldValue = op;
+			}
+
+			/// <inheritdoc/>
+			public object Current
+			{
+				get
+				{
+					return _current;
+				}
+			}
+
+			/// <summary>
+			/// Gets a value indicating whether the underlying operation is completed.
+			/// </summary>
+			/// <value>The operation completion flag.</value>
+			public bool IsCompleted
+			{
+				get
+				{
+					return _current == null && _yieldValue == null;
+				}
+			}
+
+			/// <summary>
+			/// Returns the source result value.
+			/// </summary>
+			public void GetResult()
+			{
+			}
+
+			/// <inheritdoc/>
+			public void OnCompleted(Action continuation)
+			{
+				_callback = continuation;
+				AsyncUtility.StartCoroutine(this);
+			}
+
+			/// <inheritdoc/>
+			public bool MoveNext()
+			{
+				if (_yieldValue != null)
+				{
+					if (_current == null)
+					{
+						_current = _yieldValue;
+						return true;
+					}
+					else
+					{
+						_current = null;
+						_yieldValue = null;
+						_callback();
+					}
+				}
+
+				return false;
+			}
+
+			/// <inheritdoc/>
+			public void Reset()
+			{
+				throw new NotSupportedException();
+			}
+		}
+
+		/// <summary>
+		/// Returns the operation awaiter. This method is intended for compiler use only.
+		/// </summary>
+		/// <param name="op">The operation to await.</param>
+		public static YieldInstructionAwaiter GetAwaiter(this YieldInstruction op)
+		{
+			return new YieldInstructionAwaiter(op);
+		}
+
+#endif
+
+		#endregion
+
 		#region AsyncOperation
 
 		/// <summary>
@@ -454,7 +552,7 @@ namespace UnityFx.Async
 
 		#endregion
 
-#region implementation
+		#region implementation
 
 #if NET_4_6 || NET_STANDARD_2_0
 
