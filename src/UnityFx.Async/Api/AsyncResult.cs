@@ -4,7 +4,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -1027,21 +1026,21 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns a <see cref="SynchronizationContext"/> for the given options.
 		/// </summary>
-		internal static SynchronizationContext GetSynchronizationContext(AsyncContinuationContext contextId)
+		internal static SynchronizationContext GetSynchronizationContext(AsyncCallbackOptions options)
 		{
 			SynchronizationContext syncContext;
 
-			if (contextId == AsyncContinuationContext.Current)
-			{
-				syncContext = SynchronizationContext.Current;
-			}
-			else if (contextId == AsyncContinuationContext.Default)
+			if ((options & AsyncCallbackOptions.ExecuteOnDefaultContext) != 0)
 			{
 				syncContext = _defaultContext;
 			}
-			else
+			else if ((options & AsyncCallbackOptions.ExecuteSynchronously) != 0)
 			{
 				syncContext = null;
+			}
+			else
+			{
+				syncContext = SynchronizationContext.Current;
 			}
 
 			return syncContext;
@@ -1050,77 +1049,6 @@ namespace UnityFx.Async
 		#endregion
 
 		#region IAsyncOperation
-
-		/// <summary>
-		/// Raised when the operation progress is changed.
-		/// </summary>
-		/// <remarks>
-		/// The event handler is invoked on a thread that registered it (if it has a <see cref="SynchronizationContext"/> attached).
-		/// If the operation is already completed the event handler is called synchronously. Throwing an exception from the event handler
-		/// might cause unspecified behaviour.
-		/// </remarks>
-		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="Completed"/>
-		public event ProgressChangedEventHandler ProgressChanged
-		{
-			add
-			{
-				ThrowIfDisposed();
-
-				if (value == null)
-				{
-					throw new ArgumentNullException(nameof(value));
-				}
-
-				var syncContext = SynchronizationContext.Current ?? _defaultContext;
-
-				if (!TryAddCallback(value, syncContext, false))
-				{
-					CallbackUtility.InvokeProgressCallback(this, value, syncContext);
-				}
-			}
-			remove
-			{
-				TryRemoveCallback(value);
-			}
-		}
-
-		/// <summary>
-		/// Raised when the operation is completed.
-		/// </summary>
-		/// <remarks>
-		/// The event handler is invoked on a thread that registered it (if it has a <see cref="SynchronizationContext"/> attached).
-		/// If the operation is already completed the event handler is called synchronously. Throwing an exception from the event handler
-		/// might cause unspecified behaviour.
-		/// </remarks>
-		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		/// <seealso cref="ProgressChanged"/>
-		public event AsyncCompletedEventHandler Completed
-		{
-			add
-			{
-				ThrowIfDisposed();
-
-				if (value == null)
-				{
-					throw new ArgumentNullException(nameof(value));
-				}
-
-				var syncContext = SynchronizationContext.Current ?? _defaultContext;
-
-				if (!TryAddCallback(value, syncContext, true))
-				{
-					var invokeAsync = (_flags & _flagRunContinuationsAsynchronously) != 0;
-					CallbackUtility.InvokeCompletionCallback(this, value, syncContext, invokeAsync);
-				}
-			}
-			remove
-			{
-				TryRemoveCallback(value);
-			}
-		}
 
 		/// <summary>
 		/// Gets a unique ID for the operation instance.

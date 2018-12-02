@@ -16,23 +16,80 @@ namespace UnityFx.Async
 		#endregion
 
 		#region interface
+		#endregion
+
+		#region IAsyncOperationCallbacks
 
 		/// <summary>
-		/// Adds a completion callback for <c>await</c> implementation.
+		/// Raised when the operation progress is changed.
 		/// </summary>
-		internal void SetContinuationForAwait(Action continuation, SynchronizationContext syncContext)
+		/// <remarks>
+		/// The event handler is invoked on a thread that registered it (if it has a <see cref="SynchronizationContext"/> attached).
+		/// If the operation is already completed the event handler is called synchronously. Throwing an exception from the event handler
+		/// might cause unspecified behaviour.
+		/// </remarks>
+		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="Completed"/>
+		public event ProgressChangedEventHandler ProgressChanged
 		{
-			ThrowIfDisposed();
-
-			if (!TryAddCallback(continuation, syncContext, true))
+			add
 			{
-				continuation();
+				ThrowIfDisposed();
+
+				if (value == null)
+				{
+					throw new ArgumentNullException(nameof(value));
+				}
+
+				var syncContext = SynchronizationContext.Current ?? _defaultContext;
+
+				if (!TryAddCallback(value, syncContext, false))
+				{
+					CallbackUtility.InvokeProgressCallback(this, value, syncContext);
+				}
+			}
+			remove
+			{
+				TryRemoveCallback(value);
 			}
 		}
 
-		#endregion
+		/// <summary>
+		/// Raised when the operation is completed.
+		/// </summary>
+		/// <remarks>
+		/// The event handler is invoked on a thread that registered it (if it has a <see cref="SynchronizationContext"/> attached).
+		/// If the operation is already completed the event handler is called synchronously. Throwing an exception from the event handler
+		/// might cause unspecified behaviour.
+		/// </remarks>
+		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="ProgressChanged"/>
+		public event AsyncCompletedEventHandler Completed
+		{
+			add
+			{
+				ThrowIfDisposed();
 
-		#region IAsyncOperationEvents
+				if (value == null)
+				{
+					throw new ArgumentNullException(nameof(value));
+				}
+
+				var syncContext = SynchronizationContext.Current ?? _defaultContext;
+
+				if (!TryAddCallback(value, syncContext, true))
+				{
+					var invokeAsync = (_flags & _flagRunContinuationsAsynchronously) != 0;
+					CallbackUtility.InvokeCompletionCallback(this, value, syncContext, invokeAsync);
+				}
+			}
+			remove
+			{
+				TryRemoveCallback(value);
+			}
+		}
 
 		/// <summary>
 		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed <paramref name="action"/> is invoked

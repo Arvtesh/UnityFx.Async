@@ -56,19 +56,7 @@ namespace UnityFx.Async.CompilerServices
 		/// <inheritdoc/>
 		public void OnCompleted(Action continuation)
 		{
-			SetAwaitContinuation(_op, continuation, _syncContext);
-		}
-
-		internal static void SetAwaitContinuation(IAsyncOperation op, Action continuation, SynchronizationContext syncContext)
-		{
-			if (op is AsyncResult ar)
-			{
-				ar.SetContinuationForAwait(continuation, syncContext);
-			}
-			else
-			{
-				op.AddCompletionCallback(continuation, syncContext);
-			}
+			_op.AddCompletionCallback(continuation, _syncContext);
 		}
 	}
 

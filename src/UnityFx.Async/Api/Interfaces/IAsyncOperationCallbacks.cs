@@ -12,11 +12,37 @@ namespace UnityFx.Async
 	/// </summary>
 	/// <seealso cref="IAsyncOperation"/>
 	[EditorBrowsable(EditorBrowsableState.Advanced)]
-	public interface IAsyncOperationEvents
+	public interface IAsyncOperationCallbacks
 	{
 		/// <summary>
+		/// Raised when the operation progress is changed.
+		/// </summary>
+		/// <remarks>
+		/// The event handler is invoked on a thread that registered it (if it has a <see cref="SynchronizationContext"/> attached).
+		/// If the operation is already completed the event handler is called synchronously. Throwing an exception from the event handler
+		/// might cause unspecified behaviour.
+		/// </remarks>
+		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="Completed"/>
+		event ProgressChangedEventHandler ProgressChanged;
+
+		/// <summary>
+		/// Raised when the operation is completed.
+		/// </summary>
+		/// <remarks>
+		/// The event handler is invoked on a thread that registered it (if it has a <see cref="SynchronizationContext"/> attached).
+		/// If the operation is already completed the event handler is called synchronously. Throwing an exception from the event handler
+		/// might cause unspecified behaviour.
+		/// </remarks>
+		/// <exception cref="ArgumentNullException">Thrown if the delegate being registered is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="ProgressChanged"/>
+		event AsyncCompletedEventHandler Completed;
+
+		/// <summary>
 		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed <paramref name="callback"/> is invoked
-		/// on the <paramref name="syncContext"/> specified.
+		/// on the <paramref name="syncContext"/> specified. Do not use if not sure.
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback causes unspecified behaviour.
@@ -41,7 +67,7 @@ namespace UnityFx.Async
 
 		/// <summary>
 		/// Adds a callback to be executed when the operation progress has changed. If the operation is completed <paramref name="callback"/> is invoked
-		/// on the <paramref name="syncContext"/> specified.
+		/// on the <paramref name="syncContext"/> specified. Do not use if not sure.
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.

@@ -96,16 +96,28 @@ namespace UnityFx.Async
 					p.Report(op.Progress);
 					break;
 #endif
-				case Action a:
-					a.Invoke();
-					break;
-
 				case Action<float> af:
 					af.Invoke(op.Progress);
 					break;
 
 				case ProgressChangedEventHandler ph:
 					ph.Invoke(op, new ProgressChangedEventArgs((int)(op.Progress * 100), op.AsyncState));
+					break;
+
+				case Action a:
+					a.Invoke();
+					break;
+
+				case IAsyncContinuation c:
+					c.Invoke(op);
+					break;
+
+				case Action<IAsyncOperation> ao:
+					ao.Invoke(op);
+					break;
+
+				case AsyncCallback ac:
+					ac.Invoke(op);
 					break;
 			}
 		}
