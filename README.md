@@ -171,7 +171,8 @@ In fact the only notable difference from synchronous implementation is usage of 
 Reference the DLL and import the namespace:
 ```csharp
 using UnityFx.Async;
-using UnityFx.Async.Promises;   // For promises-specific stuff.
+using UnityFx.Async.Extensions;  // For BCL extension methods.
+using UnityFx.Async.Promises;    // For promise extensions.
 ```
 Create an operation instance like this:
 ```csharp
