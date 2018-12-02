@@ -98,11 +98,11 @@ namespace UnityFx.Async
 			};
 
 			op.AddProgressCallback(
-				p =>
+				new Action<float>(p =>
 				{
 					asyncCallbackCalled2 = true;
 					progress2 = p;
-				},
+				}),
 				null);
 
 			op.AddProgressCallback(pc, null);

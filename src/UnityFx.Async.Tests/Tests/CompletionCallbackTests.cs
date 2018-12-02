@@ -33,7 +33,7 @@ namespace UnityFx.Async
 			var callbackCalled = false;
 
 			// Act
-			op.AddCompletionCallback(_ => callbackCalled = true, null);
+			op.AddCompletionCallback(new Action(() => callbackCalled = true), null);
 
 			// Assert
 			Assert.True(callbackCalled);
@@ -105,7 +105,7 @@ namespace UnityFx.Async
 			var op = AsyncResult.Delay(1);
 			var callbackCalled = false;
 
-			op.AddCompletionCallback(_ => callbackCalled = true, null);
+			op.AddCompletionCallback(new Action(() => callbackCalled = true), null);
 
 			// Act
 			await op;
@@ -136,7 +136,7 @@ namespace UnityFx.Async
 			var callbackCalled = false;
 
 			// Act
-			op.AddCompletionCallback(_ => callbackCalled = true, null);
+			op.AddCompletionCallback(new Action(() => callbackCalled = true), null);
 
 			// Assert
 			Assert.True(callbackCalled);
@@ -152,8 +152,8 @@ namespace UnityFx.Async
 			var tid = 0;
 			var tidActual = 0;
 
-			op.AddCompletionCallback(_ => { }, sc);
-			op2.AddCompletionCallback(_ => tidActual = Thread.CurrentThread.ManagedThreadId, null);
+			op.AddCompletionCallback(new Action(() => { }), sc);
+			op2.AddCompletionCallback(new Action(() => tidActual = Thread.CurrentThread.ManagedThreadId), null);
 
 			// Act
 			await Task.Run(() => op.SetCompleted());

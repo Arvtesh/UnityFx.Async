@@ -96,6 +96,9 @@ namespace UnityFx.Async
 					p.Report(op.Progress);
 					break;
 #endif
+				case Action a:
+					a.Invoke();
+					break;
 
 				case Action<float> af:
 					af.Invoke(op.Progress);

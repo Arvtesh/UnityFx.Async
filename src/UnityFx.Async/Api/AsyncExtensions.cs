@@ -846,7 +846,7 @@ namespace UnityFx.Async
 				var tcs = new TaskCompletionSource<VoidResult>();
 
 				op.AddCompletionCallback(
-					asyncOp =>
+					new Action(() =>
 					{
 						status = op.Status;
 
@@ -862,7 +862,7 @@ namespace UnityFx.Async
 						{
 							tcs.TrySetCanceled();
 						}
-					},
+					}),
 					null);
 
 				return tcs.Task;
@@ -895,7 +895,7 @@ namespace UnityFx.Async
 				var tcs = new TaskCompletionSource<TResult>();
 
 				op.AddCompletionCallback(
-					asyncOp =>
+					new Action(() =>
 					{
 						status = op.Status;
 
@@ -911,7 +911,7 @@ namespace UnityFx.Async
 						{
 							tcs.TrySetCanceled();
 						}
-					},
+					}),
 					null);
 
 				return tcs.Task;

@@ -67,7 +67,7 @@ namespace UnityFx.Async.CompilerServices
 			}
 			else
 			{
-				op.AddCompletionCallback(asyncOp => continuation(), syncContext);
+				op.AddCompletionCallback(continuation, syncContext);
 			}
 		}
 	}

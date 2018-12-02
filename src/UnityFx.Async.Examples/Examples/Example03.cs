@@ -21,7 +21,7 @@ namespace UnityFx.Async.Examples
 			// NOTE: The operation should be disposed because of the Wait() call.
 			using (var op = DownloadAsTextAsync("http://www.google.com"))
 			{
-				op.AddCompletionCallback(o =>
+				op.Completed += (sender, args) =>
 				{
 					if (op.IsCompletedSuccessfully)
 					{
@@ -34,7 +34,7 @@ namespace UnityFx.Async.Examples
 
 						Console.WriteLine("Download result: " + s);
 					}
-				}, null);
+				};
 
 				op.Wait();
 			}
