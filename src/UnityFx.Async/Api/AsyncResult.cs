@@ -316,6 +316,8 @@ namespace UnityFx.Async
 		/// <seealso cref="OnStarted"/>
 		public void Start()
 		{
+			ThrowIfDisposed();
+
 			if (!TrySetRunning())
 			{
 				throw new InvalidOperationException();
@@ -332,6 +334,7 @@ namespace UnityFx.Async
 		/// <seealso cref="OnStarted"/>
 		public bool TryStart()
 		{
+			ThrowIfDisposed();
 			return TrySetRunning();
 		}
 
@@ -342,8 +345,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetRunning"/>
 		protected internal bool TrySetScheduled()
 		{
-			ThrowIfDisposed();
-
 			if (TrySetStatus(StatusScheduled))
 			{
 				return true;
@@ -359,8 +360,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetScheduled"/>
 		protected internal bool TrySetRunning()
 		{
-			ThrowIfDisposed();
-
 			if (TrySetStatus(StatusRunning))
 			{
 				OnStarted();
@@ -390,8 +389,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetCanceled()"/>
 		protected internal bool TrySetCanceled(bool completedSynchronously)
 		{
-			ThrowIfDisposed();
-
 			if (TryReserveCompletion())
 			{
 				_exception = new OperationCanceledException();
@@ -461,8 +458,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetException(Exception)"/>
 		protected internal bool TrySetException(Exception exception, bool completedSynchronously)
 		{
-			ThrowIfDisposed();
-
 			if (exception == null)
 			{
 				throw new ArgumentNullException(nameof(exception));
@@ -533,8 +528,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetExceptions(IEnumerable{Exception})"/>
 		protected internal bool TrySetExceptions(IEnumerable<Exception> exceptions, bool completedSynchronously)
 		{
-			ThrowIfDisposed();
-
 			if (exceptions == null)
 			{
 				throw new ArgumentNullException(nameof(exceptions));
@@ -617,8 +610,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetCompleted()"/>
 		protected internal bool TrySetCompleted(bool completedSynchronously)
 		{
-			ThrowIfDisposed();
-
 			if (TrySetCompleted(StatusRanToCompletion, completedSynchronously))
 			{
 				return true;
@@ -836,6 +827,7 @@ namespace UnityFx.Async
 		/// </summary>
 		internal bool TrySetStatus(int newStatus)
 		{
+			Debug.Assert(!IsDisposed);
 			Debug.Assert(newStatus < StatusRanToCompletion);
 
 			do
@@ -871,6 +863,7 @@ namespace UnityFx.Async
 		/// </summary>
 		internal bool TrySetCompleted(int status, bool completedSynchronously)
 		{
+			Debug.Assert(!IsDisposed);
 			Debug.Assert(status > StatusRunning);
 
 			status |= _flagCompleted | _flagCompletionReserved;
@@ -905,6 +898,8 @@ namespace UnityFx.Async
 		/// </summary>
 		internal bool TryReserveCompletion()
 		{
+			Debug.Assert(!IsDisposed);
+
 			do
 			{
 				var flags = _flags;
@@ -950,6 +945,7 @@ namespace UnityFx.Async
 		/// </summary>
 		internal void SetCompleted(int status, bool completedSynchronously)
 		{
+			Debug.Assert(!IsDisposed);
 			Debug.Assert(status > StatusRunning);
 			Debug.Assert((_flags & _flagCompletionReserved) != 0);
 			Debug.Assert((_flags & _statusMask) < StatusRanToCompletion);

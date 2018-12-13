@@ -149,6 +149,8 @@ namespace UnityFx.Async
 		/// <seealso cref="SetRunning"/>
 		public void SetScheduled()
 		{
+			ThrowIfDisposed();
+
 			if (!base.TrySetScheduled())
 			{
 				throw new InvalidOperationException();
@@ -162,7 +164,11 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="SetScheduled"/>
 		/// <seealso cref="TrySetRunning"/>
-		public new bool TrySetScheduled() => base.TrySetScheduled();
+		public new bool TrySetScheduled()
+		{
+			ThrowIfDisposed();
+			return base.TrySetScheduled();
+		}
 
 		/// <summary>
 		/// Transitions the operation to <see cref="AsyncOperationStatus.Running"/> state.
@@ -173,6 +179,8 @@ namespace UnityFx.Async
 		/// <seealso cref="SetScheduled"/>
 		public void SetRunning()
 		{
+			ThrowIfDisposed();
+
 			if (!base.TrySetRunning())
 			{
 				throw new InvalidOperationException();
@@ -186,7 +194,11 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the underlying operation is disposed.</exception>
 		/// <seealso cref="SetRunning"/>
 		/// <seealso cref="TrySetScheduled"/>
-		public new bool TrySetRunning() => base.TrySetRunning();
+		public new bool TrySetRunning()
+		{
+			ThrowIfDisposed();
+			return base.TrySetRunning();
+		}
 
 		#endregion
 
@@ -248,7 +260,11 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		public new bool TrySetCanceled() => TrySetCanceled(false);
+		public new bool TrySetCanceled()
+		{
+			ThrowIfDisposed();
+			return TrySetCanceled(false);
+		}
 
 		/// <summary>
 		/// Attempts to transition the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
@@ -257,7 +273,11 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		public new bool TrySetException(Exception exception) => TrySetException(exception, false);
+		public new bool TrySetException(Exception exception)
+		{
+			ThrowIfDisposed();
+			return TrySetException(exception, false);
+		}
 
 		/// <summary>
 		/// Attempts to transition the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
@@ -266,7 +286,11 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		public new bool TrySetExceptions(IEnumerable<Exception> exceptions) => TrySetExceptions(exceptions, false);
+		public new bool TrySetExceptions(IEnumerable<Exception> exceptions)
+		{
+			ThrowIfDisposed();
+			return TrySetExceptions(exceptions, false);
+		}
 
 		/// <summary>
 		/// Attempts to transition the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
@@ -274,7 +298,11 @@ namespace UnityFx.Async
 		/// <param name="result">The operation result.</param>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		public new bool TrySetResult(TResult result) => TrySetResult(result, false);
+		public new bool TrySetResult(TResult result)
+		{
+			ThrowIfDisposed();
+			return TrySetResult(result, false);
+		}
 
 		#endregion
 	}

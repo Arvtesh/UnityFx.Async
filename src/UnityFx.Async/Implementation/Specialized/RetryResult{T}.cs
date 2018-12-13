@@ -140,7 +140,7 @@ namespace UnityFx.Async
 			}
 			else
 			{
-				// NOTE: should not get here.
+				// NOTE: Should not get here.
 				TrySetException(new Exception(Messages.FormatError_MaxNumberOrRetriesReached(_maxRetryCount)));
 			}
 		}
