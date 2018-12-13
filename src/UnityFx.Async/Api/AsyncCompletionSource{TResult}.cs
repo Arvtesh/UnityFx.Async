@@ -11,7 +11,7 @@ namespace UnityFx.Async
 	/// </summary>
 	/// <typeparam name="TResult">Type of the operation result value.</typeparam>
 	/// <seealso cref="AsyncCompletionSource"/>
-	public sealed class AsyncCompletionSource<TResult> : AsyncResult<TResult>, IAsyncCompletionSource<TResult>
+	public class AsyncCompletionSource<TResult> : AsyncResult<TResult>, IAsyncCompletionSource<TResult>
 	{
 		#region data
 
@@ -223,14 +223,17 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		public bool TrySetProgress(float progress)
 		{
-			if (progress < 0 || progress > 1)
-			{
-				throw new ArgumentOutOfRangeException(nameof(progress), progress, Messages.FormatError_InvalidProgress());
-			}
-
 			ThrowIfDisposed();
 
-			if (Status == AsyncOperationStatus.Running && _progress != progress)
+			if (progress < 0 || progress > 1)
+			{
+				throw new ArgumentOutOfRangeException(nameof(progress), progress, Messages.FormatError_InvalidProgressValue());
+			}
+
+			// Make sure the operation has been started before going further.
+			base.TrySetRunning();
+
+			if (!IsCompleted && _progress != progress)
 			{
 				_progress = progress;
 				ReportProgress();

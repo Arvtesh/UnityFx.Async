@@ -10,7 +10,7 @@ namespace UnityFx.Async
 	/// Represents an asynchronous operation with external completion control.
 	/// </summary>
 	/// <seealso cref="AsyncCompletionSource{T}"/>
-	public sealed class AsyncCompletionSource : AsyncResult, IAsyncCompletionSource
+	public class AsyncCompletionSource : AsyncResult, IAsyncCompletionSource
 	{
 		#region data
 
@@ -222,14 +222,18 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		public bool TrySetProgress(float progress)
 		{
-			if (progress < 0 || progress > 1)
-			{
-				throw new ArgumentOutOfRangeException(nameof(progress), progress, Messages.FormatError_InvalidProgress());
-			}
-
 			ThrowIfDisposed();
 
-			if (Status == AsyncOperationStatus.Running && _progress != progress)
+			if (progress < 0 || progress > 1)
+			{
+				throw new ArgumentOutOfRangeException(nameof(progress), progress, Messages.FormatError_InvalidProgressValue());
+			}
+
+			// Make sure the operation has been started before going further.
+			base.TrySetRunning();
+
+			// Now try set the new progress value.
+			if (!IsCompleted && _progress != progress)
 			{
 				_progress = progress;
 				ReportProgress();

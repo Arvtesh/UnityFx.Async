@@ -42,7 +42,7 @@ namespace UnityFx.Async
 			return "The timeout value specified is not valid. The supported range is [-1, MaxInt].";
 		}
 
-		public static string FormatError_InvalidProgress()
+		public static string FormatError_InvalidProgressValue()
 		{
 			return "The progress value should be in range [0, 1].";
 		}
