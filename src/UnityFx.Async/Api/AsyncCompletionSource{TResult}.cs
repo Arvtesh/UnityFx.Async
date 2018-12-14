@@ -245,10 +245,14 @@ namespace UnityFx.Async
 			// Make sure the operation has been started before going further.
 			base.TrySetRunning();
 
-			if (!IsCompleted && _progress != progress)
+			if (!IsCompleted)
 			{
-				_progress = progress;
-				ReportProgress();
+				if (_progress != progress)
+				{
+					_progress = progress;
+					ReportProgress();
+				}
+
 				return true;
 			}
 

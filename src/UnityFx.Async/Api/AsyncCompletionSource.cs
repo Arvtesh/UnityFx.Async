@@ -245,10 +245,14 @@ namespace UnityFx.Async
 			base.TrySetRunning();
 
 			// Now try set the new progress value.
-			if (!IsCompleted && _progress != progress)
+			if (!IsCompleted)
 			{
-				_progress = progress;
-				ReportProgress();
+				if (_progress != progress)
+				{
+					_progress = progress;
+					ReportProgress();
+				}
+
 				return true;
 			}
 
