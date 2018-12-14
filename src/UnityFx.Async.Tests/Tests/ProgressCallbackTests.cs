@@ -13,12 +13,10 @@ namespace UnityFx.Async
 		#region SetProgress/TrySetProgress
 
 		[Theory]
-		[InlineData(AsyncOperationStatus.Created)]
-		[InlineData(AsyncOperationStatus.Scheduled)]
 		[InlineData(AsyncOperationStatus.RanToCompletion)]
 		[InlineData(AsyncOperationStatus.Faulted)]
 		[InlineData(AsyncOperationStatus.Canceled)]
-		public void SetProgress_ThrowsIfOperationIsNotRunning(AsyncOperationStatus status)
+		public void SetProgress_ThrowsIfOperationIsCompleted(AsyncOperationStatus status)
 		{
 			// Arrange
 			var op = new AsyncCompletionSource(status);
@@ -28,8 +26,8 @@ namespace UnityFx.Async
 		}
 
 		[Theory]
-		[InlineData(AsyncOperationStatus.Created, false)]
-		[InlineData(AsyncOperationStatus.Scheduled, false)]
+		[InlineData(AsyncOperationStatus.Created, true)]
+		[InlineData(AsyncOperationStatus.Scheduled, true)]
 		[InlineData(AsyncOperationStatus.Running, true)]
 		[InlineData(AsyncOperationStatus.RanToCompletion, false)]
 		[InlineData(AsyncOperationStatus.Faulted, false)]

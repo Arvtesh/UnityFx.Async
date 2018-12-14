@@ -445,8 +445,8 @@ namespace UnityFx.Async
 		}
 
 		[Theory]
-		[InlineData(AsyncOperationStatus.Created, 0)]
-		[InlineData(AsyncOperationStatus.Scheduled, 0)]
+		[InlineData(AsyncOperationStatus.Created, 0.3f)]
+		[InlineData(AsyncOperationStatus.Scheduled, 0.3f)]
 		[InlineData(AsyncOperationStatus.Running, 0.3f)]
 		[InlineData(AsyncOperationStatus.RanToCompletion, 1)]
 		[InlineData(AsyncOperationStatus.Faulted, 0)]
