@@ -153,6 +153,9 @@ namespace UnityFx.Async
 			return false;
 		}
 
+#if !DEBUG
+		[DebuggerHidden]
+#endif
 		public void Invoke(bool invokeAsync)
 		{
 			if (_progressCallback1.Callback != null)
@@ -192,6 +195,9 @@ namespace UnityFx.Async
 			}
 		}
 
+#if !DEBUG
+		[DebuggerHidden]
+#endif
 		public void InvokeProgressCallbacks()
 		{
 			if (_progressCallback1.Callback != null)

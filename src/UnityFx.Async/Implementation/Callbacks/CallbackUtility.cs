@@ -8,6 +8,9 @@ using System.Threading;
 
 namespace UnityFx.Async
 {
+#if !DEBUG
+	[DebuggerHidden]
+#endif
 	internal static class CallbackUtility
 	{
 		#region data

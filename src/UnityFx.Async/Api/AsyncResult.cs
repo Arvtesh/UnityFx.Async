@@ -86,30 +86,35 @@ namespace UnityFx.Async
 		/// a context attached to the app UI thread.
 		/// </remarks>
 		/// <value>An instance of <see cref="SynchronizationContext"/> that is used as default one. Initial value is <see langword="null"/>.</value>
+		[DebuggerHidden]
 		public static SynchronizationContext DefaultSynchronizationContext { get => _defaultContext; set => _defaultContext = value; }
 
 		/// <summary>
 		/// Gets the <see cref="AsyncCreationOptions"/> used to create this operation.
 		/// </summary>
 		/// <value>The operation creation options.</value>
+		[DebuggerHidden]
 		public AsyncCreationOptions CreationOptions => (AsyncCreationOptions)(_flags >> _optionsOffset);
 
 		/// <summary>
 		/// Gets a value indicating whether the operation has been started.
 		/// </summary>
 		/// <value>A value indicating whether the operation has been started.</value>
+		[DebuggerHidden]
 		public bool IsStarted => (_flags & _statusMask) >= StatusRunning;
 
 		/// <summary>
 		/// Gets a value indicating whether the operation instance is disposed.
 		/// </summary>
 		/// <value>A value indicating whether the operation is disposed.</value>
+		[DebuggerHidden]
 		protected bool IsDisposed => (_flags & _flagDisposed) != 0;
 
 		/// <summary>
 		/// Gets a value indicating whether the operation cancellation was requested.
 		/// </summary>
 		/// <value>A value indicating whether the operation cancellation was requested.</value>
+		[DebuggerHidden]
 		protected bool IsCancellationRequested => (_flags & _flagCancellationRequested) != 0;
 
 		/// <summary>
@@ -1091,6 +1096,7 @@ namespace UnityFx.Async
 		/// Gets the operation status identifier.
 		/// </summary>
 		/// <value>Identifier of the operation status.</value>
+		[DebuggerHidden]
 		public AsyncOperationStatus Status => (AsyncOperationStatus)(_flags & _statusMask);
 
 		/// <summary>
@@ -1098,24 +1104,28 @@ namespace UnityFx.Async
 		/// or has not yet thrown any exceptions, this will return <see langword="null"/>.
 		/// </summary>
 		/// <value>An exception that caused the operation to end prematurely.</value>
+		[DebuggerHidden]
 		public Exception Exception => (_flags & _flagCompleted) != 0 ? _exception : null;
 
 		/// <summary>
 		/// Gets a value indicating whether the operation completed successfully (i.e. with <see cref="AsyncOperationStatus.RanToCompletion"/> status).
 		/// </summary>
 		/// <value>A value indicating whether the operation completed successfully.</value>
+		[DebuggerHidden]
 		public bool IsCompletedSuccessfully => (_flags & _statusMask) == StatusRanToCompletion;
 
 		/// <summary>
 		/// Gets a value indicating whether the operation completed due to an unhandled exception (i.e. with <see cref="AsyncOperationStatus.Faulted"/> status).
 		/// </summary>
 		/// <value>A value indicating whether the operation has failed.</value>
+		[DebuggerHidden]
 		public bool IsFaulted => (_flags & _statusMask) == StatusFaulted;
 
 		/// <summary>
 		/// Gets a value indicating whether the operation completed due to being canceled (i.e. with <see cref="AsyncOperationStatus.Canceled"/> status).
 		/// </summary>
 		/// <value>A value indicating whether the operation was canceled.</value>
+		[DebuggerHidden]
 		public bool IsCanceled => (_flags & _statusMask) == StatusCanceled;
 
 		#endregion
@@ -1212,6 +1222,7 @@ namespace UnityFx.Async
 		/// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
 		/// </summary>
 		/// <value>A user-defined object that qualifies or contains information about an asynchronous operation.</value>
+		[DebuggerHidden]
 		public object AsyncState => _asyncState;
 
 		/// <summary>
@@ -1222,6 +1233,7 @@ namespace UnityFx.Async
 		/// </remarks>
 		/// <value><see langword="true"/> if the asynchronous operation completed synchronously; otherwise, <see langword="false"/>.</value>
 		/// <seealso cref="IsCompleted"/>
+		[DebuggerHidden]
 		public bool CompletedSynchronously => (_flags & _flagSynchronous) != 0;
 
 		/// <summary>
@@ -1229,6 +1241,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <value><see langword="true"/> if the operation is complete; otherwise, <see langword="false"/>.</value>
 		/// <seealso cref="CompletedSynchronously"/>
+		[DebuggerHidden]
 		public bool IsCompleted => (_flags & _flagCompleted) != 0;
 
 		#endregion
