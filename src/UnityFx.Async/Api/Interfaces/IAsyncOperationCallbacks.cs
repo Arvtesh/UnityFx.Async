@@ -42,10 +42,11 @@ namespace UnityFx.Async
 
 		/// <summary>
 		/// Adds a completion callback to be executed after the operation has completed. If the operation is completed <paramref name="callback"/> is invoked
-		/// on the <paramref name="syncContext"/> specified. Do not use if not sure.
+		/// on the <paramref name="syncContext"/> specified. Throwing an exception from the callback causes unspecified behaviour. The method is not intended
+		/// to be used by user code. Do not use if not sure.
 		/// </summary>
 		/// <remarks>
-		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback causes unspecified behaviour.
+		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified.
 		/// </remarks>
 		/// <param name="callback">The callback to be executed when the operation has completed. Can be one of <see cref="Action"/>, <see cref="Action{T}"/>
 		/// (with <see cref="IAsyncOperation"/> argument type), <see cref="AsyncCallback"/>, <see cref="IAsyncContinuation"/> or <see cref="AsyncCompletedEventHandler"/>.</param>
@@ -60,10 +61,11 @@ namespace UnityFx.Async
 
 		/// <summary>
 		/// Adds a callback to be executed when the operation progress has changed. If the operation is completed <paramref name="callback"/> is invoked
-		/// on the <paramref name="syncContext"/> specified. Do not use if not sure.
+		/// on the <paramref name="syncContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour. The method is not intended
+		/// to be used by user code. Do not use if not sure.
 		/// </summary>
 		/// <remarks>
-		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified. Throwing an exception from the callback might cause unspecified behaviour.
+		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified.
 		/// </remarks>
 		/// <param name="callback">The callback to be executed when the operation progress has changed.</param>
 		/// <param name="syncContext">If not <see langword="null"/> method attempts to marshal the continuation to the synchronization context.
