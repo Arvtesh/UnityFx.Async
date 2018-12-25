@@ -223,6 +223,8 @@ private IEnumerator DownloadTextInternal(IAsyncCompletionSource<string> op, stri
 }
 ```
 
+Please note that all `SetXxx` methods throw `InvalidOperationException` if the operation is completed. Use corresponding `TrySetXxx` methods is this behaviour is not desired.
+
 ### Waiting for an operation to complete
 The simpliest way to get notified of an operation completion is registering a completion handler to be invoked when the operation succeeds (the JS promise-like way):
 ```csharp
