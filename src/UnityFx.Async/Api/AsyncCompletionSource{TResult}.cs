@@ -10,6 +10,7 @@ namespace UnityFx.Async
 	/// Represents an asynchronous operation with external completion control. <see cref="IAsyncCompletionSource{TResult}"/>.
 	/// </summary>
 	/// <typeparam name="TResult">Type of the operation result value.</typeparam>
+	/// <threadsafety static="true" instance="true"/>
 	/// <seealso cref="AsyncCompletionSource"/>
 	public class AsyncCompletionSource<TResult> : AsyncResult<TResult>, IAsyncCompletionSource<TResult>
 	{

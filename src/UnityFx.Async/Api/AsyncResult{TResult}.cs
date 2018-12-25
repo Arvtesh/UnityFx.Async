@@ -15,6 +15,7 @@ namespace UnityFx.Async
 	/// A lightweight net35-compatible asynchronous operation that can return a value.
 	/// </summary>
 	/// <typeparam name="TResult">Type of the operation result value.</typeparam>
+	/// <threadsafety static="true" instance="true"/>
 	/// <seealso cref="AsyncCompletionSource{T}"/>
 	/// <seealso cref="AsyncResult"/>
 #if !NET35
