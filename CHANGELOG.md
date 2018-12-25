@@ -7,13 +7,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ## [1.0.0] - unreleased
 
 ### Added
+- Added Unity 2018.3 support (esp. support all target .NET frameworks in a single Asset Store package).
+- Added `await` support to `YieldInstruction` Unity class.
+
+### Changed
+- Added `DebuggerHidden` attribute to some properties/methods to make stack traces a bit more friendly.
+- Renamed `AsyncCOntinuationContext` to `AsyncCallbackOptions`.
 
 ### Fixed
 - Fixed web requests `null` result in cases when downloaded file failed to open.
 - Fixed `AsyncUtility.AddCompletionCallback` exception when adding new callbacks from another callback.
 - Fixed `AsyncUpdateSource` implementation to allow adding listeners from a callback.
+- Fixed `AsyncCompletionSource.SetProgress` implementation to allow setting progress when the operation is not started.
 
 ### Removed
+- Removed many specialized `IAsyncOperationCallbacks` methods to make the interface as minimalistic as possible (new extension methods are added to compensate).
 
 -----------------------
 ## [0.9.8] - 2018.11.09
