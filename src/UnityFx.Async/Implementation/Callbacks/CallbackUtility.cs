@@ -16,7 +16,7 @@ namespace UnityFx.Async
 		#region interface
 
 #if !DEBUG
-	[DebuggerHidden]
+		[DebuggerHidden]
 #endif
 		public static void InvokeCompletionCallback(IAsyncOperation op, object continuation)
 		{
@@ -48,7 +48,7 @@ namespace UnityFx.Async
 		}
 
 #if !DEBUG
-	[DebuggerHidden]
+		[DebuggerHidden]
 #endif
 		public static void InvokeCompletionCallback(IAsyncOperation op, object continuation, SynchronizationContext syncContext, bool invokeAsync)
 		{
@@ -91,7 +91,7 @@ namespace UnityFx.Async
 		}
 
 #if !DEBUG
-	[DebuggerHidden]
+		[DebuggerHidden]
 #endif
 		public static void InvokeProgressCallback(IAsyncOperation op, object callback)
 		{
@@ -132,7 +132,7 @@ namespace UnityFx.Async
 		}
 
 #if !DEBUG
-	[DebuggerHidden]
+		[DebuggerHidden]
 #endif
 		public static void InvokeProgressCallback(IAsyncOperation op, object callback, SynchronizationContext syncContext)
 		{
