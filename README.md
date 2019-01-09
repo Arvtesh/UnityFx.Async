@@ -43,6 +43,8 @@ The table below summarizes differences berween *UnityFx.Async* and other popular
 | Minimum operation data size for 32-bit systems (in bytes) | 32+ | 36+ | 40+ |
 | Minimum number of allocations per continuation | ~1 | 5+ | 2+ |
 
+**NOTE**: As the table states [ExecutionContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.executioncontext) flow is NOT supported. Please use [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) if you need it.
+
 ## Getting Started
 ### Prerequisites
 You may need the following software installed in order to build/use the library:
