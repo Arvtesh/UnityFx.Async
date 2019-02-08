@@ -12,7 +12,7 @@ namespace UnityFx.Async.Helpers
 	/// A wrapper for <see cref="UnityWebRequest"/> with result value.
 	/// </summary>
 	/// <typeparam name="T">Type of the request result.</typeparam>
-	public class WebRequestResult<T> : AsyncResult<T> where T : class
+	internal class WebRequestResult<T> : AsyncResult<T> where T : class
 	{
 		#region data
 
@@ -181,7 +181,7 @@ namespace UnityFx.Async.Helpers
 				if (_request.isHttpError || _request.isNetworkError)
 #endif
 				{
-					TrySetException(new WebRequestException(_request.error, _request.responseCode));
+					throw new WebRequestException(_request.error, _request.responseCode);
 				}
 				else if (_request.downloadHandler != null)
 				{
