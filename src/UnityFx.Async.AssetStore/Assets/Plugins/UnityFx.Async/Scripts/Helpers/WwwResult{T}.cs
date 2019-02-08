@@ -13,7 +13,7 @@ namespace UnityFx.Async.Helpers
 	/// A wrapper for <see cref="WWW"/> with result value.
 	/// </summary>
 	/// <typeparam name="T">Type of the request result.</typeparam>
-	public class WwwResult<T> : AsyncResult<T> where T : class
+	internal class WwwResult<T> : AsyncResult<T> where T : class
 	{
 		#region data
 

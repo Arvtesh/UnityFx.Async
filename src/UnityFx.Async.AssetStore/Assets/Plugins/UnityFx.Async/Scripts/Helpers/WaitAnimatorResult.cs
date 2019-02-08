@@ -11,7 +11,7 @@ namespace UnityFx.Async.Helpers
 	/// <summary>
 	/// A wrapper for <see cref="Animator"/>.
 	/// </summary>
-	public class WaitAnimatorResult : AsyncResult, IAsyncUpdatable
+	internal class WaitAnimatorResult : AsyncResult, IAsyncUpdatable
 	{
 		#region data
 

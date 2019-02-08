@@ -11,7 +11,7 @@ namespace UnityFx.Async.Helpers
 	/// <summary>
 	/// A wrapper for <see cref="AsyncOperation"/> with result value.
 	/// </summary>
-	public abstract class AsyncOperationResult<T> : AsyncResult<T>
+	internal abstract class AsyncOperationResult<T> : AsyncResult<T>
 	{
 		#region data
 
@@ -123,6 +123,7 @@ namespace UnityFx.Async.Helpers
 				}
 				else
 				{
+					// TODO: Use dedicated exception type.
 					throw new NullReferenceException();
 				}
 			}
