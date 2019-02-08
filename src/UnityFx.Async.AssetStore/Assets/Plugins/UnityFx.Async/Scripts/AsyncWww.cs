@@ -17,7 +17,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="url">The URI of the text to download.</param>
 		/// <returns>An operation that can be used to track the download process.</returns>
-		public static IAsyncOperation<string> GetText(string url)
+		public static IAsyncOperation<string> GetTextAsync(string url)
 		{
 			var webRequest = UnityWebRequest.Get(url);
 			var result = new Helpers.WebRequestResult<string>(webRequest);
@@ -30,7 +30,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="url">The URI of the binary content to download.</param>
 		/// <returns>An operation that can be used to track the download process.</returns>
-		public static IAsyncOperation<byte[]> GetBytes(string url)
+		public static IAsyncOperation<byte[]> GetBytesAsync(string url)
 		{
 			var webRequest = UnityWebRequest.Get(url);
 			var result = new Helpers.WebRequestResult<byte[]>(webRequest);
@@ -43,7 +43,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="url">The URI of the asset bundle to download.</param>
 		/// <returns>An operation that can be used to track the download process.</returns>
-		public static IAsyncOperation<AssetBundle> GetAssetBundle(string url)
+		public static IAsyncOperation<AssetBundle> GetAssetBundleAsync(string url)
 		{
 #if UNITY_2018_1_OR_NEWER
 
@@ -67,7 +67,7 @@ namespace UnityFx.Async
 		/// <param name="url">The URI of the asset bundle to download.</param>
 		/// <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
 		/// <returns>An operation that can be used to track the download process.</returns>
-		public static IAsyncOperation<AssetBundle> GetAssetBundle(string url, Hash128 hash)
+		public static IAsyncOperation<AssetBundle> GetAssetBundleAsync(string url, Hash128 hash)
 		{
 #if UNITY_2018_1_OR_NEWER
 
@@ -92,7 +92,7 @@ namespace UnityFx.Async
 		/// <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
 		/// <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
 		/// <returns>An operation that can be used to track the download process.</returns>
-		public static IAsyncOperation<AssetBundle> GetAssetBundle(string url, Hash128 hash, uint crc)
+		public static IAsyncOperation<AssetBundle> GetAssetBundleAsync(string url, Hash128 hash, uint crc)
 		{
 #if UNITY_2018_1_OR_NEWER
 
@@ -115,7 +115,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="url">The URI of the audio clip to download.</param>
 		/// <returns>An operation that can be used to track the download process.</returns>
-		public static IAsyncOperation<AudioClip> GetAudioClip(string url)
+		public static IAsyncOperation<AudioClip> GetAudioClipAsync(string url)
 		{
 #if UNITY_2017_1_OR_NEWER
 
@@ -139,7 +139,7 @@ namespace UnityFx.Async
 		/// <param name="url">The URI of the audio clip to download.</param>
 		/// <param name="audioType">The type of audio encoding for the downloaded audio clip.</param>
 		/// <returns>An operation that can be used to track the download process.</returns>
-		public static IAsyncOperation<AudioClip> GetAudioClip(string url, AudioType audioType)
+		public static IAsyncOperation<AudioClip> GetAudioClipAsync(string url, AudioType audioType)
 		{
 #if UNITY_2017_1_OR_NEWER
 
@@ -162,7 +162,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="url">The URI of the texture to download.</param>
 		/// <returns>An operation that can be used to track the download process.</returns>
-		public static IAsyncOperation<Texture2D> GetTexture(string url)
+		public static IAsyncOperation<Texture2D> GetTextureAsync(string url)
 		{
 #if UNITY_2017_1_OR_NEWER
 
@@ -186,7 +186,7 @@ namespace UnityFx.Async
 		/// <param name="url">The URI of the texture to download.</param>
 		/// <param name="nonReadable">If <see langword="true"/>, the texture's raw data will not be accessible to script. This can conserve memory.</param>
 		/// <returns>An operation that can be used to track the download process.</returns>
-		public static IAsyncOperation<Texture2D> GetTexture(string url, bool nonReadable)
+		public static IAsyncOperation<Texture2D> GetTextureAsync(string url, bool nonReadable)
 		{
 #if UNITY_2017_1_OR_NEWER
 
