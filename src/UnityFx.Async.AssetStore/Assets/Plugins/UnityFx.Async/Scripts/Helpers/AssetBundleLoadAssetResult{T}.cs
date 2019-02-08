@@ -7,9 +7,7 @@ using UnityEngine.Networking;
 
 namespace UnityFx.Async.Helpers
 {
-	using Debug = System.Diagnostics.Debug;
-
-	internal class AssetBundleAssetLoadResult<T> : AsyncResult<T> where T : UnityEngine.Object
+	internal class AssetBundleLoadAssetResult<T> : AsyncResult<T> where T : UnityEngine.Object
 	{
 		#region data
 
@@ -21,7 +19,7 @@ namespace UnityFx.Async.Helpers
 
 		#region interface
 
-		public AssetBundleAssetLoadResult(UnityWebRequest request, string assetName, bool unloadAssetBundle, object userState)
+		public AssetBundleLoadAssetResult(UnityWebRequest request, string assetName, bool unloadAssetBundle, object userState)
 			: base(null, userState)
 		{
 			_unloadAssetBundle = unloadAssetBundle;
