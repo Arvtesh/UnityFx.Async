@@ -204,33 +204,6 @@ namespace UnityFx.Async
 			return result;
 		}
 
-#if !UNITY_2018_2_OR_NEWER && !UNITY_IOS && !UNITY_ANDROID
-
-		/// <summary>
-		/// Creates an asyncronous operation optimized for downloading a <see cref="MovieTexture"/> via HTTP GET.
-		/// </summary>
-		/// <param name="url">The URI of the texture to download.</param>
-		/// <returns>An operation that can be used to track the download process.</returns>
-		public static IAsyncOperation<MovieTexture> GetMovieTexture(string url)
-		{
-#if UNITY_2017_1_OR_NEWER
-
-			var webRequest = UnityWebRequestMultimedia.GetMovieTexture(url);
-			var result = new Helpers.WebRequestResult<MovieTexture>(webRequest);
-
-#else
-
-			var www = new WWW(url);
-			var result = new Helpers.WwwResult<MovieTexture>(www);
-
-#endif
-
-			result.Start();
-			return result;
-		}
-
-#endif
-
 		/// <summary>
 		/// Returns result value of the specified <see cref="UnityWebRequest"/> instance.
 		/// </summary>
@@ -254,12 +227,6 @@ namespace UnityFx.Async
 			{
 				return ((DownloadHandlerAudioClip)request.downloadHandler).audioClip as T;
 			}
-#if !UNITY_5 && !UNITY_2018_2_OR_NEWER && !UNITY_IOS && !UNITY_ANDROID
-			else if (request.downloadHandler is DownloadHandlerMovieTexture)
-			{
-				return ((DownloadHandlerMovieTexture)request.downloadHandler).movieTexture as T;
-			}
-#endif
 			else if (typeof(T) == typeof(byte[]))
 			{
 				return request.downloadHandler.data as T;
@@ -303,19 +270,6 @@ namespace UnityFx.Async
 			{
 				return request.audioClip as T;
 			}
-#endif
-#if !UNITY_2018_2_OR_NEWER && !UNITY_IOS && !UNITY_ANDROID
-#if UNITY_5_6_OR_NEWER
-			else if (typeof(T) == typeof(MovieTexture))
-			{
-				return request.GetMovieTexture() as T;
-			}
-#else
-			else if (typeof(T) == typeof(MovieTexture))
-			{
-				return request.movie as T;
-			}
-#endif
 #endif
 			else if (typeof(T) == typeof(byte[]))
 			{
