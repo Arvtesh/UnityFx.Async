@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ## [1.0.0] - unreleased
 
 ### Added
+- Added more comments throughout the code.
 - Added Unity 2018.3 support (esp. support all target .NET frameworks in a single Asset Store package).
 - Added `await` support to `YieldInstruction` Unity class.
 - Added coroutine helpers (`AsyncUtility.FromCoroutine`).
