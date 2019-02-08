@@ -219,6 +219,90 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Starts a coroutine and wraps it with <see cref="IAsyncOperation"/>.
+		/// </summary>
+		/// <param name="coroutineFunc">The coroutine delegate.</param>
+		/// <returns>Returns the coroutine handle.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="coroutineFunc"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="FromCoroutine(Func{IAsyncCompletionSource, IEnumerator}, object)"/>
+		public static IAsyncOperation FromCoroutine(Func<IAsyncCompletionSource, IEnumerator> coroutineFunc)
+		{
+			return FromCoroutine(coroutineFunc, null);
+		}
+
+		/// <summary>
+		/// Starts a coroutine and wraps it with <see cref="IAsyncOperation"/>.
+		/// </summary>
+		/// <param name="coroutineFunc">The coroutine delegate.</param>
+		/// <param name="userState">User-defined state.</param>
+		/// <returns>Returns the coroutine handle.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="coroutineFunc"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="FromCoroutine(Func{IAsyncCompletionSource, IEnumerator})"/>
+		public static IAsyncOperation FromCoroutine(Func<IAsyncCompletionSource, IEnumerator> coroutineFunc, object userState)
+		{
+			if (coroutineFunc == null)
+			{
+				throw new ArgumentNullException("coroutineFunc");
+			}
+
+			var result = new AsyncCompletionSource(AsyncOperationStatus.Running, userState);
+			var enumerator = coroutineFunc(result);
+
+			if (enumerator == null)
+			{
+				result.TrySetException(new InvalidOperationException("Cannot start a coroutine from null enumerator."));
+			}
+			else
+			{
+				_rootBehaviour.StartCoroutine(enumerator);
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// Starts a coroutine and wraps it with <see cref="IAsyncOperation{TResult}"/>.
+		/// </summary>
+		/// <param name="coroutineFunc">The coroutine delegate.</param>
+		/// <returns>Returns the coroutine handle.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="coroutineFunc"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="FromCoroutine{TResult}(Func{IAsyncCompletionSource{TResult}, IEnumerator}, object)"/>
+		public static IAsyncOperation<TResult> FromCoroutine<TResult>(Func<IAsyncCompletionSource<TResult>, IEnumerator> coroutineFunc)
+		{
+			return FromCoroutine(coroutineFunc, null);
+		}
+
+		/// <summary>
+		/// Starts a coroutine and wraps it with <see cref="IAsyncOperation{TResult}"/>.
+		/// </summary>
+		/// <param name="coroutineFunc">The coroutine delegate.</param>
+		/// <param name="userState">User-defined state.</param>
+		/// <returns>Returns the coroutine handle.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="coroutineFunc"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="FromCoroutine{TResult}(Func{IAsyncCompletionSource{TResult}, IEnumerator})"/>
+		public static IAsyncOperation<TResult> FromCoroutine<TResult>(Func<IAsyncCompletionSource<TResult>, IEnumerator> coroutineFunc, object userState)
+		{
+			if (coroutineFunc == null)
+			{
+				throw new ArgumentNullException("coroutineFunc");
+			}
+
+			var result = new AsyncCompletionSource<TResult>(AsyncOperationStatus.Running, userState);
+			var enumerator = coroutineFunc(result);
+
+			if (enumerator == null)
+			{
+				result.TrySetException(new InvalidOperationException("Cannot start a coroutine from null enumerator."));
+			}
+			else
+			{
+				_rootBehaviour.StartCoroutine(enumerator);
+			}
+
+			return result;
+		}
+
+		/// <summary>
 		/// Starts a coroutine.
 		/// </summary>
 		/// <param name="enumerator">The coroutine to run.</param>
