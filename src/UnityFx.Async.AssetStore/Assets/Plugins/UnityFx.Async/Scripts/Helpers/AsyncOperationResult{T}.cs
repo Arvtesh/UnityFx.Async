@@ -123,8 +123,7 @@ namespace UnityFx.Async.Helpers
 				}
 				else
 				{
-					// TODO: Use dedicated exception type.
-					throw new NullReferenceException();
+					throw new InvalidOperationException();
 				}
 			}
 			catch (Exception e)

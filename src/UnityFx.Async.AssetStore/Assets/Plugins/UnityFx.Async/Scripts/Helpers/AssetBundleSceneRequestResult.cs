@@ -72,8 +72,7 @@ namespace UnityFx.Async.Helpers
 
 			if (!scene.isLoaded)
 			{
-				// TODO: Use dedicated exception type.
-				throw new IOException(string.Format("Failed to load scene {0}.", _finalSceneName));
+				throw new AssetLoadException(_finalSceneName, typeof(Scene));
 			}
 
 			return scene;
@@ -110,8 +109,7 @@ namespace UnityFx.Async.Helpers
 
 					if (string.IsNullOrEmpty(_finalSceneName))
 					{
-						// TODO: Use dedicated exception type.
-						TrySetException("The asset bundle does not contain scenes.");
+						throw new AssetLoadException("The asset bundle does not contain scenes.", null, typeof(Scene));
 					}
 					else
 					{
@@ -121,8 +119,7 @@ namespace UnityFx.Async.Helpers
 				}
 				else
 				{
-					// TODO: Use dedicated exception type.
-					TrySetException("The asset bundle does not contain scenes.");
+					throw new AssetLoadException("The asset bundle does not contain scenes.", null, typeof(Scene));
 				}
 			}
 			else

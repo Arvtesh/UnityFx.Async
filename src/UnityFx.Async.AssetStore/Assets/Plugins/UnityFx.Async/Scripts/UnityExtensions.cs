@@ -566,7 +566,7 @@ namespace UnityFx.Async
 				if (request.isHttpError || request.isNetworkError)
 #endif
 				{
-					tcs.TrySetException(new Helpers.WebRequestException(request.error, request.responseCode));
+					tcs.TrySetException(new WebRequestException(request.error, request.responseCode));
 				}
 				else if (request.downloadHandler != null)
 				{
@@ -597,7 +597,7 @@ namespace UnityFx.Async
 				}
 				else
 				{
-					tcs.TrySetException(new Helpers.WebRequestException(www.error));
+					tcs.TrySetException(new WebRequestException(www.error));
 				}
 			}
 			catch (Exception e)
