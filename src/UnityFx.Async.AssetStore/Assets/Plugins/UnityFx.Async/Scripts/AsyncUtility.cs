@@ -46,45 +46,47 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for Update.
 		/// </summary>
-		/// <seealso cref="GetLateUpdateSource"/>
-		/// <seealso cref="GetFixedUpdateSource"/>
-		/// <seealso cref="GetEndOfFrameUpdateSource"/>
+		/// <seealso cref="GetUpdateSource(FrameTiming)"/>
 		public static IAsyncUpdateSource GetUpdateSource()
 		{
 			return _rootBehaviour.UpdateSource;
 		}
 
 		/// <summary>
-		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for LateUpdate.
+		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for the specified <paramref name="frameTiming"/>.
 		/// </summary>
-		/// <seealso cref="GetUpdateSource"/>
-		/// <seealso cref="GetFixedUpdateSource"/>
-		/// <seealso cref="GetEndOfFrameUpdateSource"/>
-		public static IAsyncUpdateSource GetLateUpdateSource()
+		/// <seealso cref="GetUpdateSource()"/>
+		public static IAsyncUpdateSource GetUpdateSource(FrameTiming frameTiming)
 		{
-			return _rootBehaviour.LateUpdateSource;
+			switch (frameTiming)
+			{
+				case FrameTiming.FixedUpdate:
+					return _rootBehaviour.FixedUpdateSource;
+
+				case FrameTiming.LateUpdate:
+					return _rootBehaviour.LateUpdateSource;
+
+				case FrameTiming.EndOfFrame:
+					return _rootBehaviour.EofUpdateSource;
+			}
+
+			return _rootBehaviour.UpdateSource;
 		}
 
 		/// <summary>
-		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for FixedUpdate.
+		/// Register a completion callback that is triggered on a specific time during next frame.
 		/// </summary>
-		/// <seealso cref="GetUpdateSource"/>
-		/// <seealso cref="GetLateUpdateSource"/>
-		/// <seealso cref="GetEndOfFrameUpdateSource"/>
-		public static IAsyncUpdateSource GetFixedUpdateSource()
+		/// <param name="callback">A delegate to be called on the next frame.</param>
+		/// <param name="timing">Time to call the <paramref name="callback"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		public static void AddFrameCallback(Action callback, FrameTiming timing)
 		{
-			return _rootBehaviour.FixedUpdateSource;
-		}
+			if (callback == null)
+			{
+				throw new ArgumentNullException("callback");
+			}
 
-		/// <summary>
-		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for end of frame.
-		/// </summary>
-		/// <seealso cref="GetUpdateSource"/>
-		/// <seealso cref="GetLateUpdateSource"/>
-		/// <seealso cref="GetFixedUpdateSource"/>
-		public static IAsyncUpdateSource GetEndOfFrameUpdateSource()
-		{
-			return _rootBehaviour.EofUpdateSource;
+			_rootBehaviour.AddFrameCallback(callback, timing);
 		}
 
 		/// <summary>
@@ -365,22 +367,6 @@ namespace UnityFx.Async
 
 #endif
 
-		/// <summary>
-		/// Register a completion callback that is triggered on a specific time during next frame.
-		/// </summary>
-		/// <param name="callback">A delegate to be called on the next frame.</param>
-		/// <param name="timing">Time to call the <paramref name="callback"/>.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
-		public static void AddFrameCallback(Action callback, FrameTiming timing)
-		{
-			if (callback == null)
-			{
-				throw new ArgumentNullException("callback");
-			}
-
-			_rootBehaviour.AddFrameCallback(callback, timing);
-		}
-
 		#endregion
 
 		#region implementation
@@ -403,12 +389,14 @@ namespace UnityFx.Async
 			private ConcurrentQueue<Action> _updateActions;
 			private ConcurrentQueue<Action> _lateUpdateActions;
 			private ConcurrentQueue<Action> _fixedUpdateActions;
+			private ConcurrentQueue<Action> _eofUpdateActions;
 
 #else
 
 			private Queue<Action> _updateActions;
 			private Queue<Action> _lateUpdateActions;
 			private Queue<Action> _fixedUpdateActions;
+			private Queue<Action> _eofUpdateActions;
 
 #endif
 
@@ -495,6 +483,10 @@ namespace UnityFx.Async
 
 					case FrameTiming.LateUpdate:
 						AddFrameCallback(ref _lateUpdateActions, callback);
+						break;
+
+					case FrameTiming.EndOfFrame:
+						AddFrameCallback(ref _eofUpdateActions, callback);
 						break;
 				}
 			}
@@ -584,7 +576,14 @@ namespace UnityFx.Async
 			{
 				if (_lateUpdateSource != null)
 				{
-					_lateUpdateSource.OnNext(Time.deltaTime);
+					try
+					{
+						_lateUpdateSource.OnNext(Time.deltaTime);
+					}
+					catch (Exception e)
+					{
+						Debug.LogException(e, this);
+					}
 				}
 
 				if (_lateUpdateActions != null)
@@ -597,7 +596,14 @@ namespace UnityFx.Async
 			{
 				if (_fixedUpdateSource != null)
 				{
-					_fixedUpdateSource.OnNext(Time.fixedDeltaTime);
+					try
+					{
+						_fixedUpdateSource.OnNext(Time.fixedDeltaTime);
+					}
+					catch (Exception e)
+					{
+						Debug.LogException(e, this);
+					}
 				}
 
 				if (_fixedUpdateActions != null)
@@ -703,7 +709,19 @@ namespace UnityFx.Async
 
 				if (_eofUpdateSource != null)
 				{
-					_eofUpdateSource.OnNext(Time.deltaTime);
+					try
+					{
+						_eofUpdateSource.OnNext(Time.deltaTime);
+					}
+					catch (Exception e)
+					{
+						Debug.LogException(e, this);
+					}
+				}
+
+				if (_eofUpdateActions != null)
+				{
+					InvokeFrameCallbacks(_eofUpdateActions, this);
 				}
 			}
 
