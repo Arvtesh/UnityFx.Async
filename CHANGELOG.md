@@ -9,10 +9,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ### Added
 - Added Unity 2018.3 support (esp. support all target .NET frameworks in a single Asset Store package).
 - Added `await` support to `YieldInstruction` Unity class.
+- Added coroutine helpers (`AsyncUtility.FromCoroutine`).
+- Added helpers for loading assets from an `AssetBundle`.
 
 ### Changed
 - Added `DebuggerHidden` attribute to some properties/methods to make stack traces a bit more friendly.
-- Renamed `AsyncCOntinuationContext` to `AsyncCallbackOptions`.
+- Renamed `AsyncContinuationContext` to `AsyncCallbackOptions`.
+- Renamed web request helper methods (added `Async` postfix to their names).
 
 ### Fixed
 - Fixed web requests `null` result in cases when downloaded file failed to open.
@@ -22,6 +25,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 
 ### Removed
 - Removed many specialized `IAsyncOperationCallbacks` methods to make the interface as minimalistic as possible (new extension methods are added to compensate).
+- Dropped `MovieTexture` support.
 
 -----------------------
 ## [0.9.8] - 2018.11.09
