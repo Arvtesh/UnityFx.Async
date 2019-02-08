@@ -22,7 +22,7 @@ namespace UnityFx.Async.Helpers
 		#region interface
 
 		public AssetBundleAssetLoadResult(UnityWebRequest request, string assetName, bool unloadAssetBundle, object userState)
-			: base(AsyncOperationStatus.Running, userState)
+			: base(null, userState)
 		{
 			_unloadAssetBundle = unloadAssetBundle;
 			_assetBundleLoadResult = new WebRequestResult<AssetBundle>(request);
@@ -35,10 +35,21 @@ namespace UnityFx.Async.Helpers
 
 		#region AsyncResult
 
+		protected override float GetProgress()
+		{
+			return (_assetBundleLoadResult.Progress + _assetLoadResult.Progress) * 0.5f;
+		}
+
 		protected override void OnStarted()
 		{
-			base.OnStarted();
 			_assetBundleLoadResult.Start();
+		}
+
+		protected override void OnCancel()
+		{
+			_assetBundleLoadResult.Cancel();
+			_assetLoadResult.Cancel();
+			TrySetCanceled();
 		}
 
 		public override void Invoke(IAsyncOperation op)
