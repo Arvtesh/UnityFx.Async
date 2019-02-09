@@ -506,6 +506,32 @@ AsyncUtility.PostToMainThread(() => Debug.Log("On the main thread."));
 // If calling thread is the main thread executes the delegate synchronously, otherwise posts it to the main thread. Returns an asynchronous operation that can be used to track the delegate execution.
 AsyncUtility.InvokeOnMainThread(() => Debug.Log("On the main thread."));
 ```
+Converting a coroutine to a promise is very easy:
+```csharp
+// The coroutine body. The completion source can be used to return promise results or report an error.
+private IEnumerator SomeCoroutine(IAsyncCompletionSource<int> completionSource)
+{
+	// Wait for 1 seconds before resolving the promise.
+	yield return new WaitForSeconds(1);
+
+	// If this line is removed, the promise would still complete (with 0 as result).
+	completionSource.SetResult(25);
+}
+
+// Start the coroutine. Note that you do not require a MonoBehaviour instance to do this.
+var op = AsyncUtility.FromCoroutine(SomeCoroutine);
+
+// Stop coroutine execution if needed.
+op.Cancel();
+```
+
+One can load an asset from an asset bundle with just one line of code:
+```csharp
+// Load Texture2D from assetbundle loaded from the specified URL. Asset bundle is unloaded when the operation is complete.
+var op = AsyncWww.GetAssetBundleAssetAsync<Texture2D>("http://asset.cdn.com/myasetbundle", "my_asset");
+// Additively load a the first scene from assetbundle loaded from a web URL. Asset bundle is unloaded when the operation is complete.
+var op = AsyncWww.GetAssetBundleSceneAsync("http://asset.cdn.com/mysceneasetbundle", null, LoadSceneMode.Additive);
+```
 
 ## Comparison to .NET Tasks
 The comparison table below shows how *UnityFx.Async* entities relate to [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task):
