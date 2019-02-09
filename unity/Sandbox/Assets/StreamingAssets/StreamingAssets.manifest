@@ -1,0 +1,10 @@
+ManifestFileVersion: 0
+CRC: 3490738327
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: quad
+      Dependencies: {}
+    Info_1:
+      Name: test_scene
+      Dependencies: {}
