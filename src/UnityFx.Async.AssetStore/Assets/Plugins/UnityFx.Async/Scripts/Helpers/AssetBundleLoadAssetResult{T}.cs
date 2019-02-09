@@ -13,16 +13,14 @@ namespace UnityFx.Async.Helpers
 
 		private readonly WebRequestResult<AssetBundle> _assetBundleLoadResult;
 		private readonly AssetBundleRequestResult<T> _assetLoadResult;
-		private readonly bool _unloadAssetBundle;
 
 		#endregion
 
 		#region interface
 
-		public AssetBundleLoadAssetResult(UnityWebRequest request, string assetName, bool unloadAssetBundle, object userState)
+		public AssetBundleLoadAssetResult(UnityWebRequest request, string assetName, object userState)
 			: base(null, userState)
 		{
-			_unloadAssetBundle = unloadAssetBundle;
 			_assetBundleLoadResult = new WebRequestResult<AssetBundle>(request);
 			_assetLoadResult = new AssetBundleRequestResult<T>(assetName);
 			_assetBundleLoadResult.AddCompletionCallback(_assetLoadResult);
@@ -52,10 +50,7 @@ namespace UnityFx.Async.Helpers
 
 		public override void Invoke(IAsyncOperation op)
 		{
-			if (_unloadAssetBundle)
-			{
-				_assetBundleLoadResult.Result.Unload(false);
-			}
+			_assetBundleLoadResult.Result.Unload(false);
 
 			if (op.IsCompletedSuccessfully)
 			{

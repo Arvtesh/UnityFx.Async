@@ -16,8 +16,7 @@ namespace UnityFx.Async.Helpers
 		#region data
 
 		private readonly LoadSceneMode _loadMode;
-		private readonly string _sceneName;
-		private string _finalSceneName;
+		private string _sceneName;
 
 		#endregion
 
@@ -49,6 +48,16 @@ namespace UnityFx.Async.Helpers
 			_loadMode = loadMode;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AssetBundleSceneRequestResult"/> class.
+		/// </summary>
+		public AssetBundleSceneRequestResult(AssetBundle assetBundle, string sceneName, LoadSceneMode loadMode, object userState)
+			: base(GetAsyncOperation(assetBundle, ref sceneName, loadMode), userState)
+		{
+			_sceneName = sceneName;
+			_loadMode = loadMode;
+		}
+
 		#endregion
 
 		#region AsyncOperationResult
@@ -63,7 +72,7 @@ namespace UnityFx.Async.Helpers
 			{
 				var s = SceneManager.GetSceneAt(i);
 
-				if (s.name == _finalSceneName)
+				if (s.name == _sceneName)
 				{
 					scene = s;
 					break;
@@ -72,7 +81,7 @@ namespace UnityFx.Async.Helpers
 
 			if (!scene.isLoaded)
 			{
-				throw new AssetLoadException(_finalSceneName, typeof(Scene));
+				throw new AssetLoadException(_sceneName, typeof(Scene));
 			}
 
 			return scene;
@@ -91,40 +100,45 @@ namespace UnityFx.Async.Helpers
 			{
 				Debug.Assert(Operation == null);
 
-				var assetBundle = abr.Result;
-
-				if (assetBundle.isStreamedSceneAssetBundle)
-				{
-					_finalSceneName = _sceneName;
-
-					if (string.IsNullOrEmpty(_finalSceneName))
-					{
-						var scenePaths = assetBundle.GetAllScenePaths();
-
-						if (scenePaths != null && scenePaths.Length > 0 && !string.IsNullOrEmpty(scenePaths[0]))
-						{
-							_finalSceneName = Path.GetFileNameWithoutExtension(scenePaths[0]);
-						}
-					}
-
-					if (string.IsNullOrEmpty(_finalSceneName))
-					{
-						throw new AssetLoadException("The asset bundle does not contain scenes.", null, typeof(Scene));
-					}
-					else
-					{
-						Operation = SceneManager.LoadSceneAsync(_finalSceneName, _loadMode);
-						Start();
-					}
-				}
-				else
-				{
-					throw new AssetLoadException("The asset bundle does not contain scenes.", null, typeof(Scene));
-				}
+				Operation = GetAsyncOperation(abr.Result, ref _sceneName, _loadMode);
+				Start();
 			}
 			else
 			{
 				base.Invoke(op);
+			}
+		}
+
+		#endregion
+
+		#region implementation
+
+		private static AsyncOperation GetAsyncOperation(AssetBundle assetBundle, ref string sceneName, LoadSceneMode loadMode)
+		{
+			if (assetBundle.isStreamedSceneAssetBundle)
+			{
+				if (string.IsNullOrEmpty(sceneName))
+				{
+					var scenePaths = assetBundle.GetAllScenePaths();
+
+					if (scenePaths != null && scenePaths.Length > 0 && !string.IsNullOrEmpty(scenePaths[0]))
+					{
+						sceneName = Path.GetFileNameWithoutExtension(scenePaths[0]);
+					}
+				}
+
+				if (string.IsNullOrEmpty(sceneName))
+				{
+					throw new AssetLoadException("The asset bundle does not contain scenes.", null, typeof(Scene));
+				}
+				else
+				{
+					return SceneManager.LoadSceneAsync(sceneName, loadMode);
+				}
+			}
+			else
+			{
+				throw new AssetLoadException("The asset bundle does not contain scenes.", null, typeof(Scene));
 			}
 		}
 

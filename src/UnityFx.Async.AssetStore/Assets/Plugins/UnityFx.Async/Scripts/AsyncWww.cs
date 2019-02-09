@@ -87,11 +87,11 @@ namespace UnityFx.Async
 		/// Creates an asyncronous operation optimized for downloading assets from <see cref="AssetBundle"/> via HTTP GET.
 		/// </summary>
 		/// <param name="url">The URI of the asset bundle to download.</param>
-		/// <param name="assetName">Name of the prefab to load.</param>
-		/// <param name="unloadAssetBundle">Specified whether to unload asset bundle ater the opertaion is complete.</param>
+		/// <param name="assetName">Name of the prefab to load. If <see langword="null"/> the first asset of the matching type is loaded.</param>
+		/// <param name="userState">User-defined data.</param>
 		/// <returns>An operation that can be used to track the download process.</returns>
-		/// <seealso cref="GetAssetBundleAssetAsync(string, Hash128, uint, string, bool)"/>
-		public static IAsyncOperation<T> GetAssetBundleAssetAsync<T>(string url, string assetName, bool unloadAssetBundle) where T : UnityEngine.Object
+		/// <seealso cref="GetAssetBundleAssetAsync(string, Hash128, uint, string, object)"/>
+		public static IAsyncOperation<T> GetAssetBundleAssetAsync<T>(string url, string assetName, object userState) where T : UnityEngine.Object
 		{
 #if UNITY_2018_1_OR_NEWER
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url);
@@ -99,7 +99,7 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequest.GetAssetBundle(url);
 #endif
 
-			var result = new Helpers.AssetBundleLoadAssetResult<T>(webRequest, assetName, unloadAssetBundle, null);
+			var result = new Helpers.AssetBundleLoadAssetResult<T>(webRequest, assetName, userState);
 			result.Start();
 			return result;
 		}
@@ -110,11 +110,11 @@ namespace UnityFx.Async
 		/// <param name="url">The URI of the asset bundle to download.</param>
 		/// <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
 		/// <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
-		/// <param name="assetName">Name of the prefab to load.</param>
-		/// <param name="unloadAssetBundle">Specified whether to unload asset bundle ater the opertaion is complete.</param>
+		/// <param name="assetName">Name of the prefab to load. If <see langword="null"/> the first asset of the matching type is loaded.</param>
+		/// <param name="userState">User-defined data.</param>
 		/// <returns>An operation that can be used to track the download process.</returns>
-		/// <seealso cref="GetAssetBundleAssetAsync(string, string, bool)"/>
-		public static IAsyncOperation<T> GetAssetBundleAssetAsync<T>(string url, Hash128 hash, uint crc, string assetName, bool unloadAssetBundle) where T : UnityEngine.Object
+		/// <seealso cref="GetAssetBundleAssetAsync(string, string, object)"/>
+		public static IAsyncOperation<T> GetAssetBundleAssetAsync<T>(string url, Hash128 hash, uint crc, string assetName, object userState) where T : UnityEngine.Object
 		{
 #if UNITY_2018_1_OR_NEWER
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, crc);
@@ -122,7 +122,26 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequest.GetAssetBundle(url, hash, crc);
 #endif
 
-			var result = new Helpers.AssetBundleLoadAssetResult<T>(webRequest, assetName, unloadAssetBundle, null);
+			var result = new Helpers.AssetBundleLoadAssetResult<T>(webRequest, assetName, userState);
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for loading assets from an <see cref="AssetBundle"/>.
+		/// </summary>
+		/// <param name="assetBundle">The source <see cref="AssetBundle"/>.</param>
+		/// <param name="assetName">Name of the prefab to load. If <see langword="null"/> the first asset of the matching type is loaded.</param>
+		/// <param name="userState">User-defined data.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		public static IAsyncOperation<T> GetAssetBundleAssetAsync<T>(AssetBundle assetBundle, string assetName, object userState) where T : UnityEngine.Object
+		{
+			if (assetBundle == null)
+			{
+				throw new ArgumentNullException("assetBundle");
+			}
+
+			var result = new Helpers.AssetBundleRequestResult<T>(assetBundle, assetName, userState);
 			result.Start();
 			return result;
 		}
@@ -131,13 +150,13 @@ namespace UnityFx.Async
 		/// Creates an asyncronous operation optimized for downloading prefabs from <see cref="AssetBundle"/> via HTTP GET.
 		/// </summary>
 		/// <param name="url">The URI of the asset bundle to download.</param>
-		/// <param name="prefabName">Name of the prefab to load.</param>
-		/// <param name="unloadAssetBundle">Specified whether to unload asset bundle ater the opertaion is complete.</param>
+		/// <param name="prefabName">Name of the prefab to load. If <see langword="null"/> the first prefab is loaded.</param>
+		/// <param name="userState">User-defined data.</param>
 		/// <returns>An operation that can be used to track the download process.</returns>
-		/// <seealso cref="GetAssetBundlePrefabAsync(string, Hash128, uint, string, bool)"/>
-		public static IAsyncOperation<GameObject> GetAssetBundlePrefabAsync(string url, string prefabName, bool unloadAssetBundle)
+		/// <seealso cref="GetAssetBundlePrefabAsync(string, Hash128, uint, string, object)"/>
+		public static IAsyncOperation<GameObject> GetAssetBundlePrefabAsync(string url, string prefabName, object userState)
 		{
-			return GetAssetBundleAssetAsync<GameObject>(url, prefabName, unloadAssetBundle);
+			return GetAssetBundleAssetAsync<GameObject>(url, prefabName, userState);
 		}
 
 		/// <summary>
@@ -146,13 +165,26 @@ namespace UnityFx.Async
 		/// <param name="url">The URI of the asset bundle to download.</param>
 		/// <param name="hash">A version hash. If this hash does not match the hash for the cached version of this asset bundle, the asset bundle will be redownloaded.</param>
 		/// <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
-		/// <param name="prefabName">Name of the prefab to load.</param>
-		/// <param name="unloadAssetBundle">Specified whether to unload asset bundle ater the opertaion is complete.</param>
+		/// <param name="prefabName">Name of the prefab to load. If <see langword="null"/> the first prefab is loaded.</param>
+		/// <param name="userState">User-defined data.</param>
 		/// <returns>An operation that can be used to track the download process.</returns>
-		/// <seealso cref="GetAssetBundlePrefabAsync(string, string, bool)"/>
-		public static IAsyncOperation<GameObject> GetAssetBundlePrefabAsync(string url, Hash128 hash, uint crc, string prefabName, bool unloadAssetBundle)
+		/// <seealso cref="GetAssetBundlePrefabAsync(string, string, object)"/>
+		public static IAsyncOperation<GameObject> GetAssetBundlePrefabAsync(string url, Hash128 hash, uint crc, string prefabName, object userState)
 		{
-			return GetAssetBundleAssetAsync<GameObject>(url, hash, crc, prefabName, unloadAssetBundle);
+			return GetAssetBundleAssetAsync<GameObject>(url, hash, crc, prefabName, userState);
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for loading prefabs from an <see cref="AssetBundle"/>.
+		/// </summary>
+		/// <param name="assetBundle">The source <see cref="AssetBundle"/>.</param>
+		/// <param name="prefabName">Name of the prefab to load. If <see langword="null"/> the first prefab is loaded.</param>
+		/// <param name="userState">User-defined data.</param>
+		/// <returns>An operation that can be used to track the download process.</returns>
+		/// <seealso cref="GetAssetBundlePrefabAsync(string, Hash128, uint, string, object)"/>
+		public static IAsyncOperation<GameObject> GetAssetBundlePrefabAsync(AssetBundle assetBundle, string prefabName, object userState)
+		{
+			return GetAssetBundleAssetAsync<GameObject>(assetBundle, prefabName, userState);
 		}
 
 		/// <summary>
@@ -161,10 +193,10 @@ namespace UnityFx.Async
 		/// <param name="url">The URI of the asset bundle to download.</param>
 		/// <param name="sceneName">Name of the prefab to load.</param>
 		/// <param name="loadMode">Scene load mode.</param>
-		/// <param name="unloadAssetBundle">Specified whether to unload asset bundle ater the opertaion is complete.</param>
+		/// <param name="userState">User-defined data.</param>
 		/// <returns>An operation that can be used to track the download process.</returns>
-		/// <seealso cref="GetAssetBundleSceneAsync(string, Hash128, uint, string, LoadSceneMode, bool)"/>
-		public static IAsyncOperation<Scene> GetAssetBundleSceneAsync(string url, string sceneName, LoadSceneMode loadMode, bool unloadAssetBundle)
+		/// <seealso cref="GetAssetBundleSceneAsync(string, Hash128, uint, string, LoadSceneMode, object)"/>
+		public static IAsyncOperation<Scene> GetAssetBundleSceneAsync(string url, string sceneName, LoadSceneMode loadMode, object userState)
 		{
 #if UNITY_2018_1_OR_NEWER
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url);
@@ -172,7 +204,7 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequest.GetAssetBundle(url);
 #endif
 
-			var result = new Helpers.AssetBundleLoadSceneResult(webRequest, sceneName, loadMode, unloadAssetBundle, null);
+			var result = new Helpers.AssetBundleLoadSceneResult(webRequest, sceneName, loadMode, userState);
 			result.Start();
 			return result;
 		}
@@ -185,10 +217,10 @@ namespace UnityFx.Async
 		/// <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
 		/// <param name="sceneName">Name of the prefab to load.</param>
 		/// <param name="loadMode">Scene load mode.</param>
-		/// <param name="unloadAssetBundle">Specified whether to unload asset bundle ater the opertaion is complete.</param>
+		/// <param name="userState">User-defined data.</param>
 		/// <returns>An operation that can be used to track the download process.</returns>
-		/// <seealso cref="GetAssetBundleSceneAsync(string, string, LoadSceneMode, bool)"/>
-		public static IAsyncOperation<Scene> GetAssetBundleSceneAsync(string url, Hash128 hash, uint crc, string sceneName, LoadSceneMode loadMode, bool unloadAssetBundle)
+		/// <seealso cref="GetAssetBundleSceneAsync(string, string, LoadSceneMode, object)"/>
+		public static IAsyncOperation<Scene> GetAssetBundleSceneAsync(string url, Hash128 hash, uint crc, string sceneName, LoadSceneMode loadMode, object userState)
 		{
 #if UNITY_2018_1_OR_NEWER
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, crc);
@@ -196,7 +228,27 @@ namespace UnityFx.Async
 			var webRequest = UnityWebRequest.GetAssetBundle(url, hash, crc);
 #endif
 
-			var result = new Helpers.AssetBundleLoadSceneResult(webRequest, sceneName, loadMode, unloadAssetBundle, null);
+			var result = new Helpers.AssetBundleLoadSceneResult(webRequest, sceneName, loadMode, userState);
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Creates an asyncronous operation optimized for loading scenes from an <see cref="AssetBundle"/>.
+		/// </summary>
+		/// <param name="assetBundle">The source <see cref="AssetBundle"/>.</param>
+		/// <param name="sceneName">Name of the scene to load. If <see langword="null"/> the first scene in the asset bundle is loaded.</param>
+		/// <param name="loadMode">Scene load mode.</param>
+		/// <param name="userState">User-defined data.</param>
+		/// <returns>An operation that can be used to track the load process.</returns>
+		public static IAsyncOperation<Scene> GetAssetBundleSceneAsync(AssetBundle assetBundle, string sceneName, LoadSceneMode loadMode, object userState)
+		{
+			if (assetBundle == null)
+			{
+				throw new ArgumentNullException("assetBundle");
+			}
+
+			var result = new Helpers.AssetBundleSceneRequestResult(assetBundle, sceneName, loadMode, userState);
 			result.Start();
 			return result;
 		}
