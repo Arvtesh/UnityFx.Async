@@ -21,10 +21,13 @@ namespace UnityFx.Async
 		/// <param name="url">The URI of the text to download.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the download process.</returns>
 		/// <seealso cref="GetBytesAsync(string, object)"/>
 		public static IAsyncOperation<string> GetTextAsync(string url, object userState = null)
 		{
+			ThrowIfInvalidUrl(url);
+
 			var webRequest = UnityWebRequest.Get(url);
 			var result = new Helpers.WebRequestResult<string>(webRequest, userState);
 			result.Start();
@@ -37,10 +40,13 @@ namespace UnityFx.Async
 		/// <param name="url">The URI of the binary content to download.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the download process.</returns>
 		/// <seealso cref="GetTextAsync(string, object)"/>
 		public static IAsyncOperation<byte[]> GetBytesAsync(string url, object userState = null)
 		{
+			ThrowIfInvalidUrl(url);
+
 			var webRequest = UnityWebRequest.Get(url);
 			var result = new Helpers.WebRequestResult<byte[]>(webRequest);
 			result.Start();
@@ -53,10 +59,13 @@ namespace UnityFx.Async
 		/// <param name="url">The URI of the asset bundle to download.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the download process.</returns>
 		/// <seealso cref="GetAssetBundleAsync(string, Hash128, uint, object)"/>
 		public static IAsyncOperation<AssetBundle> GetAssetBundleAsync(string url, object userState = null)
 		{
+			ThrowIfInvalidUrl(url);
+
 #if UNITY_2018_1_OR_NEWER
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url);
 #else
@@ -76,10 +85,13 @@ namespace UnityFx.Async
 		/// <param name="crc">If nonzero, this number will be compared to the checksum of the downloaded asset bundle data. If the CRCs do not match, an error will be logged and the asset bundle will not be loaded. If set to zero, CRC checking will be skipped.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the download process.</returns>
 		/// <seealso cref="GetAssetBundleAsync(string, object)"/>
 		public static IAsyncOperation<AssetBundle> GetAssetBundleAsync(string url, Hash128 hash, uint crc, object userState = null)
 		{
+			ThrowIfInvalidUrl(url);
+
 #if UNITY_2018_1_OR_NEWER
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, crc);
 #else
@@ -98,10 +110,13 @@ namespace UnityFx.Async
 		/// <param name="assetName">Name of the prefab to load. If <see langword="null"/> the first asset of the matching type is loaded.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the download process.</returns>
 		/// <seealso cref="GetAssetBundleAssetAsync(string, Hash128, uint, string, object)"/>
 		public static IAsyncOperation<T> GetAssetBundleAssetAsync<T>(string url, string assetName, object userState = null) where T : UnityEngine.Object
 		{
+			ThrowIfInvalidUrl(url);
+
 #if UNITY_2018_1_OR_NEWER
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url);
 #else
@@ -122,10 +137,13 @@ namespace UnityFx.Async
 		/// <param name="assetName">Name of the prefab to load. If <see langword="null"/> the first asset of the matching type is loaded.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the download process.</returns>
 		/// <seealso cref="GetAssetBundleAssetAsync(string, string, object)"/>
 		public static IAsyncOperation<T> GetAssetBundleAssetAsync<T>(string url, Hash128 hash, uint crc, string assetName, object userState = null) where T : UnityEngine.Object
 		{
+			ThrowIfInvalidUrl(url);
+
 #if UNITY_2018_1_OR_NEWER
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, crc);
 #else
@@ -164,6 +182,7 @@ namespace UnityFx.Async
 		/// <param name="prefabName">Name of the prefab to load. If <see langword="null"/> the first prefab is loaded.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the download process.</returns>
 		/// <seealso cref="GetAssetBundlePrefabAsync(string, Hash128, uint, string, object)"/>
 		public static IAsyncOperation<GameObject> GetAssetBundlePrefabAsync(string url, string prefabName, object userState = null)
@@ -180,6 +199,7 @@ namespace UnityFx.Async
 		/// <param name="prefabName">Name of the prefab to load. If <see langword="null"/> the first prefab is loaded.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the download process.</returns>
 		/// <seealso cref="GetAssetBundlePrefabAsync(string, string, object)"/>
 		public static IAsyncOperation<GameObject> GetAssetBundlePrefabAsync(string url, Hash128 hash, uint crc, string prefabName, object userState = null)
@@ -194,6 +214,7 @@ namespace UnityFx.Async
 		/// <param name="prefabName">Name of the prefab to load. If <see langword="null"/> the first prefab is loaded.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="assetBundle"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the download process.</returns>
 		/// <seealso cref="GetAssetBundlePrefabAsync(string, Hash128, uint, string, object)"/>
 		public static IAsyncOperation<GameObject> GetAssetBundlePrefabAsync(AssetBundle assetBundle, string prefabName, object userState = null)
@@ -209,10 +230,13 @@ namespace UnityFx.Async
 		/// <param name="loadMode">Scene load mode.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the download process.</returns>
 		/// <seealso cref="GetAssetBundleSceneAsync(string, Hash128, uint, string, LoadSceneMode, object)"/>
 		public static IAsyncOperation<Scene> GetAssetBundleSceneAsync(string url, string sceneName, LoadSceneMode loadMode, object userState = null)
 		{
+			ThrowIfInvalidUrl(url);
+
 #if UNITY_2018_1_OR_NEWER
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url);
 #else
@@ -234,10 +258,13 @@ namespace UnityFx.Async
 		/// <param name="loadMode">Scene load mode.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the download process.</returns>
 		/// <seealso cref="GetAssetBundleSceneAsync(string, string, LoadSceneMode, object)"/>
 		public static IAsyncOperation<Scene> GetAssetBundleSceneAsync(string url, Hash128 hash, uint crc, string sceneName, LoadSceneMode loadMode, object userState = null)
 		{
+			ThrowIfInvalidUrl(url);
+
 #if UNITY_2018_1_OR_NEWER
 			var webRequest = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, crc);
 #else
@@ -257,6 +284,7 @@ namespace UnityFx.Async
 		/// <param name="loadMode">Scene load mode.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="assetBundle"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the load process.</returns>
 		public static IAsyncOperation<Scene> GetAssetBundleSceneAsync(AssetBundle assetBundle, string sceneName, LoadSceneMode loadMode, object userState = null)
 		{
@@ -276,10 +304,13 @@ namespace UnityFx.Async
 		/// <param name="url">The URI of the audio clip to download.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the download process.</returns>
 		/// <seealso cref="GetAudioClipAsync(string, AudioType, object)"/>
 		public static IAsyncOperation<AudioClip> GetAudioClipAsync(string url, object userState = null)
 		{
+			ThrowIfInvalidUrl(url);
+
 #if UNITY_2017_1_OR_NEWER
 			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.UNKNOWN);
 #else
@@ -298,10 +329,13 @@ namespace UnityFx.Async
 		/// <param name="audioType">The type of audio encoding for the downloaded audio clip.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the download process.</returns>
 		/// <seealso cref="GetAudioClipAsync(string, object)"/>
 		public static IAsyncOperation<AudioClip> GetAudioClipAsync(string url, AudioType audioType, object userState = null)
 		{
+			ThrowIfInvalidUrl(url);
+
 #if UNITY_2017_1_OR_NEWER
 			var webRequest = UnityWebRequestMultimedia.GetAudioClip(url, audioType);
 #else
@@ -319,10 +353,13 @@ namespace UnityFx.Async
 		/// <param name="url">The URI of the texture to download.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the download process.</returns>
 		/// <seealso cref="GetTextureAsync(string, bool, object)"/>
 		public static IAsyncOperation<Texture2D> GetTextureAsync(string url, object userState = null)
 		{
+			ThrowIfInvalidUrl(url);
+
 #if UNITY_2017_1_OR_NEWER
 			var webRequest = UnityWebRequestTexture.GetTexture(url, false);
 #else
@@ -341,10 +378,13 @@ namespace UnityFx.Async
 		/// <param name="nonReadable">If <see langword="true"/>, the texture's raw data will not be accessible to script. This can conserve memory.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the download process.</returns>
 		/// <seealso cref="GetTextureAsync(string, object)"/>
 		public static IAsyncOperation<Texture2D> GetTextureAsync(string url, bool nonReadable, object userState = null)
 		{
+			ThrowIfInvalidUrl(url);
+
 #if UNITY_2017_1_OR_NEWER
 			var webRequest = UnityWebRequestTexture.GetTexture(url, nonReadable);
 #else
@@ -440,6 +480,24 @@ namespace UnityFx.Async
 		#endregion
 
 		#region implementation
+
+		private static void ThrowIfInvalidUrl(string url)
+		{
+			if (url == null)
+			{
+				throw new ArgumentNullException("url");
+			}
+
+#if NET35
+			if (string.IsNullOrEmpty(url))
+#else
+			if (string.IsNullOrWhiteSpace(url))
+#endif
+			{
+				throw new ArgumentException("Invalid URL.", "url");
+			}
+		}
+
 		#endregion
 	}
 }
