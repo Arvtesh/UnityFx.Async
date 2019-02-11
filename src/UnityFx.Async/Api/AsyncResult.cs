@@ -259,51 +259,6 @@ namespace UnityFx.Async
 			_asyncState = asyncState;
 		}
 
-#if NET35
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult"/> class that is faulted. For internal use only.
-		/// </summary>
-		/// <param name="exceptions">Exceptions to complete the operation with.</param>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
-		internal AsyncResult(IEnumerable<Exception> exceptions, object asyncState)
-			: this(exceptions?.First(), asyncState)
-		{
-		}
-
-#else
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult"/> class that is faulted. For internal use only.
-		/// </summary>
-		/// <param name="exceptions">Exceptions to complete the operation with.</param>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
-		internal AsyncResult(IEnumerable<Exception> exceptions, object asyncState)
-		{
-			if (exceptions == null)
-			{
-				throw new ArgumentNullException(nameof(exceptions));
-			}
-
-			_exception = new AggregateException(exceptions);
-
-			if (_exception.InnerException is OperationCanceledException)
-			{
-				_flags = StatusCanceled | _flagCompletedSynchronously;
-			}
-			else
-			{
-				_flags = StatusFaulted | _flagCompletedSynchronously;
-			}
-
-			_callback = _callbackCompletionSentinel;
-			_asyncState = asyncState;
-		}
-
-#endif
-
 		/// <summary>
 		/// Transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
 		/// </summary>
@@ -484,7 +439,7 @@ namespace UnityFx.Async
 
 #else
 
-					if (exception is AggregateException && _exception.InnerException is OperationCanceledException)
+					if (exception.InnerException is OperationCanceledException)
 					{
 						SetCompleted(StatusCanceled, completedSynchronously);
 					}
@@ -495,94 +450,6 @@ namespace UnityFx.Async
 
 #endif
 				}
-
-				return true;
-			}
-			else if (!IsCompleted)
-			{
-				SpinUntilCompleted();
-			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
-		/// </summary>
-		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentException">Thrown if <paramref name="exceptions"/> is empty.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="TrySetExceptions(IEnumerable{Exception}, bool)"/>
-		protected internal bool TrySetExceptions(IEnumerable<Exception> exceptions)
-		{
-			return TrySetExceptions(exceptions, false);
-		}
-
-		/// <summary>
-		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
-		/// </summary>
-		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
-		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentException">Thrown if <paramref name="exceptions"/> is empty.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="TrySetExceptions(IEnumerable{Exception})"/>
-		protected internal bool TrySetExceptions(IEnumerable<Exception> exceptions, bool completedSynchronously)
-		{
-			if (exceptions == null)
-			{
-				throw new ArgumentNullException(nameof(exceptions));
-			}
-
-			var list = new List<Exception>();
-
-			foreach (var e in exceptions)
-			{
-				if (e == null)
-				{
-					throw new ArgumentException(Messages.FormatError_ListElementIsNull(), nameof(exceptions));
-				}
-
-				list.Add(e);
-			}
-
-			if (list.Count == 0)
-			{
-				throw new ArgumentException(Messages.FormatError_ListIsEmpty(), nameof(exceptions));
-			}
-
-			if (TryReserveCompletion())
-			{
-#if NET35
-
-				_exception = list[0];
-
-				if (_exception is OperationCanceledException)
-				{
-					SetCompleted(StatusCanceled, completedSynchronously);
-				}
-				else
-				{
-					SetCompleted(StatusFaulted, completedSynchronously);
-				}
-
-#else
-
-				_exception = new AggregateException(list);
-
-				if (_exception.InnerException is OperationCanceledException)
-				{
-					SetCompleted(StatusCanceled, completedSynchronously);
-				}
-				else
-				{
-					SetCompleted(StatusFaulted, completedSynchronously);
-				}
-
-#endif
 
 				return true;
 			}
@@ -743,7 +610,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetCanceled(bool)"/>
 		/// <seealso cref="TrySetCompleted(bool)"/>
 		/// <seealso cref="TrySetException(System.Exception, bool)"/>
-		/// <seealso cref="TrySetExceptions(IEnumerable{System.Exception}, bool)"/>
 		protected virtual void OnStatusChanged(AsyncOperationStatus status)
 		{
 		}
@@ -779,7 +645,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetCanceled(bool)"/>
 		/// <seealso cref="TrySetCompleted(bool)"/>
 		/// <seealso cref="TrySetException(System.Exception, bool)"/>
-		/// <seealso cref="TrySetExceptions(IEnumerable{System.Exception}, bool)"/>
 		protected virtual void OnCompleted()
 		{
 		}

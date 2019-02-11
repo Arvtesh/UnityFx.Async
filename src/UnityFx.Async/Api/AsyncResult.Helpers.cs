@@ -110,7 +110,6 @@ namespace UnityFx.Async
 		/// <returns>A canceled operation.</returns>
 		/// <seealso cref="FromCanceled(object)"/>
 		/// <seealso cref="FromException(Exception)"/>
-		/// <seealso cref="FromExceptions(IEnumerable{System.Exception})"/>
 		/// <seealso cref="FromResult{T}(T)"/>
 		public static AsyncResult FromCanceled()
 		{
@@ -124,7 +123,6 @@ namespace UnityFx.Async
 		/// <returns>A canceled operation.</returns>
 		/// <seealso cref="FromCanceled()"/>
 		/// <seealso cref="FromException(Exception)"/>
-		/// <seealso cref="FromExceptions(IEnumerable{System.Exception})"/>
 		/// <seealso cref="FromResult{T}(T, object)"/>
 		public static AsyncResult FromCanceled(object asyncState)
 		{
@@ -137,7 +135,6 @@ namespace UnityFx.Async
 		/// <returns>A canceled operation.</returns>
 		/// <seealso cref="FromCanceled{T}(object)"/>
 		/// <seealso cref="FromException{T}(Exception)"/>
-		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception})"/>
 		/// <seealso cref="FromResult{T}(T)"/>
 		public static AsyncResult<T> FromCanceled<T>()
 		{
@@ -151,7 +148,6 @@ namespace UnityFx.Async
 		/// <returns>A canceled operation.</returns>
 		/// <seealso cref="FromCanceled{T}()"/>
 		/// <seealso cref="FromException{T}(Exception)"/>
-		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception})"/>
 		/// <seealso cref="FromResult{T}(T, object)"/>
 		public static AsyncResult<T> FromCanceled<T>(object asyncState)
 		{
@@ -192,7 +188,6 @@ namespace UnityFx.Async
 		/// <returns>A faulted operation.</returns>
 		/// <seealso cref="FromException(System.Exception, object)"/>
 		/// <seealso cref="FromException(string)"/>
-		/// <seealso cref="FromExceptions(IEnumerable{System.Exception})"/>
 		/// <seealso cref="FromCanceled()"/>
 		/// <seealso cref="FromResult{T}(T)"/>
 		public static AsyncResult FromException(Exception exception)
@@ -208,41 +203,11 @@ namespace UnityFx.Async
 		/// <returns>A faulted operation.</returns>
 		/// <seealso cref="FromException(System.Exception)"/>
 		/// <seealso cref="FromException(string, object)"/>
-		/// <seealso cref="FromExceptions(IEnumerable{System.Exception}, object)"/>
 		/// <seealso cref="FromCanceled(object)"/>
 		/// <seealso cref="FromResult{T}(T, object)"/>
 		public static AsyncResult FromException(Exception exception, object asyncState)
 		{
 			return new AsyncResult(exception, asyncState);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation"/> that has completed with specified exceptions.
-		/// </summary>
-		/// <param name="exceptions">Exceptions to complete the operation with.</param>
-		/// <returns>A faulted operation.</returns>
-		/// <seealso cref="FromExceptions(IEnumerable{Exception}, object)"/>
-		/// <seealso cref="FromException(System.Exception)"/>
-		/// <seealso cref="FromCanceled()"/>
-		/// <seealso cref="FromResult{T}(T)"/>
-		public static AsyncResult FromExceptions(IEnumerable<Exception> exceptions)
-		{
-			return new AsyncResult(exceptions, null);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation"/> that has completed with specified exceptions.
-		/// </summary>
-		/// <param name="exceptions">Exceptions to complete the operation with.</param>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
-		/// <returns>A faulted operation.</returns>
-		/// <seealso cref="FromExceptions(IEnumerable{Exception})"/>
-		/// <seealso cref="FromException(System.Exception, object)"/>
-		/// <seealso cref="FromCanceled(object)"/>
-		/// <seealso cref="FromResult{T}(T, object)"/>
-		public static AsyncResult FromExceptions(IEnumerable<Exception> exceptions, object asyncState)
-		{
-			return new AsyncResult(exceptions, asyncState);
 		}
 
 		/// <summary>
@@ -279,7 +244,6 @@ namespace UnityFx.Async
 		/// <returns>A faulted operation.</returns>
 		/// <seealso cref="FromException(string)"/>
 		/// <seealso cref="FromException{T}(System.Exception, object)"/>
-		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception})"/>
 		/// <seealso cref="FromCanceled{T}()"/>
 		/// <seealso cref="FromResult{T}(T)"/>
 		public static AsyncResult<T> FromException<T>(Exception exception)
@@ -295,41 +259,11 @@ namespace UnityFx.Async
 		/// <returns>A faulted operation.</returns>
 		/// <seealso cref="FromException(string, object)"/>
 		/// <seealso cref="FromException{T}(System.Exception)"/>
-		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception}, object)"/>
 		/// <seealso cref="FromCanceled{T}(object)"/>
 		/// <seealso cref="FromResult{T}(T, object)"/>
 		public static AsyncResult<T> FromException<T>(Exception exception, object asyncState)
 		{
 			return new AsyncResult<T>(exception, asyncState);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{TResult}"/> that has completed with specified exceptions.
-		/// </summary>
-		/// <param name="exceptions">Exceptions to complete the operation with.</param>
-		/// <returns>A faulted operation.</returns>
-		/// <seealso cref="FromExceptions{T}(IEnumerable{Exception}, object)"/>
-		/// <seealso cref="FromException{T}(System.Exception)"/>
-		/// <seealso cref="FromCanceled{T}()"/>
-		/// <seealso cref="FromResult{T}(T)"/>
-		public static AsyncResult<T> FromExceptions<T>(IEnumerable<Exception> exceptions)
-		{
-			return new AsyncResult<T>(exceptions, null);
-		}
-
-		/// <summary>
-		/// Creates a <see cref="IAsyncOperation{TResult}"/> that has completed with specified exceptions.
-		/// </summary>
-		/// <param name="exceptions">Exceptions to complete the operation with.</param>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
-		/// <returns>A faulted operation.</returns>
-		/// <seealso cref="FromExceptions{T}(IEnumerable{Exception})"/>
-		/// <seealso cref="FromException{T}(System.Exception, object)"/>
-		/// <seealso cref="FromCanceled{T}(object)"/>
-		/// <seealso cref="FromResult{T}(T, object)"/>
-		public static AsyncResult<T> FromExceptions<T>(IEnumerable<Exception> exceptions, object asyncState)
-		{
-			return new AsyncResult<T>(exceptions, asyncState);
 		}
 
 		/// <summary>
@@ -340,7 +274,6 @@ namespace UnityFx.Async
 		/// <seealso cref="FromResult{T}(T, object)"/>
 		/// <seealso cref="FromCanceled{T}()"/>
 		/// <seealso cref="FromException{T}(Exception)"/>
-		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception})"/>
 		public static AsyncResult<T> FromResult<T>(T result)
 		{
 			return new AsyncResult<T>(result, null);
@@ -355,7 +288,6 @@ namespace UnityFx.Async
 		/// <seealso cref="FromResult{T}(T)"/>
 		/// <seealso cref="FromCanceled{T}(object)"/>
 		/// <seealso cref="FromException{T}(Exception)"/>
-		/// <seealso cref="FromExceptions{T}(IEnumerable{System.Exception})"/>
 		public static AsyncResult<T> FromResult<T>(T result, object asyncState)
 		{
 			return new AsyncResult<T>(result, asyncState);

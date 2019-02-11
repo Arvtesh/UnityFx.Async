@@ -214,7 +214,6 @@ namespace UnityFx.Async
 		/// <param name="prefabName">Name of the prefab to load. If <see langword="null"/> the first prefab is loaded.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="assetBundle"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the download process.</returns>
 		/// <seealso cref="GetAssetBundlePrefabAsync(string, Hash128, uint, string, object)"/>
 		public static IAsyncOperation<GameObject> GetAssetBundlePrefabAsync(AssetBundle assetBundle, string prefabName, object userState = null)
@@ -284,7 +283,6 @@ namespace UnityFx.Async
 		/// <param name="loadMode">Scene load mode.</param>
 		/// <param name="userState">User-defined data.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="assetBundle"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is an empty string.</exception>
 		/// <returns>An operation that can be used to track the load process.</returns>
 		public static IAsyncOperation<Scene> GetAssetBundleSceneAsync(AssetBundle assetBundle, string sceneName, LoadSceneMode loadMode, object userState = null)
 		{

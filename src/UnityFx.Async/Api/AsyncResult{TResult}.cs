@@ -154,16 +154,6 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class. For internal use only.
 		/// </summary>
-		/// <param name="exceptions">Exceptions to complete the operation with.</param>
-		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
-		internal AsyncResult(IEnumerable<Exception> exceptions, object asyncState)
-			: base(exceptions, asyncState)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class. For internal use only.
-		/// </summary>
 		/// <param name="result">Result value.</param>
 		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
 		internal AsyncResult(TResult result, object asyncState)

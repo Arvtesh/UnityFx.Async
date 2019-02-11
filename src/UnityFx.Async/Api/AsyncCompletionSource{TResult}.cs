@@ -285,19 +285,6 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Attempts to transition the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
-		/// </summary>
-		/// <param name="exceptions">An exception that caused the operation to end prematurely.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		public new bool TrySetExceptions(IEnumerable<Exception> exceptions)
-		{
-			ThrowIfDisposed();
-			return TrySetExceptions(exceptions, false);
-		}
-
-		/// <summary>
 		/// Attempts to transition the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
 		/// <param name="result">The operation result.</param>
