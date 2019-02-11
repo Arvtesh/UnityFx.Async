@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 
 ### Removed
 - Removed many specialized `IAsyncOperationCallbacks` methods to make the interface as minimalistic as possible (new extension methods are added to compensate).
+- Removed `(Try)SetExceptions` methods/extensions and `FromExceptions` helpers.
 - Dropped `MovieTexture` support.
 
 -----------------------
