@@ -488,10 +488,10 @@ namespace UnityFx.Async
 				throw new ArgumentNullException("url");
 			}
 
-#if NET35
-			if (string.IsNullOrEmpty(url))
-#else
+#if NET_4_6 || NET_STANDARD_2_0
 			if (string.IsNullOrWhiteSpace(url))
+#else
+			if (string.IsNullOrEmpty(url))
 #endif
 			{
 				throw new ArgumentException("Invalid URL.", "url");
