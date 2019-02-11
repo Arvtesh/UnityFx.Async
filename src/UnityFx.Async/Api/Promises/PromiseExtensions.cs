@@ -11,7 +11,7 @@ namespace UnityFx.Async.Promises
 	/// Promise extensions for <see cref="IAsyncOperation"/>.
 	/// </summary>
 	[EditorBrowsable(EditorBrowsableState.Advanced)]
-	public static class AsyncExtensions
+	public static class PromiseExtensions
 	{
 		#region Then
 
