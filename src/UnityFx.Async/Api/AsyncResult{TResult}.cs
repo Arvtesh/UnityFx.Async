@@ -234,7 +234,7 @@ namespace UnityFx.Async
 					return TrySetCompleted(completedSynchronously);
 				}
 			}
-			else if (patternOp.IsFaulted || patternOp.IsCanceled)
+			else if (patternOp.IsCompleted)
 			{
 				return TrySetException(patternOp.Exception, completedSynchronously);
 			}
@@ -251,7 +251,7 @@ namespace UnityFx.Async
 			{
 				return TrySetResult(patternOp.Result, completedSynchronously);
 			}
-			else if (patternOp.IsFaulted || patternOp.IsCanceled)
+			else if (patternOp.IsCompleted)
 			{
 				return TrySetException(patternOp.Exception, completedSynchronously);
 			}

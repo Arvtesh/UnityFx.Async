@@ -103,6 +103,13 @@ namespace UnityFx.Async
 		public bool IsStarted => (_flags & _statusMask) >= StatusRunning;
 
 		/// <summary>
+		/// Gets a value indicating whether the operation in running.
+		/// </summary>
+		/// <value>A value indicating whether the operation is running.</value>
+		[DebuggerHidden]
+		public bool IsRunning => (_flags & _statusMask) == StatusRunning;
+
+		/// <summary>
 		/// Gets a value indicating whether the operation instance is disposed.
 		/// </summary>
 		/// <value>A value indicating whether the operation is disposed.</value>
@@ -432,23 +439,7 @@ namespace UnityFx.Async
 				else
 				{
 					_exception = exception;
-
-#if NET35
-
 					SetCompleted(StatusFaulted, completedSynchronously);
-
-#else
-
-					if (exception.InnerException is OperationCanceledException)
-					{
-						SetCompleted(StatusCanceled, completedSynchronously);
-					}
-					else
-					{
-						SetCompleted(StatusFaulted, completedSynchronously);
-					}
-
-#endif
 				}
 
 				return true;
@@ -1007,7 +998,7 @@ namespace UnityFx.Async
 			{
 				TrySetRunning();
 			}
-			else
+			else if (op.IsCompleted)
 			{
 				TrySetException(op.Exception);
 			}
