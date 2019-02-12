@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `await` support to `YieldInstruction` Unity class.
 - Added coroutine helpers (`AsyncUtility.FromCoroutine`).
 - Added helpers for loading assets from an `AssetBundle`.
+- Added `TaskScheduler` implementation that queues tasks on the main thread.
 
 ### Changed
 - Added `DebuggerHidden` attribute to some properties/methods to make stack traces a bit more friendly.
