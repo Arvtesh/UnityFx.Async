@@ -6,7 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 #if NET_4_6 || NET_STANDARD_2_0
 using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
+using System.Threading.Tasks;
 #endif
 using System.Threading;
 using UnityEngine;
@@ -403,6 +405,60 @@ namespace UnityFx.Async
 			}
 
 			_rootBehaviour.AddCompletionCallback(request, completionCallback);
+		}
+
+#endif
+
+#if NET_4_6 || NET_STANDARD_2_0
+
+		/// <summary>
+		/// Provides an object that waits for the specified <see cref="FrameTiming"/>. This type and its members are intended for compiler use only.
+		/// </summary>
+		public struct FrameAwaiter : INotifyCompletion
+		{
+			private readonly FrameTiming _frameTiming;
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="FrameAwaiter"/> struct.
+			/// </summary>
+			public FrameAwaiter(FrameTiming frameTiming)
+			{
+				_frameTiming = frameTiming;
+			}
+
+			/// <summary>
+			/// Gets a value indicating whether the underlying operation is completed.
+			/// </summary>
+			/// <value>The operation completion flag.</value>
+			public bool IsCompleted
+			{
+				get
+				{
+					return false;
+				}
+			}
+
+			/// <summary>
+			/// Returns the source result value.
+			/// </summary>
+			public void GetResult()
+			{
+			}
+
+			/// <inheritdoc/>
+			public void OnCompleted(Action continuation)
+			{
+				_rootBehaviour.AddFrameCallback(continuation, _frameTiming);
+			}
+		}
+
+		/// <summary>
+		/// Waits until the specified <paramref name="frameTime"/>.
+		/// </summary>
+		/// <param name="frameTime">The frame time to await.</param>
+		public static FrameAwaiter FrameUpdate(FrameTiming frameTime = FrameTiming.Update)
+		{
+			return new FrameAwaiter(frameTime);
 		}
 
 #endif
