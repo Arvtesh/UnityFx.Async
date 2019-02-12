@@ -5,7 +5,7 @@ Channel  | UnityFx.Async |
 AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/master?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/master) [![AppVeyor tests](https://img.shields.io/appveyor/tests/Arvtesh/unityFx-async.svg)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/build/tests)
 NuGet | [![NuGet](https://img.shields.io/nuget/v/UnityFx.Async.svg)](https://www.nuget.org/packages/UnityFx.Async)
 Github | [![GitHub release](https://img.shields.io/github/release/Arvtesh/UnityFx.Async.svg?logo=github)](https://github.com/Arvtesh/UnityFx.Async/releases)
-Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v0.9.8-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
+Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v1.0.0-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
 
 **Requires Unity 5.4 or higher.**
 
@@ -540,6 +540,20 @@ async Task Test()
 	await new WaitForSeconds(2);
 	await new UnityWebRequest("myurl.com");
 	await Resources.LoadAsync("myasset");
+}
+```
+.. or a specific frame time:
+```csharp
+async Task FrameTimingsTest()
+{
+	// Wait until the next Update() cycle.
+	await AsyncUtility.FrameUpdate();
+	// Wait until the next LateUpdate().
+	await AsyncUtility.FrameUpdate(FrameTiming.LateUpdate);
+	// Wait until the next FixedUpdate().
+	await AsyncUtility.FrameUpdate(FrameTiming.FixedUpdate);
+	// Wait until the end of frame (same as yield new WaitForEndOfFrame()).
+	await AsyncUtility.FrameUpdate(FrameTiming.EndOfFrame);
 }
 ```
 
