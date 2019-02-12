@@ -24,6 +24,12 @@ namespace UnityFx.Async
 	{
 		#region data
 
+#if NET_4_6 || NET_STANDARD_2_0
+
+		private static TaskScheduler _mainThreadScheduler;
+
+#endif
+
 		private static SynchronizationContext _mainThreadContext;
 		private static GameObject _go;
 		private static AsyncRootBehaviour _rootBehaviour;
@@ -412,8 +418,20 @@ namespace UnityFx.Async
 #if NET_4_6 || NET_STANDARD_2_0
 
 		/// <summary>
-		/// Provides an object that waits for the specified <see cref="FrameTiming"/>. This type and its members are intended for compiler use only.
+		/// Gets the main thread <see cref="TaskScheduler"/>.
 		/// </summary>
+		public static TaskScheduler MainThreadTaskScheduler
+		{
+			get
+			{
+				return _mainThreadScheduler;
+			}
+		}
+
+		/// <summary>
+		/// Provides an object that awaits for the specified <see cref="FrameTiming"/>. This type and its members are intended for compiler use only.
+		/// </summary>
+		/// <seealso cref="FrameAwaitable"/>
 		public struct FrameAwaiter : INotifyCompletion
 		{
 			private readonly FrameTiming _frameTiming;
@@ -453,12 +471,37 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
+		/// Provides an awaitable object that allows awaits for the specified <see cref="FrameTiming"/>. This type is intended for compiler use only.
+		/// </summary>
+		/// <seealso cref="FrameAwaiter"/>
+		public struct FrameAwaitable
+		{
+			private readonly FrameAwaiter _awaiter;
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="FrameAwaitable"/> struct.
+			/// </summary>
+			public FrameAwaitable(FrameTiming frameTime)
+			{
+				_awaiter = new FrameAwaiter(frameTime);
+			}
+
+			/// <summary>
+			/// Returns the awaiter.
+			/// </summary>
+			public FrameAwaiter GetAwaiter()
+			{
+				return _awaiter;
+			}
+		}
+
+		/// <summary>
 		/// Waits until the specified <paramref name="frameTime"/>.
 		/// </summary>
 		/// <param name="frameTime">The frame time to await.</param>
-		public static FrameAwaiter FrameUpdate(FrameTiming frameTime = FrameTiming.Update)
+		public static FrameAwaitable FrameUpdate(FrameTiming frameTime = FrameTiming.Update)
 		{
-			return new FrameAwaiter(frameTime);
+			return new FrameAwaitable(frameTime);
 		}
 
 #endif
@@ -838,6 +881,11 @@ namespace UnityFx.Async
 
 			// Save the main thread context for future use.
 			_mainThreadContext = context;
+
+			// Save main thread scheduler.
+#if NET_4_6 || NET_STANDARD_2_0
+			_mainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+#endif
 
 			// Set main thread context as default for all continuations. This saves allocations in many cases.
 			AsyncResult.DefaultSynchronizationContext = context;
