@@ -24,12 +24,6 @@ namespace UnityFx.Async
 	{
 		#region data
 
-#if NET_4_6 || NET_STANDARD_2_0
-
-		private static TaskScheduler _mainThreadScheduler;
-
-#endif
-
 		private static SynchronizationContext _mainThreadContext;
 		private static GameObject _go;
 		private static AsyncRootBehaviour _rootBehaviour;
@@ -416,17 +410,6 @@ namespace UnityFx.Async
 #endif
 
 #if NET_4_6 || NET_STANDARD_2_0
-
-		/// <summary>
-		/// Gets the main thread <see cref="TaskScheduler"/>.
-		/// </summary>
-		public static TaskScheduler MainThreadTaskScheduler
-		{
-			get
-			{
-				return _mainThreadScheduler;
-			}
-		}
 
 		/// <summary>
 		/// Provides an object that awaits for the specified <see cref="FrameTiming"/>. This type and its members are intended for compiler use only.
@@ -881,11 +864,6 @@ namespace UnityFx.Async
 
 			// Save the main thread context for future use.
 			_mainThreadContext = context;
-
-			// Save main thread scheduler.
-#if NET_4_6 || NET_STANDARD_2_0
-			_mainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-#endif
 
 			// Set main thread context as default for all continuations. This saves allocations in many cases.
 			AsyncResult.DefaultSynchronizationContext = context;
