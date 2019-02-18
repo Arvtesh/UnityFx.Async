@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -474,6 +475,14 @@ namespace UnityFx.Async
 		}
 
 #endif
+
+		/// <summary>
+		/// Initializes WWW services. This method is intended for internal use only. DO NOT use.
+		/// </summary>
+		internal static void Initialize(GameObject go, SynchronizationContext mainThreadContext)
+		{
+			// TODO
+		}
 
 		#endregion
 

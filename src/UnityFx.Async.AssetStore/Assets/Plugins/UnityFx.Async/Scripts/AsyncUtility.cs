@@ -25,25 +25,11 @@ namespace UnityFx.Async
 		#region data
 
 		private static SynchronizationContext _mainThreadContext;
-		private static GameObject _go;
-		private static AsyncRootBehaviour _rootBehaviour;
+		private static AsyncUtilityBehaviour _rootBehaviour;
 
 		#endregion
 
 		#region interface
-
-		/// <summary>
-		/// Name of a <see cref="GameObject"/> used by the library tools.
-		/// </summary>
-		public const string RootGoName = "UnityFx.Async";
-
-		/// <summary>
-		/// Returns a <see cref="GameObject"/> used by the library tools.
-		/// </summary>
-		public static GameObject GetRootGo()
-		{
-			return _go;
-		}
 
 		/// <summary>
 		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for Update.
@@ -489,11 +475,20 @@ namespace UnityFx.Async
 
 #endif
 
+		/// <summary>
+		/// Initializes utilities. This method is intended for internal use only. DO NOT use.
+		/// </summary>
+		internal static void Initialize(GameObject go, SynchronizationContext mainThreadContext)
+		{
+			_mainThreadContext = mainThreadContext;
+			_rootBehaviour = go.AddComponent<AsyncUtilityBehaviour>();
+		}
+
 		#endregion
 
 		#region implementation
 
-		private sealed class AsyncRootBehaviour : MonoBehaviour
+		private sealed class AsyncUtilityBehaviour : MonoBehaviour
 		{
 			#region data
 
@@ -848,30 +843,6 @@ namespace UnityFx.Async
 			}
 
 			#endregion
-		}
-
-		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-		private static void Initialize()
-		{
-			var context = SynchronizationContext.Current;
-
-			if (context == null)
-			{
-				// Create custom SynchronizationContext for the main thread.
-				context = new Helpers.MainThreadSynchronizationContext();
-				SynchronizationContext.SetSynchronizationContext(context);
-			}
-
-			// Save the main thread context for future use.
-			_mainThreadContext = context;
-
-			// Set main thread context as default for all continuations. This saves allocations in many cases.
-			AsyncResult.DefaultSynchronizationContext = context;
-
-			// Initialize library components.
-			_go = new GameObject(RootGoName);
-			_rootBehaviour = _go.AddComponent<AsyncRootBehaviour>();
-			GameObject.DontDestroyOnLoad(_go);
 		}
 
 		#endregion
