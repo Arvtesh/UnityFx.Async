@@ -2,16 +2,13 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 #if NET_4_6 || NET_STANDARD_2_0
 using System.Threading.Tasks;
 #endif
 
-namespace UnityFx.Async
+namespace UnityFx.Async.Extensions
 {
 	/// <summary>
 	/// Extensions for Unity API.
@@ -23,92 +20,12 @@ namespace UnityFx.Async
 #if NET_4_6 || NET_STANDARD_2_0
 
 		/// <summary>
-		/// Provides an object that waits for the completion of an <see cref="YieldInstruction"/>. This type and its members are intended for compiler use only.
-		/// </summary>
-		public class YieldInstructionAwaiter : IEnumerator, INotifyCompletion
-		{
-			private YieldInstruction _yieldValue;
-			private Action _callback;
-			private object _current;
-
-			/// <summary>
-			/// Initializes a new instance of the <see cref="YieldInstructionAwaiter"/> class.
-			/// </summary>
-			public YieldInstructionAwaiter(YieldInstruction op)
-			{
-				_yieldValue = op;
-			}
-
-			/// <inheritdoc/>
-			public object Current
-			{
-				get
-				{
-					return _current;
-				}
-			}
-
-			/// <summary>
-			/// Gets a value indicating whether the underlying operation is completed.
-			/// </summary>
-			/// <value>The operation completion flag.</value>
-			public bool IsCompleted
-			{
-				get
-				{
-					return _current == null && _yieldValue == null;
-				}
-			}
-
-			/// <summary>
-			/// Returns the source result value.
-			/// </summary>
-			public void GetResult()
-			{
-			}
-
-			/// <inheritdoc/>
-			public void OnCompleted(Action continuation)
-			{
-				_callback = continuation;
-				AsyncUtility.StartCoroutine(this);
-			}
-
-			/// <inheritdoc/>
-			public bool MoveNext()
-			{
-				if (_yieldValue != null)
-				{
-					if (_current == null)
-					{
-						_current = _yieldValue;
-						return true;
-					}
-					else
-					{
-						_current = null;
-						_yieldValue = null;
-						_callback();
-					}
-				}
-
-				return false;
-			}
-
-			/// <inheritdoc/>
-			public void Reset()
-			{
-				throw new NotSupportedException();
-			}
-		}
-
-		/// <summary>
 		/// Returns the operation awaiter. This method is intended for compiler use only.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
-		public static YieldInstructionAwaiter GetAwaiter(this YieldInstruction op)
+		public static CompilerServices.YieldInstructionAwaiter GetAwaiter(this YieldInstruction op)
 		{
-			return new YieldInstructionAwaiter(op);
+			return new CompilerServices.YieldInstructionAwaiter(op);
 		}
 
 #endif
@@ -200,53 +117,12 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Provides an object that waits for the completion of an <see cref="AsyncOperation"/>. This type and its members are intended for compiler use only.
-		/// </summary>
-		public struct AsyncOperationAwaiter : INotifyCompletion
-		{
-			private readonly AsyncOperation _op;
-
-			/// <summary>
-			/// Initializes a new instance of the <see cref="AsyncOperationAwaiter"/> struct.
-			/// </summary>
-			public AsyncOperationAwaiter(AsyncOperation op)
-			{
-				_op = op;
-			}
-
-			/// <summary>
-			/// Gets a value indicating whether the underlying operation is completed.
-			/// </summary>
-			/// <value>The operation completion flag.</value>
-			public bool IsCompleted
-			{
-				get
-				{
-					return _op.isDone;
-				}
-			}
-
-			/// <summary>
-			/// Returns the source result value.
-			/// </summary>
-			public void GetResult()
-			{
-			}
-
-			/// <inheritdoc/>
-			public void OnCompleted(Action continuation)
-			{
-				AsyncUtility.AddCompletionCallback(_op, continuation);
-			}
-		}
-
-		/// <summary>
 		/// Returns the operation awaiter. This method is intended for compiler use only.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
-		public static AsyncOperationAwaiter GetAwaiter(this AsyncOperation op)
+		public static CompilerServices.AsyncOperationAwaiter GetAwaiter(this AsyncOperation op)
 		{
-			return new AsyncOperationAwaiter(op);
+			return new CompilerServices.AsyncOperationAwaiter(op);
 		}
 
 #endif
@@ -302,53 +178,12 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Provides an object that waits for the completion of an <see cref="UnityWebRequest"/>. This type and its members are intended for compiler use only.
-		/// </summary>
-		public struct UnityWebRequestAwaiter : INotifyCompletion
-		{
-			private readonly UnityWebRequest _op;
-
-			/// <summary>
-			/// Initializes a new instance of the <see cref="UnityWebRequestAwaiter"/> struct.
-			/// </summary>
-			public UnityWebRequestAwaiter(UnityWebRequest op)
-			{
-				_op = op;
-			}
-
-			/// <summary>
-			/// Gets a value indicating whether the underlying operation is completed.
-			/// </summary>
-			/// <value>The operation completion flag.</value>
-			public bool IsCompleted
-			{
-				get
-				{
-					return _op.isDone;
-				}
-			}
-
-			/// <summary>
-			/// Returns the source result value.
-			/// </summary>
-			public void GetResult()
-			{
-			}
-
-			/// <inheritdoc/>
-			public void OnCompleted(Action continuation)
-			{
-				AsyncUtility.AddCompletionCallback(_op, continuation);
-			}
-		}
-
-		/// <summary>
 		/// Returns the operation awaiter. This method is intended for compiler use only.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
-		public static UnityWebRequestAwaiter GetAwaiter(this UnityWebRequest op)
+		public static CompilerServices.UnityWebRequestAwaiter GetAwaiter(this UnityWebRequest op)
 		{
-			return new UnityWebRequestAwaiter(op);
+			return new CompilerServices.UnityWebRequestAwaiter(op);
 		}
 
 #endif
@@ -406,53 +241,12 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Provides an object that waits for the completion of an <see cref="WWW"/>. This type and its members are intended for compiler use only.
-		/// </summary>
-		public struct WwwAwaiter : INotifyCompletion
-		{
-			private readonly WWW _op;
-
-			/// <summary>
-			/// Initializes a new instance of the <see cref="WwwAwaiter"/> struct.
-			/// </summary>
-			public WwwAwaiter(WWW op)
-			{
-				_op = op;
-			}
-
-			/// <summary>
-			/// Gets a value indicating whether the underlying operation is completed.
-			/// </summary>
-			/// <value>The operation completion flag.</value>
-			public bool IsCompleted
-			{
-				get
-				{
-					return _op.isDone;
-				}
-			}
-
-			/// <summary>
-			/// Returns the source result value.
-			/// </summary>
-			public void GetResult()
-			{
-			}
-
-			/// <inheritdoc/>
-			public void OnCompleted(Action continuation)
-			{
-				AsyncUtility.AddCompletionCallback(_op, continuation);
-			}
-		}
-
-		/// <summary>
 		/// Returns the operation awaiter. This method is intended for compiler use only.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
-		public static WwwAwaiter GetAwaiter(this WWW op)
+		public static CompilerServices.WwwAwaiter GetAwaiter(this WWW op)
 		{
-			return new WwwAwaiter(op);
+			return new CompilerServices.WwwAwaiter(op);
 		}
 
 #endif
