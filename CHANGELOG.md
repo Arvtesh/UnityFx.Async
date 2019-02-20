@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `DebuggerHidden` attribute to some properties/methods to make stack traces a bit more friendly.
 - Renamed `AsyncContinuationContext` to `AsyncCallbackOptions`.
 - Renamed web request helper methods (added `Async` postfix to their names).
+- Moved Unity extension methods to `UnityFx.Async.Extensions` namespace (previously they were in namespace `UnityFx.Async`).
 
 ### Fixed
 - Fixed web requests `null` result in cases when downloaded file failed to open.
