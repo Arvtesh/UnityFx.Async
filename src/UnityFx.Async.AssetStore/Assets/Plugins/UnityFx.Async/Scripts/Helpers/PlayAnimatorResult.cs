@@ -27,6 +27,20 @@ namespace UnityFx.Async.Helpers
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PlayAnimatorResult"/> class.
 		/// </summary>
+		public PlayAnimatorResult(Animator anim, int stateNameHash, int layer, IAsyncUpdateSource updateSource)
+		{
+			Debug.Assert(anim != null);
+			Debug.Assert(updateSource != null);
+
+			_updateSource = updateSource;
+			_anim = anim;
+			_stateNameHash = stateNameHash;
+			_layer = layer;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PlayAnimatorResult"/> class.
+		/// </summary>
 		public PlayAnimatorResult(Animator anim, string stateName, int layer, IAsyncUpdateSource updateSource)
 		{
 			Debug.Assert(anim != null);

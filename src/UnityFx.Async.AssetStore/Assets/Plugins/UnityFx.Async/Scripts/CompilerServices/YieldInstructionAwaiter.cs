@@ -16,81 +16,97 @@ namespace UnityFx.Async.CompilerServices
 	/// </summary>
 	/// <seealso cref="YieldInstruction"/>
 	public class YieldInstructionAwaiter : IEnumerator, INotifyCompletion
+	{
+		#region data
+
+		private YieldInstruction _yieldValue;
+		private Action _callback;
+		private object _current;
+
+		#endregion
+
+		#region interface
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="YieldInstructionAwaiter"/> class.
+		/// </summary>
+		public YieldInstructionAwaiter(YieldInstruction op)
 		{
-			private YieldInstruction _yieldValue;
-			private Action _callback;
-			private object _current;
+			_yieldValue = op;
+		}
 
-			/// <summary>
-			/// Initializes a new instance of the <see cref="YieldInstructionAwaiter"/> class.
-			/// </summary>
-			public YieldInstructionAwaiter(YieldInstruction op)
+		/// <summary>
+		/// Gets a value indicating whether the underlying operation is completed.
+		/// </summary>
+		/// <value>The operation completion flag.</value>
+		public bool IsCompleted
+		{
+			get
 			{
-				_yieldValue = op;
-			}
-
-			/// <inheritdoc/>
-			public object Current
-			{
-				get
-				{
-					return _current;
-				}
-			}
-
-			/// <summary>
-			/// Gets a value indicating whether the underlying operation is completed.
-			/// </summary>
-			/// <value>The operation completion flag.</value>
-			public bool IsCompleted
-			{
-				get
-				{
-					return _current == null && _yieldValue == null;
-				}
-			}
-
-			/// <summary>
-			/// Returns the source result value.
-			/// </summary>
-			public void GetResult()
-			{
-			}
-
-			/// <inheritdoc/>
-			public void OnCompleted(Action continuation)
-			{
-				_callback = continuation;
-				AsyncUtility.StartCoroutine(this);
-			}
-
-			/// <inheritdoc/>
-			public bool MoveNext()
-			{
-				if (_yieldValue != null)
-				{
-					if (_current == null)
-					{
-						_current = _yieldValue;
-						return true;
-					}
-					else
-					{
-						_current = null;
-						_yieldValue = null;
-						_callback();
-					}
-				}
-
-				return false;
-			}
-
-			/// <inheritdoc/>
-			public void Reset()
-			{
-				throw new NotSupportedException();
+				return _current == null && _yieldValue == null;
 			}
 		}
+
+		/// <summary>
+		/// Returns the source result value.
+		/// </summary>
+		public void GetResult()
+		{
+		}
+
+		#endregion
+
+		#region INotifyCompletion
+
+		/// <inheritdoc/>
+		public void OnCompleted(Action continuation)
+		{
+			_callback = continuation;
+			AsyncUtility.StartCoroutine(this);
+		}
+
+		#endregion
+
+		#region IEnumerator
+
+		/// <inheritdoc/>
+		public object Current
+		{
+			get
+			{
+				return _current;
+			}
+		}
+
+		/// <inheritdoc/>
+		public bool MoveNext()
+		{
+			if (_yieldValue != null)
+			{
+				if (_current == null)
+				{
+					_current = _yieldValue;
+					return true;
+				}
+				else
+				{
+					_current = null;
+					_yieldValue = null;
+					_callback();
+				}
+			}
+
+			return false;
+		}
+
+		/// <inheritdoc/>
+		public void Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		#endregion
+	}
 
 #endif
 }
