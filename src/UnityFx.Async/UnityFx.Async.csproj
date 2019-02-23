@@ -5,18 +5,18 @@
 		<Description>Task-like asynchronous operations (promises) for Unity3d.</Description>
 		<Company />
 		<Authors>Alexander Bogarsukov</Authors>
-		<Copyright>Copyright © 2017-2018 Alexander Bogarsukov</Copyright>
+		<Copyright>Copyright © 2017-2019 Alexander Bogarsukov</Copyright>
 		<RepositoryUrl>https://github.com/Arvtesh/UnityFx.Async</RepositoryUrl>
 		<RepositoryType>Git</RepositoryType>
-		<PackageVersion>0.0.1-alpha0001</PackageVersion>
+		<PackageVersion>1.0.0</PackageVersion>
 		<PackageProjectUrl>https://github.com/Arvtesh/UnityFx.Async</PackageProjectUrl>
 		<PackageLicenseUrl>https://github.com/Arvtesh/UnityFx.Async/blob/master/LICENSE.md</PackageLicenseUrl>
 		<PackageTags>UnityFx;Async;Promise;AsyncOperation;Coroutine;Task;Unity3d</PackageTags>
 		<PackageIconUrl></PackageIconUrl>
-		<Version>0.7.0</Version>
-		<AssemblyVersion>0.7.0.0</AssemblyVersion>
-		<FileVersion>0.7.0.0</FileVersion>
-		<InformationalVersion>0.7.0.0</InformationalVersion>
+		<Version>1.0.0</Version>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.0.0.0</FileVersion>
+		<InformationalVersion>1.0.0.0</InformationalVersion>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<RootNamespace>UnityFx.Async</RootNamespace>

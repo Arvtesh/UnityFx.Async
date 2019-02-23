@@ -16,7 +16,7 @@ namespace UnityFx.Async.Helpers
 	/// <summary>
 	/// Implementation of <see cref="SynchronizationContext"/> for Unity.
 	/// </summary>
-	public sealed class MainThreadSynchronizationContext : SynchronizationContext
+	internal sealed class MainThreadSynchronizationContext : SynchronizationContext
 	{
 		#region data
 

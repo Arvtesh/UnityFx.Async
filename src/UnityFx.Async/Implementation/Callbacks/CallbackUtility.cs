@@ -15,6 +15,9 @@ namespace UnityFx.Async
 
 		#region interface
 
+#if !DEBUG
+		[DebuggerHidden]
+#endif
 		public static void InvokeCompletionCallback(IAsyncOperation op, object continuation)
 		{
 			Debug.Assert(op != null);
@@ -44,6 +47,9 @@ namespace UnityFx.Async
 			}
 		}
 
+#if !DEBUG
+		[DebuggerHidden]
+#endif
 		public static void InvokeCompletionCallback(IAsyncOperation op, object continuation, SynchronizationContext syncContext, bool invokeAsync)
 		{
 			Debug.Assert(op != null);
@@ -84,6 +90,9 @@ namespace UnityFx.Async
 			}
 		}
 
+#if !DEBUG
+		[DebuggerHidden]
+#endif
 		public static void InvokeProgressCallback(IAsyncOperation op, object callback)
 		{
 			Debug.Assert(op != null);
@@ -96,7 +105,6 @@ namespace UnityFx.Async
 					p.Report(op.Progress);
 					break;
 #endif
-
 				case Action<float> af:
 					af.Invoke(op.Progress);
 					break;
@@ -104,9 +112,28 @@ namespace UnityFx.Async
 				case ProgressChangedEventHandler ph:
 					ph.Invoke(op, new ProgressChangedEventArgs((int)(op.Progress * 100), op.AsyncState));
 					break;
+
+				case Action a:
+					a.Invoke();
+					break;
+
+				case IAsyncContinuation c:
+					c.Invoke(op);
+					break;
+
+				case Action<IAsyncOperation> ao:
+					ao.Invoke(op);
+					break;
+
+				case AsyncCallback ac:
+					ac.Invoke(op);
+					break;
 			}
 		}
 
+#if !DEBUG
+		[DebuggerHidden]
+#endif
 		public static void InvokeProgressCallback(IAsyncOperation op, object callback, SynchronizationContext syncContext)
 		{
 			Debug.Assert(op != null);

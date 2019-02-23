@@ -9,8 +9,9 @@ namespace UnityFx.Async
 	/// <summary>
 	/// Represents an asynchronous operation with external completion control.
 	/// </summary>
+	/// <threadsafety static="true" instance="true"/>
 	/// <seealso cref="AsyncCompletionSource{T}"/>
-	public sealed class AsyncCompletionSource : AsyncResult, IAsyncCompletionSource
+	public class AsyncCompletionSource : AsyncResult, IAsyncCompletionSource
 	{
 		#region data
 
@@ -148,6 +149,8 @@ namespace UnityFx.Async
 		/// <seealso cref="SetRunning"/>
 		public void SetScheduled()
 		{
+			ThrowIfDisposed();
+
 			if (!base.TrySetScheduled())
 			{
 				throw new InvalidOperationException();
@@ -161,7 +164,11 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		/// <seealso cref="SetScheduled"/>
 		/// <seealso cref="TrySetRunning"/>
-		public new bool TrySetScheduled() => base.TrySetScheduled();
+		public new bool TrySetScheduled()
+		{
+			ThrowIfDisposed();
+			return base.TrySetScheduled();
+		}
 
 		/// <summary>
 		/// Transitions the operation to <see cref="AsyncOperationStatus.Running"/> state.
@@ -172,6 +179,8 @@ namespace UnityFx.Async
 		/// <seealso cref="SetScheduled"/>
 		public void SetRunning()
 		{
+			ThrowIfDisposed();
+
 			if (!base.TrySetRunning())
 			{
 				throw new InvalidOperationException();
@@ -185,7 +194,11 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="SetRunning"/>
 		/// <seealso cref="TrySetScheduled"/>
-		public new bool TrySetRunning() => base.TrySetRunning();
+		public new bool TrySetRunning()
+		{
+			ThrowIfDisposed();
+			return base.TrySetRunning();
+		}
 
 		#endregion
 
@@ -222,17 +235,25 @@ namespace UnityFx.Async
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
 		public bool TrySetProgress(float progress)
 		{
-			if (progress < 0 || progress > 1)
-			{
-				throw new ArgumentOutOfRangeException(nameof(progress), progress, Messages.FormatError_InvalidProgress());
-			}
-
 			ThrowIfDisposed();
 
-			if (Status == AsyncOperationStatus.Running && _progress != progress)
+			if (progress < 0 || progress > 1)
 			{
-				_progress = progress;
-				ReportProgress();
+				throw new ArgumentOutOfRangeException(nameof(progress), progress, Messages.FormatError_InvalidProgressValue());
+			}
+
+			// Make sure the operation has been started before going further.
+			base.TrySetRunning();
+
+			// Now try set the new progress value.
+			if (!IsCompleted)
+			{
+				if (_progress != progress)
+				{
+					_progress = progress;
+					ReportProgress();
+				}
+
 				return true;
 			}
 
@@ -244,14 +265,22 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		public new bool TrySetCanceled() => TrySetCanceled(false);
+		public new bool TrySetCanceled()
+		{
+			ThrowIfDisposed();
+			return TrySetCanceled(false);
+		}
 
 		/// <summary>
 		/// Attempts to transition the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		public new bool TrySetCompleted() => TrySetCompleted(false);
+		public new bool TrySetCompleted()
+		{
+			ThrowIfDisposed();
+			return TrySetCompleted(false);
+		}
 
 		/// <summary>
 		/// Attempts to transition the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
@@ -260,16 +289,11 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		public new bool TrySetException(Exception exception) => TrySetException(exception, false);
-
-		/// <summary>
-		/// Attempts to transition the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
-		/// </summary>
-		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		public new bool TrySetExceptions(IEnumerable<Exception> exceptions) => TrySetExceptions(exceptions, false);
+		public new bool TrySetException(Exception exception)
+		{
+			ThrowIfDisposed();
+			return TrySetException(exception, false);
+		}
 
 		#endregion
 	}

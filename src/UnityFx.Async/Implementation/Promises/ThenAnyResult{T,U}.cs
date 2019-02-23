@@ -49,7 +49,7 @@ namespace UnityFx.Async.Promises
 			if (result != null)
 			{
 				result.AddCompletionCallback(
-					op2 =>
+					new Action<IAsyncOperation>(op2 =>
 					{
 						if (IsCancellationRequested)
 						{
@@ -72,7 +72,7 @@ namespace UnityFx.Async.Promises
 						{
 							TrySetException(op2.Exception);
 						}
-					},
+					}),
 					null);
 			}
 			else
