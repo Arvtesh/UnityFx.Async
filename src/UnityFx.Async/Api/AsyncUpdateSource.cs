@@ -18,20 +18,16 @@ namespace UnityFx.Async
 	{
 		#region data
 
+		private List<object> _tmpList = new List<object>();
 		private List<Action<float>> _updateCallbacks;
-		private List<Action<float>> _updateCallbacksToRemove;
-
 		private List<IAsyncUpdatable> _updatables;
-		private List<IAsyncUpdatable> _updatablesToRemove;
 
 #if !NET35
 
 		private List<IObserver<float>> _observers;
-		private List<IObserver<float>> _observersToRemove;
 
 #endif
 
-		private bool _updating;
 		private bool _disposed;
 
 		#endregion
@@ -54,7 +50,6 @@ namespace UnityFx.Async
 			if (_updateCallbacks == null)
 			{
 				_updateCallbacks = new List<Action<float>>();
-				_updateCallbacksToRemove = new List<Action<float>>();
 			}
 
 			_updateCallbacks.Add(updateCallback);
@@ -65,17 +60,7 @@ namespace UnityFx.Async
 		{
 			if (_updateCallbacks != null)
 			{
-				if (_updating)
-				{
-					if (updateCallback != null)
-					{
-						_updateCallbacksToRemove.Add(updateCallback);
-					}
-				}
-				else
-				{
-					_updateCallbacks.Remove(updateCallback);
-				}
+				_updateCallbacks.Remove(updateCallback);
 			}
 		}
 
@@ -92,7 +77,6 @@ namespace UnityFx.Async
 			if (_updatables == null)
 			{
 				_updatables = new List<IAsyncUpdatable>();
-				_updatablesToRemove = new List<IAsyncUpdatable>();
 			}
 
 			_updatables.Add(updatable);
@@ -103,17 +87,7 @@ namespace UnityFx.Async
 		{
 			if (_updatables != null)
 			{
-				if (_updating)
-				{
-					if (updatable != null)
-					{
-						_updatablesToRemove.Add(updatable);
-					}
-				}
-				else
-				{
-					_updatables.Remove(updatable);
-				}
+				_updatables.Remove(updatable);
 			}
 		}
 
@@ -145,14 +119,7 @@ namespace UnityFx.Async
 		{
 			if (_observers != null)
 			{
-				if (_updating)
-				{
-					_observersToRemove.Add(observer);
-				}
-				else
-				{
-					_observers.Remove(observer);
-				}
+				_observers.Remove(observer);
 			}
 		}
 
@@ -169,7 +136,6 @@ namespace UnityFx.Async
 			if (_observers == null)
 			{
 				_observers = new List<IObserver<float>>();
-				_observersToRemove = new List<IObserver<float>>();
 			}
 
 			return new ObservableSubscription(this, observer);
@@ -186,63 +152,54 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 
-			try
+			if (_updateCallbacks != null && _updateCallbacks.Count > 0)
 			{
-				_updating = true;
+				_tmpList.Clear();
 
-				if (_updateCallbacks != null && _updateCallbacks.Count > 0)
+				foreach (var item in _updateCallbacks)
 				{
-					foreach (var callback in _updateCallbacks)
-					{
-						callback(frameTime);
-					}
-
-					foreach (var callback in _updateCallbacksToRemove)
-					{
-						_updateCallbacks.Remove(callback);
-					}
-
-					_updateCallbacksToRemove.Clear();
+					_tmpList.Add(item);
 				}
 
-				if (_updatables != null && _updatables.Count > 0)
+				foreach (var callback in _tmpList)
 				{
-					foreach (var item in _updatables)
-					{
-						item.Update(frameTime);
-					}
-
-					foreach (var item in _updatablesToRemove)
-					{
-						_updatables.Remove(item);
-					}
-
-					_updatablesToRemove.Clear();
+					((Action<float>)callback).Invoke(frameTime);
 				}
+			}
+
+			if (_updatables != null && _updatables.Count > 0)
+			{
+				_tmpList.Clear();
+
+				foreach (var item in _updatables)
+				{
+					_tmpList.Add(item);
+				}
+
+				foreach (var item in _tmpList)
+				{
+					((IAsyncUpdatable)item).Update(frameTime);
+				}
+			}
 
 #if !NET35
 
-				if (_observers != null && _observers.Count > 0)
+			if (_observers != null && _observers.Count > 0)
+			{
+				_tmpList.Clear();
+
+				foreach (var item in _observers)
 				{
-					foreach (var item in _observers)
-					{
-						item.OnNext(frameTime);
-					}
-
-					foreach (var item in _observersToRemove)
-					{
-						_observers.Remove(item);
-					}
-
-					_observersToRemove.Clear();
+					_tmpList.Add(item);
 				}
 
+				foreach (var item in _tmpList)
+				{
+					((IObserver<float>)item).OnNext(frameTime);
+				}
+			}
+
 #endif
-			}
-			finally
-			{
-				_updating = false;
-			}
 		}
 
 		/// <inheritdoc/>
@@ -257,20 +214,23 @@ namespace UnityFx.Async
 
 			if (_observers != null && _observers.Count > 0)
 			{
-				_updating = true;
-
 				try
 				{
+					_tmpList.Clear();
+
 					foreach (var item in _observers)
 					{
-						item.OnCompleted();
+						_tmpList.Add(item);
+					}
+
+					foreach (var item in _tmpList)
+					{
+						((IObserver<float>)item).OnCompleted();
 					}
 				}
 				finally
 				{
-					_observersToRemove.Clear();
 					_observers.Clear();
-					_updating = false;
 				}
 			}
 
@@ -289,20 +249,23 @@ namespace UnityFx.Async
 
 			if (_observers != null && _observers.Count > 0)
 			{
-				_updating = true;
-
 				try
 				{
+					_tmpList.Clear();
+
 					foreach (var item in _observers)
 					{
-						item.OnError(e);
+						_tmpList.Add(item);
+					}
+
+					foreach (var item in _tmpList)
+					{
+						((IObserver<float>)item).OnError(e);
 					}
 				}
 				finally
 				{
-					_observersToRemove.Clear();
 					_observers.Clear();
-					_updating = false;
 				}
 			}
 
@@ -327,20 +290,23 @@ namespace UnityFx.Async
 
 				if (_observers != null && _observers.Count > 0)
 				{
-					_updating = true;
-
 					try
 					{
+						_tmpList.Clear();
+
 						foreach (var item in _observers)
 						{
-							item.OnCompleted();
+							_tmpList.Add(item);
+						}
+
+						foreach (var item in _tmpList)
+						{
+							((IObserver<float>)item).OnCompleted();
 						}
 					}
 					finally
 					{
-						_observersToRemove = null;
 						_observers = null;
-						_updating = false;
 					}
 				}
 

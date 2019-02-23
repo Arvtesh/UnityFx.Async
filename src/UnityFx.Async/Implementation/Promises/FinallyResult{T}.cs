@@ -50,21 +50,29 @@ namespace UnityFx.Async.Promises
 				switch (_continuation)
 				{
 					case Action a:
-						a.Invoke();
-						TrySetCompleted();
-						break;
+						{
+							a.Invoke();
+							TrySetCompleted();
+							break;
+						}
 
 					case Func<IAsyncOperation<T>> f1:
-						f1().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
-						break;
+						{
+							f1().AddCompletionCallback(new Action<IAsyncOperation>(op2 => TryCopyCompletionState(op2, false)), null);
+							break;
+						}
 
 					case Func<IAsyncOperation> f2:
-						f2().AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
-						break;
+						{
+							f2().AddCompletionCallback(new Action<IAsyncOperation>(op2 => TryCopyCompletionState(op2, false)), null);
+							break;
+						}
 
 					default:
-						TrySetCanceled();
-						break;
+						{
+							TrySetCanceled();
+							break;
+						}
 				}
 			}
 			catch (Exception e)

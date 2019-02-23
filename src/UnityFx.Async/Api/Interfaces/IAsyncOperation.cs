@@ -11,13 +11,13 @@ namespace UnityFx.Async
 	/// <remarks>
 	/// The interface defines a read-only consumer side of an asynchronous operation. Basically
 	/// it provides the operation state information and completion/progress events. It is cancellable
-	/// so a cancellation request can be issued at any time (without any guarantees).
+	/// so a cancellation request can be issued at any time (without any guarantees though).
 	/// </remarks>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task">Task</seealso>
 	/// <seealso cref="IAsyncCompletionSource"/>
 	/// <seealso cref="IAsyncOperation{TResult}"/>
 	/// <seealso cref="AsyncResult"/>
-	public interface IAsyncOperation : IAsyncOperationEvents, IAsyncCancellable, IAsyncResult, IDisposable
+	public interface IAsyncOperation : IAsyncOperationCallbacks, IAsyncCancellable, IAsyncResult, IDisposable
 	{
 		/// <summary>
 		/// Gets a unique ID for the operation instance.

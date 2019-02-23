@@ -87,7 +87,11 @@ namespace UnityFx.Async
 
 				if (exceptions != null)
 				{
-					TrySetExceptions(exceptions);
+#if NET35
+					TrySetException(exceptions[0]);
+#else
+					TrySetException(new AggregateException(exceptions));
+#endif
 				}
 				else if (canceledOp != null)
 				{

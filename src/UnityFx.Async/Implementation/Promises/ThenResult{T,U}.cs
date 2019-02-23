@@ -36,38 +36,52 @@ namespace UnityFx.Async.Promises
 			switch (continuation)
 			{
 				case Action a:
-					a.Invoke();
-					TrySetCompleted();
-					break;
+					{
+						a.Invoke();
+						TrySetCompleted();
+						break;
+					}
 
 				case Action<T> a1:
-					a1.Invoke((op as IAsyncOperation<T>).Result);
-					TrySetCompleted();
-					break;
+					{
+						a1.Invoke((op as IAsyncOperation<T>).Result);
+						TrySetCompleted();
+						break;
+					}
 
 				case Func<IAsyncOperation<U>> f3:
-					result = f3();
-					result.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
-					break;
+					{
+						result = f3();
+						result.AddCompletionCallback(new Action<IAsyncOperation>(op2 => TryCopyCompletionState(op2, false)), null);
+						break;
+					}
 
 				case Func<IAsyncOperation> f1:
-					result = f1();
-					result.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
-					break;
+					{
+						result = f1();
+						result.AddCompletionCallback(new Action<IAsyncOperation>(op2 => TryCopyCompletionState(op2, false)), null);
+						break;
+					}
 
 				case Func<T, IAsyncOperation<U>> f4:
-					result = f4((op as IAsyncOperation<T>).Result);
-					result.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
-					break;
+					{
+						result = f4((op as IAsyncOperation<T>).Result);
+						result.AddCompletionCallback(new Action<IAsyncOperation>(op2 => TryCopyCompletionState(op2, false)), null);
+						break;
+					}
 
 				case Func<T, IAsyncOperation> f2:
-					result = f2((op as IAsyncOperation<T>).Result);
-					result.AddCompletionCallback(op2 => TryCopyCompletionState(op2, false), null);
-					break;
+					{
+						result = f2((op as IAsyncOperation<T>).Result);
+						result.AddCompletionCallback(new Action<IAsyncOperation>(op2 => TryCopyCompletionState(op2, false)), null);
+						break;
+					}
 
 				default:
-					TrySetCanceled();
-					break;
+					{
+						TrySetCanceled();
+						break;
+					}
 			}
 
 			return result;

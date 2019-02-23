@@ -47,7 +47,7 @@ namespace UnityFx.Async
 
 		public void Dispose()
 		{
-			_op.RemoveCompletionCallback(this);
+			_op.RemoveCallback(this);
 		}
 
 		#endregion

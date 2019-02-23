@@ -23,6 +23,11 @@ namespace UnityFx.Async
 		/// <summary>
 		/// LateUpdate.
 		/// </summary>
-		LateUpdate
+		LateUpdate,
+
+		/// <summary>
+		/// yield WaitForEndOfFrame().
+		/// </summary>
+		EndOfFrame
 	}
 }

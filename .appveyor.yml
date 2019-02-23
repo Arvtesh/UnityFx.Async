@@ -27,6 +27,8 @@ artifacts:
     name: UnityFx.Async-netstandard2.0
   - path: .\bin\AssetStore
     name: UnityFx.Async.AssetStore
+  - path: .\bin\AssetStoreLegacy
+    name: UnityFx.Async.AssetStoreLegacy
   - path: .\bin\*.nupkg
 
 dotnet_csproj:
@@ -49,7 +51,7 @@ deploy:
 
   - provider: NuGet
     api_key:
-      secure: iJt9p5F/FKKj2Y+neRJ1SG7W2P6aUhZBU8Z6j1x+7rLD3PGe5gH7VEZ/drxrNIzc
+      secure: T9wqAaW7mXUp2iCjx98JTk8I9P7YPz45VNY3Fs40YnbJ26f/3QPCFZvg47h6ntUj
     artifact: /.*\.nupkg/
     on:
       branch: /master|(release\/.+)|(hotfix\/.+)/

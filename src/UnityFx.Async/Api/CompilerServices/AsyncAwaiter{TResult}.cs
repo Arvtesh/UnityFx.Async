@@ -59,7 +59,7 @@ namespace UnityFx.Async.CompilerServices
 		/// <inheritdoc/>
 		public void OnCompleted(Action continuation)
 		{
-			AsyncAwaiter.SetAwaitContinuation(_op, continuation, _syncContext);
+			_op.AddCompletionCallback(continuation, _syncContext);
 		}
 	}
 

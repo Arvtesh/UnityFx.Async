@@ -15,6 +15,7 @@ namespace UnityFx.Async
 	/// A lightweight net35-compatible asynchronous operation that can return a value.
 	/// </summary>
 	/// <typeparam name="TResult">Type of the operation result value.</typeparam>
+	/// <threadsafety static="true" instance="true"/>
 	/// <seealso cref="AsyncCompletionSource{T}"/>
 	/// <seealso cref="AsyncResult"/>
 #if !NET35
@@ -153,16 +154,6 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class. For internal use only.
 		/// </summary>
-		/// <param name="exceptions">Exceptions to complete the operation with.</param>
-		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
-		internal AsyncResult(IEnumerable<Exception> exceptions, object asyncState)
-			: base(exceptions, asyncState)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult{T}"/> class. For internal use only.
-		/// </summary>
 		/// <param name="result">Result value.</param>
 		/// <param name="asyncState">User-defined data to assosiate with the operation.</param>
 		internal AsyncResult(TResult result, object asyncState)
@@ -243,7 +234,7 @@ namespace UnityFx.Async
 					return TrySetCompleted(completedSynchronously);
 				}
 			}
-			else if (patternOp.IsFaulted || patternOp.IsCanceled)
+			else if (patternOp.IsCompleted)
 			{
 				return TrySetException(patternOp.Exception, completedSynchronously);
 			}
@@ -260,7 +251,7 @@ namespace UnityFx.Async
 			{
 				return TrySetResult(patternOp.Result, completedSynchronously);
 			}
-			else if (patternOp.IsFaulted || patternOp.IsCanceled)
+			else if (patternOp.IsCompleted)
 			{
 				return TrySetException(patternOp.Exception, completedSynchronously);
 			}

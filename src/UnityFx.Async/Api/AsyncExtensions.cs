@@ -846,7 +846,7 @@ namespace UnityFx.Async
 				var tcs = new TaskCompletionSource<VoidResult>();
 
 				op.AddCompletionCallback(
-					asyncOp =>
+					new Action(() =>
 					{
 						status = op.Status;
 
@@ -862,7 +862,7 @@ namespace UnityFx.Async
 						{
 							tcs.TrySetCanceled();
 						}
-					},
+					}),
 					null);
 
 				return tcs.Task;
@@ -895,7 +895,7 @@ namespace UnityFx.Async
 				var tcs = new TaskCompletionSource<TResult>();
 
 				op.AddCompletionCallback(
-					asyncOp =>
+					new Action(() =>
 					{
 						status = op.Status;
 
@@ -911,7 +911,7 @@ namespace UnityFx.Async
 						{
 							tcs.TrySetCanceled();
 						}
-					},
+					}),
 					null);
 
 				return tcs.Task;
@@ -972,22 +972,22 @@ namespace UnityFx.Async
 		/// Configures an awaiter used to await this operation.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
-		/// <param name="continuationContext">Specifies continuation options.</param>
+		/// <param name="options">Specifies continuation options.</param>
 		/// <returns>An object that can be used to await the operation.</returns>
-		public static CompilerServices.AsyncAwaitable ConfigureAwait(this IAsyncOperation op, AsyncContinuationContext continuationContext)
+		public static CompilerServices.AsyncAwaitable ConfigureAwait(this IAsyncOperation op, AsyncCallbackOptions options)
 		{
-			return new CompilerServices.AsyncAwaitable(op, AsyncResult.GetSynchronizationContext(continuationContext));
+			return new CompilerServices.AsyncAwaitable(op, AsyncResult.GetSynchronizationContext(options));
 		}
 
 		/// <summary>
 		/// Configures an awaiter used to await this operation.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
-		/// <param name="continuationContext">Specifies continuation options.</param>
+		/// <param name="options">Specifies continuation options.</param>
 		/// <returns>An object that can be used to await the operation.</returns>
-		public static CompilerServices.AsyncAwaitable<TResult> ConfigureAwait<TResult>(this IAsyncOperation<TResult> op, AsyncContinuationContext continuationContext)
+		public static CompilerServices.AsyncAwaitable<TResult> ConfigureAwait<TResult>(this IAsyncOperation<TResult> op, AsyncCallbackOptions options)
 		{
-			return new CompilerServices.AsyncAwaitable<TResult>(op, AsyncResult.GetSynchronizationContext(continuationContext));
+			return new CompilerServices.AsyncAwaitable<TResult>(op, AsyncResult.GetSynchronizationContext(options));
 		}
 
 #endif
@@ -996,7 +996,7 @@ namespace UnityFx.Async
 
 		#endregion
 
-		#region IAsyncOperationEvents
+		#region IAsyncOperationCallbacks
 
 		/// <summary>
 		/// Adds a completion callback to be executed after the operation has completed. If the operation is already completed
@@ -1010,14 +1010,14 @@ namespace UnityFx.Async
 		/// <param name="callback">The callback to be executed when the operation has completed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		public static void AddCompletionCallback(this IAsyncOperationEvents op, Action<IAsyncOperation> callback)
+		public static void AddCompletionCallback(this IAsyncOperationCallbacks op, Action callback)
 		{
 			op.AddCompletionCallback(callback, SynchronizationContext.Current);
 		}
 
 		/// <summary>
 		/// Adds a completion callback to be executed after the operation has completed. If the operation is already completed
-		/// the <paramref name="callback"/> is invoked on a context specified via <paramref name="continuationContext"/>.
+		/// the <paramref name="callback"/> is invoked on a context specified via <paramref name="options"/>.
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified.
@@ -1025,12 +1025,12 @@ namespace UnityFx.Async
 		/// </remarks>
 		/// <param name="op">The operation to schedule continuation for.</param>
 		/// <param name="callback">The callback to be executed when the operation has completed.</param>
-		/// <param name="continuationContext">Identifier of a <see cref="SynchronizationContext"/> to schedule callback on.</param>
+		/// <param name="options">Identifier of a <see cref="SynchronizationContext"/> to schedule callback on.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		public static void AddCompletionCallback(this IAsyncOperationEvents op, Action<IAsyncOperation> callback, AsyncContinuationContext continuationContext)
+		public static void AddCompletionCallback(this IAsyncOperationCallbacks op, Action callback, AsyncCallbackOptions options)
 		{
-			op.AddCompletionCallback(callback, AsyncResult.GetSynchronizationContext(continuationContext));
+			op.AddCompletionCallback(callback, AsyncResult.GetSynchronizationContext(options));
 		}
 
 		/// <summary>
@@ -1045,14 +1045,14 @@ namespace UnityFx.Async
 		/// <param name="callback">The callback to be executed when the operation has completed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		public static void AddCompletionCallback(this IAsyncOperationEvents op, IAsyncContinuation callback)
+		public static void AddCompletionCallback(this IAsyncOperationCallbacks op, Action<IAsyncOperation> callback)
 		{
 			op.AddCompletionCallback(callback, SynchronizationContext.Current);
 		}
 
 		/// <summary>
 		/// Adds a completion callback to be executed after the operation has completed. If the operation is already completed
-		/// the <paramref name="callback"/> is invoked on a context specified via <paramref name="continuationContext"/>.
+		/// the <paramref name="callback"/> is invoked on a context specified via <paramref name="options"/>.
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified.
@@ -1060,12 +1060,47 @@ namespace UnityFx.Async
 		/// </remarks>
 		/// <param name="op">The operation to schedule continuation for.</param>
 		/// <param name="callback">The callback to be executed when the operation has completed.</param>
-		/// <param name="continuationContext">Identifier of a <see cref="SynchronizationContext"/> to schedule callback on.</param>
+		/// <param name="options">Identifier of a <see cref="SynchronizationContext"/> to schedule callback on.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		public static void AddCompletionCallback(this IAsyncOperationEvents op, IAsyncContinuation callback, AsyncContinuationContext continuationContext)
+		public static void AddCompletionCallback(this IAsyncOperationCallbacks op, Action<IAsyncOperation> callback, AsyncCallbackOptions options)
 		{
-			op.AddCompletionCallback(callback, AsyncResult.GetSynchronizationContext(continuationContext));
+			op.AddCompletionCallback(callback, AsyncResult.GetSynchronizationContext(options));
+		}
+
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is already completed
+		/// the <paramref name="callback"/> is called synchronously.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="callback"/> is invoked on a thread that registered the continuation (if it has a <see cref="SynchronizationContext"/> attached).
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="op">The operation to schedule continuation for.</param>
+		/// <param name="callback">The callback to be executed when the operation has completed.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		public static void AddCompletionCallback(this IAsyncOperationCallbacks op, IAsyncContinuation callback)
+		{
+			op.AddCompletionCallback(callback, SynchronizationContext.Current);
+		}
+
+		/// <summary>
+		/// Adds a completion callback to be executed after the operation has completed. If the operation is already completed
+		/// the <paramref name="callback"/> is invoked on a context specified via <paramref name="options"/>.
+		/// </summary>
+		/// <remarks>
+		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified.
+		/// Throwing an exception from the callback might cause unspecified behaviour.
+		/// </remarks>
+		/// <param name="op">The operation to schedule continuation for.</param>
+		/// <param name="callback">The callback to be executed when the operation has completed.</param>
+		/// <param name="options">Identifier of a <see cref="SynchronizationContext"/> to schedule callback on.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		public static void AddCompletionCallback(this IAsyncOperationCallbacks op, IAsyncContinuation callback, AsyncCallbackOptions options)
+		{
+			op.AddCompletionCallback(callback, AsyncResult.GetSynchronizationContext(options));
 		}
 
 		/// <summary>
@@ -1080,14 +1115,14 @@ namespace UnityFx.Async
 		/// <param name="callback">The callback to be executed when the operation progress has changed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		public static void AddProgressCallback(this IAsyncOperationEvents op, Action<float> callback)
+		public static void AddProgressCallback(this IAsyncOperationCallbacks op, Action<float> callback)
 		{
 			op.AddProgressCallback(callback, SynchronizationContext.Current);
 		}
 
 		/// <summary>
 		/// Adds a callback to be executed when the operation progress has changed. If the operation is already completed
-		/// the <paramref name="callback"/> is invoked on a context specified via <paramref name="continuationContext"/>.
+		/// the <paramref name="callback"/> is invoked on a context specified via <paramref name="options"/>.
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified.
@@ -1095,12 +1130,12 @@ namespace UnityFx.Async
 		/// </remarks>
 		/// <param name="op">The operation to schedule continuation for.</param>
 		/// <param name="callback">The callback to be executed when the operation progress has changed.</param>
-		/// <param name="continuationContext">Identifier of a <see cref="SynchronizationContext"/> to schedule callback on.</param>
+		/// <param name="options">Identifier of a <see cref="SynchronizationContext"/> to schedule callback on.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		public static void AddProgressCallback(this IAsyncOperationEvents op, Action<float> callback, AsyncContinuationContext continuationContext)
+		public static void AddProgressCallback(this IAsyncOperationCallbacks op, Action<float> callback, AsyncCallbackOptions options)
 		{
-			op.AddProgressCallback(callback, AsyncResult.GetSynchronizationContext(continuationContext));
+			op.AddProgressCallback(callback, AsyncResult.GetSynchronizationContext(options));
 		}
 
 #if !NET35
@@ -1117,14 +1152,14 @@ namespace UnityFx.Async
 		/// <param name="callback">The callback to be executed when the operation progress has changed.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		public static void AddProgressCallback(this IAsyncOperationEvents op, IProgress<float> callback)
+		public static void AddProgressCallback(this IAsyncOperationCallbacks op, IProgress<float> callback)
 		{
 			op.AddProgressCallback(callback, SynchronizationContext.Current);
 		}
 
 		/// <summary>
 		/// Adds a callback to be executed when the operation progress has changed. If the operation is already completed
-		/// the <paramref name="callback"/> is invoked on a context specified via <paramref name="continuationContext"/>.
+		/// the <paramref name="callback"/> is invoked on a context specified via <paramref name="options"/>.
 		/// </summary>
 		/// <remarks>
 		/// The <paramref name="callback"/> is invoked on a <see cref="SynchronizationContext"/> specified.
@@ -1132,12 +1167,12 @@ namespace UnityFx.Async
 		/// </remarks>
 		/// <param name="op">The operation to schedule continuation for.</param>
 		/// <param name="callback">The callback to be executed when the operation progress has changed.</param>
-		/// <param name="continuationContext">Identifier of a <see cref="SynchronizationContext"/> to schedule callback on.</param>
+		/// <param name="options">Identifier of a <see cref="SynchronizationContext"/> to schedule callback on.</param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
-		public static void AddProgressCallback(this IAsyncOperationEvents op, IProgress<float> callback, AsyncContinuationContext continuationContext)
+		public static void AddProgressCallback(this IAsyncOperationCallbacks op, IProgress<float> callback, AsyncCallbackOptions options)
 		{
-			op.AddProgressCallback(callback, AsyncResult.GetSynchronizationContext(continuationContext));
+			op.AddProgressCallback(callback, AsyncResult.GetSynchronizationContext(options));
 		}
 
 #endif
@@ -1187,7 +1222,6 @@ namespace UnityFx.Async
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="SetException(IAsyncCompletionSource, Exception)"/>
-		/// <seealso cref="SetExceptions(IAsyncCompletionSource, IEnumerable{Exception})"/>
 		/// <seealso cref="SetCompleted(IAsyncCompletionSource)"/>
 		public static void SetCanceled(this IAsyncCompletionSource completionSource)
 		{
@@ -1204,7 +1238,6 @@ namespace UnityFx.Async
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="SetException{TResult}(IAsyncCompletionSource{TResult}, Exception)"/>
-		/// <seealso cref="SetExceptions{TResult}(IAsyncCompletionSource{TResult}, IEnumerable{Exception})"/>
 		/// <seealso cref="SetResult{TResult}(IAsyncCompletionSource{TResult}, TResult)"/>
 		public static void SetCanceled<TResult>(this IAsyncCompletionSource<TResult> completionSource)
 		{
@@ -1292,7 +1325,6 @@ namespace UnityFx.Async
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
 		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="SetExceptions(IAsyncCompletionSource, IEnumerable{Exception})"/>
 		/// <seealso cref="SetCanceled(IAsyncCompletionSource)"/>
 		/// <seealso cref="SetCompleted(IAsyncCompletionSource)"/>
 		public static void SetException(this IAsyncCompletionSource completionSource, Exception exception)
@@ -1323,44 +1355,6 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
-		/// </summary>
-		/// <param name="completionSource">The completion source instance.</param>
-		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
-		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="SetException(IAsyncCompletionSource, Exception)"/>
-		/// <seealso cref="SetCanceled(IAsyncCompletionSource)"/>
-		/// <seealso cref="SetCompleted(IAsyncCompletionSource)"/>
-		public static void SetExceptions(this IAsyncCompletionSource completionSource, IEnumerable<Exception> exceptions)
-		{
-			if (!completionSource.TrySetExceptions(exceptions))
-			{
-				throw new InvalidOperationException(Messages.FormatError_OperationStateCannotBeChanged());
-			}
-		}
-
-		/// <summary>
-		/// Transitions the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
-		/// </summary>
-		/// <param name="completionSource">The completion source instance.</param>
-		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
-		/// <exception cref="InvalidOperationException">Thrown if the transition fails.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <seealso cref="SetException{TResult}(IAsyncCompletionSource{TResult}, Exception)"/>
-		/// <seealso cref="SetCanceled{TResult}(IAsyncCompletionSource{TResult})"/>
-		/// <seealso cref="SetResult{TResult}(IAsyncCompletionSource{TResult}, TResult)"/>
-		public static void SetExceptions<TResult>(this IAsyncCompletionSource<TResult> completionSource, IEnumerable<Exception> exceptions)
-		{
-			if (!completionSource.TrySetExceptions(exceptions))
-			{
-				throw new InvalidOperationException(Messages.FormatError_OperationStateCannotBeChanged());
-			}
-		}
-
-		/// <summary>
 		/// Transitions the underlying <see cref="IAsyncOperation"/> into the <see cref="AsyncOperationStatus.RanToCompletion"/> state.
 		/// </summary>
 		/// <param name="completionSource">The completion source instance.</param>
@@ -1368,7 +1362,6 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="SetCanceled(IAsyncCompletionSource)"/>
 		/// <seealso cref="SetException(IAsyncCompletionSource, Exception)"/>
-		/// <seealso cref="SetExceptions(IAsyncCompletionSource, IEnumerable{Exception})"/>
 		public static void SetCompleted(this IAsyncCompletionSource completionSource)
 		{
 			if (!completionSource.TrySetCompleted())
@@ -1386,7 +1379,6 @@ namespace UnityFx.Async
 		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
 		/// <seealso cref="SetCanceled{TResult}(IAsyncCompletionSource{TResult})"/>
 		/// <seealso cref="SetException{TResult}(IAsyncCompletionSource{TResult}, Exception)"/>
-		/// <seealso cref="SetExceptions{TResult}(IAsyncCompletionSource{TResult}, IEnumerable{Exception})"/>
 		public static void SetResult<TResult>(this IAsyncCompletionSource<TResult> completionSource, TResult result)
 		{
 			if (!completionSource.TrySetResult(result))

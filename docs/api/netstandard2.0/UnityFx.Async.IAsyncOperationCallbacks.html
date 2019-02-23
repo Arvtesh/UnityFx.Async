@@ -1,0 +1,485 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Interface IAsyncOperationCallbacks
+   | Asynchronous Operations for Unity </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Interface IAsyncOperationCallbacks
+   | Asynchronous Operations for Unity ">
+    <meta name="generator" content="docfx 2.31.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="UnityFx.Async.IAsyncOperationCallbacks">
+  
+  
+  <h1 id="UnityFx_Async_IAsyncOperationCallbacks" data-uid="UnityFx.Async.IAsyncOperationCallbacks" class="text-break">Interface IAsyncOperationCallbacks
+  </h1>
+  <div class="markdown level0 summary"><p>Defines basic callback management tools for <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="UnityFx.Async.html">UnityFx.Async</a></h6>
+  <h6><strong>Assembly</strong>: UnityFx.Async.dll</h6>
+  <h5 id="UnityFx_Async_IAsyncOperationCallbacks_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IAsyncOperationCallbacks</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationCallbacks_AddCompletionCallback_System_Object_System_Threading_SynchronizationContext_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationCallbacks.AddCompletionCallback(System.Object%2CSystem.Threading.SynchronizationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationCallbacks.cs/#L60">View Source</a>
+  </span>
+  <a id="UnityFx_Async_IAsyncOperationCallbacks_AddCompletionCallback_" data-uid="UnityFx.Async.IAsyncOperationCallbacks.AddCompletionCallback*"></a>
+  <h4 id="UnityFx_Async_IAsyncOperationCallbacks_AddCompletionCallback_System_Object_System_Threading_SynchronizationContext_" data-uid="UnityFx.Async.IAsyncOperationCallbacks.AddCompletionCallback(System.Object,System.Threading.SynchronizationContext)">AddCompletionCallback(Object, SynchronizationContext)</h4>
+  <div class="markdown level1 summary"><p>Adds a completion callback to be executed after the operation has completed. If the operation is completed <code data-dev-comment-type="paramref" class="paramref">callback</code> is invoked
+on the <code data-dev-comment-type="paramref" class="paramref">syncContext</code> specified. Throwing an exception from the callback causes unspecified behaviour. The method is not intended
+to be used by user code. Do not use if not sure.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void AddCompletionCallback(object callback, SynchronizationContext syncContext)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="parametername">callback</span></td>
+        <td><p>The callback to be executed when the operation has completed. Can be one of <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.action">Action</a>, <span class="xref">System.Action&lt;T&gt;</span>
+(with <a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a> argument type), <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.asynccallback">AsyncCallback</a>, <a class="xref" href="UnityFx.Async.IAsyncContinuation.html">IAsyncContinuation</a> or <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.asynccompletedeventhandler">AsyncCompletedEventHandler</a>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">syncContext</span></td>
+        <td><p>If not <span class="xref">null</span> method attempts to marshal the continuation to the synchronization context.
+Otherwise the callback is invoked on a thread that initiated the operation completion.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationCallbacks_AddCompletionCallback_System_Object_System_Threading_SynchronizationContext__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The <code data-dev-comment-type="paramref" class="paramref">callback</code> is invoked on a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a> specified.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">callback</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>Thrown is the operation has been disposed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationCallbacks_AddCompletionCallback_System_Object_System_Threading_SynchronizationContext__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationCallbacks.html#UnityFx_Async_IAsyncOperationCallbacks_AddProgressCallback_System_Object_System_Threading_SynchronizationContext_">AddProgressCallback(Object, SynchronizationContext)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationCallbacks.html#UnityFx_Async_IAsyncOperationCallbacks_RemoveCallback_System_Object_">RemoveCallback(Object)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationCallbacks_AddProgressCallback_System_Object_System_Threading_SynchronizationContext_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationCallbacks.AddProgressCallback(System.Object%2CSystem.Threading.SynchronizationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationCallbacks.cs/#L78">View Source</a>
+  </span>
+  <a id="UnityFx_Async_IAsyncOperationCallbacks_AddProgressCallback_" data-uid="UnityFx.Async.IAsyncOperationCallbacks.AddProgressCallback*"></a>
+  <h4 id="UnityFx_Async_IAsyncOperationCallbacks_AddProgressCallback_System_Object_System_Threading_SynchronizationContext_" data-uid="UnityFx.Async.IAsyncOperationCallbacks.AddProgressCallback(System.Object,System.Threading.SynchronizationContext)">AddProgressCallback(Object, SynchronizationContext)</h4>
+  <div class="markdown level1 summary"><p>Adds a callback to be executed when the operation progress has changed. If the operation is completed <code data-dev-comment-type="paramref" class="paramref">callback</code> is invoked
+on the <code data-dev-comment-type="paramref" class="paramref">syncContext</code> specified. Throwing an exception from the callback might cause unspecified behaviour. The method is not intended
+to be used by user code. Do not use if not sure.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void AddProgressCallback(object callback, SynchronizationContext syncContext)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="parametername">callback</span></td>
+        <td><p>The callback to be executed when the operation progress has changed.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a></td>
+        <td><span class="parametername">syncContext</span></td>
+        <td><p>If not <span class="xref">null</span> method attempts to marshal the continuation to the synchronization context.
+Otherwise the callback is invoked on a thread that initiated the operation.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationCallbacks_AddProgressCallback_System_Object_System_Threading_SynchronizationContext__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The <code data-dev-comment-type="paramref" class="paramref">callback</code> is invoked on a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a> specified.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">callback</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>Thrown is the operation has been disposed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationCallbacks_AddProgressCallback_System_Object_System_Threading_SynchronizationContext__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationCallbacks.html#UnityFx_Async_IAsyncOperationCallbacks_AddCompletionCallback_System_Object_System_Threading_SynchronizationContext_">AddCompletionCallback(Object, SynchronizationContext)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationCallbacks.html#UnityFx_Async_IAsyncOperationCallbacks_RemoveCallback_System_Object_">RemoveCallback(Object)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationCallbacks_RemoveCallback_System_Object_.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationCallbacks.RemoveCallback(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationCallbacks.cs/#L87">View Source</a>
+  </span>
+  <a id="UnityFx_Async_IAsyncOperationCallbacks_RemoveCallback_" data-uid="UnityFx.Async.IAsyncOperationCallbacks.RemoveCallback*"></a>
+  <h4 id="UnityFx_Async_IAsyncOperationCallbacks_RemoveCallback_System_Object_" data-uid="UnityFx.Async.IAsyncOperationCallbacks.RemoveCallback(System.Object)">RemoveCallback(Object)</h4>
+  <div class="markdown level1 summary"><p>Removes an existing completion/progress callback.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool RemoveCallback(object callback)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="parametername">callback</span></td>
+        <td><p>The callback to remove. Can be <span class="xref">null</span>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p>Returns <span class="xref">true</span> if <code data-dev-comment-type="paramref" class="paramref">callback</code> was removed; <span class="xref">false</span> otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationCallbacks_RemoveCallback_System_Object__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationCallbacks.html#UnityFx_Async_IAsyncOperationCallbacks_AddCompletionCallback_System_Object_System_Threading_SynchronizationContext_">AddCompletionCallback(Object, SynchronizationContext)</a></div>
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationCallbacks.html#UnityFx_Async_IAsyncOperationCallbacks_AddProgressCallback_System_Object_System_Threading_SynchronizationContext_">AddProgressCallback(Object, SynchronizationContext)</a></div>
+  </div>
+  <h3 id="events">Events
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationCallbacks_Completed.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationCallbacks.Completed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationCallbacks.cs/#L41">View Source</a>
+  </span>
+  <h4 id="UnityFx_Async_IAsyncOperationCallbacks_Completed" data-uid="UnityFx.Async.IAsyncOperationCallbacks.Completed">Completed</h4>
+  <div class="markdown level1 summary"><p>Raised when the operation is completed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event AsyncCompletedEventHandler Completed</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.asynccompletedeventhandler">AsyncCompletedEventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationCallbacks_Completed_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The event handler is invoked on a thread that registered it (if it has a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a> attached).
+If the operation is already completed the event handler is called synchronously. Throwing an exception from the event handler
+might cause unspecified behaviour.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if the delegate being registered is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>Thrown is the operation has been disposed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationCallbacks_Completed_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationCallbacks.html#UnityFx_Async_IAsyncOperationCallbacks_ProgressChanged">ProgressChanged</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationCallbacks_ProgressChanged.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationCallbacks.ProgressChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationCallbacks.cs/#L28">View Source</a>
+  </span>
+  <h4 id="UnityFx_Async_IAsyncOperationCallbacks_ProgressChanged" data-uid="UnityFx.Async.IAsyncOperationCallbacks.ProgressChanged">ProgressChanged</h4>
+  <div class="markdown level1 summary"><p>Raised when the operation progress is changed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event ProgressChangedEventHandler ProgressChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.progresschangedeventhandler">ProgressChangedEventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationCallbacks_ProgressChanged_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The event handler is invoked on a thread that registered it (if it has a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a> attached).
+If the operation is already completed the event handler is called synchronously. Throwing an exception from the event handler
+might cause unspecified behaviour.</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if the delegate being registered is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.objectdisposedexception">ObjectDisposedException</a></td>
+        <td><p>Thrown is the operation has been disposed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_IAsyncOperationCallbacks_ProgressChanged_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperationCallbacks.html#UnityFx_Async_IAsyncOperationCallbacks_Completed">Completed</a></div>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperationCallbacks_System_Action_">AsyncExtensions.AddCompletionCallback(IAsyncOperationCallbacks, Action)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperationCallbacks_System_Action_UnityFx_Async_AsyncCallbackOptions_">AsyncExtensions.AddCompletionCallback(IAsyncOperationCallbacks, Action, AsyncCallbackOptions)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperationCallbacks_System_Action_UnityFx_Async_IAsyncOperation__">AsyncExtensions.AddCompletionCallback(IAsyncOperationCallbacks, Action&lt;IAsyncOperation&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperationCallbacks_System_Action_UnityFx_Async_IAsyncOperation__UnityFx_Async_AsyncCallbackOptions_">AsyncExtensions.AddCompletionCallback(IAsyncOperationCallbacks, Action&lt;IAsyncOperation&gt;, AsyncCallbackOptions)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperationCallbacks_UnityFx_Async_IAsyncContinuation_">AsyncExtensions.AddCompletionCallback(IAsyncOperationCallbacks, IAsyncContinuation)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddCompletionCallback_UnityFx_Async_IAsyncOperationCallbacks_UnityFx_Async_IAsyncContinuation_UnityFx_Async_AsyncCallbackOptions_">AsyncExtensions.AddCompletionCallback(IAsyncOperationCallbacks, IAsyncContinuation, AsyncCallbackOptions)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddProgressCallback_UnityFx_Async_IAsyncOperationCallbacks_System_Action_System_Single__">AsyncExtensions.AddProgressCallback(IAsyncOperationCallbacks, Action&lt;Single&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddProgressCallback_UnityFx_Async_IAsyncOperationCallbacks_System_Action_System_Single__UnityFx_Async_AsyncCallbackOptions_">AsyncExtensions.AddProgressCallback(IAsyncOperationCallbacks, Action&lt;Single&gt;, AsyncCallbackOptions)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddProgressCallback_UnityFx_Async_IAsyncOperationCallbacks_System_IProgress_System_Single__">AsyncExtensions.AddProgressCallback(IAsyncOperationCallbacks, IProgress&lt;Single&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="UnityFx.Async.AsyncExtensions.html#UnityFx_Async_AsyncExtensions_AddProgressCallback_UnityFx_Async_IAsyncOperationCallbacks_System_IProgress_System_Single__UnityFx_Async_AsyncCallbackOptions_">AsyncExtensions.AddProgressCallback(IAsyncOperationCallbacks, IProgress&lt;Single&gt;, AsyncCallbackOptions)</a>
+  </div>
+  <h3 id="seealso">See Also</h3>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></div>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_IAsyncOperationCallbacks.md&amp;value=---%0Auid%3A%20UnityFx.Async.IAsyncOperationCallbacks%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Interfaces/IAsyncOperationCallbacks.cs/#L14" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            Copyright (c) 2017-2018 Alexander Bogarsukov
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

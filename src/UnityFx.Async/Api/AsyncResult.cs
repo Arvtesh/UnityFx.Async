@@ -16,19 +16,18 @@ using System.Threading;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// A lightweight <c>net35</c>-compatible asynchronous operation for <c>Unity3d</c>.
+	/// A lightweight <c>net35</c>-compatible asynchronous operation (promise) for <c>Unity3d</c>.
 	/// </summary>
 	/// <remarks>
-	/// This class is the core entity of the library. In many aspects it mimics <c>Task</c>
-	/// interface and behaviour. For example, any <see cref="AsyncResult"/> instance can have any
-	/// number of continuations (added either explicitly via <c>AddCompletionCallback</c>
-	/// call or implicitly using <c>async</c>/<c>await</c> keywords). These continuations can be
-	/// invoked on a an arbitrary <see cref="SynchronizationContext"/>. The class can be used to
-	/// implement Asynchronous Programming Model (APM). There are operation state accessors that
-	/// can be used exactly like corresponding properties of <c>Task</c>. While the class implements
-	/// <see cref="IDisposable"/> disposing is only required if <see cref="AsyncWaitHandle"/> property
-	/// was used.
+	/// This class is the core entity of the library. In many aspects it mimics <c>Task</c> interface and behaviour.
+	/// For example, any <see cref="AsyncResult"/> instance can have any number of continuations (added either explicitly
+	/// via <c>AddCompletionCallback</c> call or implicitly using <c>async</c>/<c>await</c> keywords). These continuations
+	/// can be invoked on a an arbitrary <see cref="SynchronizationContext"/>. The class can be used to implement Asynchronous
+	/// Programming Model (APM). There are operation state accessors that can be used exactly like corresponding properties of
+	/// <c>Task</c>. While the class implements <see cref="IDisposable"/> disposing is only required if <see cref="AsyncWaitHandle"/>
+	/// property was used.
 	/// </remarks>
+	/// <threadsafety static="true" instance="true"/>
 	/// <seealso href="http://www.what-could-possibly-go-wrong.com/promises-for-game-development/">Promises for game development</seealso>
 	/// <seealso href="https://blogs.msdn.microsoft.com/nikos/2011/03/14/how-to-implement-the-iasyncresult-design-pattern/">How to implement the IAsyncResult design pattern</seealso>
 	/// <seealso href="https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming">Task-based Asynchronous Pattern (TAP)</seealso>
@@ -86,30 +85,42 @@ namespace UnityFx.Async
 		/// a context attached to the app UI thread.
 		/// </remarks>
 		/// <value>An instance of <see cref="SynchronizationContext"/> that is used as default one. Initial value is <see langword="null"/>.</value>
+		[DebuggerHidden]
 		public static SynchronizationContext DefaultSynchronizationContext { get => _defaultContext; set => _defaultContext = value; }
 
 		/// <summary>
 		/// Gets the <see cref="AsyncCreationOptions"/> used to create this operation.
 		/// </summary>
 		/// <value>The operation creation options.</value>
+		[DebuggerHidden]
 		public AsyncCreationOptions CreationOptions => (AsyncCreationOptions)(_flags >> _optionsOffset);
 
 		/// <summary>
 		/// Gets a value indicating whether the operation has been started.
 		/// </summary>
 		/// <value>A value indicating whether the operation has been started.</value>
+		[DebuggerHidden]
 		public bool IsStarted => (_flags & _statusMask) >= StatusRunning;
+
+		/// <summary>
+		/// Gets a value indicating whether the operation in running.
+		/// </summary>
+		/// <value>A value indicating whether the operation is running.</value>
+		[DebuggerHidden]
+		public bool IsRunning => (_flags & _statusMask) == StatusRunning;
 
 		/// <summary>
 		/// Gets a value indicating whether the operation instance is disposed.
 		/// </summary>
 		/// <value>A value indicating whether the operation is disposed.</value>
+		[DebuggerHidden]
 		protected bool IsDisposed => (_flags & _flagDisposed) != 0;
 
 		/// <summary>
 		/// Gets a value indicating whether the operation cancellation was requested.
 		/// </summary>
 		/// <value>A value indicating whether the operation cancellation was requested.</value>
+		[DebuggerHidden]
 		protected bool IsCancellationRequested => (_flags & _flagCancellationRequested) != 0;
 
 		/// <summary>
@@ -255,51 +266,6 @@ namespace UnityFx.Async
 			_asyncState = asyncState;
 		}
 
-#if NET35
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult"/> class that is faulted. For internal use only.
-		/// </summary>
-		/// <param name="exceptions">Exceptions to complete the operation with.</param>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
-		internal AsyncResult(IEnumerable<Exception> exceptions, object asyncState)
-			: this(exceptions?.First(), asyncState)
-		{
-		}
-
-#else
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncResult"/> class that is faulted. For internal use only.
-		/// </summary>
-		/// <param name="exceptions">Exceptions to complete the operation with.</param>
-		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
-		internal AsyncResult(IEnumerable<Exception> exceptions, object asyncState)
-		{
-			if (exceptions == null)
-			{
-				throw new ArgumentNullException(nameof(exceptions));
-			}
-
-			_exception = new AggregateException(exceptions);
-
-			if (_exception.InnerException is OperationCanceledException)
-			{
-				_flags = StatusCanceled | _flagCompletedSynchronously;
-			}
-			else
-			{
-				_flags = StatusFaulted | _flagCompletedSynchronously;
-			}
-
-			_callback = _callbackCompletionSentinel;
-			_asyncState = asyncState;
-		}
-
-#endif
-
 		/// <summary>
 		/// Transitions the operation into the <see cref="AsyncOperationStatus.Running"/> state.
 		/// </summary>
@@ -316,6 +282,8 @@ namespace UnityFx.Async
 		/// <seealso cref="OnStarted"/>
 		public void Start()
 		{
+			ThrowIfDisposed();
+
 			if (!TrySetRunning())
 			{
 				throw new InvalidOperationException();
@@ -332,6 +300,7 @@ namespace UnityFx.Async
 		/// <seealso cref="OnStarted"/>
 		public bool TryStart()
 		{
+			ThrowIfDisposed();
 			return TrySetRunning();
 		}
 
@@ -342,8 +311,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetRunning"/>
 		protected internal bool TrySetScheduled()
 		{
-			ThrowIfDisposed();
-
 			if (TrySetStatus(StatusScheduled))
 			{
 				return true;
@@ -359,8 +326,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetScheduled"/>
 		protected internal bool TrySetRunning()
 		{
-			ThrowIfDisposed();
-
 			if (TrySetStatus(StatusRunning))
 			{
 				OnStarted();
@@ -390,8 +355,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetCanceled()"/>
 		protected internal bool TrySetCanceled(bool completedSynchronously)
 		{
-			ThrowIfDisposed();
-
 			if (TryReserveCompletion())
 			{
 				_exception = new OperationCanceledException();
@@ -461,8 +424,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetException(Exception)"/>
 		protected internal bool TrySetException(Exception exception, bool completedSynchronously)
 		{
-			ThrowIfDisposed();
-
 			if (exception == null)
 			{
 				throw new ArgumentNullException(nameof(exception));
@@ -478,114 +439,8 @@ namespace UnityFx.Async
 				else
 				{
 					_exception = exception;
-
-#if NET35
-
-					SetCompleted(StatusFaulted, completedSynchronously);
-
-#else
-
-					if (exception is AggregateException && _exception.InnerException is OperationCanceledException)
-					{
-						SetCompleted(StatusCanceled, completedSynchronously);
-					}
-					else
-					{
-						SetCompleted(StatusFaulted, completedSynchronously);
-					}
-
-#endif
-				}
-
-				return true;
-			}
-			else if (!IsCompleted)
-			{
-				SpinUntilCompleted();
-			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
-		/// </summary>
-		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentException">Thrown if <paramref name="exceptions"/> is empty.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="TrySetExceptions(IEnumerable{Exception}, bool)"/>
-		protected internal bool TrySetExceptions(IEnumerable<Exception> exceptions)
-		{
-			return TrySetExceptions(exceptions, false);
-		}
-
-		/// <summary>
-		/// Attempts to transition the operation into the <see cref="AsyncOperationStatus.Faulted"/> state.
-		/// </summary>
-		/// <param name="exceptions">Exceptions that caused the operation to end prematurely.</param>
-		/// <param name="completedSynchronously">Value of the <see cref="CompletedSynchronously"/> property.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentException">Thrown if <paramref name="exceptions"/> is empty.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		/// <seealso cref="TrySetExceptions(IEnumerable{Exception})"/>
-		protected internal bool TrySetExceptions(IEnumerable<Exception> exceptions, bool completedSynchronously)
-		{
-			ThrowIfDisposed();
-
-			if (exceptions == null)
-			{
-				throw new ArgumentNullException(nameof(exceptions));
-			}
-
-			var list = new List<Exception>();
-
-			foreach (var e in exceptions)
-			{
-				if (e == null)
-				{
-					throw new ArgumentException(Messages.FormatError_ListElementIsNull(), nameof(exceptions));
-				}
-
-				list.Add(e);
-			}
-
-			if (list.Count == 0)
-			{
-				throw new ArgumentException(Messages.FormatError_ListIsEmpty(), nameof(exceptions));
-			}
-
-			if (TryReserveCompletion())
-			{
-#if NET35
-
-				_exception = list[0];
-
-				if (_exception is OperationCanceledException)
-				{
-					SetCompleted(StatusCanceled, completedSynchronously);
-				}
-				else
-				{
 					SetCompleted(StatusFaulted, completedSynchronously);
 				}
-
-#else
-
-				_exception = new AggregateException(list);
-
-				if (_exception.InnerException is OperationCanceledException)
-				{
-					SetCompleted(StatusCanceled, completedSynchronously);
-				}
-				else
-				{
-					SetCompleted(StatusFaulted, completedSynchronously);
-				}
-
-#endif
 
 				return true;
 			}
@@ -617,8 +472,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetCompleted()"/>
 		protected internal bool TrySetCompleted(bool completedSynchronously)
 		{
-			ThrowIfDisposed();
-
 			if (TrySetCompleted(StatusRanToCompletion, completedSynchronously))
 			{
 				return true;
@@ -748,7 +601,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetCanceled(bool)"/>
 		/// <seealso cref="TrySetCompleted(bool)"/>
 		/// <seealso cref="TrySetException(System.Exception, bool)"/>
-		/// <seealso cref="TrySetExceptions(IEnumerable{System.Exception}, bool)"/>
 		protected virtual void OnStatusChanged(AsyncOperationStatus status)
 		{
 		}
@@ -784,7 +636,6 @@ namespace UnityFx.Async
 		/// <seealso cref="TrySetCanceled(bool)"/>
 		/// <seealso cref="TrySetCompleted(bool)"/>
 		/// <seealso cref="TrySetException(System.Exception, bool)"/>
-		/// <seealso cref="TrySetExceptions(IEnumerable{System.Exception}, bool)"/>
 		protected virtual void OnCompleted()
 		{
 		}
@@ -836,6 +687,7 @@ namespace UnityFx.Async
 		/// </summary>
 		internal bool TrySetStatus(int newStatus)
 		{
+			Debug.Assert(!IsDisposed);
 			Debug.Assert(newStatus < StatusRanToCompletion);
 
 			do
@@ -871,6 +723,7 @@ namespace UnityFx.Async
 		/// </summary>
 		internal bool TrySetCompleted(int status, bool completedSynchronously)
 		{
+			Debug.Assert(!IsDisposed);
 			Debug.Assert(status > StatusRunning);
 
 			status |= _flagCompleted | _flagCompletionReserved;
@@ -905,6 +758,8 @@ namespace UnityFx.Async
 		/// </summary>
 		internal bool TryReserveCompletion()
 		{
+			Debug.Assert(!IsDisposed);
+
 			do
 			{
 				var flags = _flags;
@@ -950,6 +805,7 @@ namespace UnityFx.Async
 		/// </summary>
 		internal void SetCompleted(int status, bool completedSynchronously)
 		{
+			Debug.Assert(!IsDisposed);
 			Debug.Assert(status > StatusRunning);
 			Debug.Assert((_flags & _flagCompletionReserved) != 0);
 			Debug.Assert((_flags & _statusMask) < StatusRanToCompletion);
@@ -1026,21 +882,21 @@ namespace UnityFx.Async
 		/// <summary>
 		/// Returns a <see cref="SynchronizationContext"/> for the given options.
 		/// </summary>
-		internal static SynchronizationContext GetSynchronizationContext(AsyncContinuationContext contextId)
+		internal static SynchronizationContext GetSynchronizationContext(AsyncCallbackOptions options)
 		{
 			SynchronizationContext syncContext;
 
-			if (contextId == AsyncContinuationContext.Current)
-			{
-				syncContext = SynchronizationContext.Current;
-			}
-			else if (contextId == AsyncContinuationContext.Default)
+			if ((options & AsyncCallbackOptions.ExecuteOnDefaultContext) != 0)
 			{
 				syncContext = _defaultContext;
 			}
-			else
+			else if ((options & AsyncCallbackOptions.ExecuteSynchronously) != 0)
 			{
 				syncContext = null;
+			}
+			else
+			{
+				syncContext = SynchronizationContext.Current;
 			}
 
 			return syncContext;
@@ -1095,6 +951,7 @@ namespace UnityFx.Async
 		/// Gets the operation status identifier.
 		/// </summary>
 		/// <value>Identifier of the operation status.</value>
+		[DebuggerHidden]
 		public AsyncOperationStatus Status => (AsyncOperationStatus)(_flags & _statusMask);
 
 		/// <summary>
@@ -1102,24 +959,28 @@ namespace UnityFx.Async
 		/// or has not yet thrown any exceptions, this will return <see langword="null"/>.
 		/// </summary>
 		/// <value>An exception that caused the operation to end prematurely.</value>
+		[DebuggerHidden]
 		public Exception Exception => (_flags & _flagCompleted) != 0 ? _exception : null;
 
 		/// <summary>
 		/// Gets a value indicating whether the operation completed successfully (i.e. with <see cref="AsyncOperationStatus.RanToCompletion"/> status).
 		/// </summary>
 		/// <value>A value indicating whether the operation completed successfully.</value>
+		[DebuggerHidden]
 		public bool IsCompletedSuccessfully => (_flags & _statusMask) == StatusRanToCompletion;
 
 		/// <summary>
 		/// Gets a value indicating whether the operation completed due to an unhandled exception (i.e. with <see cref="AsyncOperationStatus.Faulted"/> status).
 		/// </summary>
 		/// <value>A value indicating whether the operation has failed.</value>
+		[DebuggerHidden]
 		public bool IsFaulted => (_flags & _statusMask) == StatusFaulted;
 
 		/// <summary>
 		/// Gets a value indicating whether the operation completed due to being canceled (i.e. with <see cref="AsyncOperationStatus.Canceled"/> status).
 		/// </summary>
 		/// <value>A value indicating whether the operation was canceled.</value>
+		[DebuggerHidden]
 		public bool IsCanceled => (_flags & _statusMask) == StatusCanceled;
 
 		#endregion
@@ -1137,7 +998,7 @@ namespace UnityFx.Async
 			{
 				TrySetRunning();
 			}
-			else
+			else if (op.IsCompleted)
 			{
 				TrySetException(op.Exception);
 			}
@@ -1216,6 +1077,7 @@ namespace UnityFx.Async
 		/// Gets a user-defined object that qualifies or contains information about an asynchronous operation.
 		/// </summary>
 		/// <value>A user-defined object that qualifies or contains information about an asynchronous operation.</value>
+		[DebuggerHidden]
 		public object AsyncState => _asyncState;
 
 		/// <summary>
@@ -1226,6 +1088,7 @@ namespace UnityFx.Async
 		/// </remarks>
 		/// <value><see langword="true"/> if the asynchronous operation completed synchronously; otherwise, <see langword="false"/>.</value>
 		/// <seealso cref="IsCompleted"/>
+		[DebuggerHidden]
 		public bool CompletedSynchronously => (_flags & _flagSynchronous) != 0;
 
 		/// <summary>
@@ -1233,6 +1096,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <value><see langword="true"/> if the operation is complete; otherwise, <see langword="false"/>.</value>
 		/// <seealso cref="CompletedSynchronously"/>
+		[DebuggerHidden]
 		public bool IsCompleted => (_flags & _flagCompleted) != 0;
 
 		#endregion
