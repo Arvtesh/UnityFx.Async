@@ -10,6 +10,7 @@ namespace UnityFx.Async
 	/// Represents an asynchronous operation with external completion control. <see cref="IAsyncCompletionSource{TResult}"/>.
 	/// </summary>
 	/// <typeparam name="TResult">Type of the operation result value.</typeparam>
+	/// <threadsafety static="true" instance="true"/>
 	/// <seealso cref="AsyncCompletionSource"/>
 	public class AsyncCompletionSource<TResult> : AsyncResult<TResult>, IAsyncCompletionSource<TResult>
 	{
@@ -281,19 +282,6 @@ namespace UnityFx.Async
 		{
 			ThrowIfDisposed();
 			return TrySetException(exception, false);
-		}
-
-		/// <summary>
-		/// Attempts to transition the underlying <see cref="IAsyncOperation{TResult}"/> into the <see cref="AsyncOperationStatus.Faulted"/> state.
-		/// </summary>
-		/// <param name="exceptions">An exception that caused the operation to end prematurely.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exceptions"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ObjectDisposedException">Thrown is the operation is disposed.</exception>
-		/// <returns>Returns <see langword="true"/> if the attemp was successfull; <see langword="false"/> otherwise.</returns>
-		public new bool TrySetExceptions(IEnumerable<Exception> exceptions)
-		{
-			ThrowIfDisposed();
-			return TrySetExceptions(exceptions, false);
 		}
 
 		/// <summary>

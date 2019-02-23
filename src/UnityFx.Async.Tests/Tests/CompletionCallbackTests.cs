@@ -65,7 +65,7 @@ namespace UnityFx.Async
 			{
 				for (var i = 0; i < 10000; ++i)
 				{
-					op.RemoveCompletionCallback(d);
+					op.RemoveCallback(d);
 				}
 			}
 

@@ -6,7 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 #if NET_4_6 || NET_STANDARD_2_0
 using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
+using System.Threading.Tasks;
 #endif
 using System.Threading;
 using UnityEngine;
@@ -23,68 +25,56 @@ namespace UnityFx.Async
 		#region data
 
 		private static SynchronizationContext _mainThreadContext;
-		private static GameObject _go;
-		private static AsyncRootBehaviour _rootBehaviour;
+		private static AsyncUtilityBehaviour _rootBehaviour;
 
 		#endregion
 
 		#region interface
 
 		/// <summary>
-		/// Name of a <see cref="GameObject"/> used by the library tools.
-		/// </summary>
-		public const string RootGoName = "UnityFx.Async";
-
-		/// <summary>
-		/// Returns a <see cref="GameObject"/> used by the library tools.
-		/// </summary>
-		public static GameObject GetRootGo()
-		{
-			return _go;
-		}
-
-		/// <summary>
 		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for Update.
 		/// </summary>
-		/// <seealso cref="GetLateUpdateSource"/>
-		/// <seealso cref="GetFixedUpdateSource"/>
-		/// <seealso cref="GetEndOfFrameUpdateSource"/>
+		/// <seealso cref="GetUpdateSource(FrameTiming)"/>
 		public static IAsyncUpdateSource GetUpdateSource()
 		{
 			return _rootBehaviour.UpdateSource;
 		}
 
 		/// <summary>
-		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for LateUpdate.
+		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for the specified <paramref name="frameTiming"/>.
 		/// </summary>
-		/// <seealso cref="GetUpdateSource"/>
-		/// <seealso cref="GetFixedUpdateSource"/>
-		/// <seealso cref="GetEndOfFrameUpdateSource"/>
-		public static IAsyncUpdateSource GetLateUpdateSource()
+		/// <seealso cref="GetUpdateSource()"/>
+		public static IAsyncUpdateSource GetUpdateSource(FrameTiming frameTiming)
 		{
-			return _rootBehaviour.LateUpdateSource;
+			switch (frameTiming)
+			{
+				case FrameTiming.FixedUpdate:
+					return _rootBehaviour.FixedUpdateSource;
+
+				case FrameTiming.LateUpdate:
+					return _rootBehaviour.LateUpdateSource;
+
+				case FrameTiming.EndOfFrame:
+					return _rootBehaviour.EofUpdateSource;
+			}
+
+			return _rootBehaviour.UpdateSource;
 		}
 
 		/// <summary>
-		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for FixedUpdate.
+		/// Register a completion callback that is triggered on a specific time during next frame.
 		/// </summary>
-		/// <seealso cref="GetUpdateSource"/>
-		/// <seealso cref="GetLateUpdateSource"/>
-		/// <seealso cref="GetEndOfFrameUpdateSource"/>
-		public static IAsyncUpdateSource GetFixedUpdateSource()
+		/// <param name="callback">A delegate to be called on the next frame.</param>
+		/// <param name="timing">Time to call the <paramref name="callback"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
+		public static void AddFrameCallback(Action callback, FrameTiming timing)
 		{
-			return _rootBehaviour.FixedUpdateSource;
-		}
+			if (callback == null)
+			{
+				throw new ArgumentNullException("callback");
+			}
 
-		/// <summary>
-		/// Returns an instance of an <see cref="IAsyncUpdateSource"/> for end of frame.
-		/// </summary>
-		/// <seealso cref="GetUpdateSource"/>
-		/// <seealso cref="GetLateUpdateSource"/>
-		/// <seealso cref="GetFixedUpdateSource"/>
-		public static IAsyncUpdateSource GetEndOfFrameUpdateSource()
-		{
-			return _rootBehaviour.EofUpdateSource;
+			_rootBehaviour.AddFrameCallback(callback, timing);
 		}
 
 		/// <summary>
@@ -214,6 +204,46 @@ namespace UnityFx.Async
 		public static IAsyncOperation Delay(TimeSpan delay)
 		{
 			return AsyncResult.Delay(delay, _rootBehaviour.UpdateSource);
+		}
+
+		/// <summary>
+		/// Starts a coroutine and wraps it with <see cref="IAsyncOperation"/>.
+		/// </summary>
+		/// <param name="coroutineFunc">The coroutine delegate.</param>
+		/// <param name="userState">User-defined state.</param>
+		/// <returns>Returns the coroutine handle.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="coroutineFunc"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="FromCoroutine(Func{IAsyncCompletionSource, IEnumerator}, object)"/>
+		public static IAsyncOperation FromCoroutine(Func<IAsyncCompletionSource, IEnumerator> coroutineFunc, object userState = null)
+		{
+			if (coroutineFunc == null)
+			{
+				throw new ArgumentNullException("coroutineFunc");
+			}
+
+			var result = new Helpers.CoroutineResult(_rootBehaviour, coroutineFunc, userState);
+			result.Start();
+			return result;
+		}
+
+		/// <summary>
+		/// Starts a coroutine and wraps it with <see cref="IAsyncOperation{TResult}"/>.
+		/// </summary>
+		/// <param name="coroutineFunc">The coroutine delegate.</param>
+		/// <param name="userState">User-defined state.</param>
+		/// <returns>Returns the coroutine handle.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="coroutineFunc"/> is <see langword="null"/>.</exception>
+		/// <seealso cref="FromCoroutine{TResult}(Func{IAsyncCompletionSource{TResult}, IEnumerator}, object)"/>
+		public static IAsyncOperation<TResult> FromCoroutine<TResult>(Func<IAsyncCompletionSource<TResult>, IEnumerator> coroutineFunc, object userState = null)
+		{
+			if (coroutineFunc == null)
+			{
+				throw new ArgumentNullException("coroutineFunc");
+			}
+
+			var result = new Helpers.CoroutineResult<TResult>(_rootBehaviour, coroutineFunc, userState);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
@@ -365,27 +395,100 @@ namespace UnityFx.Async
 
 #endif
 
+#if NET_4_6 || NET_STANDARD_2_0
+
 		/// <summary>
-		/// Register a completion callback that is triggered on a specific time during next frame.
+		/// Provides an object that awaits for the specified <see cref="FrameTiming"/>. This type and its members are intended for compiler use only.
 		/// </summary>
-		/// <param name="callback">A delegate to be called on the next frame.</param>
-		/// <param name="timing">Time to call the <paramref name="callback"/>.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="callback"/> is <see langword="null"/>.</exception>
-		public static void AddFrameCallback(Action callback, FrameTiming timing)
+		/// <seealso cref="FrameAwaitable"/>
+		public struct FrameAwaiter : INotifyCompletion
 		{
-			if (callback == null)
+			private readonly FrameTiming _frameTiming;
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="FrameAwaiter"/> struct.
+			/// </summary>
+			public FrameAwaiter(FrameTiming frameTiming)
 			{
-				throw new ArgumentNullException("callback");
+				_frameTiming = frameTiming;
 			}
 
-			_rootBehaviour.AddFrameCallback(callback, timing);
+			/// <summary>
+			/// Gets a value indicating whether the underlying operation is completed.
+			/// </summary>
+			/// <value>The operation completion flag.</value>
+			public bool IsCompleted
+			{
+				get
+				{
+					return false;
+				}
+			}
+
+			/// <summary>
+			/// Returns the source result value.
+			/// </summary>
+			public void GetResult()
+			{
+			}
+
+			/// <inheritdoc/>
+			public void OnCompleted(Action continuation)
+			{
+				_rootBehaviour.AddFrameCallback(continuation, _frameTiming);
+			}
+		}
+
+		/// <summary>
+		/// Provides an awaitable object that allows awaits for the specified <see cref="FrameTiming"/>. This type is intended for compiler use only.
+		/// </summary>
+		/// <seealso cref="FrameAwaiter"/>
+		public struct FrameAwaitable
+		{
+			private readonly FrameAwaiter _awaiter;
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="FrameAwaitable"/> struct.
+			/// </summary>
+			public FrameAwaitable(FrameTiming frameTime)
+			{
+				_awaiter = new FrameAwaiter(frameTime);
+			}
+
+			/// <summary>
+			/// Returns the awaiter.
+			/// </summary>
+			public FrameAwaiter GetAwaiter()
+			{
+				return _awaiter;
+			}
+		}
+
+		/// <summary>
+		/// Waits until the specified <paramref name="frameTime"/>.
+		/// </summary>
+		/// <param name="frameTime">The frame time to await.</param>
+		public static FrameAwaitable FrameUpdate(FrameTiming frameTime = FrameTiming.Update)
+		{
+			return new FrameAwaitable(frameTime);
+		}
+
+#endif
+
+		/// <summary>
+		/// Initializes utilities. This method is intended for internal use only. DO NOT use.
+		/// </summary>
+		internal static void Initialize(GameObject go, SynchronizationContext mainThreadContext)
+		{
+			_mainThreadContext = mainThreadContext;
+			_rootBehaviour = go.AddComponent<AsyncUtilityBehaviour>();
 		}
 
 		#endregion
 
 		#region implementation
 
-		private sealed class AsyncRootBehaviour : MonoBehaviour
+		private sealed class AsyncUtilityBehaviour : MonoBehaviour
 		{
 			#region data
 
@@ -403,12 +506,14 @@ namespace UnityFx.Async
 			private ConcurrentQueue<Action> _updateActions;
 			private ConcurrentQueue<Action> _lateUpdateActions;
 			private ConcurrentQueue<Action> _fixedUpdateActions;
+			private ConcurrentQueue<Action> _eofUpdateActions;
 
 #else
 
 			private Queue<Action> _updateActions;
 			private Queue<Action> _lateUpdateActions;
 			private Queue<Action> _fixedUpdateActions;
+			private Queue<Action> _eofUpdateActions;
 
 #endif
 
@@ -495,6 +600,10 @@ namespace UnityFx.Async
 
 					case FrameTiming.LateUpdate:
 						AddFrameCallback(ref _lateUpdateActions, callback);
+						break;
+
+					case FrameTiming.EndOfFrame:
+						AddFrameCallback(ref _eofUpdateActions, callback);
 						break;
 				}
 			}
@@ -584,7 +693,14 @@ namespace UnityFx.Async
 			{
 				if (_lateUpdateSource != null)
 				{
-					_lateUpdateSource.OnNext(Time.deltaTime);
+					try
+					{
+						_lateUpdateSource.OnNext(Time.deltaTime);
+					}
+					catch (Exception e)
+					{
+						Debug.LogException(e, this);
+					}
 				}
 
 				if (_lateUpdateActions != null)
@@ -597,7 +713,14 @@ namespace UnityFx.Async
 			{
 				if (_fixedUpdateSource != null)
 				{
-					_fixedUpdateSource.OnNext(Time.fixedDeltaTime);
+					try
+					{
+						_fixedUpdateSource.OnNext(Time.fixedDeltaTime);
+					}
+					catch (Exception e)
+					{
+						Debug.LogException(e, this);
+					}
 				}
 
 				if (_fixedUpdateActions != null)
@@ -703,35 +826,23 @@ namespace UnityFx.Async
 
 				if (_eofUpdateSource != null)
 				{
-					_eofUpdateSource.OnNext(Time.deltaTime);
+					try
+					{
+						_eofUpdateSource.OnNext(Time.deltaTime);
+					}
+					catch (Exception e)
+					{
+						Debug.LogException(e, this);
+					}
+				}
+
+				if (_eofUpdateActions != null)
+				{
+					InvokeFrameCallbacks(_eofUpdateActions, this);
 				}
 			}
 
 			#endregion
-		}
-
-		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-		private static void Initialize()
-		{
-			var context = SynchronizationContext.Current;
-
-			if (context == null)
-			{
-				// Create custom SynchronizationContext for the main thread.
-				context = new Helpers.MainThreadSynchronizationContext();
-				SynchronizationContext.SetSynchronizationContext(context);
-			}
-
-			// Save the main thread context for future use.
-			_mainThreadContext = context;
-
-			// Set main thread context as default for all continuations. This saves allocations in many cases.
-			AsyncResult.DefaultSynchronizationContext = context;
-
-			// Initialize library components.
-			_go = new GameObject(RootGoName);
-			_rootBehaviour = _go.AddComponent<AsyncRootBehaviour>();
-			GameObject.DontDestroyOnLoad(_go);
 		}
 
 		#endregion

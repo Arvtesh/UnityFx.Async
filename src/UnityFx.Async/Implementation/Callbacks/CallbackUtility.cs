@@ -15,6 +15,9 @@ namespace UnityFx.Async
 
 		#region interface
 
+#if !DEBUG
+		[DebuggerHidden]
+#endif
 		public static void InvokeCompletionCallback(IAsyncOperation op, object continuation)
 		{
 			Debug.Assert(op != null);
@@ -44,6 +47,9 @@ namespace UnityFx.Async
 			}
 		}
 
+#if !DEBUG
+		[DebuggerHidden]
+#endif
 		public static void InvokeCompletionCallback(IAsyncOperation op, object continuation, SynchronizationContext syncContext, bool invokeAsync)
 		{
 			Debug.Assert(op != null);
@@ -84,6 +90,9 @@ namespace UnityFx.Async
 			}
 		}
 
+#if !DEBUG
+		[DebuggerHidden]
+#endif
 		public static void InvokeProgressCallback(IAsyncOperation op, object callback)
 		{
 			Debug.Assert(op != null);
@@ -122,6 +131,9 @@ namespace UnityFx.Async
 			}
 		}
 
+#if !DEBUG
+		[DebuggerHidden]
+#endif
 		public static void InvokeProgressCallback(IAsyncOperation op, object callback, SynchronizationContext syncContext)
 		{
 			Debug.Assert(op != null);

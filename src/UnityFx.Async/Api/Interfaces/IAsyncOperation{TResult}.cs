@@ -6,7 +6,7 @@ using System;
 namespace UnityFx.Async
 {
 	/// <summary>
-	/// Represents the consumer side of an asynchronous operation. Extends <see cref="IAsyncOperation"/>
+	/// Represents the consumer side of an asynchronous operation (promise). Extends <see cref="IAsyncOperation"/>
 	/// interface with a result value.
 	/// </summary>
 	/// <typeparam name="TResult">Type of the operation result value.</typeparam>

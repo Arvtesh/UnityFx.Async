@@ -5,7 +5,7 @@ Channel  | UnityFx.Async |
 AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/master?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/master) [![AppVeyor tests](https://img.shields.io/appveyor/tests/Arvtesh/unityFx-async.svg)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/build/tests)
 NuGet | [![NuGet](https://img.shields.io/nuget/v/UnityFx.Async.svg)](https://www.nuget.org/packages/UnityFx.Async)
 Github | [![GitHub release](https://img.shields.io/github/release/Arvtesh/UnityFx.Async.svg?logo=github)](https://github.com/Arvtesh/UnityFx.Async/releases)
-Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v0.9.8-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
+Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v1.0.0-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
 
 **Requires Unity 5.4 or higher.**
 
@@ -42,6 +42,8 @@ The table below summarizes differences berween *UnityFx.Async* and other popular
 | Supports [ExecutionContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.executioncontext) flow | - | - | ✔️ |
 | Minimum operation data size for 32-bit systems (in bytes) | 32+ | 36+ | 40+ |
 | Minimum number of allocations per continuation | ~1 | 5+ | 2+ |
+
+**NOTE**: As the table states [ExecutionContext](https://docs.microsoft.com/en-us/dotnet/api/system.threading.executioncontext) flow is NOT supported. Please use [Tasks](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task) if you need it.
 
 ## Getting Started
 ### Prerequisites
@@ -170,9 +172,9 @@ In fact the only notable difference from synchronous implementation is usage of 
 ## Using the library
 Reference the DLL and import the namespace:
 ```csharp
-using UnityFx.Async;
-using UnityFx.Async.Extensions;  // For BCL extension methods.
-using UnityFx.Async.Promises;    // For promise extensions.
+using UnityFx.Async;            // Library core.
+using UnityFx.Async.Extensions; // BCL/Unity extension methods.
+using UnityFx.Async.Promises;   // Promise extensions.
 ```
 Create an operation instance like this:
 ```csharp
@@ -222,6 +224,8 @@ private IEnumerator DownloadTextInternal(IAsyncCompletionSource<string> op, stri
     }
 }
 ```
+
+Please note that all `SetXxx` methods throw `InvalidOperationException` if the operation is completed. Use corresponding `TrySetXxx` methods is this behaviour is not desired.
 
 ### Waiting for an operation to complete
 The simpliest way to get notified of an operation completion is registering a completion handler to be invoked when the operation succeeds (the JS promise-like way):
@@ -501,6 +505,56 @@ AsyncUtility.SendToMainThread(() => Debug.Log("On the main thread."));
 AsyncUtility.PostToMainThread(() => Debug.Log("On the main thread."));
 // If calling thread is the main thread executes the delegate synchronously, otherwise posts it to the main thread. Returns an asynchronous operation that can be used to track the delegate execution.
 AsyncUtility.InvokeOnMainThread(() => Debug.Log("On the main thread."));
+```
+Converting a coroutine to promise is very easy:
+```csharp
+// The coroutine body. The completion source can be used to return promise results or report an error.
+private IEnumerator SomeCoroutine(IAsyncCompletionSource completionSource)
+{
+	// Wait for 1 seconds before resolving the promise.
+	yield return new WaitForSeconds(1);
+
+	// This line is optional. The promise is automativally resolved when the corresponding coroutine completes.
+	completionSource.SetCompleted();
+}
+
+// Start the coroutine. Note that you do not require a MonoBehaviour instance to do this.
+var op = AsyncUtility.FromCoroutine(SomeCoroutine);
+
+// Stop coroutine execution if needed.
+op.Cancel();
+```
+
+One can also load an asset from an asset bundle with just one line of code:
+```csharp
+// Load Texture2D from assetbundle loaded from the specified URL. Asset bundle is unloaded when the operation is complete.
+var op = AsyncWww.GetAssetBundleAssetAsync<Texture2D>("http://asset.cdn.com/myasetbundle", "my_asset");
+// Additively load a the first scene from assetbundle loaded from a web URL. Asset bundle is unloaded when the operation is complete.
+var op = AsyncWww.GetAssetBundleSceneAsync("http://asset.cdn.com/mysceneasetbundle", null, LoadSceneMode.Additive);
+```
+
+*UnityFx.Async* adds many useful extensions to Unity API, for example possibility to await any yieldable entity:
+```csharp
+async Task Test()
+{
+	await new WaitForSeconds(2);
+	await new UnityWebRequest("myurl.com");
+	await Resources.LoadAsync("myasset");
+}
+```
+.. or a specific frame time:
+```csharp
+async Task FrameTimingsTest()
+{
+	// Wait until the next Update() cycle.
+	await AsyncUtility.FrameUpdate();
+	// Wait until the next LateUpdate().
+	await AsyncUtility.FrameUpdate(FrameTiming.LateUpdate);
+	// Wait until the next FixedUpdate().
+	await AsyncUtility.FrameUpdate(FrameTiming.FixedUpdate);
+	// Wait until the end of frame (same as yield new WaitForEndOfFrame()).
+	await AsyncUtility.FrameUpdate(FrameTiming.EndOfFrame);
+}
 ```
 
 ## Comparison to .NET Tasks

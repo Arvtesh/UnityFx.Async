@@ -105,6 +105,8 @@ namespace UnityFx.Async
 		/// </param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="AddProgressCallback(object, SynchronizationContext)"/>
+		/// <seealso cref="RemoveCallback(object)"/>
 		public void AddCompletionCallback(object action, SynchronizationContext syncContext)
 		{
 			ThrowIfDisposed();
@@ -122,16 +124,6 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Removes an existing completion callback.
-		/// </summary>
-		/// <param name="action">The callback to remove. Can be <see langword="null"/>.</param>
-		/// <returns>Returns <see langword="true"/> if <paramref name="action"/> was removed; <see langword="false"/> otherwise.</returns>
-		public bool RemoveCompletionCallback(object action)
-		{
-			return TryRemoveCallback(action);
-		}
-
-		/// <summary>
 		/// Adds a callback to be executed when the operation progress has changed. If the operation is completed <paramref name="action"/> is invoked
 		/// on the <paramref name="syncContext"/> specified.
 		/// </summary>
@@ -144,6 +136,8 @@ namespace UnityFx.Async
 		/// </param>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ObjectDisposedException">Thrown is the operation has been disposed.</exception>
+		/// <seealso cref="AddCompletionCallback(object, SynchronizationContext)"/>
+		/// <seealso cref="RemoveCallback(object)"/>
 		public void AddProgressCallback(object action, SynchronizationContext syncContext)
 		{
 			ThrowIfDisposed();
@@ -160,11 +154,13 @@ namespace UnityFx.Async
 		}
 
 		/// <summary>
-		/// Removes an existing progress callback.
+		/// Removes an existing completion/progress callback.
 		/// </summary>
 		/// <param name="action">The callback to remove. Can be <see langword="null"/>.</param>
 		/// <returns>Returns <see langword="true"/> if <paramref name="action"/> was removed; <see langword="false"/> otherwise.</returns>
-		public bool RemoveProgressCallback(object action)
+		/// <seealso cref="AddCompletionCallback(object, SynchronizationContext)"/>
+		/// <seealso cref="AddProgressCallback(object, SynchronizationContext)"/>
+		public bool RemoveCallback(object action)
 		{
 			return TryRemoveCallback(action);
 		}
