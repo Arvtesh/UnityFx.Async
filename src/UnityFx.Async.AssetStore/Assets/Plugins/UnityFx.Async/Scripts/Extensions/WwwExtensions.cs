@@ -46,6 +46,7 @@ namespace UnityFx.Async.Extensions
 		/// Creates an <see cref="Task"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
+		[Obsolete("Task-related helpers are out of the library scope. Please use UnityFx.Tasks instead.")]
 		public static Task ToTask(this WWW request)
 		{
 			var result = new TaskCompletionSource<object>(request);
@@ -57,6 +58,7 @@ namespace UnityFx.Async.Extensions
 		/// Creates an <see cref="Task{TResult}"/> wrapper for the specified <see cref="WWW"/>.
 		/// </summary>
 		/// <param name="request">The source web request.</param>
+		[Obsolete("Task-related helpers are out of the library scope. Please use UnityFx.Tasks instead.")]
 		public static Task<T> ToTask<T>(this WWW request) where T : class
 		{
 			var result = new TaskCompletionSource<T>(request);
