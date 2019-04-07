@@ -10,7 +10,6 @@
 		<RepositoryType>Git</RepositoryType>
 		<PackageVersion>1.0.0</PackageVersion>
 		<PackageProjectUrl>https://github.com/Arvtesh/UnityFx.Async</PackageProjectUrl>
-		<PackageLicenseUrl>https://github.com/Arvtesh/UnityFx.Async/blob/master/LICENSE.md</PackageLicenseUrl>
 		<PackageTags>UnityFx;Async;Promise;AsyncOperation;Coroutine;Task;Unity3d</PackageTags>
 		<PackageIconUrl></PackageIconUrl>
 		<Version>1.0.0</Version>
@@ -23,6 +22,7 @@
 		<CodeAnalysisRuleSet>../CodingConventions/Cs/CsharpRules.ruleset</CodeAnalysisRuleSet>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>UnityFx.Async.snk</AssemblyOriginatorKeyFile>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 
 	<ItemGroup>

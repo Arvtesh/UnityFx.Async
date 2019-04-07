@@ -2,22 +2,22 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net35;net46</TargetFrameworks>
-		<Description>Asset Store code for UnityFx.Async.</Description>
+		<Description>Asset Store scripts for UnityFx.Async.</Description>
 		<Company />
 		<Authors>Alexander Bogarsukov</Authors>
 		<Copyright>Alexander Bogarsukov</Copyright>
 		<RepositoryUrl>https://github.com/Arvtesh/UnityFx.Async</RepositoryUrl>
 		<RepositoryType>Git</RepositoryType>
-		<Version>0.7.0</Version>
-		<AssemblyVersion>0.7.0.0</AssemblyVersion>
-		<FileVersion>0.7.0.0</FileVersion>
-		<InformationalVersion>0.7.0.0</InformationalVersion>
+		<Version>1.0.0</Version>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.0.0.0</FileVersion>
+		<InformationalVersion>1.0.0.0</InformationalVersion>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<RootNamespace>UnityFx.Async</RootNamespace>
 		<IsPackable>false</IsPackable>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<CodeAnalysisRuleSet>../CodingConventions/Cs/CsharpRules.ruleset</CodeAnalysisRuleSet>
 		<LangVersion>4</LangVersion>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net46'">
