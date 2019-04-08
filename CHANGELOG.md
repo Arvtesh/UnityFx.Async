@@ -4,7 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
 -----------------------
-## [1.0.1] - unleleased
+## [1.1.0] - unleleased
+
+### Added
+- Added `LoadSceneAsync` extension method for `AssetBundle`.
+- Added `AsyncUtility.LoadSceneAsync` helper.
+
+### Changed
+- Deprecated all `Task`-related extension methods. They are considered out of the library scope.
 
 -----------------------
 ## [1.0.0] - 2019.02.23
