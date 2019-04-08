@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using UnityFx.Async.Extensions;
 
 namespace UnityFx.Async
@@ -204,6 +205,26 @@ namespace UnityFx.Async
 		public static IAsyncOperation Delay(TimeSpan delay)
 		{
 			return AsyncResult.Delay(delay, _rootBehaviour.UpdateSource);
+		}
+
+		/// <summary>
+		/// Asynchronously loads a scene with the specified name.
+		/// </summary>
+		/// <param name="sceneName">Name of the scene to load.</param>
+		/// <param name="loadMode">The scene load mode.</param>
+		/// <returns>A <see cref="IAsyncOperation{TResult}"/> that can be used to track the operation progress.</returns>
+		public static IAsyncOperation<Scene> LoadSceneAsync(string sceneName, LoadSceneMode loadMode)
+		{
+			var scene = SceneManager.GetSceneByName(sceneName);
+
+			if (scene.isLoaded)
+			{
+				return AsyncResult.FromResult(scene);
+			}
+
+			var result = new Helpers.SceneRequestResult(sceneName, loadMode);
+			result.Start();
+			return result;
 		}
 
 		/// <summary>
