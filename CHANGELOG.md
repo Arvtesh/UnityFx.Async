@@ -10,6 +10,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `LoadSceneAsync` extension method for `AssetBundle`.
 - Added `AsyncUtility.LoadSceneAsync` helper.
 
+-----------------------
+## [1.0.1] - 2019.04.09
+
+NOTE: NuGet-only release to instead of not published v1.0.0.
+
 ### Changed
 - Deprecated all `Task`-related extension methods. They are considered out of the library scope.
 
