@@ -492,10 +492,9 @@ As stated abovethe library include 2 main parts:
 * Core tools (defined in `UnityFx.Async.dll` assembly, do not depend on Unity3d);
 * Unity3d-specific tools (defined as a collection of C# scripts if installed as an Asset Store package, require Unity3d to compile/execute).
 
-Everything described before (unless specified otherwise) does not require Unity and can be used in any application. The Unity-specific stuff is located in 3 classes:
+Everything described before (unless specified otherwise) does not require Unity and can be used in any application. Essential Unity-specific stuff is located in classes:
 * `AsyncUtility`. Defines helper methods for accessing main thread in Unity, running coroutines without actually using a `MonoBehaviour` and waiting for native Unity asynchronous operations outside of coroutines.
 * `AsyncWww`. Defines web request related helpers.
-* `UnityExtensions`. Defines extensions for native Unity classes (like `AsyncOperation` and `UnityWebRequest`).
 
 For example, one can throw a few lines of code to be executed on a main thread using:
 ```csharp

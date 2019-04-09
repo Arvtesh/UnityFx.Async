@@ -20,6 +20,7 @@ namespace UnityFx.Async.Extensions
 		/// Returns the operation awaiter. This method is intended for compiler use only.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
+		[Obsolete("Task-related helpers are out of the library scope. Please use UnityFx.Tasks instead.")]
 		public static CompilerServices.YieldInstructionAwaiter GetAwaiter(this YieldInstruction op)
 		{
 			return new CompilerServices.YieldInstructionAwaiter(op);

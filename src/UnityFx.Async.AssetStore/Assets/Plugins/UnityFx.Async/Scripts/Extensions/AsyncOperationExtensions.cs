@@ -60,6 +60,7 @@ namespace UnityFx.Async.Extensions
 		/// Creates an <see cref="Task"/> wrapper for the Unity <see cref="AsyncOperation"/>.
 		/// </summary>
 		/// <param name="op">The source operation.</param>
+		[Obsolete("Task-related helpers are out of the library scope. Please use UnityFx.Tasks instead.")]
 		public static Task ToTask(this AsyncOperation op)
 		{
 			if (op.isDone)
@@ -78,6 +79,7 @@ namespace UnityFx.Async.Extensions
 		/// Creates an <see cref="Task{TResult}"/> wrapper for the Unity <see cref="ResourceRequest"/>.
 		/// </summary>
 		/// <param name="op">The source operation.</param>
+		[Obsolete("Task-related helpers are out of the library scope. Please use UnityFx.Tasks instead.")]
 		public static Task<T> ToTask<T>(this ResourceRequest op) where T : UnityEngine.Object
 		{
 			var result = new TaskCompletionSource<T>(op);
@@ -89,6 +91,7 @@ namespace UnityFx.Async.Extensions
 		/// Creates an <see cref="Task{TResult}"/> wrapper for the Unity <see cref="AssetBundleRequest"/>.
 		/// </summary>
 		/// <param name="op">The source operation.</param>
+		[Obsolete("Task-related helpers are out of the library scope. Please use UnityFx.Tasks instead.")]
 		public static Task<T> ToTask<T>(this AssetBundleRequest op) where T : UnityEngine.Object
 		{
 			var result = new TaskCompletionSource<T>(op);
@@ -100,6 +103,7 @@ namespace UnityFx.Async.Extensions
 		/// Returns the operation awaiter. This method is intended for compiler use only.
 		/// </summary>
 		/// <param name="op">The operation to await.</param>
+		[Obsolete("Task-related helpers are out of the library scope. Please use UnityFx.Tasks instead.")]
 		public static CompilerServices.AsyncOperationAwaiter GetAwaiter(this AsyncOperation op)
 		{
 			return new CompilerServices.AsyncOperationAwaiter(op);
