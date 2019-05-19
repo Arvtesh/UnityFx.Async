@@ -492,6 +492,9 @@ namespace UnityFx.Async
 		{
 			#region data
 
+			private WaitForEndOfFrame _eof;
+			private Coroutine _eofCoroutine;
+
 			private Dictionary<object, Action> _ops;
 			private List<KeyValuePair<object, Action>> _opsToRemove;
 
@@ -499,7 +502,6 @@ namespace UnityFx.Async
 			private AsyncUpdateSource _lateUpdateSource;
 			private AsyncUpdateSource _fixedUpdateSource;
 			private AsyncUpdateSource _eofUpdateSource;
-			private WaitForEndOfFrame _eof;
 
 #if NET_4_6 || NET_STANDARD_2_0
 
@@ -567,8 +569,11 @@ namespace UnityFx.Async
 					if (_eofUpdateSource == null)
 					{
 						_eofUpdateSource = new AsyncUpdateSource();
-						_eof = new WaitForEndOfFrame();
-						StartCoroutine(EofEnumerator());
+					}
+
+					if (_eofCoroutine == null)
+					{
+						_eofCoroutine = StartCoroutine(EofEnumerator());
 					}
 
 					return _eofUpdateSource;
@@ -603,6 +608,12 @@ namespace UnityFx.Async
 						break;
 
 					case FrameTiming.EndOfFrame:
+
+						if (_eofCoroutine == null)
+						{
+							_eofCoroutine = StartCoroutine(EofEnumerator());
+						}
+
 						AddFrameCallback(ref _eofUpdateActions, callback);
 						break;
 				}
@@ -611,6 +622,11 @@ namespace UnityFx.Async
 			#endregion
 
 			#region MonoBehavoiur
+
+			private void Awake()
+			{
+				_eof = new WaitForEndOfFrame();
+			}
 
 			private void Update()
 			{
@@ -840,7 +856,9 @@ namespace UnityFx.Async
 				{
 					InvokeFrameCallbacks(_eofUpdateActions, this);
 				}
-			}
+
+				_eofCoroutine = null;
+            }
 
 			#endregion
 		}
