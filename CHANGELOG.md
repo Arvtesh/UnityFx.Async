@@ -11,6 +11,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 - Added `AsyncUtility.LoadSceneAsync` helper.
 
 -----------------------
+## [1.0.2] - 2019.05.19
+
+### Fixed
+- Fixed `AsyncUtility.FrameUpdate` not scheduling the callback.
+
+-----------------------
 ## [1.0.1] - 2019.04.09
 
 NOTE: NuGet-only release to instead of not published v1.0.0.
