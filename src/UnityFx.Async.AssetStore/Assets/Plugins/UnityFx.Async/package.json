@@ -1,0 +1,24 @@
+{
+	"name": "com.unityfx.async",
+	"displayName": "Asynchronous operations (promises) for Unity",
+	"description": "UnityFx.Async introduces effective and portable asynchronous operations that can be used very much like Tasks in .NET or Promises in JS. In many aspects they mimic Task (for example, async/await, continuations and synchronization context capturing) while maintaining Unity/net35 compatibility. It is a great foundation toolset for any Unity project.",
+	"version": "1.0.2",
+	"unity": "5.4",
+	"keywords": [
+		"UnityFx",
+		"Promise",
+		"Async",
+		"Task"
+	],
+	"category": "UnityFx",
+	"author": "Alexander Bogarsukov",
+	"license": "MIT",
+	"homepage": "https://github.com/Arvtesh/UnityFx.Async",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Arvtesh/UnityFx.Async"
+	},
+	"bugs": {
+		"url": "https://github.com/Arvtesh/UnityFx.Async/issues"
+	}
+}
