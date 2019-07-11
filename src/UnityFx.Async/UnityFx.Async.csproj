@@ -8,11 +8,14 @@
 		<Copyright>Copyright © 2017-2019 Alexander Bogarsukov</Copyright>
 		<RepositoryUrl>https://github.com/Arvtesh/UnityFx.Async</RepositoryUrl>
 		<RepositoryType>Git</RepositoryType>
+		<Product>$(MSBuildProjectName)</Product>
+		<PackageId>$(MSBuildProjectName)</PackageId>
 		<PackageVersion>1.0.0</PackageVersion>
 		<PackageProjectUrl>https://github.com/Arvtesh/UnityFx.Async</PackageProjectUrl>
 		<PackageTags>UnityFx;Async;Promise;AsyncOperation;Coroutine;Task;Unity3d</PackageTags>
 		<PackageIconUrl></PackageIconUrl>
 		<Version>1.0.0</Version>
+		<AssemblyName>$(MSBuildProjectName)-$(TargetFramework)</AssemblyName>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<FileVersion>1.0.0.0</FileVersion>
 		<InformationalVersion>1.0.0.0</InformationalVersion>
@@ -21,7 +24,7 @@
 		<RootNamespace>UnityFx.Async</RootNamespace>
 		<CodeAnalysisRuleSet>../CodingConventions/Cs/CsharpRules.ruleset</CodeAnalysisRuleSet>
 		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>UnityFx.Async.snk</AssemblyOriginatorKeyFile>
+		<AssemblyOriginatorKeyFile>$(MSBuildProjectName).snk</AssemblyOriginatorKeyFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 
