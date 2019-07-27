@@ -3,8 +3,8 @@
 Channel  | UnityFx.Async |
 ---------|---------------|
 AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hfmq9vow53al7tpd/branch/master?svg=true)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/branch/master) [![AppVeyor tests](https://img.shields.io/appveyor/tests/Arvtesh/unityFx-async.svg)](https://ci.appveyor.com/project/Arvtesh/unityfx-async/build/tests)
-NuGet | [![NuGet](https://img.shields.io/nuget/v/UnityFx.Async.svg)](https://www.nuget.org/packages/UnityFx.Async)
-Npm | [![Npm release](https://img.shields.io/npm/v/com.unityfx.async.svg)](https://www.npmjs.com/package/com.unityfx.async)
+NuGet | [![NuGet](https://img.shields.io/nuget/v/UnityFx.Async.svg)](https://www.nuget.org/packages/UnityFx.Async) ![Nuget](https://img.shields.io/nuget/dt/UnityFx.Async)
+Npm | [![Npm release](https://img.shields.io/npm/v/com.unityfx.async.svg)](https://www.npmjs.com/package/com.unityfx.async) ![npm](https://img.shields.io/npm/dt/com.unityfx.async)
 Github | [![GitHub release](https://img.shields.io/github/release/Arvtesh/UnityFx.Async.svg?logo=github)](https://github.com/Arvtesh/UnityFx.Async/releases)
 Unity Asset Store | [![Asynchronous operations for Unity](https://img.shields.io/badge/tools-v1.1.0-green.svg)](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696)
 
