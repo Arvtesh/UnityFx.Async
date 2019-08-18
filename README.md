@@ -63,6 +63,8 @@ git submodule -q update --init
 The binaries are available as a [NuGet package](https://www.nuget.org/packages/UnityFx.Async). See [here](http://docs.nuget.org/docs/start-here/using-the-package-manager-console) for instructions on installing a package via nuget. One can also download them directly from [Github releases](https://github.com/Arvtesh/UnityFx.Async/releases). Unity3d users can import corresponding [Unity Asset Store package](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696) using the editor.
 
 ### Npm package
+[![NPM](https://nodei.co/npm/com.unityfx.async.png)](https://www.npmjs.com/package/com.unityfx.async)
+
 Npm package is available at [npmjs.com](https://www.npmjs.com/package/com.unityfx.async). To use it, add the following line to dependencies section of your `manifest.json`. Unity should download and link the package automatically:
 ```json
 {
