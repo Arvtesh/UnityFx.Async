@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/); this proj
 ## [1.1.0] - unleleased
 
 ### Added
+- Added `Promise.UnhandledException` event support for `Done` promise extensions.
 - Added `LoadSceneAsync` extension method for `AssetBundle`.
 - Added `AsyncUtility.LoadSceneAsync` helper.
 - Added `npm` support.
