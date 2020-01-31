@@ -48,7 +48,7 @@ namespace UnityFx.Async.Promises
 			}
 			catch (Exception e)
 			{
-				PromiseExtensions.PropagateUnhandledException(this, e);
+				Promise.PropagateUnhandledException(this, e);
 			}
 		}
 

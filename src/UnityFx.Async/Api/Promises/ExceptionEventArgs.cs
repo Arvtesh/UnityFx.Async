@@ -6,7 +6,7 @@ using System;
 namespace UnityFx.Async.Promises
 {
 	/// <summary>
-	/// Arguments of <see cref="PromiseExtensions.UnhandledException"/> event.
+	/// Arguments of <see cref="Promise.UnhandledException"/> event.
 	/// </summary>
 	public class ExceptionEventArgs : EventArgs
 	{
