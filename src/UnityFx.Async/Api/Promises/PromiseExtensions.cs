@@ -472,6 +472,15 @@ namespace UnityFx.Async.Promises
 		#region Done
 
 		/// <summary>
+		/// Event raised for unhandled exceptions. For this to work you have to complete your promises with a call to Done().
+		/// </summary>
+		/// <seealso cref="Done(IAsyncOperation, Action)"/>
+		/// <seealso cref="Done(IAsyncOperation, Action, Action{Exception})"/>
+		/// <seealso cref="Done{TResult}(IAsyncOperation{TResult}, Action{TResult})"/>
+		/// <seealso cref="Done{TResult}(IAsyncOperation{TResult}, Action{TResult}, Action{Exception})"/>
+		public static event EventHandler<ExceptionEventArgs> UnhandledException;
+
+		/// <summary>
 		/// Schedules a callback to be executed after the promise chain has completed.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
@@ -549,6 +558,15 @@ namespace UnityFx.Async.Promises
 			}
 
 			op.AddCompletionCallback(new DoneResult<TResult>(successCallback, errorCallback));
+		}
+
+		#endregion
+
+		#region implementation
+
+		internal static void PropagateUnhandledException(object sender, Exception e)
+		{
+			UnhandledException?.Invoke(sender, new ExceptionEventArgs(e));
 		}
 
 		#endregion
