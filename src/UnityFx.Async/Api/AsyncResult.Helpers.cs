@@ -1155,7 +1155,7 @@ namespace UnityFx.Async
 				return CompletedOperation;
 			}
 
-			return new WhenAllResult<VoidResult>(opList.ToArray());
+			return new WhenAllResult<VoidResult>(opList);
 		}
 
 		/// <summary>
@@ -1174,7 +1174,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(ops));
 			}
 
-			var opList = new List<IAsyncOperation<T>>();
+			var opList = new List<IAsyncOperation>();
 
 			foreach (var op in ops)
 			{
@@ -1191,7 +1191,7 @@ namespace UnityFx.Async
 				return FromResult(new T[0]);
 			}
 
-			return new WhenAllResult<T>(opList.ToArray());
+			return new WhenAllResult<T>(opList);
 		}
 
 		/// <summary>
@@ -1302,7 +1302,7 @@ namespace UnityFx.Async
 				throw new ArgumentException(Messages.FormatError_ListIsEmpty(), nameof(ops));
 			}
 
-			return new WhenAnyResult<T>(opList.ToArray());
+			return new WhenAnyResult<T>(opList);
 		}
 
 		/// <summary>
