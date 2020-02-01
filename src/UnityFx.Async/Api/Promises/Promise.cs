@@ -81,7 +81,7 @@ namespace UnityFx.Async.Promises
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
 		/// <seealso cref="All(IEnumerable{IAsyncOperation})"/>
-		public static IAsyncResult All(params IAsyncOperation[] ops)
+		public static IAsyncOperation All(params IAsyncOperation[] ops)
 		{
 			return AsyncResult.WhenAll(ops);
 		}
@@ -94,7 +94,7 @@ namespace UnityFx.Async.Promises
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
 		/// <seealso cref="All(IAsyncOperation[])"/>
-		public static IAsyncResult All(IEnumerable<IAsyncOperation> ops)
+		public static IAsyncOperation All(IEnumerable<IAsyncOperation> ops)
 		{
 			return AsyncResult.WhenAll(ops);
 		}
@@ -107,7 +107,7 @@ namespace UnityFx.Async.Promises
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
 		/// <seealso cref="Race(IEnumerable{IAsyncOperation})"/>
-		public static IAsyncResult Race(params IAsyncOperation[] ops)
+		public static IAsyncOperation Race(params IAsyncOperation[] ops)
 		{
 			return AsyncResult.WhenAny(ops);
 		}
@@ -120,7 +120,7 @@ namespace UnityFx.Async.Promises
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
 		/// <seealso cref="Race(IAsyncOperation[])"/>
-		public static IAsyncResult Race(IEnumerable<IAsyncOperation> ops)
+		public static IAsyncOperation Race(IEnumerable<IAsyncOperation> ops)
 		{
 			return AsyncResult.WhenAny(ops);
 		}
@@ -133,7 +133,7 @@ namespace UnityFx.Async.Promises
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
 		/// <seealso cref="Sequence(IEnumerable{Func{IAsyncOperation}})"/>
-		public static IAsyncResult Sequence(params Func<IAsyncOperation>[] ops)
+		public static IAsyncOperation Sequence(params Func<IAsyncOperation>[] ops)
 		{
 			if (ops == null)
 			{
@@ -164,7 +164,7 @@ namespace UnityFx.Async.Promises
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
 		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
 		/// <seealso cref="Sequence(Func{IAsyncOperation}[])"/>
-		public static IAsyncResult Sequence(IEnumerable<Func<IAsyncOperation>> ops)
+		public static IAsyncOperation Sequence(IEnumerable<Func<IAsyncOperation>> ops)
 		{
 			if (ops == null)
 			{
