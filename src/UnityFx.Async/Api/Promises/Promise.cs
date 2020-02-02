@@ -9,6 +9,7 @@ namespace UnityFx.Async.Promises
 	/// <summary>
 	/// Promise-related helpers.
 	/// </summary>
+	/// <seealso href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"/>
 	public static class Promise
 	{
 		#region interface
