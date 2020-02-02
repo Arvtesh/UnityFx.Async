@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace UnityFx.Async.Promises
 {
@@ -40,9 +41,21 @@ namespace UnityFx.Async.Promises
 		}
 
 		/// <summary>
+		/// Creates a promise that's already been rejected.
+		/// </summary>
+		/// <seealso cref="Rejected(string)"/>
+		/// <seealso cref="Rejected(Exception)"/>
+		/// <seealso cref="Resolved"/>
+		public static IAsyncOperation Rejected()
+		{
+			return AsyncResult.CanceledOperation;
+		}
+
+		/// <summary>
 		/// Creates a promise that's already been rejected with the specified error <paramref name="message"/>.
 		/// </summary>
 		/// <seealso cref="Rejected(Exception)"/>
+		/// <seealso cref="Rejected()"/>
 		/// <seealso cref="Resolved"/>
 		public static IAsyncOperation Rejected(string message)
 		{
@@ -52,7 +65,9 @@ namespace UnityFx.Async.Promises
 		/// <summary>
 		/// Creates a promise that's already been rejected with the specified <see cref="Exception"/>.
 		/// </summary>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
 		/// <seealso cref="Rejected(string)"/>
+		/// <seealso cref="Rejected()"/>
 		/// <seealso cref="Resolved"/>
 		public static IAsyncOperation Rejected(Exception e)
 		{
@@ -64,10 +79,12 @@ namespace UnityFx.Async.Promises
 		/// </summary>
 		/// <param name="ops">Operations to wait for.</param>
 		/// <returns>An operation that completes when all specified promises are resolved.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
 		/// <seealso cref="All(IEnumerable{IAsyncOperation})"/>
-		public static IAsyncResult All(params IAsyncOperation[] ops)
+		public static IAsyncOperation All(params IAsyncOperation[] ops)
 		{
-			throw new NotImplementedException();
+			return AsyncResult.WhenAll(ops);
 		}
 
 		/// <summary>
@@ -75,10 +92,12 @@ namespace UnityFx.Async.Promises
 		/// </summary>
 		/// <param name="ops">Operations to wait for.</param>
 		/// <returns>An operation that completes when all specified promises are resolved.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
 		/// <seealso cref="All(IAsyncOperation[])"/>
-		public static IAsyncResult All(IEnumerable<IAsyncOperation> ops)
+		public static IAsyncOperation All(IEnumerable<IAsyncOperation> ops)
 		{
-			throw new NotImplementedException();
+			return AsyncResult.WhenAll(ops);
 		}
 
 		/// <summary>
@@ -86,10 +105,12 @@ namespace UnityFx.Async.Promises
 		/// </summary>
 		/// <param name="ops">Operations to wait for.</param>
 		/// <returns>An operation that completes when any of the specified promises is resolved.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
 		/// <seealso cref="Race(IEnumerable{IAsyncOperation})"/>
-		public static IAsyncResult Race(params IAsyncOperation[] ops)
+		public static IAsyncOperation Race(params IAsyncOperation[] ops)
 		{
-			throw new NotImplementedException();
+			return AsyncResult.WhenAny(ops);
 		}
 
 		/// <summary>
@@ -97,32 +118,78 @@ namespace UnityFx.Async.Promises
 		/// </summary>
 		/// <param name="ops">Operations to wait for.</param>
 		/// <returns>An operation that completes when any of the specified promises is resolved.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
 		/// <seealso cref="Race(IAsyncOperation[])"/>
-		public static IAsyncResult Race(IEnumerable<IAsyncOperation> ops)
+		public static IAsyncOperation Race(IEnumerable<IAsyncOperation> ops)
 		{
-			throw new NotImplementedException();
+			return AsyncResult.WhenAny(ops);
 		}
 
 		/// <summary>
 		/// Chain a number of operations using promises.
 		/// </summary>
-		/// <param name="opFuncs">Functions each of which starts an async operation and yields a promise.</param>
+		/// <param name="ops">Functions each of which starts an async operation and yields a promise.</param>
 		/// <returns>An operation that completes when all promises in the sequence are resolved.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
 		/// <seealso cref="Sequence(IEnumerable{Func{IAsyncOperation}})"/>
-		public static IAsyncResult Sequence(params Func<IAsyncOperation>[] opFuncs)
+		public static IAsyncOperation Sequence(params Func<IAsyncOperation>[] ops)
 		{
-			throw new NotImplementedException();
+			if (ops == null)
+			{
+				throw new ArgumentNullException(nameof(ops));
+			}
+
+			if (ops.Length == 0)
+			{
+				return AsyncResult.CompletedOperation;
+			}
+
+			for (var i = 0; i < ops.Length; i++)
+			{
+				if (ops[i] == null)
+				{
+					throw new ArgumentException(Messages.FormatError_ListElementIsNull(), nameof(ops));
+				}
+			}
+
+			return new SequenceResult(ops);
 		}
 
 		/// <summary>
 		/// Chain a number of operations using promises.
 		/// </summary>
-		/// <param name="opFuncs">Functions each of which starts an async operation and yields a promise.</param>
+		/// <param name="ops">Functions each of which starts an async operation and yields a promise.</param>
 		/// <returns>An operation that completes when all promises in the sequence are resolved.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
 		/// <seealso cref="Sequence(Func{IAsyncOperation}[])"/>
-		public static IAsyncResult Sequence(IEnumerable<Func<IAsyncOperation>> opFuncs)
+		public static IAsyncOperation Sequence(IEnumerable<Func<IAsyncOperation>> ops)
 		{
-			throw new NotImplementedException();
+			if (ops == null)
+			{
+				throw new ArgumentNullException(nameof(ops));
+			}
+
+			var opList = new List<Func<IAsyncOperation>>();
+
+			foreach (var op in ops)
+			{
+				if (op == null)
+				{
+					throw new ArgumentException(Messages.FormatError_ListElementIsNull(), nameof(ops));
+				}
+
+				opList.Add(op);
+			}
+
+			if (opList.Count == 0)
+			{
+				return AsyncResult.CompletedOperation;
+			}
+
+			return new SequenceResult(opList);
 		}
 
 		internal static void PropagateUnhandledException(object sender, Exception e)

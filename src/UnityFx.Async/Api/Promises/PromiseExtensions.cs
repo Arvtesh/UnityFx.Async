@@ -370,6 +370,74 @@ namespace UnityFx.Async.Promises
 
 		#endregion
 
+		#region ThenSequence
+
+		/// <summary>
+		/// Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback have completed.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation ThenSequence(this IAsyncOperation op, Func<IEnumerable<Func<IAsyncOperation>>> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			return new ThenSequenceResult<VoidResult>(op, successCallback, null);
+		}
+
+		/// <summary>
+		/// Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback have completed.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation ThenSequence<TResult>(this IAsyncOperation<TResult> op, Func<IEnumerable<Func<IAsyncOperation>>> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			return new ThenSequenceResult<TResult>(op, successCallback, null);
+		}
+
+		/// <summary>
+		/// Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback have completed.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation ThenSequence(this IAsyncOperation op, Func<Func<IAsyncOperation>[]> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			return new ThenSequenceResult<VoidResult>(op, successCallback, null);
+		}
+
+		/// <summary>
+		/// Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback have completed.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation ThenSequence<TResult>(this IAsyncOperation<TResult> op, Func<Func<IAsyncOperation>[]> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			return new ThenSequenceResult<TResult>(op, successCallback, null);
+		}
+
+		#endregion
+
 		#region Rebind
 
 		/// <summary>

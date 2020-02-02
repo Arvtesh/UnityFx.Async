@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 
 namespace UnityFx.Async
 {
@@ -9,20 +10,20 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private readonly T[] _ops;
+		private readonly IList<T> _ops;
 
 		#endregion
 
 		#region interface
 
-		public WhenAnyResult(T[] ops)
+		public WhenAnyResult(IList<T> ops)
 			: base(AsyncOperationStatus.Running)
 		{
 			_ops = ops;
 
-			foreach (var op in ops)
+			for (var i = 0; i < ops.Count; i++)
 			{
-				op.AddCompletionCallback(this, null);
+				ops[i].AddCompletionCallback(this, null);
 			}
 		}
 
@@ -32,9 +33,9 @@ namespace UnityFx.Async
 
 		protected override void OnCancel()
 		{
-			foreach (var op in _ops)
+			for (var i = 0; i < _ops.Count; i++)
 			{
-				op.Cancel();
+				_ops[i].Cancel();
 			}
 		}
 
