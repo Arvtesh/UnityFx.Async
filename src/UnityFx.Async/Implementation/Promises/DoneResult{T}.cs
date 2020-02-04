@@ -41,9 +41,13 @@ namespace UnityFx.Async.Promises
 						a1(((IAsyncOperation<T>)op).Result);
 					}
 				}
+				else if (_errorCallback != null)
+				{
+					_errorCallback.Invoke(op.Exception);
+				}
 				else
 				{
-					_errorCallback?.Invoke(op.Exception);
+					Promise.PropagateUnhandledException(this, op.Exception);
 				}
 			}
 			catch (Exception e)

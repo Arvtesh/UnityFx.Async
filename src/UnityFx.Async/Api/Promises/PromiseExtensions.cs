@@ -540,7 +540,7 @@ namespace UnityFx.Async.Promises
 		#region Done
 
 		/// <summary>
-		/// Schedules a callback to be executed after the promise chain has completed.
+		/// Schedules a callback to be executed after the promise chain has completed. Routes unhendled errors to <see cref="Promise.UnhandledException"/>.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the promise has resolved.</param>
@@ -558,7 +558,7 @@ namespace UnityFx.Async.Promises
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the promise chain has completed.
+		/// Schedules a callback to be executed after the promise chain has completed. Routes unhendled errors to <see cref="Promise.UnhandledException"/>.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the promise has resolved.</param>
@@ -582,7 +582,7 @@ namespace UnityFx.Async.Promises
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the promise chain has completed.
+		/// Schedules a callback to be executed after the promise chain has completed. Routes unhendled errors to <see cref="Promise.UnhandledException"/>.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the promise has resolved.</param>
@@ -600,7 +600,7 @@ namespace UnityFx.Async.Promises
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the promise chain has completed.
+		/// Schedules a callback to be executed after the promise chain has completed. Routes unhendled errors to <see cref="Promise.UnhandledException"/>.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the promise has resolved.</param>
@@ -621,6 +621,17 @@ namespace UnityFx.Async.Promises
 			}
 
 			op.AddCompletionCallback(new DoneResult<TResult>(successCallback, errorCallback));
+		}
+
+		/// <summary>
+		/// Routes unhendled errors to <see cref="Promise.UnhandledException"/>.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <seealso cref="Promise.UnhandledException"/>
+		/// <seealso href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise"/>
+		public static void Done(this IAsyncOperation op)
+		{
+			op.AddCompletionCallback(new DoneResult<VoidResult>(null, null));
 		}
 
 		#endregion
