@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace UnityFx.Async.Promises
 {
@@ -30,19 +29,19 @@ namespace UnityFx.Async.Promises
 			switch (continuation)
 			{
 				case Func<IEnumerable<IAsyncOperation<U>>> f1:
-					result = new WhenAnyResult<IAsyncOperation>(f1().ToArray());
+					result = WhenAny(f1());
 					break;
 
 				case Func<IEnumerable<IAsyncOperation>> f2:
-					result = new WhenAnyResult<IAsyncOperation>(f2().ToArray());
+					result = WhenAny(f2());
 					break;
 
 				case Func<T, IEnumerable<IAsyncOperation<U>>> f3:
-					result = new WhenAnyResult<IAsyncOperation>(f3((op as IAsyncOperation<T>).Result).ToArray());
+					result = WhenAny(f3(((IAsyncOperation<T>)op).Result));
 					break;
 
 				case Func<T, IEnumerable<IAsyncOperation>> f4:
-					result = new WhenAnyResult<IAsyncOperation>(f4((op as IAsyncOperation<T>).Result).ToArray());
+					result = WhenAny(f4(((IAsyncOperation<T>)op).Result));
 					break;
 			}
 

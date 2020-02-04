@@ -38,11 +38,11 @@ namespace UnityFx.Async.Promises
 					break;
 
 				case Func<T, Func<IAsyncOperation>[]> f3:
-					result = Promise.Sequence(f3((op as IAsyncOperation<T>).Result));
+					result = Promise.Sequence(f3(((IAsyncOperation<T>)op).Result));
 					break;
 
 				case Func<T, IEnumerable<Func<IAsyncOperation>>> f4:
-					result = Promise.Sequence(f4((op as IAsyncOperation<T>).Result));
+					result = Promise.Sequence(f4(((IAsyncOperation<T>)op).Result));
 					break;
 			}
 

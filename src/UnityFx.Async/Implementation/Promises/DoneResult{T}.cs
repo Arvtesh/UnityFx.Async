@@ -38,7 +38,7 @@ namespace UnityFx.Async.Promises
 					}
 					else if (_successCallback is Action<T> a1)
 					{
-						a1((op as IAsyncOperation<T>).Result);
+						a1(((IAsyncOperation<T>)op).Result);
 					}
 				}
 				else

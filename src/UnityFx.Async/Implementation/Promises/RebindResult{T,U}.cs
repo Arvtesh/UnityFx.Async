@@ -56,7 +56,7 @@ namespace UnityFx.Async.Promises
 							break;
 
 						case Func<T, U> f2:
-							TrySetResult(f2((op as IAsyncOperation<T>).Result));
+							TrySetResult(f2(((IAsyncOperation<T>)op).Result));
 							break;
 
 						default:

@@ -44,7 +44,7 @@ namespace UnityFx.Async.Promises
 
 				case Action<T> a1:
 					{
-						a1.Invoke((op as IAsyncOperation<T>).Result);
+						a1.Invoke(((IAsyncOperation<T>)op).Result);
 						TrySetCompleted();
 						break;
 					}
@@ -65,14 +65,14 @@ namespace UnityFx.Async.Promises
 
 				case Func<T, IAsyncOperation<U>> f4:
 					{
-						result = f4((op as IAsyncOperation<T>).Result);
+						result = f4(((IAsyncOperation<T>)op).Result);
 						result.AddCompletionCallback(new Action<IAsyncOperation>(op2 => TryCopyCompletionState(op2, false)), null);
 						break;
 					}
 
 				case Func<T, IAsyncOperation> f2:
 					{
-						result = f2((op as IAsyncOperation<T>).Result);
+						result = f2(((IAsyncOperation<T>)op).Result);
 						result.AddCompletionCallback(new Action<IAsyncOperation>(op2 => TryCopyCompletionState(op2, false)), null);
 						break;
 					}
