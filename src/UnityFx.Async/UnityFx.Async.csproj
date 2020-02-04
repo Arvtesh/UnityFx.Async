@@ -16,7 +16,7 @@
 		<PackageIconUrl></PackageIconUrl>
 		<Version>1.1.0</Version>
 		<AssemblyName>$(MSBuildProjectName)-$(TargetFramework)</AssemblyName>
-		<AssemblyVersion>110.0.0</AssemblyVersion>
+		<AssemblyVersion>1.1.0.0</AssemblyVersion>
 		<FileVersion>1.1.0.0</FileVersion>
 		<InformationalVersion>1.1.0.0</InformationalVersion>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>

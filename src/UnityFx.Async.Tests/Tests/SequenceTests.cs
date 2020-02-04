@@ -63,7 +63,7 @@ namespace UnityFx.Async.Promises
 			{
 				await op2;
 			}
-			catch (NotImplementedException e)
+			catch (NotImplementedException)
 			{
 			}
 
