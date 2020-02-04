@@ -338,7 +338,7 @@ DownloadTextAsync("http://www.google.com")
     .ContinueWith(op => Debug.Log("2"), AsyncContinuationOptions.NotOnCanceled)
     .ContinueWith(op => Debug.Log("3"), AsyncContinuationOptions.OnlyOnFaulted);
 ```
-`Done()` acts like a combination of `Catch()` and `Finally()`. It should always be the last element of the chain:
+`Done()` acts like a combination of `Catch()` and `Finally()`. It should always be the last element of the chain. Note that `Done()` also routes unhandled exceptions to `Promise.UnhandledException` static event:
 ```csharp
 DownloadTextAsync("http://www.google.com")
     .Then(text => ExtractFirstUrl(text))
