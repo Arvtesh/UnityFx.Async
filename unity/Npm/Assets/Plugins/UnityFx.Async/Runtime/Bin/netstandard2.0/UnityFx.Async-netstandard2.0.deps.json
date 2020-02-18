@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "UnityFx.Async-netstandard2.0/1.0.0": {
+      "UnityFx.Async-netstandard2.0/1.1.0": {
         "dependencies": {
           "NETStandard.Library": "2.0.3",
           "StyleCop.Analyzers": "1.1.0-beta009"
@@ -26,7 +26,7 @@
     }
   },
   "libraries": {
-    "UnityFx.Async-netstandard2.0/1.0.0": {
+    "UnityFx.Async-netstandard2.0/1.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -34,7 +34,7 @@
     "Microsoft.NETCore.Platforms/1.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
+      "sha512": "sha512-d15KS6WIdb5TzAEQiNM7KxB5TYb7cgiRk/767t83xYicHpHoqekPHXLWOc6gyh/FDF77dj4oR1/qg2tnPRfM1g==",
       "path": "microsoft.netcore.platforms/1.1.0",
       "hashPath": "microsoft.netcore.platforms.1.1.0.nupkg.sha512"
     },

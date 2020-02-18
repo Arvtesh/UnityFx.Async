@@ -2,7 +2,7 @@
 	"name": "com.unityfx.async",
 	"displayName": "Asynchronous operations (promises) for Unity",
 	"description": "UnityFx.Async introduces effective and portable asynchronous operations that can be used very much like Tasks in .NET and Promises in JS.",
-	"version": "1.0.3",
+	"version": "1.1.0",
 	"unity": "2018.3",
 	"keywords": [
 		"UnityFx",

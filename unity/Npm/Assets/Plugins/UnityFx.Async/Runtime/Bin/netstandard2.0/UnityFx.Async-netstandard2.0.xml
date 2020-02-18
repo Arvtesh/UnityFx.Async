@@ -2002,6 +2002,7 @@
             </summary>
             <param name="exception">The exception to complete the operation with.</param>
             <returns>A faulted operation.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
             <seealso cref="M:UnityFx.Async.AsyncResult.FromException(System.Exception,System.Object)"/>
             <seealso cref="M:UnityFx.Async.AsyncResult.FromException(System.String)"/>
             <seealso cref="M:UnityFx.Async.AsyncResult.FromCanceled"/>
@@ -2014,6 +2015,7 @@
             <param name="exception">The exception to complete the operation with.</param>
             <param name="asyncState">User-defined data returned by <see cref="P:UnityFx.Async.AsyncResult.AsyncState"/>.</param>
             <returns>A faulted operation.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
             <seealso cref="M:UnityFx.Async.AsyncResult.FromException(System.Exception)"/>
             <seealso cref="M:UnityFx.Async.AsyncResult.FromException(System.String,System.Object)"/>
             <seealso cref="M:UnityFx.Async.AsyncResult.FromCanceled(System.Object)"/>
@@ -2505,7 +2507,7 @@
             <param name="ops">The operations to wait on for completion.</param>
             <returns>An operation that represents the completion of all of the supplied operations.</returns>
             <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
-            <exception cref="T:System.ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation..</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
             <seealso cref="M:UnityFx.Async.AsyncResult.WhenAll(UnityFx.Async.IAsyncOperation[])"/>
             <seealso cref="M:UnityFx.Async.AsyncResult.WhenAll``1(System.Collections.Generic.IEnumerable{UnityFx.Async.IAsyncOperation{``0}})"/>
         </member>
@@ -3801,6 +3803,131 @@
             </summary>
             <param name="updatable">An update listener. Can be <see langword="null"/>.</param>
         </member>
+        <member name="T:UnityFx.Async.Promises.ExceptionEventArgs">
+            <summary>
+            Arguments of <see cref="E:UnityFx.Async.Promises.Promise.UnhandledException"/> event.
+            </summary>
+        </member>
+        <member name="P:UnityFx.Async.Promises.ExceptionEventArgs.Exception">
+            <summary>
+            Gets the stored <see cref="P:UnityFx.Async.Promises.ExceptionEventArgs.Exception"/>.
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.Promises.ExceptionEventArgs.#ctor(System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:UnityFx.Async.Promises.ExceptionEventArgs"/> class.
+            </summary>
+        </member>
+        <member name="T:UnityFx.Async.Promises.Promise">
+            <summary>
+            Promise-related helpers.
+            </summary>
+            <seealso href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"/>
+        </member>
+        <member name="E:UnityFx.Async.Promises.Promise.UnhandledException">
+            <summary>
+            Event raised for unhandled exceptions. For this to work you have to complete your promises with a call to Done().
+            </summary>
+        </member>
+        <member name="M:UnityFx.Async.Promises.Promise.Resolved">
+            <summary>
+            Creates a promise that's already been resolved.
+            </summary>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Rejected(System.Exception)"/>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Resolved``1(``0)"/>
+        </member>
+        <member name="M:UnityFx.Async.Promises.Promise.Resolved``1(``0)">
+            <summary>
+            Creates a promise that's already been resolved with the specified value.
+            </summary>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Rejected(System.Exception)"/>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Resolved"/>
+        </member>
+        <member name="M:UnityFx.Async.Promises.Promise.Rejected">
+            <summary>
+            Creates a promise that's already been rejected.
+            </summary>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Rejected(System.String)"/>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Rejected(System.Exception)"/>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Resolved"/>
+        </member>
+        <member name="M:UnityFx.Async.Promises.Promise.Rejected(System.String)">
+            <summary>
+            Creates a promise that's already been rejected with the specified error <paramref name="message"/>.
+            </summary>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Rejected(System.Exception)"/>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Rejected"/>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Resolved"/>
+        </member>
+        <member name="M:UnityFx.Async.Promises.Promise.Rejected(System.Exception)">
+            <summary>
+            Creates a promise that's already been rejected with the specified <see cref="T:System.Exception"/>.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="e"/> is <see langword="null"/>.</exception>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Rejected(System.String)"/>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Rejected"/>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Resolved"/>
+        </member>
+        <member name="M:UnityFx.Async.Promises.Promise.All(UnityFx.Async.IAsyncOperation[])">
+            <summary>
+            Returns a promise that resolves when all of the promises in the enumerable argument have resolved.
+            </summary>
+            <param name="ops">Operations to wait for.</param>
+            <returns>An operation that completes when all specified promises are resolved.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.All(System.Collections.Generic.IEnumerable{UnityFx.Async.IAsyncOperation})"/>
+        </member>
+        <member name="M:UnityFx.Async.Promises.Promise.All(System.Collections.Generic.IEnumerable{UnityFx.Async.IAsyncOperation})">
+            <summary>
+            Returns a promise that resolves when all of the promises in the enumerable argument have resolved.
+            </summary>
+            <param name="ops">Operations to wait for.</param>
+            <returns>An operation that completes when all specified promises are resolved.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.All(UnityFx.Async.IAsyncOperation[])"/>
+        </member>
+        <member name="M:UnityFx.Async.Promises.Promise.Race(UnityFx.Async.IAsyncOperation[])">
+            <summary>
+            Returns a promise that resolves when any of the promises in the enumerable argument have resolved.
+            </summary>
+            <param name="ops">Operations to wait for.</param>
+            <returns>An operation that completes when any of the specified promises is resolved.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Race(System.Collections.Generic.IEnumerable{UnityFx.Async.IAsyncOperation})"/>
+        </member>
+        <member name="M:UnityFx.Async.Promises.Promise.Race(System.Collections.Generic.IEnumerable{UnityFx.Async.IAsyncOperation})">
+            <summary>
+            Returns a promise that resolves when any of the promises in the enumerable argument have resolved.
+            </summary>
+            <param name="ops">Operations to wait for.</param>
+            <returns>An operation that completes when any of the specified promises is resolved.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Race(UnityFx.Async.IAsyncOperation[])"/>
+        </member>
+        <member name="M:UnityFx.Async.Promises.Promise.Sequence(System.Func{UnityFx.Async.IAsyncOperation}[])">
+            <summary>
+            Chain a number of operations using promises.
+            </summary>
+            <param name="ops">Functions each of which starts an async operation and yields a promise.</param>
+            <returns>An operation that completes when all promises in the sequence are resolved.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Sequence(System.Collections.Generic.IEnumerable{System.Func{UnityFx.Async.IAsyncOperation}})"/>
+        </member>
+        <member name="M:UnityFx.Async.Promises.Promise.Sequence(System.Collections.Generic.IEnumerable{System.Func{UnityFx.Async.IAsyncOperation}})">
+            <summary>
+            Chain a number of operations using promises.
+            </summary>
+            <param name="ops">Functions each of which starts an async operation and yields a promise.</param>
+            <returns>An operation that completes when all promises in the sequence are resolved.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
+            <seealso cref="M:UnityFx.Async.Promises.Promise.Sequence(System.Func{UnityFx.Async.IAsyncOperation}[])"/>
+        </member>
         <member name="T:UnityFx.Async.Promises.PromiseExtensions">
             <summary>
             Promise extensions for <see cref="T:UnityFx.Async.IAsyncOperation"/>.
@@ -3987,6 +4114,38 @@
             <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
             <seealso cref="M:UnityFx.Async.Promises.PromiseExtensions.ThenAny``1(UnityFx.Async.IAsyncOperation,System.Func{System.Collections.Generic.IEnumerable{UnityFx.Async.IAsyncOperation{``0}}})"/>
         </member>
+        <member name="M:UnityFx.Async.Promises.PromiseExtensions.ThenSequence(UnityFx.Async.IAsyncOperation,System.Func{System.Collections.Generic.IEnumerable{System.Func{UnityFx.Async.IAsyncOperation}}})">
+            <summary>
+            Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback have completed.
+            </summary>
+            <param name="op">An operation to be continued.</param>
+            <param name="successCallback">The callback to be executed when the operation has completed.</param>
+            <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+        </member>
+        <member name="M:UnityFx.Async.Promises.PromiseExtensions.ThenSequence``1(UnityFx.Async.IAsyncOperation{``0},System.Func{System.Collections.Generic.IEnumerable{System.Func{UnityFx.Async.IAsyncOperation}}})">
+            <summary>
+            Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback have completed.
+            </summary>
+            <param name="op">An operation to be continued.</param>
+            <param name="successCallback">The callback to be executed when the operation has completed.</param>
+            <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+        </member>
+        <member name="M:UnityFx.Async.Promises.PromiseExtensions.ThenSequence(UnityFx.Async.IAsyncOperation,System.Func{System.Func{UnityFx.Async.IAsyncOperation}[]})">
+            <summary>
+            Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback have completed.
+            </summary>
+            <param name="op">An operation to be continued.</param>
+            <param name="successCallback">The callback to be executed when the operation has completed.</param>
+            <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+        </member>
+        <member name="M:UnityFx.Async.Promises.PromiseExtensions.ThenSequence``1(UnityFx.Async.IAsyncOperation{``0},System.Func{System.Func{UnityFx.Async.IAsyncOperation}[]})">
+            <summary>
+            Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback have completed.
+            </summary>
+            <param name="op">An operation to be continued.</param>
+            <param name="successCallback">The callback to be executed when the operation has completed.</param>
+            <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+        </member>
         <member name="M:UnityFx.Async.Promises.PromiseExtensions.Rebind``1(UnityFx.Async.IAsyncOperation,System.Func{``0})">
             <summary>
             Transforms the promise result to another type.
@@ -4036,40 +4195,52 @@
         </member>
         <member name="M:UnityFx.Async.Promises.PromiseExtensions.Done(UnityFx.Async.IAsyncOperation,System.Action)">
             <summary>
-            Schedules a callback to be executed after the promise chain has completed.
+            Schedules a callback to be executed after the promise chain has completed. Routes unhendled errors to <see cref="E:UnityFx.Async.Promises.Promise.UnhandledException"/>.
             </summary>
             <param name="op">An operation to be continued.</param>
             <param name="successCallback">The callback to be executed when the promise has resolved.</param>
             <seealso cref="M:UnityFx.Async.Promises.PromiseExtensions.Done(UnityFx.Async.IAsyncOperation,System.Action,System.Action{System.Exception})"/>
+            <seealso cref="E:UnityFx.Async.Promises.Promise.UnhandledException"/>
             <seealso href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise"/>
         </member>
         <member name="M:UnityFx.Async.Promises.PromiseExtensions.Done(UnityFx.Async.IAsyncOperation,System.Action,System.Action{System.Exception})">
             <summary>
-            Schedules a callback to be executed after the promise chain has completed.
+            Schedules a callback to be executed after the promise chain has completed. Routes unhendled errors to <see cref="E:UnityFx.Async.Promises.Promise.UnhandledException"/>.
             </summary>
             <param name="op">An operation to be continued.</param>
             <param name="successCallback">The callback to be executed when the promise has resolved.</param>
             <param name="errorCallback">The callback to be executed when the promise was rejected.</param>
             <seealso cref="M:UnityFx.Async.Promises.PromiseExtensions.Done(UnityFx.Async.IAsyncOperation,System.Action)"/>
+            <seealso cref="E:UnityFx.Async.Promises.Promise.UnhandledException"/>
             <seealso href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise"/>
         </member>
         <member name="M:UnityFx.Async.Promises.PromiseExtensions.Done``1(UnityFx.Async.IAsyncOperation{``0},System.Action{``0})">
             <summary>
-            Schedules a callback to be executed after the promise chain has completed.
+            Schedules a callback to be executed after the promise chain has completed. Routes unhendled errors to <see cref="E:UnityFx.Async.Promises.Promise.UnhandledException"/>.
             </summary>
             <param name="op">An operation to be continued.</param>
             <param name="successCallback">The callback to be executed when the promise has resolved.</param>
             <seealso cref="M:UnityFx.Async.Promises.PromiseExtensions.Done``1(UnityFx.Async.IAsyncOperation{``0},System.Action{``0},System.Action{System.Exception})"/>
+            <seealso cref="E:UnityFx.Async.Promises.Promise.UnhandledException"/>
             <seealso href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise"/>
         </member>
         <member name="M:UnityFx.Async.Promises.PromiseExtensions.Done``1(UnityFx.Async.IAsyncOperation{``0},System.Action{``0},System.Action{System.Exception})">
             <summary>
-            Schedules a callback to be executed after the promise chain has completed.
+            Schedules a callback to be executed after the promise chain has completed. Routes unhendled errors to <see cref="E:UnityFx.Async.Promises.Promise.UnhandledException"/>.
             </summary>
             <param name="op">An operation to be continued.</param>
             <param name="successCallback">The callback to be executed when the promise has resolved.</param>
             <param name="errorCallback">The callback to be executed when the promise was rejected.</param>
             <seealso cref="M:UnityFx.Async.Promises.PromiseExtensions.Done``1(UnityFx.Async.IAsyncOperation{``0},System.Action{``0})"/>
+            <seealso cref="E:UnityFx.Async.Promises.Promise.UnhandledException"/>
+            <seealso href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise"/>
+        </member>
+        <member name="M:UnityFx.Async.Promises.PromiseExtensions.Done(UnityFx.Async.IAsyncOperation)">
+            <summary>
+            Routes unhendled errors to <see cref="E:UnityFx.Async.Promises.Promise.UnhandledException"/>.
+            </summary>
+            <param name="op">An operation to be continued.</param>
+            <seealso cref="E:UnityFx.Async.Promises.Promise.UnhandledException"/>
             <seealso href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise"/>
         </member>
         <member name="T:UnityFx.Async.CallbackData">
