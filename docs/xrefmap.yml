@@ -4137,6 +4137,165 @@ references:
   commentId: N:UnityFx.Async.Promises
   fullName: UnityFx.Async.Promises
   nameWithType: UnityFx.Async.Promises
+- uid: UnityFx.Async.Promises.ExceptionEventArgs
+  name: ExceptionEventArgs
+  href: api/netstandard2.0/UnityFx.Async.Promises.ExceptionEventArgs.html
+  commentId: T:UnityFx.Async.Promises.ExceptionEventArgs
+  fullName: UnityFx.Async.Promises.ExceptionEventArgs
+  nameWithType: ExceptionEventArgs
+- uid: UnityFx.Async.Promises.ExceptionEventArgs.#ctor(System.Exception)
+  name: ExceptionEventArgs(Exception)
+  href: api/netstandard2.0/UnityFx.Async.Promises.ExceptionEventArgs.html#UnityFx_Async_Promises_ExceptionEventArgs__ctor_System_Exception_
+  commentId: M:UnityFx.Async.Promises.ExceptionEventArgs.#ctor(System.Exception)
+  fullName: UnityFx.Async.Promises.ExceptionEventArgs.ExceptionEventArgs(System.Exception)
+  nameWithType: ExceptionEventArgs.ExceptionEventArgs(Exception)
+- uid: UnityFx.Async.Promises.ExceptionEventArgs.#ctor*
+  name: ExceptionEventArgs
+  href: api/netstandard2.0/UnityFx.Async.Promises.ExceptionEventArgs.html#UnityFx_Async_Promises_ExceptionEventArgs__ctor_
+  commentId: Overload:UnityFx.Async.Promises.ExceptionEventArgs.#ctor
+  fullName: UnityFx.Async.Promises.ExceptionEventArgs.ExceptionEventArgs
+  nameWithType: ExceptionEventArgs.ExceptionEventArgs
+- uid: UnityFx.Async.Promises.ExceptionEventArgs.Exception
+  name: Exception
+  href: api/netstandard2.0/UnityFx.Async.Promises.ExceptionEventArgs.html#UnityFx_Async_Promises_ExceptionEventArgs_Exception
+  commentId: P:UnityFx.Async.Promises.ExceptionEventArgs.Exception
+  fullName: UnityFx.Async.Promises.ExceptionEventArgs.Exception
+  nameWithType: ExceptionEventArgs.Exception
+- uid: UnityFx.Async.Promises.ExceptionEventArgs.Exception*
+  name: Exception
+  href: api/netstandard2.0/UnityFx.Async.Promises.ExceptionEventArgs.html#UnityFx_Async_Promises_ExceptionEventArgs_Exception_
+  commentId: Overload:UnityFx.Async.Promises.ExceptionEventArgs.Exception
+  fullName: UnityFx.Async.Promises.ExceptionEventArgs.Exception
+  nameWithType: ExceptionEventArgs.Exception
+- uid: UnityFx.Async.Promises.Promise
+  name: Promise
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html
+  commentId: T:UnityFx.Async.Promises.Promise
+  fullName: UnityFx.Async.Promises.Promise
+  nameWithType: Promise
+- uid: UnityFx.Async.Promises.Promise.All(System.Collections.Generic.IEnumerable{UnityFx.Async.IAsyncOperation})
+  name: All(IEnumerable<IAsyncOperation>)
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_All_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation__
+  commentId: M:UnityFx.Async.Promises.Promise.All(System.Collections.Generic.IEnumerable{UnityFx.Async.IAsyncOperation})
+  name.vb: All(IEnumerable(Of IAsyncOperation))
+  fullName: UnityFx.Async.Promises.Promise.All(System.Collections.Generic.IEnumerable<UnityFx.Async.IAsyncOperation>)
+  fullName.vb: UnityFx.Async.Promises.Promise.All(System.Collections.Generic.IEnumerable(Of UnityFx.Async.IAsyncOperation))
+  nameWithType: Promise.All(IEnumerable<IAsyncOperation>)
+  nameWithType.vb: Promise.All(IEnumerable(Of IAsyncOperation))
+- uid: UnityFx.Async.Promises.Promise.All(UnityFx.Async.IAsyncOperation[])
+  name: All(IAsyncOperation[])
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_All_UnityFx_Async_IAsyncOperation___
+  commentId: M:UnityFx.Async.Promises.Promise.All(UnityFx.Async.IAsyncOperation[])
+  name.vb: All(IAsyncOperation())
+  fullName: UnityFx.Async.Promises.Promise.All(UnityFx.Async.IAsyncOperation[])
+  fullName.vb: UnityFx.Async.Promises.Promise.All(UnityFx.Async.IAsyncOperation())
+  nameWithType: Promise.All(IAsyncOperation[])
+  nameWithType.vb: Promise.All(IAsyncOperation())
+- uid: UnityFx.Async.Promises.Promise.All*
+  name: All
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_All_
+  commentId: Overload:UnityFx.Async.Promises.Promise.All
+  fullName: UnityFx.Async.Promises.Promise.All
+  nameWithType: Promise.All
+- uid: UnityFx.Async.Promises.Promise.Race(System.Collections.Generic.IEnumerable{UnityFx.Async.IAsyncOperation})
+  name: Race(IEnumerable<IAsyncOperation>)
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Race_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation__
+  commentId: M:UnityFx.Async.Promises.Promise.Race(System.Collections.Generic.IEnumerable{UnityFx.Async.IAsyncOperation})
+  name.vb: Race(IEnumerable(Of IAsyncOperation))
+  fullName: UnityFx.Async.Promises.Promise.Race(System.Collections.Generic.IEnumerable<UnityFx.Async.IAsyncOperation>)
+  fullName.vb: UnityFx.Async.Promises.Promise.Race(System.Collections.Generic.IEnumerable(Of UnityFx.Async.IAsyncOperation))
+  nameWithType: Promise.Race(IEnumerable<IAsyncOperation>)
+  nameWithType.vb: Promise.Race(IEnumerable(Of IAsyncOperation))
+- uid: UnityFx.Async.Promises.Promise.Race(UnityFx.Async.IAsyncOperation[])
+  name: Race(IAsyncOperation[])
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Race_UnityFx_Async_IAsyncOperation___
+  commentId: M:UnityFx.Async.Promises.Promise.Race(UnityFx.Async.IAsyncOperation[])
+  name.vb: Race(IAsyncOperation())
+  fullName: UnityFx.Async.Promises.Promise.Race(UnityFx.Async.IAsyncOperation[])
+  fullName.vb: UnityFx.Async.Promises.Promise.Race(UnityFx.Async.IAsyncOperation())
+  nameWithType: Promise.Race(IAsyncOperation[])
+  nameWithType.vb: Promise.Race(IAsyncOperation())
+- uid: UnityFx.Async.Promises.Promise.Race*
+  name: Race
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Race_
+  commentId: Overload:UnityFx.Async.Promises.Promise.Race
+  fullName: UnityFx.Async.Promises.Promise.Race
+  nameWithType: Promise.Race
+- uid: UnityFx.Async.Promises.Promise.Rejected
+  name: Rejected()
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Rejected
+  commentId: M:UnityFx.Async.Promises.Promise.Rejected
+  fullName: UnityFx.Async.Promises.Promise.Rejected()
+  nameWithType: Promise.Rejected()
+- uid: UnityFx.Async.Promises.Promise.Rejected(System.Exception)
+  name: Rejected(Exception)
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Rejected_System_Exception_
+  commentId: M:UnityFx.Async.Promises.Promise.Rejected(System.Exception)
+  fullName: UnityFx.Async.Promises.Promise.Rejected(System.Exception)
+  nameWithType: Promise.Rejected(Exception)
+- uid: UnityFx.Async.Promises.Promise.Rejected(System.String)
+  name: Rejected(String)
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Rejected_System_String_
+  commentId: M:UnityFx.Async.Promises.Promise.Rejected(System.String)
+  fullName: UnityFx.Async.Promises.Promise.Rejected(System.String)
+  nameWithType: Promise.Rejected(String)
+- uid: UnityFx.Async.Promises.Promise.Rejected*
+  name: Rejected
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Rejected_
+  commentId: Overload:UnityFx.Async.Promises.Promise.Rejected
+  fullName: UnityFx.Async.Promises.Promise.Rejected
+  nameWithType: Promise.Rejected
+- uid: UnityFx.Async.Promises.Promise.Resolved
+  name: Resolved()
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Resolved
+  commentId: M:UnityFx.Async.Promises.Promise.Resolved
+  fullName: UnityFx.Async.Promises.Promise.Resolved()
+  nameWithType: Promise.Resolved()
+- uid: UnityFx.Async.Promises.Promise.Resolved*
+  name: Resolved
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Resolved_
+  commentId: Overload:UnityFx.Async.Promises.Promise.Resolved
+  fullName: UnityFx.Async.Promises.Promise.Resolved
+  nameWithType: Promise.Resolved
+- uid: UnityFx.Async.Promises.Promise.Resolved``1(``0)
+  name: Resolved<TResult>(TResult)
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Resolved__1___0_
+  commentId: M:UnityFx.Async.Promises.Promise.Resolved``1(``0)
+  name.vb: Resolved(Of TResult)(TResult)
+  fullName: UnityFx.Async.Promises.Promise.Resolved<TResult>(TResult)
+  fullName.vb: UnityFx.Async.Promises.Promise.Resolved(Of TResult)(TResult)
+  nameWithType: Promise.Resolved<TResult>(TResult)
+  nameWithType.vb: Promise.Resolved(Of TResult)(TResult)
+- uid: UnityFx.Async.Promises.Promise.Sequence(System.Collections.Generic.IEnumerable{System.Func{UnityFx.Async.IAsyncOperation}})
+  name: Sequence(IEnumerable<Func<IAsyncOperation>>)
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Sequence_System_Collections_Generic_IEnumerable_System_Func_UnityFx_Async_IAsyncOperation___
+  commentId: M:UnityFx.Async.Promises.Promise.Sequence(System.Collections.Generic.IEnumerable{System.Func{UnityFx.Async.IAsyncOperation}})
+  name.vb: Sequence(IEnumerable(Of Func(Of IAsyncOperation)))
+  fullName: UnityFx.Async.Promises.Promise.Sequence(System.Collections.Generic.IEnumerable<System.Func<UnityFx.Async.IAsyncOperation>>)
+  fullName.vb: UnityFx.Async.Promises.Promise.Sequence(System.Collections.Generic.IEnumerable(Of System.Func(Of UnityFx.Async.IAsyncOperation)))
+  nameWithType: Promise.Sequence(IEnumerable<Func<IAsyncOperation>>)
+  nameWithType.vb: Promise.Sequence(IEnumerable(Of Func(Of IAsyncOperation)))
+- uid: UnityFx.Async.Promises.Promise.Sequence(System.Func{UnityFx.Async.IAsyncOperation}[])
+  name: Sequence(Func<IAsyncOperation>[])
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Sequence_System_Func_UnityFx_Async_IAsyncOperation____
+  commentId: M:UnityFx.Async.Promises.Promise.Sequence(System.Func{UnityFx.Async.IAsyncOperation}[])
+  name.vb: Sequence(Func(Of IAsyncOperation)())
+  fullName: UnityFx.Async.Promises.Promise.Sequence(System.Func<UnityFx.Async.IAsyncOperation>[])
+  fullName.vb: UnityFx.Async.Promises.Promise.Sequence(System.Func(Of UnityFx.Async.IAsyncOperation)())
+  nameWithType: Promise.Sequence(Func<IAsyncOperation>[])
+  nameWithType.vb: Promise.Sequence(Func(Of IAsyncOperation)())
+- uid: UnityFx.Async.Promises.Promise.Sequence*
+  name: Sequence
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Sequence_
+  commentId: Overload:UnityFx.Async.Promises.Promise.Sequence
+  fullName: UnityFx.Async.Promises.Promise.Sequence
+  nameWithType: Promise.Sequence
+- uid: UnityFx.Async.Promises.Promise.UnhandledException
+  name: UnhandledException
+  href: api/netstandard2.0/UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_UnhandledException
+  commentId: E:UnityFx.Async.Promises.Promise.UnhandledException
+  fullName: UnityFx.Async.Promises.Promise.UnhandledException
+  nameWithType: Promise.UnhandledException
 - uid: UnityFx.Async.Promises.PromiseExtensions
   name: PromiseExtensions
   href: api/netstandard2.0/UnityFx.Async.Promises.PromiseExtensions.html
@@ -4167,6 +4326,12 @@ references:
   fullName.vb: UnityFx.Async.Promises.PromiseExtensions.Catch(Of TException)(UnityFx.Async.IAsyncOperation, System.Action(Of TException))
   nameWithType: PromiseExtensions.Catch<TException>(IAsyncOperation, Action<TException>)
   nameWithType.vb: PromiseExtensions.Catch(Of TException)(IAsyncOperation, Action(Of TException))
+- uid: UnityFx.Async.Promises.PromiseExtensions.Done(UnityFx.Async.IAsyncOperation)
+  name: Done(IAsyncOperation)
+  href: api/netstandard2.0/UnityFx.Async.Promises.PromiseExtensions.html#UnityFx_Async_Promises_PromiseExtensions_Done_UnityFx_Async_IAsyncOperation_
+  commentId: M:UnityFx.Async.Promises.PromiseExtensions.Done(UnityFx.Async.IAsyncOperation)
+  fullName: UnityFx.Async.Promises.PromiseExtensions.Done(UnityFx.Async.IAsyncOperation)
+  nameWithType: PromiseExtensions.Done(IAsyncOperation)
 - uid: UnityFx.Async.Promises.PromiseExtensions.Done(UnityFx.Async.IAsyncOperation,System.Action)
   name: Done(IAsyncOperation, Action)
   href: api/netstandard2.0/UnityFx.Async.Promises.PromiseExtensions.html#UnityFx_Async_Promises_PromiseExtensions_Done_UnityFx_Async_IAsyncOperation_System_Action_
@@ -4419,3 +4584,45 @@ references:
   fullName.vb: UnityFx.Async.Promises.PromiseExtensions.ThenAny(Of T, TResult)(UnityFx.Async.IAsyncOperation(Of T), System.Func(Of T, System.Collections.Generic.IEnumerable(Of UnityFx.Async.IAsyncOperation(Of TResult))))
   nameWithType: PromiseExtensions.ThenAny<T, TResult>(IAsyncOperation<T>, Func<T, IEnumerable<IAsyncOperation<TResult>>>)
   nameWithType.vb: PromiseExtensions.ThenAny(Of T, TResult)(IAsyncOperation(Of T), Func(Of T, IEnumerable(Of IAsyncOperation(Of TResult))))
+- uid: UnityFx.Async.Promises.PromiseExtensions.ThenSequence(UnityFx.Async.IAsyncOperation,System.Func{System.Collections.Generic.IEnumerable{System.Func{UnityFx.Async.IAsyncOperation}}})
+  name: ThenSequence(IAsyncOperation, Func<IEnumerable<Func<IAsyncOperation>>>)
+  href: api/netstandard2.0/UnityFx.Async.Promises.PromiseExtensions.html#UnityFx_Async_Promises_PromiseExtensions_ThenSequence_UnityFx_Async_IAsyncOperation_System_Func_System_Collections_Generic_IEnumerable_System_Func_UnityFx_Async_IAsyncOperation____
+  commentId: M:UnityFx.Async.Promises.PromiseExtensions.ThenSequence(UnityFx.Async.IAsyncOperation,System.Func{System.Collections.Generic.IEnumerable{System.Func{UnityFx.Async.IAsyncOperation}}})
+  name.vb: ThenSequence(IAsyncOperation, Func(Of IEnumerable(Of Func(Of IAsyncOperation))))
+  fullName: UnityFx.Async.Promises.PromiseExtensions.ThenSequence(UnityFx.Async.IAsyncOperation, System.Func<System.Collections.Generic.IEnumerable<System.Func<UnityFx.Async.IAsyncOperation>>>)
+  fullName.vb: UnityFx.Async.Promises.PromiseExtensions.ThenSequence(UnityFx.Async.IAsyncOperation, System.Func(Of System.Collections.Generic.IEnumerable(Of System.Func(Of UnityFx.Async.IAsyncOperation))))
+  nameWithType: PromiseExtensions.ThenSequence(IAsyncOperation, Func<IEnumerable<Func<IAsyncOperation>>>)
+  nameWithType.vb: PromiseExtensions.ThenSequence(IAsyncOperation, Func(Of IEnumerable(Of Func(Of IAsyncOperation))))
+- uid: UnityFx.Async.Promises.PromiseExtensions.ThenSequence(UnityFx.Async.IAsyncOperation,System.Func{System.Func{UnityFx.Async.IAsyncOperation}[]})
+  name: ThenSequence(IAsyncOperation, Func<Func<IAsyncOperation>[]>)
+  href: api/netstandard2.0/UnityFx.Async.Promises.PromiseExtensions.html#UnityFx_Async_Promises_PromiseExtensions_ThenSequence_UnityFx_Async_IAsyncOperation_System_Func_System_Func_UnityFx_Async_IAsyncOperation_____
+  commentId: M:UnityFx.Async.Promises.PromiseExtensions.ThenSequence(UnityFx.Async.IAsyncOperation,System.Func{System.Func{UnityFx.Async.IAsyncOperation}[]})
+  name.vb: ThenSequence(IAsyncOperation, Func(Of Func(Of IAsyncOperation)()))
+  fullName: UnityFx.Async.Promises.PromiseExtensions.ThenSequence(UnityFx.Async.IAsyncOperation, System.Func<System.Func<UnityFx.Async.IAsyncOperation>[]>)
+  fullName.vb: UnityFx.Async.Promises.PromiseExtensions.ThenSequence(UnityFx.Async.IAsyncOperation, System.Func(Of System.Func(Of UnityFx.Async.IAsyncOperation)()))
+  nameWithType: PromiseExtensions.ThenSequence(IAsyncOperation, Func<Func<IAsyncOperation>[]>)
+  nameWithType.vb: PromiseExtensions.ThenSequence(IAsyncOperation, Func(Of Func(Of IAsyncOperation)()))
+- uid: UnityFx.Async.Promises.PromiseExtensions.ThenSequence*
+  name: ThenSequence
+  href: api/netstandard2.0/UnityFx.Async.Promises.PromiseExtensions.html#UnityFx_Async_Promises_PromiseExtensions_ThenSequence_
+  commentId: Overload:UnityFx.Async.Promises.PromiseExtensions.ThenSequence
+  fullName: UnityFx.Async.Promises.PromiseExtensions.ThenSequence
+  nameWithType: PromiseExtensions.ThenSequence
+- uid: UnityFx.Async.Promises.PromiseExtensions.ThenSequence``1(UnityFx.Async.IAsyncOperation{``0},System.Func{System.Collections.Generic.IEnumerable{System.Func{UnityFx.Async.IAsyncOperation}}})
+  name: ThenSequence<TResult>(IAsyncOperation<TResult>, Func<IEnumerable<Func<IAsyncOperation>>>)
+  href: api/netstandard2.0/UnityFx.Async.Promises.PromiseExtensions.html#UnityFx_Async_Promises_PromiseExtensions_ThenSequence__1_UnityFx_Async_IAsyncOperation___0__System_Func_System_Collections_Generic_IEnumerable_System_Func_UnityFx_Async_IAsyncOperation____
+  commentId: M:UnityFx.Async.Promises.PromiseExtensions.ThenSequence``1(UnityFx.Async.IAsyncOperation{``0},System.Func{System.Collections.Generic.IEnumerable{System.Func{UnityFx.Async.IAsyncOperation}}})
+  name.vb: ThenSequence(Of TResult)(IAsyncOperation(Of TResult), Func(Of IEnumerable(Of Func(Of IAsyncOperation))))
+  fullName: UnityFx.Async.Promises.PromiseExtensions.ThenSequence<TResult>(UnityFx.Async.IAsyncOperation<TResult>, System.Func<System.Collections.Generic.IEnumerable<System.Func<UnityFx.Async.IAsyncOperation>>>)
+  fullName.vb: UnityFx.Async.Promises.PromiseExtensions.ThenSequence(Of TResult)(UnityFx.Async.IAsyncOperation(Of TResult), System.Func(Of System.Collections.Generic.IEnumerable(Of System.Func(Of UnityFx.Async.IAsyncOperation))))
+  nameWithType: PromiseExtensions.ThenSequence<TResult>(IAsyncOperation<TResult>, Func<IEnumerable<Func<IAsyncOperation>>>)
+  nameWithType.vb: PromiseExtensions.ThenSequence(Of TResult)(IAsyncOperation(Of TResult), Func(Of IEnumerable(Of Func(Of IAsyncOperation))))
+- uid: UnityFx.Async.Promises.PromiseExtensions.ThenSequence``1(UnityFx.Async.IAsyncOperation{``0},System.Func{System.Func{UnityFx.Async.IAsyncOperation}[]})
+  name: ThenSequence<TResult>(IAsyncOperation<TResult>, Func<Func<IAsyncOperation>[]>)
+  href: api/netstandard2.0/UnityFx.Async.Promises.PromiseExtensions.html#UnityFx_Async_Promises_PromiseExtensions_ThenSequence__1_UnityFx_Async_IAsyncOperation___0__System_Func_System_Func_UnityFx_Async_IAsyncOperation_____
+  commentId: M:UnityFx.Async.Promises.PromiseExtensions.ThenSequence``1(UnityFx.Async.IAsyncOperation{``0},System.Func{System.Func{UnityFx.Async.IAsyncOperation}[]})
+  name.vb: ThenSequence(Of TResult)(IAsyncOperation(Of TResult), Func(Of Func(Of IAsyncOperation)()))
+  fullName: UnityFx.Async.Promises.PromiseExtensions.ThenSequence<TResult>(UnityFx.Async.IAsyncOperation<TResult>, System.Func<System.Func<UnityFx.Async.IAsyncOperation>[]>)
+  fullName.vb: UnityFx.Async.Promises.PromiseExtensions.ThenSequence(Of TResult)(UnityFx.Async.IAsyncOperation(Of TResult), System.Func(Of System.Func(Of UnityFx.Async.IAsyncOperation)()))
+  nameWithType: PromiseExtensions.ThenSequence<TResult>(IAsyncOperation<TResult>, Func<Func<IAsyncOperation>[]>)
+  nameWithType.vb: PromiseExtensions.ThenSequence(Of TResult)(IAsyncOperation(Of TResult), Func(Of Func(Of IAsyncOperation)()))

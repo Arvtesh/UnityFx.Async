@@ -1,0 +1,908 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class Promise
+   | Asynchronous Operations for Unity </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class Promise
+   | Asynchronous Operations for Unity ">
+    <meta name="generator" content="docfx 2.31.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="UnityFx.Async.Promises.Promise">
+  
+  
+  <h1 id="UnityFx_Async_Promises_Promise" data-uid="UnityFx.Async.Promises.Promise" class="text-break">Class Promise
+  </h1>
+  <div class="markdown level0 summary"><p>Promise-related helpers.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">Promise</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="UnityFx.Async.Promises.html">UnityFx.Async.Promises</a></h6>
+  <h6><strong>Assembly</strong>: UnityFx.Async-netstandard2.0.dll</h6>
+  <h5 id="UnityFx_Async_Promises_Promise_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class Promise</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_Promise_All_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation__.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.Promise.All(System.Collections.Generic.IEnumerable%7BUnityFx.Async.IAsyncOperation%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/Promise.cs/#L98">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Promises_Promise_All_" data-uid="UnityFx.Async.Promises.Promise.All*"></a>
+  <h4 id="UnityFx_Async_Promises_Promise_All_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation__" data-uid="UnityFx.Async.Promises.Promise.All(System.Collections.Generic.IEnumerable{UnityFx.Async.IAsyncOperation})">All(IEnumerable&lt;IAsyncOperation&gt;)</h4>
+  <div class="markdown level1 summary"><p>Returns a promise that resolves when all of the promises in the enumerable argument have resolved.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation All(IEnumerable&lt;IAsyncOperation&gt; ops)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>&gt;</td>
+        <td><span class="parametername">ops</span></td>
+        <td><p>Operations to wait for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><p>An operation that completes when all specified promises are resolved.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">ops</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if the <code data-dev-comment-type="paramref" class="paramref">ops</code> collection contained a <span class="xref">null</span> operation.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_Promises_Promise_All_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation___seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_All_UnityFx_Async_IAsyncOperation___">All(IAsyncOperation[])</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_Promise_All_UnityFx_Async_IAsyncOperation___.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.Promise.All(UnityFx.Async.IAsyncOperation%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/Promise.cs/#L85">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Promises_Promise_All_" data-uid="UnityFx.Async.Promises.Promise.All*"></a>
+  <h4 id="UnityFx_Async_Promises_Promise_All_UnityFx_Async_IAsyncOperation___" data-uid="UnityFx.Async.Promises.Promise.All(UnityFx.Async.IAsyncOperation[])">All(IAsyncOperation[])</h4>
+  <div class="markdown level1 summary"><p>Returns a promise that resolves when all of the promises in the enumerable argument have resolved.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation All(params IAsyncOperation[] ops)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>[]</td>
+        <td><span class="parametername">ops</span></td>
+        <td><p>Operations to wait for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><p>An operation that completes when all specified promises are resolved.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">ops</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if the <code data-dev-comment-type="paramref" class="paramref">ops</code> collection contained a <span class="xref">null</span> operation.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_Promises_Promise_All_UnityFx_Async_IAsyncOperation____seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_All_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation__">All(IEnumerable&lt;IAsyncOperation&gt;)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_Promise_Race_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation__.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.Promise.Race(System.Collections.Generic.IEnumerable%7BUnityFx.Async.IAsyncOperation%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/Promise.cs/#L124">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Promises_Promise_Race_" data-uid="UnityFx.Async.Promises.Promise.Race*"></a>
+  <h4 id="UnityFx_Async_Promises_Promise_Race_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation__" data-uid="UnityFx.Async.Promises.Promise.Race(System.Collections.Generic.IEnumerable{UnityFx.Async.IAsyncOperation})">Race(IEnumerable&lt;IAsyncOperation&gt;)</h4>
+  <div class="markdown level1 summary"><p>Returns a promise that resolves when any of the promises in the enumerable argument have resolved.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation Race(IEnumerable&lt;IAsyncOperation&gt; ops)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>&gt;</td>
+        <td><span class="parametername">ops</span></td>
+        <td><p>Operations to wait for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><p>An operation that completes when any of the specified promises is resolved.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">ops</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if the <code data-dev-comment-type="paramref" class="paramref">ops</code> collection contained a <span class="xref">null</span> operation.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_Promises_Promise_Race_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation___seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Race_UnityFx_Async_IAsyncOperation___">Race(IAsyncOperation[])</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_Promise_Race_UnityFx_Async_IAsyncOperation___.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.Promise.Race(UnityFx.Async.IAsyncOperation%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/Promise.cs/#L111">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Promises_Promise_Race_" data-uid="UnityFx.Async.Promises.Promise.Race*"></a>
+  <h4 id="UnityFx_Async_Promises_Promise_Race_UnityFx_Async_IAsyncOperation___" data-uid="UnityFx.Async.Promises.Promise.Race(UnityFx.Async.IAsyncOperation[])">Race(IAsyncOperation[])</h4>
+  <div class="markdown level1 summary"><p>Returns a promise that resolves when any of the promises in the enumerable argument have resolved.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation Race(params IAsyncOperation[] ops)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>[]</td>
+        <td><span class="parametername">ops</span></td>
+        <td><p>Operations to wait for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><p>An operation that completes when any of the specified promises is resolved.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">ops</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if the <code data-dev-comment-type="paramref" class="paramref">ops</code> collection contained a <span class="xref">null</span> operation.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_Promises_Promise_Race_UnityFx_Async_IAsyncOperation____seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Race_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation__">Race(IEnumerable&lt;IAsyncOperation&gt;)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_Promise_Rejected.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.Promise.Rejected%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/Promise.cs/#L49">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Promises_Promise_Rejected_" data-uid="UnityFx.Async.Promises.Promise.Rejected*"></a>
+  <h4 id="UnityFx_Async_Promises_Promise_Rejected" data-uid="UnityFx.Async.Promises.Promise.Rejected">Rejected()</h4>
+  <div class="markdown level1 summary"><p>Creates a promise that&apos;s already been rejected.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation Rejected()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_Promises_Promise_Rejected_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Rejected_System_String_">Rejected(String)</a></div>
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Rejected_System_Exception_">Rejected(Exception)</a></div>
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Resolved">Resolved()</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_Promise_Rejected_System_Exception_.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.Promise.Rejected(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/Promise.cs/#L72">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Promises_Promise_Rejected_" data-uid="UnityFx.Async.Promises.Promise.Rejected*"></a>
+  <h4 id="UnityFx_Async_Promises_Promise_Rejected_System_Exception_" data-uid="UnityFx.Async.Promises.Promise.Rejected(System.Exception)">Rejected(Exception)</h4>
+  <div class="markdown level1 summary"><p>Creates a promise that&apos;s already been rejected with the specified <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation Rejected(Exception e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a></td>
+        <td><span class="parametername">e</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">e</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_Promises_Promise_Rejected_System_Exception__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Rejected_System_String_">Rejected(String)</a></div>
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Rejected">Rejected()</a></div>
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Resolved">Resolved()</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_Promise_Rejected_System_String_.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.Promise.Rejected(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/Promise.cs/#L60">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Promises_Promise_Rejected_" data-uid="UnityFx.Async.Promises.Promise.Rejected*"></a>
+  <h4 id="UnityFx_Async_Promises_Promise_Rejected_System_String_" data-uid="UnityFx.Async.Promises.Promise.Rejected(System.String)">Rejected(String)</h4>
+  <div class="markdown level1 summary"><p>Creates a promise that&apos;s already been rejected with the specified error <code data-dev-comment-type="paramref" class="paramref">message</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation Rejected(string message)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">message</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_Promises_Promise_Rejected_System_String__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Rejected_System_Exception_">Rejected(Exception)</a></div>
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Rejected">Rejected()</a></div>
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Resolved">Resolved()</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_Promise_Resolved.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.Promise.Resolved%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/Promise.cs/#L28">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Promises_Promise_Resolved_" data-uid="UnityFx.Async.Promises.Promise.Resolved*"></a>
+  <h4 id="UnityFx_Async_Promises_Promise_Resolved" data-uid="UnityFx.Async.Promises.Promise.Resolved">Resolved()</h4>
+  <div class="markdown level1 summary"><p>Creates a promise that&apos;s already been resolved.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation Resolved()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_Promises_Promise_Resolved_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Rejected_System_Exception_">Rejected(Exception)</a></div>
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Resolved__1___0_">Resolved&lt;TResult&gt;(TResult)</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_Promise_Resolved__1___0_.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.Promise.Resolved%60%601(%60%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/Promise.cs/#L38">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Promises_Promise_Resolved_" data-uid="UnityFx.Async.Promises.Promise.Resolved*"></a>
+  <h4 id="UnityFx_Async_Promises_Promise_Resolved__1___0_" data-uid="UnityFx.Async.Promises.Promise.Resolved``1(``0)">Resolved&lt;TResult&gt;(TResult)</h4>
+  <div class="markdown level1 summary"><p>Creates a promise that&apos;s already been resolved with the specified value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation&lt;TResult&gt; Resolved&lt;TResult&gt;(TResult result)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TResult</span></td>
+        <td><span class="parametername">result</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation</a>&lt;TResult&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TResult</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_Promises_Promise_Resolved__1___0__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Rejected_System_Exception_">Rejected(Exception)</a></div>
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Resolved">Resolved()</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_Promise_Sequence_System_Collections_Generic_IEnumerable_System_Func_UnityFx_Async_IAsyncOperation___.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.Promise.Sequence(System.Collections.Generic.IEnumerable%7BSystem.Func%7BUnityFx.Async.IAsyncOperation%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/Promise.cs/#L168">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Promises_Promise_Sequence_" data-uid="UnityFx.Async.Promises.Promise.Sequence*"></a>
+  <h4 id="UnityFx_Async_Promises_Promise_Sequence_System_Collections_Generic_IEnumerable_System_Func_UnityFx_Async_IAsyncOperation___" data-uid="UnityFx.Async.Promises.Promise.Sequence(System.Collections.Generic.IEnumerable{System.Func{UnityFx.Async.IAsyncOperation}})">Sequence(IEnumerable&lt;Func&lt;IAsyncOperation&gt;&gt;)</h4>
+  <div class="markdown level1 summary"><p>Chain a number of operations using promises.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation Sequence(IEnumerable&lt;Func&lt;IAsyncOperation&gt;&gt; ops)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Func</span>&lt;<a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>&gt;&gt;</td>
+        <td><span class="parametername">ops</span></td>
+        <td><p>Functions each of which starts an async operation and yields a promise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><p>An operation that completes when all promises in the sequence are resolved.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">ops</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if the <code data-dev-comment-type="paramref" class="paramref">ops</code> collection contained a <span class="xref">null</span> operation.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_Promises_Promise_Sequence_System_Collections_Generic_IEnumerable_System_Func_UnityFx_Async_IAsyncOperation____seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Sequence_System_Func_UnityFx_Async_IAsyncOperation____">Sequence(Func&lt;IAsyncOperation&gt;[])</a></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_Promise_Sequence_System_Func_UnityFx_Async_IAsyncOperation____.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.Promise.Sequence(System.Func%7BUnityFx.Async.IAsyncOperation%7D%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/Promise.cs/#L137">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Promises_Promise_Sequence_" data-uid="UnityFx.Async.Promises.Promise.Sequence*"></a>
+  <h4 id="UnityFx_Async_Promises_Promise_Sequence_System_Func_UnityFx_Async_IAsyncOperation____" data-uid="UnityFx.Async.Promises.Promise.Sequence(System.Func{UnityFx.Async.IAsyncOperation}[])">Sequence(Func&lt;IAsyncOperation&gt;[])</h4>
+  <div class="markdown level1 summary"><p>Chain a number of operations using promises.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation Sequence(params Func&lt;IAsyncOperation&gt;[] ops)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;<a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>&gt;[]</td>
+        <td><span class="parametername">ops</span></td>
+        <td><p>Functions each of which starts an async operation and yields a promise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><p>An operation that completes when all promises in the sequence are resolved.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown if <code data-dev-comment-type="paramref" class="paramref">ops</code> is <span class="xref">null</span>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Thrown if the <code data-dev-comment-type="paramref" class="paramref">ops</code> collection contained a <span class="xref">null</span> operation.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_Promises_Promise_Sequence_System_Func_UnityFx_Async_IAsyncOperation_____seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_Sequence_System_Collections_Generic_IEnumerable_System_Func_UnityFx_Async_IAsyncOperation___">Sequence(IEnumerable&lt;Func&lt;IAsyncOperation&gt;&gt;)</a></div>
+  </div>
+  <h3 id="events">Events
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_Promise_UnhandledException.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.Promise.UnhandledException%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/Promise.cs/#L21">View Source</a>
+  </span>
+  <h4 id="UnityFx_Async_Promises_Promise_UnhandledException" data-uid="UnityFx.Async.Promises.Promise.UnhandledException">UnhandledException</h4>
+  <div class="markdown level1 summary"><p>Event raised for unhandled exceptions. For this to work you have to complete your promises with a call to Done().</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event EventHandler&lt;ExceptionEventArgs&gt; UnhandledException</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.EventHandler</span>&lt;<a class="xref" href="UnityFx.Async.Promises.ExceptionEventArgs.html">ExceptionEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="seealso">See Also</h3>
+  <div class="seealso">
+      <div><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise</a></span></div>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_Promise.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.Promise%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/Promise.cs/#L14" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            Copyright (c) 2017-2018 Alexander Bogarsukov
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

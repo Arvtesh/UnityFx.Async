@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexander Bogarsukov.
+﻿// Copyright (c) 2018-2020 Alexander Bogarsukov.
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
@@ -28,20 +28,31 @@ namespace UnityFx.Async.Promises
 
 		public void Invoke(IAsyncOperation op)
 		{
-			if (op.IsCompletedSuccessfully)
+			try
 			{
-				if (_successCallback is Action a)
+				if (op.IsCompletedSuccessfully)
 				{
-					a();
+					if (_successCallback is Action a)
+					{
+						a();
+					}
+					else if (_successCallback is Action<T> a1)
+					{
+						a1(((IAsyncOperation<T>)op).Result);
+					}
 				}
-				else if (_successCallback is Action<T> a1)
+				else if (_errorCallback != null)
 				{
-					a1((op as IAsyncOperation<T>).Result);
+					_errorCallback.Invoke(op.Exception);
+				}
+				else
+				{
+					Promise.PropagateUnhandledException(this, op.Exception);
 				}
 			}
-			else
+			catch (Exception e)
 			{
-				_errorCallback?.Invoke(op.Exception);
+				Promise.PropagateUnhandledException(this, e);
 			}
 		}
 

@@ -1,0 +1,28 @@
+{
+	"name": "com.unityfx.async",
+	"displayName": "Asynchronous operations (promises) for Unity",
+	"description": "UnityFx.Async introduces effective and portable asynchronous operations that can be used very much like Tasks in .NET and Promises in JS.",
+	"version": "1.0.3",
+	"unity": "2018.3",
+	"keywords": [
+		"UnityFx",
+		"UnityFx.Async",
+		"Task",
+		"promise",
+		"async"
+	],
+	"category": "UnityFx",
+	"author": {
+		"name": "Arvtesh",
+		"email": "arvtesh@gmail.com"
+	},
+	"license": "MIT",
+	"homepage": "https://github.com/Arvtesh/UnityFx.Async",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Arvtesh/UnityFx.Async.git"
+	},
+	"bugs": {
+		"url": "https://github.com/Arvtesh/UnityFx.Async/issues"
+	}
+}

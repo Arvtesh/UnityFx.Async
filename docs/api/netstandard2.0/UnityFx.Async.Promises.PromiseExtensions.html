@@ -106,7 +106,7 @@
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="UnityFx.Async.Promises.html">UnityFx.Async.Promises</a></h6>
-  <h6><strong>Assembly</strong>: UnityFx.Async.dll</h6>
+  <h6><strong>Assembly</strong>: UnityFx.Async-netstandard2.0.dll</h6>
   <h5 id="UnityFx_Async_Promises_PromiseExtensions_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public static class PromiseExtensions</code></pre>
@@ -118,7 +118,7 @@
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_PromiseExtensions_Catch_UnityFx_Async_IAsyncOperation_System_Action_System_Exception__.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.PromiseExtensions.Catch(UnityFx.Async.IAsyncOperation%2CSystem.Action%7BSystem.Exception%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L421">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L489">View Source</a>
   </span>
   <a id="UnityFx_Async_Promises_PromiseExtensions_Catch_" data-uid="UnityFx.Async.Promises.PromiseExtensions.Catch*"></a>
   <h4 id="UnityFx_Async_Promises_PromiseExtensions_Catch_UnityFx_Async_IAsyncOperation_System_Action_System_Exception__" data-uid="UnityFx.Async.Promises.PromiseExtensions.Catch(UnityFx.Async.IAsyncOperation,System.Action{System.Exception})">Catch(IAsyncOperation, Action&lt;Exception&gt;)</h4>
@@ -179,7 +179,7 @@
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_PromiseExtensions_Catch__1_UnityFx_Async_IAsyncOperation_System_Action___0__.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.PromiseExtensions.Catch%60%601(UnityFx.Async.IAsyncOperation%2CSystem.Action%7B%60%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L439">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L507">View Source</a>
   </span>
   <a id="UnityFx_Async_Promises_PromiseExtensions_Catch_" data-uid="UnityFx.Async.Promises.PromiseExtensions.Catch*"></a>
   <h4 id="UnityFx_Async_Promises_PromiseExtensions_Catch__1_UnityFx_Async_IAsyncOperation_System_Action___0__" data-uid="UnityFx.Async.Promises.PromiseExtensions.Catch``1(UnityFx.Async.IAsyncOperation,System.Action{``0})">Catch&lt;TException&gt;(IAsyncOperation, Action&lt;TException&gt;)</h4>
@@ -252,14 +252,53 @@
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_PromiseExtensions_Done_UnityFx_Async_IAsyncOperation_.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.PromiseExtensions.Done(UnityFx.Async.IAsyncOperation)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L632">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Promises_PromiseExtensions_Done_" data-uid="UnityFx.Async.Promises.PromiseExtensions.Done*"></a>
+  <h4 id="UnityFx_Async_Promises_PromiseExtensions_Done_UnityFx_Async_IAsyncOperation_" data-uid="UnityFx.Async.Promises.PromiseExtensions.Done(UnityFx.Async.IAsyncOperation)">Done(IAsyncOperation)</h4>
+  <div class="markdown level1 summary"><p>Routes unhendled errors to <a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_UnhandledException">UnhandledException</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Done(this IAsyncOperation op)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><span class="parametername">op</span></td>
+        <td><p>An operation to be continued.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="UnityFx_Async_Promises_PromiseExtensions_Done_UnityFx_Async_IAsyncOperation__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_UnhandledException">UnhandledException</a></div>
+      <div><span><a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise">https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise</a></span></div>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_PromiseExtensions_Done_UnityFx_Async_IAsyncOperation_System_Action_.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.PromiseExtensions.Done(UnityFx.Async.IAsyncOperation%2CSystem.Action)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L481">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L550">View Source</a>
   </span>
   <a id="UnityFx_Async_Promises_PromiseExtensions_Done_" data-uid="UnityFx.Async.Promises.PromiseExtensions.Done*"></a>
   <h4 id="UnityFx_Async_Promises_PromiseExtensions_Done_UnityFx_Async_IAsyncOperation_System_Action_" data-uid="UnityFx.Async.Promises.PromiseExtensions.Done(UnityFx.Async.IAsyncOperation,System.Action)">Done(IAsyncOperation, Action)</h4>
-  <div class="markdown level1 summary"><p>Schedules a callback to be executed after the promise chain has completed.</p>
+  <div class="markdown level1 summary"><p>Schedules a callback to be executed after the promise chain has completed. Routes unhendled errors to <a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_UnhandledException">UnhandledException</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -293,6 +332,7 @@
   <h5 id="UnityFx_Async_Promises_PromiseExtensions_Done_UnityFx_Async_IAsyncOperation_System_Action__seealso">See Also</h5>
   <div class="seealso">
       <div><a class="xref" href="UnityFx.Async.Promises.PromiseExtensions.html#UnityFx_Async_Promises_PromiseExtensions_Done_UnityFx_Async_IAsyncOperation_System_Action_System_Action_System_Exception__">Done(IAsyncOperation, Action, Action&lt;Exception&gt;)</a></div>
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_UnhandledException">UnhandledException</a></div>
       <div><span><a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise">https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise</a></span></div>
   </div>
   <span class="small pull-right mobile-hide">
@@ -300,11 +340,11 @@
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_PromiseExtensions_Done_UnityFx_Async_IAsyncOperation_System_Action_System_Action_System_Exception__.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.PromiseExtensions.Done(UnityFx.Async.IAsyncOperation%2CSystem.Action%2CSystem.Action%7BSystem.Exception%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L499">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L569">View Source</a>
   </span>
   <a id="UnityFx_Async_Promises_PromiseExtensions_Done_" data-uid="UnityFx.Async.Promises.PromiseExtensions.Done*"></a>
   <h4 id="UnityFx_Async_Promises_PromiseExtensions_Done_UnityFx_Async_IAsyncOperation_System_Action_System_Action_System_Exception__" data-uid="UnityFx.Async.Promises.PromiseExtensions.Done(UnityFx.Async.IAsyncOperation,System.Action,System.Action{System.Exception})">Done(IAsyncOperation, Action, Action&lt;Exception&gt;)</h4>
-  <div class="markdown level1 summary"><p>Schedules a callback to be executed after the promise chain has completed.</p>
+  <div class="markdown level1 summary"><p>Schedules a callback to be executed after the promise chain has completed. Routes unhendled errors to <a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_UnhandledException">UnhandledException</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -344,6 +384,7 @@
   <h5 id="UnityFx_Async_Promises_PromiseExtensions_Done_UnityFx_Async_IAsyncOperation_System_Action_System_Action_System_Exception___seealso">See Also</h5>
   <div class="seealso">
       <div><a class="xref" href="UnityFx.Async.Promises.PromiseExtensions.html#UnityFx_Async_Promises_PromiseExtensions_Done_UnityFx_Async_IAsyncOperation_System_Action_">Done(IAsyncOperation, Action)</a></div>
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_UnhandledException">UnhandledException</a></div>
       <div><span><a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise">https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise</a></span></div>
   </div>
   <span class="small pull-right mobile-hide">
@@ -351,11 +392,11 @@
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_PromiseExtensions_Done__1_UnityFx_Async_IAsyncOperation___0__System_Action___0__.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.PromiseExtensions.Done%60%601(UnityFx.Async.IAsyncOperation%7B%60%600%7D%2CSystem.Action%7B%60%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L521">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L592">View Source</a>
   </span>
   <a id="UnityFx_Async_Promises_PromiseExtensions_Done_" data-uid="UnityFx.Async.Promises.PromiseExtensions.Done*"></a>
   <h4 id="UnityFx_Async_Promises_PromiseExtensions_Done__1_UnityFx_Async_IAsyncOperation___0__System_Action___0__" data-uid="UnityFx.Async.Promises.PromiseExtensions.Done``1(UnityFx.Async.IAsyncOperation{``0},System.Action{``0})">Done&lt;TResult&gt;(IAsyncOperation&lt;TResult&gt;, Action&lt;TResult&gt;)</h4>
-  <div class="markdown level1 summary"><p>Schedules a callback to be executed after the promise chain has completed.</p>
+  <div class="markdown level1 summary"><p>Schedules a callback to be executed after the promise chain has completed. Routes unhendled errors to <a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_UnhandledException">UnhandledException</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -404,6 +445,7 @@
   <h5 id="UnityFx_Async_Promises_PromiseExtensions_Done__1_UnityFx_Async_IAsyncOperation___0__System_Action___0___seealso">See Also</h5>
   <div class="seealso">
       <div><a class="xref" href="UnityFx.Async.Promises.PromiseExtensions.html#UnityFx_Async_Promises_PromiseExtensions_Done__1_UnityFx_Async_IAsyncOperation___0__System_Action___0__System_Action_System_Exception__">Done&lt;TResult&gt;(IAsyncOperation&lt;TResult&gt;, Action&lt;TResult&gt;, Action&lt;Exception&gt;)</a></div>
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_UnhandledException">UnhandledException</a></div>
       <div><span><a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise">https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise</a></span></div>
   </div>
   <span class="small pull-right mobile-hide">
@@ -411,11 +453,11 @@
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_PromiseExtensions_Done__1_UnityFx_Async_IAsyncOperation___0__System_Action___0__System_Action_System_Exception__.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.PromiseExtensions.Done%60%601(UnityFx.Async.IAsyncOperation%7B%60%600%7D%2CSystem.Action%7B%60%600%7D%2CSystem.Action%7BSystem.Exception%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L539">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L611">View Source</a>
   </span>
   <a id="UnityFx_Async_Promises_PromiseExtensions_Done_" data-uid="UnityFx.Async.Promises.PromiseExtensions.Done*"></a>
   <h4 id="UnityFx_Async_Promises_PromiseExtensions_Done__1_UnityFx_Async_IAsyncOperation___0__System_Action___0__System_Action_System_Exception__" data-uid="UnityFx.Async.Promises.PromiseExtensions.Done``1(UnityFx.Async.IAsyncOperation{``0},System.Action{``0},System.Action{System.Exception})">Done&lt;TResult&gt;(IAsyncOperation&lt;TResult&gt;, Action&lt;TResult&gt;, Action&lt;Exception&gt;)</h4>
-  <div class="markdown level1 summary"><p>Schedules a callback to be executed after the promise chain has completed.</p>
+  <div class="markdown level1 summary"><p>Schedules a callback to be executed after the promise chain has completed. Routes unhendled errors to <a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_UnhandledException">UnhandledException</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -470,6 +512,7 @@
   <h5 id="UnityFx_Async_Promises_PromiseExtensions_Done__1_UnityFx_Async_IAsyncOperation___0__System_Action___0__System_Action_System_Exception___seealso">See Also</h5>
   <div class="seealso">
       <div><a class="xref" href="UnityFx.Async.Promises.PromiseExtensions.html#UnityFx_Async_Promises_PromiseExtensions_Done__1_UnityFx_Async_IAsyncOperation___0__System_Action___0__">Done&lt;TResult&gt;(IAsyncOperation&lt;TResult&gt;, Action&lt;TResult&gt;)</a></div>
+      <div><a class="xref" href="UnityFx.Async.Promises.Promise.html#UnityFx_Async_Promises_Promise_UnhandledException">UnhandledException</a></div>
       <div><span><a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise">https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise</a></span></div>
   </div>
   <span class="small pull-right mobile-hide">
@@ -477,7 +520,7 @@
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_PromiseExtensions_Finally_UnityFx_Async_IAsyncOperation_System_Action_.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.PromiseExtensions.Finally(UnityFx.Async.IAsyncOperation%2CSystem.Action)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L460">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L528">View Source</a>
   </span>
   <a id="UnityFx_Async_Promises_PromiseExtensions_Finally_" data-uid="UnityFx.Async.Promises.PromiseExtensions.Finally*"></a>
   <h4 id="UnityFx_Async_Promises_PromiseExtensions_Finally_UnityFx_Async_IAsyncOperation_System_Action_" data-uid="UnityFx.Async.Promises.PromiseExtensions.Finally(UnityFx.Async.IAsyncOperation,System.Action)">Finally(IAsyncOperation, Action)</h4>
@@ -537,7 +580,7 @@
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_PromiseExtensions_Rebind__1_UnityFx_Async_IAsyncOperation_System_Func___0__.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.PromiseExtensions.Rebind%60%601(UnityFx.Async.IAsyncOperation%2CSystem.Func%7B%60%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L382">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L450">View Source</a>
   </span>
   <a id="UnityFx_Async_Promises_PromiseExtensions_Rebind_" data-uid="UnityFx.Async.Promises.PromiseExtensions.Rebind*"></a>
   <h4 id="UnityFx_Async_Promises_PromiseExtensions_Rebind__1_UnityFx_Async_IAsyncOperation_System_Func___0__" data-uid="UnityFx.Async.Promises.PromiseExtensions.Rebind``1(UnityFx.Async.IAsyncOperation,System.Func{``0})">Rebind&lt;TResult&gt;(IAsyncOperation, Func&lt;TResult&gt;)</h4>
@@ -612,7 +655,7 @@
     <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_PromiseExtensions_Rebind__2_UnityFx_Async_IAsyncOperation___0__System_Func___0___1__.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.PromiseExtensions.Rebind%60%602(UnityFx.Async.IAsyncOperation%7B%60%600%7D%2CSystem.Func%7B%60%600%2C%60%601%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L399">View Source</a>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L467">View Source</a>
   </span>
   <a id="UnityFx_Async_Promises_PromiseExtensions_Rebind_" data-uid="UnityFx.Async.Promises.PromiseExtensions.Rebind*"></a>
   <h4 id="UnityFx_Async_Promises_PromiseExtensions_Rebind__2_UnityFx_Async_IAsyncOperation___0__System_Func___0___1__" data-uid="UnityFx.Async.Promises.PromiseExtensions.Rebind``2(UnityFx.Async.IAsyncOperation{``0},System.Func{``0,``1})">Rebind&lt;TResult, TNewResult&gt;(IAsyncOperation&lt;TResult&gt;, Func&lt;TResult, TNewResult&gt;)</h4>
@@ -1997,6 +2040,260 @@
   <div class="seealso">
       <div><a class="xref" href="UnityFx.Async.Promises.PromiseExtensions.html#UnityFx_Async_Promises_PromiseExtensions_ThenAny__1_UnityFx_Async_IAsyncOperation_System_Func_System_Collections_Generic_IEnumerable_UnityFx_Async_IAsyncOperation___0____">ThenAny&lt;TResult&gt;(IAsyncOperation, Func&lt;IEnumerable&lt;IAsyncOperation&lt;TResult&gt;&gt;&gt;)</a></div>
   </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_PromiseExtensions_ThenSequence_UnityFx_Async_IAsyncOperation_System_Func_System_Collections_Generic_IEnumerable_System_Func_UnityFx_Async_IAsyncOperation____.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.PromiseExtensions.ThenSequence(UnityFx.Async.IAsyncOperation%2CSystem.Func%7BSystem.Collections.Generic.IEnumerable%7BSystem.Func%7BUnityFx.Async.IAsyncOperation%7D%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L381">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Promises_PromiseExtensions_ThenSequence_" data-uid="UnityFx.Async.Promises.PromiseExtensions.ThenSequence*"></a>
+  <h4 id="UnityFx_Async_Promises_PromiseExtensions_ThenSequence_UnityFx_Async_IAsyncOperation_System_Func_System_Collections_Generic_IEnumerable_System_Func_UnityFx_Async_IAsyncOperation____" data-uid="UnityFx.Async.Promises.PromiseExtensions.ThenSequence(UnityFx.Async.IAsyncOperation,System.Func{System.Collections.Generic.IEnumerable{System.Func{UnityFx.Async.IAsyncOperation}}})">ThenSequence(IAsyncOperation, Func&lt;IEnumerable&lt;Func&lt;IAsyncOperation&gt;&gt;&gt;)</h4>
+  <div class="markdown level1 summary"><p>Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback have completed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation ThenSequence(this IAsyncOperation op, Func&lt;IEnumerable&lt;Func&lt;IAsyncOperation&gt;&gt;&gt; successCallback)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><span class="parametername">op</span></td>
+        <td><p>An operation to be continued.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Func</span>&lt;<a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>&gt;&gt;&gt;</td>
+        <td><span class="parametername">successCallback</span></td>
+        <td><p>The callback to be executed when the operation has completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><p>Returns a continuation operation that completes after both source operation and the callback has completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_PromiseExtensions_ThenSequence_UnityFx_Async_IAsyncOperation_System_Func_System_Func_UnityFx_Async_IAsyncOperation_____.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.PromiseExtensions.ThenSequence(UnityFx.Async.IAsyncOperation%2CSystem.Func%7BSystem.Func%7BUnityFx.Async.IAsyncOperation%7D%5B%5D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L413">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Promises_PromiseExtensions_ThenSequence_" data-uid="UnityFx.Async.Promises.PromiseExtensions.ThenSequence*"></a>
+  <h4 id="UnityFx_Async_Promises_PromiseExtensions_ThenSequence_UnityFx_Async_IAsyncOperation_System_Func_System_Func_UnityFx_Async_IAsyncOperation_____" data-uid="UnityFx.Async.Promises.PromiseExtensions.ThenSequence(UnityFx.Async.IAsyncOperation,System.Func{System.Func{UnityFx.Async.IAsyncOperation}[]})">ThenSequence(IAsyncOperation, Func&lt;Func&lt;IAsyncOperation&gt;[]&gt;)</h4>
+  <div class="markdown level1 summary"><p>Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback have completed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation ThenSequence(this IAsyncOperation op, Func&lt;Func&lt;IAsyncOperation&gt;[]&gt; successCallback)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><span class="parametername">op</span></td>
+        <td><p>An operation to be continued.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Func</span>&lt;<a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>&gt;[]&gt;</td>
+        <td><span class="parametername">successCallback</span></td>
+        <td><p>The callback to be executed when the operation has completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><p>Returns a continuation operation that completes after both source operation and the callback has completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_PromiseExtensions_ThenSequence__1_UnityFx_Async_IAsyncOperation___0__System_Func_System_Collections_Generic_IEnumerable_System_Func_UnityFx_Async_IAsyncOperation____.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.PromiseExtensions.ThenSequence%60%601(UnityFx.Async.IAsyncOperation%7B%60%600%7D%2CSystem.Func%7BSystem.Collections.Generic.IEnumerable%7BSystem.Func%7BUnityFx.Async.IAsyncOperation%7D%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L397">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Promises_PromiseExtensions_ThenSequence_" data-uid="UnityFx.Async.Promises.PromiseExtensions.ThenSequence*"></a>
+  <h4 id="UnityFx_Async_Promises_PromiseExtensions_ThenSequence__1_UnityFx_Async_IAsyncOperation___0__System_Func_System_Collections_Generic_IEnumerable_System_Func_UnityFx_Async_IAsyncOperation____" data-uid="UnityFx.Async.Promises.PromiseExtensions.ThenSequence``1(UnityFx.Async.IAsyncOperation{``0},System.Func{System.Collections.Generic.IEnumerable{System.Func{UnityFx.Async.IAsyncOperation}}})">ThenSequence&lt;TResult&gt;(IAsyncOperation&lt;TResult&gt;, Func&lt;IEnumerable&lt;Func&lt;IAsyncOperation&gt;&gt;&gt;)</h4>
+  <div class="markdown level1 summary"><p>Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback have completed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation ThenSequence&lt;TResult&gt;(this IAsyncOperation&lt;TResult&gt; op, Func&lt;IEnumerable&lt;Func&lt;IAsyncOperation&gt;&gt;&gt; successCallback)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation</a>&lt;TResult&gt;</td>
+        <td><span class="parametername">op</span></td>
+        <td><p>An operation to be continued.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Func</span>&lt;<a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>&gt;&gt;&gt;</td>
+        <td><span class="parametername">successCallback</span></td>
+        <td><p>The callback to be executed when the operation has completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><p>Returns a continuation operation that completes after both source operation and the callback has completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TResult</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Arvtesh/UnityFx.Async/new/master/apiSpec/new?filename=UnityFx_Async_Promises_PromiseExtensions_ThenSequence__1_UnityFx_Async_IAsyncOperation___0__System_Func_System_Func_UnityFx_Async_IAsyncOperation_____.md&amp;value=---%0Auid%3A%20UnityFx.Async.Promises.PromiseExtensions.ThenSequence%60%601(UnityFx.Async.IAsyncOperation%7B%60%600%7D%2CSystem.Func%7BSystem.Func%7BUnityFx.Async.IAsyncOperation%7D%5B%5D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Arvtesh/UnityFx.Async/blob/master/src/UnityFx.Async/Api/Promises/PromiseExtensions.cs/#L429">View Source</a>
+  </span>
+  <a id="UnityFx_Async_Promises_PromiseExtensions_ThenSequence_" data-uid="UnityFx.Async.Promises.PromiseExtensions.ThenSequence*"></a>
+  <h4 id="UnityFx_Async_Promises_PromiseExtensions_ThenSequence__1_UnityFx_Async_IAsyncOperation___0__System_Func_System_Func_UnityFx_Async_IAsyncOperation_____" data-uid="UnityFx.Async.Promises.PromiseExtensions.ThenSequence``1(UnityFx.Async.IAsyncOperation{``0},System.Func{System.Func{UnityFx.Async.IAsyncOperation}[]})">ThenSequence&lt;TResult&gt;(IAsyncOperation&lt;TResult&gt;, Func&lt;Func&lt;IAsyncOperation&gt;[]&gt;)</h4>
+  <div class="markdown level1 summary"><p>Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback have completed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncOperation ThenSequence&lt;TResult&gt;(this IAsyncOperation&lt;TResult&gt; op, Func&lt;Func&lt;IAsyncOperation&gt;[]&gt; successCallback)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation-1.html">IAsyncOperation</a>&lt;TResult&gt;</td>
+        <td><span class="parametername">op</span></td>
+        <td><p>An operation to be continued.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Func</span>&lt;<a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a>&gt;[]&gt;</td>
+        <td><span class="parametername">successCallback</span></td>
+        <td><p>The callback to be executed when the operation has completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="UnityFx.Async.IAsyncOperation.html">IAsyncOperation</a></td>
+        <td><p>Returns a continuation operation that completes after both source operation and the callback has completed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TResult</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
 </article>
           </div>
           

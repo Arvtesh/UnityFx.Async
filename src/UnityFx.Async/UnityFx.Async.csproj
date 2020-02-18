@@ -5,23 +5,26 @@
 		<Description>Task-like asynchronous operations (promises) for Unity3d.</Description>
 		<Company />
 		<Authors>Alexander Bogarsukov</Authors>
-		<Copyright>Copyright © 2017-2019 Alexander Bogarsukov</Copyright>
+		<Copyright>Copyright © 2017-2020 Alexander Bogarsukov</Copyright>
 		<RepositoryUrl>https://github.com/Arvtesh/UnityFx.Async</RepositoryUrl>
 		<RepositoryType>Git</RepositoryType>
-		<PackageVersion>1.0.0</PackageVersion>
+		<Product>$(MSBuildProjectName)</Product>
+		<PackageId>$(MSBuildProjectName)</PackageId>
+		<PackageVersion>1.1.0</PackageVersion>
 		<PackageProjectUrl>https://github.com/Arvtesh/UnityFx.Async</PackageProjectUrl>
 		<PackageTags>UnityFx;Async;Promise;AsyncOperation;Coroutine;Task;Unity3d</PackageTags>
 		<PackageIconUrl></PackageIconUrl>
-		<Version>1.0.0</Version>
-		<AssemblyVersion>1.0.0.0</AssemblyVersion>
-		<FileVersion>1.0.0.0</FileVersion>
-		<InformationalVersion>1.0.0.0</InformationalVersion>
+		<Version>1.1.0</Version>
+		<AssemblyName>$(MSBuildProjectName)-$(TargetFramework)</AssemblyName>
+		<AssemblyVersion>1.1.0.0</AssemblyVersion>
+		<FileVersion>1.1.0.0</FileVersion>
+		<InformationalVersion>1.1.0.0</InformationalVersion>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<RootNamespace>UnityFx.Async</RootNamespace>
 		<CodeAnalysisRuleSet>../CodingConventions/Cs/CsharpRules.ruleset</CodeAnalysisRuleSet>
 		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>UnityFx.Async.snk</AssemblyOriginatorKeyFile>
+		<AssemblyOriginatorKeyFile>$(MSBuildProjectName).snk</AssemblyOriginatorKeyFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 

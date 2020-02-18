@@ -4,15 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
 -----------------------
+## [1.1.0] - unleleased
+
+### Added
+- Added `Promise` helper class with promise-specific helpers.
+- Added `ThenSequence` extensions.
+- Added unhandled exception event for `Done` promise extensions.
+- Added `LoadSceneAsync` extension method for `AssetBundle`.
+- Added `AsyncUtility.LoadSceneAsync` helper.
+- Added `npm` support.
+
+## Fixed
+- Fixed build issue for Unity 2018.3.
+
+-----------------------
 ## [1.0.2] - 2019.05.19
 
 ### Fixed
-- Fixed `AsyncUtility.FrameUpdate()` not scheduling callbacks as expected.
+- Fixed `AsyncUtility.FrameUpdate` not scheduling the callback.
 
 -----------------------
 ## [1.0.1] - 2019.04.09
 
-NOTE: NuGet-only release to instead of not published v1.0.0.
+NOTE: NuGet-only release instead of not published v1.0.0.
 
 ### Changed
 - Deprecated all `Task`-related extension methods. They are considered out of the library scope.

@@ -14,6 +14,7 @@
 		<InformationalVersion>1.0.0.0</InformationalVersion>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<RootNamespace>UnityFx.Async</RootNamespace>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<IsPackable>false</IsPackable>
 		<CodeAnalysisRuleSet>../CodingConventions/Cs/CsharpRules.ruleset</CodeAnalysisRuleSet>
 		<LangVersion>4</LangVersion>
