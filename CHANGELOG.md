@@ -4,7 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/); this project adheres to [Semantic Versioning](http://semver.org/).
 
 -----------------------
-## [1.1.0] - unleleased
+## [1.1.1] - unleleased
+
+-----------------------
+## [1.1.0] - 2020.02.18
 
 ### Added
 - Added `Promise` helper class with promise-specific helpers.
