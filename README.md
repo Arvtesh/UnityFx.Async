@@ -57,7 +57,6 @@ You may need the following software installed in order to build/use the library:
 You can get the code by cloning the github repository using your preffered git client UI or you can do it from command line as follows:
 ```cmd
 git clone https://github.com/Arvtesh/UnityFx.Async.git
-git submodule -q update --init
 ```
 ### Getting binaries
 The binaries are available as a [NuGet package](https://www.nuget.org/packages/UnityFx.Async). See [here](http://docs.nuget.org/docs/start-here/using-the-package-manager-console) for instructions on installing a package via nuget. One can also download them directly from [Github releases](https://github.com/Arvtesh/UnityFx.Async/releases). Unity3d users can import corresponding [Unity Asset Store package](https://assetstore.unity.com/packages/tools/asynchronous-operations-for-unity-96696) using the editor.
@@ -338,7 +337,7 @@ DownloadTextAsync("http://www.google.com")
     .ContinueWith(op => Debug.Log("2"), AsyncContinuationOptions.NotOnCanceled)
     .ContinueWith(op => Debug.Log("3"), AsyncContinuationOptions.OnlyOnFaulted);
 ```
-`Done()` acts like a combination of `Catch()` and `Finally()`. It should always be the last element of the chain:
+`Done()` acts like a combination of `Catch()` and `Finally()`. It should always be the last element of the chain. Note that `Done()` also routes unhandled exceptions to `Promise.UnhandledException` static event:
 ```csharp
 DownloadTextAsync("http://www.google.com")
     .Then(text => ExtractFirstUrl(text))

@@ -1,0 +1,16 @@
+﻿{
+	"$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
+	"settings": {
+			"documentationRules": {
+				"documentationCulture": "en-US",
+				"documentInternalElements": false,
+				"xmlHeader": false,
+				"copyrightText": "Copyright (c) 2018-2020 {companyName}.\nLicensed under the {licenseName} license. See the {licenseFile} file in the project root for more information.",
+				"companyName": "Alexander Bogarsukov",
+				"variables": {
+					"licenseName": "MIT",
+					"licenseFile": "LICENSE.md"
+				}
+			}
+	}
+}
