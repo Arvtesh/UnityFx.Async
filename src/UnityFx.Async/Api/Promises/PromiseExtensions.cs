@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexander Bogarsukov.
+﻿// Copyright (c) 2018-2020 Alexander Bogarsukov.
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
@@ -370,6 +370,74 @@ namespace UnityFx.Async.Promises
 
 		#endregion
 
+		#region ThenSequence
+
+		/// <summary>
+		/// Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback have completed.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation ThenSequence(this IAsyncOperation op, Func<IEnumerable<Func<IAsyncOperation>>> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			return new ThenSequenceResult<VoidResult>(op, successCallback, null);
+		}
+
+		/// <summary>
+		/// Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback have completed.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation ThenSequence<TResult>(this IAsyncOperation<TResult> op, Func<IEnumerable<Func<IAsyncOperation>>> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			return new ThenSequenceResult<TResult>(op, successCallback, null);
+		}
+
+		/// <summary>
+		/// Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback have completed.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation ThenSequence(this IAsyncOperation op, Func<Func<IAsyncOperation>[]> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			return new ThenSequenceResult<VoidResult>(op, successCallback, null);
+		}
+
+		/// <summary>
+		/// Schedules a callback to be executed after the promise has been resolved. The resulting operation will complete after all of the operations in the callback have completed.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <param name="successCallback">The callback to be executed when the operation has completed.</param>
+		/// <returns>Returns a continuation operation that completes after both source operation and the callback has completed.</returns>
+		public static IAsyncOperation ThenSequence<TResult>(this IAsyncOperation<TResult> op, Func<Func<IAsyncOperation>[]> successCallback)
+		{
+			if (successCallback == null)
+			{
+				throw new ArgumentNullException(nameof(successCallback));
+			}
+
+			return new ThenSequenceResult<TResult>(op, successCallback, null);
+		}
+
+		#endregion
+
 		#region Rebind
 
 		/// <summary>
@@ -472,11 +540,12 @@ namespace UnityFx.Async.Promises
 		#region Done
 
 		/// <summary>
-		/// Schedules a callback to be executed after the promise chain has completed.
+		/// Schedules a callback to be executed after the promise chain has completed. Routes unhendled errors to <see cref="Promise.UnhandledException"/>.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the promise has resolved.</param>
 		/// <seealso cref="Done(IAsyncOperation, Action, Action{Exception})"/>
+		/// <seealso cref="Promise.UnhandledException"/>
 		/// <seealso href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise"/>
 		public static void Done(this IAsyncOperation op, Action successCallback)
 		{
@@ -489,12 +558,13 @@ namespace UnityFx.Async.Promises
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the promise chain has completed.
+		/// Schedules a callback to be executed after the promise chain has completed. Routes unhendled errors to <see cref="Promise.UnhandledException"/>.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the promise has resolved.</param>
 		/// <param name="errorCallback">The callback to be executed when the promise was rejected.</param>
 		/// <seealso cref="Done(IAsyncOperation, Action)"/>
+		/// <seealso cref="Promise.UnhandledException"/>
 		/// <seealso href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise"/>
 		public static void Done(this IAsyncOperation op, Action successCallback, Action<Exception> errorCallback)
 		{
@@ -512,11 +582,12 @@ namespace UnityFx.Async.Promises
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the promise chain has completed.
+		/// Schedules a callback to be executed after the promise chain has completed. Routes unhendled errors to <see cref="Promise.UnhandledException"/>.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the promise has resolved.</param>
 		/// <seealso cref="Done{TResult}(IAsyncOperation{TResult}, Action{TResult}, Action{Exception})"/>
+		/// <seealso cref="Promise.UnhandledException"/>
 		/// <seealso href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise"/>
 		public static void Done<TResult>(this IAsyncOperation<TResult> op, Action<TResult> successCallback)
 		{
@@ -529,12 +600,13 @@ namespace UnityFx.Async.Promises
 		}
 
 		/// <summary>
-		/// Schedules a callback to be executed after the promise chain has completed.
+		/// Schedules a callback to be executed after the promise chain has completed. Routes unhendled errors to <see cref="Promise.UnhandledException"/>.
 		/// </summary>
 		/// <param name="op">An operation to be continued.</param>
 		/// <param name="successCallback">The callback to be executed when the promise has resolved.</param>
 		/// <param name="errorCallback">The callback to be executed when the promise was rejected.</param>
 		/// <seealso cref="Done{TResult}(IAsyncOperation{TResult}, Action{TResult})"/>
+		/// <seealso cref="Promise.UnhandledException"/>
 		/// <seealso href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise"/>
 		public static void Done<TResult>(this IAsyncOperation<TResult> op, Action<TResult> successCallback, Action<Exception> errorCallback)
 		{
@@ -549,6 +621,17 @@ namespace UnityFx.Async.Promises
 			}
 
 			op.AddCompletionCallback(new DoneResult<TResult>(successCallback, errorCallback));
+		}
+
+		/// <summary>
+		/// Routes unhendled errors to <see cref="Promise.UnhandledException"/>.
+		/// </summary>
+		/// <param name="op">An operation to be continued.</param>
+		/// <seealso cref="Promise.UnhandledException"/>
+		/// <seealso href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise"/>
+		public static void Done(this IAsyncOperation op)
+		{
+			op.AddCompletionCallback(new DoneResult<VoidResult>(null, null));
 		}
 
 		#endregion

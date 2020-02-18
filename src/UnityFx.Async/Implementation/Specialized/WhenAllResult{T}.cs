@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexander Bogarsukov.
+﻿// Copyright (c) 2018-2020 Alexander Bogarsukov.
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
@@ -11,18 +11,18 @@ namespace UnityFx.Async
 	{
 		#region data
 
-		private readonly IAsyncOperation[] _ops;
+		private readonly IList<IAsyncOperation> _ops;
 		private int _count;
 
 		#endregion
 
 		#region interface
 
-		public WhenAllResult(IAsyncOperation[] ops)
+		public WhenAllResult(IList<IAsyncOperation> ops)
 			: base(AsyncOperationStatus.Running)
 		{
 			_ops = ops;
-			_count = ops.Length;
+			_count = ops.Count;
 
 			foreach (var op in ops)
 			{
@@ -38,19 +38,19 @@ namespace UnityFx.Async
 		{
 			var result = 0f;
 
-			foreach (var op in _ops)
+			for (var i = 0; i < _ops.Count; i++)
 			{
-				result += op.Progress;
+				result += _ops[i].Progress;
 			}
 
-			return result / _ops.Length;
+			return result / _ops.Count;
 		}
 
 		protected override void OnCancel()
 		{
-			foreach (var op in _ops)
+			for (var i = 0; i < _ops.Count; i++)
 			{
-				op.Cancel();
+				_ops[i].Cancel();
 			}
 		}
 
@@ -70,8 +70,10 @@ namespace UnityFx.Async
 				List<Exception> exceptions = null;
 				IAsyncOperation canceledOp = null;
 
-				foreach (var op in _ops)
+				for (var i = 0; i < _ops.Count; i++)
 				{
+					var op = _ops[i];
+
 					if (op.IsFaulted)
 					{
 						if (exceptions == null)
@@ -103,7 +105,7 @@ namespace UnityFx.Async
 				}
 				else
 				{
-					var results = new List<T>(_ops.Length);
+					var results = new List<T>(_ops.Count);
 
 					foreach (var op in _ops)
 					{

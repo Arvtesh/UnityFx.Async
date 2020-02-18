@@ -10,6 +10,8 @@ using UnityFx.Async.Promises;
 
 namespace UnityFx.Async.Benchmarks
 {
+	using Promise = RSG.Promise;
+
 	[MemoryDiagnoser]
 	public class ThenBenchmarks
 	{

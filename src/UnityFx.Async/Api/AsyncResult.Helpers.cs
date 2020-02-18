@@ -1,4 +1,4 @@
-﻿// Copyright (c) Alexander Bogarsukov.
+﻿// Copyright (c) 2018-2020 Alexander Bogarsukov.
 // Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using System;
@@ -186,6 +186,7 @@ namespace UnityFx.Async
 		/// </summary>
 		/// <param name="exception">The exception to complete the operation with.</param>
 		/// <returns>A faulted operation.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
 		/// <seealso cref="FromException(System.Exception, object)"/>
 		/// <seealso cref="FromException(string)"/>
 		/// <seealso cref="FromCanceled()"/>
@@ -201,6 +202,7 @@ namespace UnityFx.Async
 		/// <param name="exception">The exception to complete the operation with.</param>
 		/// <param name="asyncState">User-defined data returned by <see cref="AsyncState"/>.</param>
 		/// <returns>A faulted operation.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="exception"/> is <see langword="null"/>.</exception>
 		/// <seealso cref="FromException(System.Exception)"/>
 		/// <seealso cref="FromException(string, object)"/>
 		/// <seealso cref="FromCanceled(object)"/>
@@ -1153,7 +1155,7 @@ namespace UnityFx.Async
 				return CompletedOperation;
 			}
 
-			return new WhenAllResult<VoidResult>(opList.ToArray());
+			return new WhenAllResult<VoidResult>(opList);
 		}
 
 		/// <summary>
@@ -1172,7 +1174,7 @@ namespace UnityFx.Async
 				throw new ArgumentNullException(nameof(ops));
 			}
 
-			var opList = new List<IAsyncOperation<T>>();
+			var opList = new List<IAsyncOperation>();
 
 			foreach (var op in ops)
 			{
@@ -1189,7 +1191,7 @@ namespace UnityFx.Async
 				return FromResult(new T[0]);
 			}
 
-			return new WhenAllResult<T>(opList.ToArray());
+			return new WhenAllResult<T>(opList);
 		}
 
 		/// <summary>
@@ -1234,7 +1236,7 @@ namespace UnityFx.Async
 		/// <param name="ops">The operations to wait on for completion.</param>
 		/// <returns>An operation that represents the completion of all of the supplied operations.</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="ops"/> is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation..</exception>
+		/// <exception cref="ArgumentException">Thrown if the <paramref name="ops"/> collection contained a <see langword="null"/> operation.</exception>
 		/// <seealso cref="WhenAll(IAsyncOperation[])"/>
 		/// <seealso cref="WhenAll{T}(IEnumerable{IAsyncOperation{T}})"/>
 		public static AsyncResult<T[]> WhenAll<T>(params IAsyncOperation<T>[] ops)
@@ -1300,7 +1302,7 @@ namespace UnityFx.Async
 				throw new ArgumentException(Messages.FormatError_ListIsEmpty(), nameof(ops));
 			}
 
-			return new WhenAnyResult<T>(opList.ToArray());
+			return new WhenAnyResult<T>(opList);
 		}
 
 		/// <summary>
